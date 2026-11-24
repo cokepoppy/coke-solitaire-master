@@ -38,11 +38,15 @@ let winShown = false;
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const CARD_BACK_FILES = { ruby: 'back-solitaire-master.svg', emerald: 'back-blue.svg', midnight: 'back-blue.svg' };
-const REFERENCE_COURT_CARDS = new Set([
+const REFERENCE_CARD_ART = new Set([
   'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
   'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
   'king-of-clubs', 'king-of-hearts', 'king-of-spades',
   'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
+  '6-of-hearts', '9-of-spades', '2-of-diamonds', 'ace-of-spades',
+  '6-of-diamonds', '4-of-hearts', 'ace-of-clubs', '5-of-hearts',
+  '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
+  '10-of-hearts', '8-of-hearts',
 ]);
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 
@@ -95,7 +99,7 @@ function renderCard(card, source, options = {}) {
   }
   const color = ['♥', '♦'].includes(card.suit) ? 'red' : 'black';
   const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
-  const asset = REFERENCE_COURT_CARDS.has(artName) ? `${artName}-reference.png` : `${artName}.svg`;
+  const asset = REFERENCE_CARD_ART.has(artName) ? `${artName}-reference.png` : `${artName}.svg`;
   return `<button class="${classes.join(' ')} ${color}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-face-art" src="/assets/cards/${asset}" alt="" draggable="false"></button>`;
 }
 

@@ -23,4 +23,23 @@ The following 118×177 PNGs are crops of matching cards from the gameplay video 
 | `jack-of-hearts-reference.png` | 1152000 (75s) | (633, 829) |
 | `jack-of-spades-reference.png` | 1612800 (105s) | (622, 428) |
 
-All twelve Jack, Queen, and King cards now use complete source-frame crops. The game chooses the matching PNG at runtime and includes every reference image in its offline shell cache.
+All twelve Jack, Queen, and King cards now use complete source-frame crops. Fourteen number-card faces also have 118×177 crops from the early default-deck section of the gameplay recording:
+
+| Card image | PTS (time) |
+| --- | ---: |
+| `6-of-hearts-reference.png` | 353280 (23s) |
+| `9-of-spades-reference.png` | 814080 (53s) |
+| `2-of-diamonds-reference.png` | 844800 (55s) |
+| `ace-of-spades-reference.png` | 921600 (60s) |
+| `6-of-diamonds-reference.png` | 952320 (62s) |
+| `4-of-hearts-reference.png` | 967680 (63s) |
+| `ace-of-clubs-reference.png` | 1075200 (70s) |
+| `5-of-hearts-reference.png` | 1136640 (74s) |
+| `6-of-spades-reference.png` | 1244160 (81s) |
+| `7-of-hearts-reference.png` | 1274880 (83s) |
+| `2-of-spades-reference.png` | 1290240 (84s) |
+| `8-of-clubs-reference.png` | 1320960 (86s) |
+| `10-of-hearts-reference.png` | 1367040 (89s) |
+| `8-of-hearts-reference.png` | 1459200 (95s) |
+
+The matching reference PNG is selected at runtime and included in the offline shell cache. Other number-card faces still use the credited CC0 deck artwork.
