@@ -301,30 +301,28 @@ function render() {
 }
 
 function showComboFeedback(cardId) {
-  board.querySelectorAll('.combo-feedback, .combo-amazing').forEach((effect) => effect.remove());
+  board.querySelectorAll('.combo-feedback, .combo-great, .combo-amazing').forEach((effect) => effect.remove());
   clearTimeout(comboFeedbackTimer);
   if (game.state.comboCount < 1 || !cardId || game.state.won) return;
   const card = [...board.querySelectorAll('[data-card-id]')].find((element) => element.dataset.cardId === cardId);
   if (!card) return;
-  const boardRect = board.getBoundingClientRect();
-  const cardRect = card.getBoundingClientRect();
   const combo = game.state.comboCount;
   const label = document.createElement('div');
   label.className = 'combo-feedback';
   label.setAttribute('role', 'status');
   label.setAttribute('aria-label', `Combo ${combo}`);
   label.innerHTML = `<span>COMBO</span><b>${combo}</b>`;
-  const targetLeft = Number(card.dataset.motionTargetLeft);
-  const targetTop = Number(card.dataset.motionTargetTop);
-  const cardLeft = Number.isFinite(targetLeft) ? targetLeft : cardRect.left;
-  const cardTop = Number.isFinite(targetTop) ? targetTop : cardRect.top;
-  const requestedLeft = cardLeft - boardRect.left + cardRect.width / 2;
-  label.style.top = `${cardTop - boardRect.top + cardRect.height / 2}px`;
+  label.style.top = '-20px';
+  label.style.left = '50%';
   board.append(label);
-  const halfLabelWidth = label.offsetWidth / 2;
-  const labelMargin = Math.max(64, halfLabelWidth + 5);
-  label.style.left = `${Math.max(labelMargin, Math.min(boardRect.width - labelMargin, requestedLeft))}px`;
-  if (combo === 4) {
+  if (combo === 2) {
+    audio.play('great');
+    const great = document.createElement('div');
+    great.className = 'combo-great';
+    great.setAttribute('aria-hidden', 'true');
+    great.innerHTML = '<b>Great</b><i>✦</i><i>✦</i>';
+    board.append(great);
+  } else if (combo === 4) {
     audio.play('amazing');
     const amazing = document.createElement('div');
     amazing.className = 'combo-amazing';
@@ -332,7 +330,7 @@ function showComboFeedback(cardId) {
     amazing.innerHTML = '<b>Amazing</b><i>♥</i><i>♥</i><i>✦</i><i>✦</i>';
     board.append(amazing);
   }
-  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-amazing').forEach((effect) => effect.remove()), combo === 4 ? 620 : 920);
+  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-great, .combo-amazing').forEach((effect) => effect.remove()), combo === 4 ? 620 : 920);
 }
 
 function captureStockFlight() {

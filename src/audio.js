@@ -18,6 +18,8 @@ export class GameAudio {
     this.referenceMoveLoadPromise = null;
     this.referenceAmazingBuffer = null;
     this.referenceAmazingLoadPromise = null;
+    this.referenceGreatBuffer = null;
+    this.referenceGreatLoadPromise = null;
     this.referenceFoundationBuffer = null;
     this.referenceFoundationLoadPromise = null;
   }
@@ -39,6 +41,7 @@ export class GameAudio {
       this.noiseBuffer = this.createNoiseBuffer(this.context);
       this.loadReferenceMove();
       this.loadReferenceAmazing();
+      this.loadReferenceGreat();
       this.loadReferenceFoundation();
     }
     return this.context;
@@ -91,6 +94,24 @@ export class GameAudio {
         .catch(() => null);
     }
     return this.referenceAmazingLoadPromise;
+  }
+
+  loadReferenceGreat() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceGreatLoadPromise) {
+      this.referenceGreatLoadPromise = fetch('/assets/audio/combo-great-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Great sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceGreatBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceGreatLoadPromise;
   }
 
   loadReferenceFoundation() {
@@ -148,6 +169,7 @@ export class GameAudio {
     }
     if (cue === 'move' || cue === 'draw') await this.referenceMoveLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
+    if (cue === 'great') await this.referenceGreatLoadPromise;
     if (cue === 'foundation') await this.referenceFoundationLoadPromise;
     this.playCue(cue);
   }
@@ -230,6 +252,12 @@ export class GameAudio {
       else {
         [587.33, 880, 1174.66].forEach((frequency, index) => this.playTone(frequency, frequency * 1.01, 0.28, 0.045, 'sine', now + index * 0.09));
         this.playNoise(4600, 2100, 0.18, 0.035, now + 0.12, 0.55);
+      }
+    } else if (cue === 'great') {
+      if (this.referenceGreatBuffer) this.playCapturedSample(this.referenceGreatBuffer, now);
+      else {
+        [659.25, 987.77].forEach((frequency, index) => this.playTone(frequency, frequency * 1.01, 0.22, 0.04, 'sine', now + index * 0.08));
+        this.playNoise(4200, 2100, 0.14, 0.03, now + 0.07, 0.55);
       }
     } else if (cue === 'flip') {
       this.playNoise(6200, 1250, 0.09, 0.14, now, 0.72);

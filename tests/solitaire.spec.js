@@ -329,7 +329,7 @@ test('source opening replay matches the 20-second score, move count, and exposed
   expect(sourceStatBounds.moves.x).toBeCloseTo(387.1, 0);
   expect(sourceStatBounds.moves.y).toBeCloseTo(162.5, 0);
   expect(sourceStatBounds.moves.width).toBeCloseTo(10.5, 1);
-  await expect(page.locator('.combo-feedback, .combo-amazing')).toHaveCount(0);
+  await expect(page.locator('.combo-feedback, .combo-great, .combo-amazing')).toHaveCount(0);
   const timeDisplay = page.locator('#time-value');
   await expect(timeDisplay).toHaveText('00:07');
   await expect(timeDisplay.locator('.timer-glyph')).toHaveCount(5);
@@ -622,6 +622,10 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   });
   await page.reload();
   await page.waitForTimeout(1200);
+  await page.evaluate(() => {
+    window.comboAudioCues = [];
+    window.solitaireAudio.play = async (cue) => { window.comboAudioCues.push(cue); };
+  });
   const move = async (card, target) => {
     await page.locator(`[data-card-id="${card}"]`).click();
     await page.locator(`[data-card-id="${target}"]`).click();
@@ -638,6 +642,10 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   await move('♣-9', '♥-10');
   await expect(page.locator('#moves-value')).toHaveText('3');
   await expect(page.locator('.combo-feedback')).toHaveText('COMBO2');
+  await expect(page.locator('.combo-great')).toContainText('Great');
+  await expect.poll(() => page.evaluate(() => window.comboAudioCues.includes('great'))).toBe(true);
+  await page.waitForTimeout(150);
+  await page.screenshot({ path: 'test-results/mobile-combo-great.png' });
   await page.locator('.pile-column[data-pile="6"] [data-card-id="♠-13"]').click();
   await page.locator('.pile-column[data-pile="0"]').click();
   await expect(page.locator('#moves-value')).toHaveText('4');
@@ -646,9 +654,15 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   await expect(page.locator('#moves-value')).toHaveText('5');
   await expect(page.locator('.combo-feedback')).toHaveText('COMBO4');
   await expect(page.locator('.combo-amazing')).toContainText('Amazing');
-  const comboBounds = await page.locator('.combo-feedback').evaluate((label) => ({ left: label.offsetLeft, right: label.offsetLeft + label.offsetWidth, width: label.parentElement.clientWidth }));
-  expect(comboBounds.left).toBeGreaterThanOrEqual(0);
-  expect(comboBounds.right).toBeLessThanOrEqual(comboBounds.width);
+  await expect.poll(() => page.evaluate(() => window.comboAudioCues.includes('amazing'))).toBe(true);
+  const comboBounds = await page.locator('.combo-feedback').evaluate((label) => {
+    const labelRect = label.getBoundingClientRect();
+    const boardRect = label.parentElement.getBoundingClientRect();
+    return { centerX: labelRect.left + labelRect.width / 2, centerY: labelRect.top + labelRect.height / 2, boardCenterX: boardRect.left + boardRect.width / 2, boardTop: boardRect.top };
+  });
+  expect(comboBounds.centerX).toBeCloseTo(comboBounds.boardCenterX, 0);
+  expect(comboBounds.centerY - comboBounds.boardTop).toBeGreaterThan(-5);
+  expect(comboBounds.centerY - comboBounds.boardTop).toBeLessThan(40);
   await page.waitForTimeout(150);
   await page.screenshot({ path: 'test-results/mobile-combo-amazing.png' });
   await page.evaluate(() => {
@@ -832,6 +846,10 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
         window.referenceAmazingSamplePlayed = true;
         window.referenceAmazingSampleGain = args[1];
       }
+      if (buffer === audio.referenceGreatBuffer) {
+        window.referenceGreatSamplePlayed = true;
+        window.referenceGreatSampleGain = args[1];
+      }
       if (buffer === audio.referenceFoundationBuffer) {
         window.referenceFoundationSampleCall = { gain: args[1], offset: args[0] - audio.context.currentTime };
       }
@@ -862,6 +880,11 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   await expect.poll(() => page.evaluate(() => window.referenceAmazingSamplePlayed)).toBe(true);
   const amazingOutputGain = await page.evaluate(() => window.referenceAmazingSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(amazingOutputGain).toBeCloseTo(1, 5);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceGreatBuffer?.duration)).toBeCloseTo(0.5, 2);
+  await page.evaluate(() => window.solitaireAudio.play('great'));
+  await expect.poll(() => page.evaluate(() => window.referenceGreatSamplePlayed)).toBe(true);
+  const greatOutputGain = await page.evaluate(() => window.referenceGreatSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(greatOutputGain).toBeCloseTo(1, 5);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceFoundationBuffer?.duration)).toBeGreaterThan(0.8);
   await page.evaluate(() => window.solitaireAudio.play('foundation'));
   await expect.poll(() => page.evaluate(() => window.referenceFoundationSampleCall?.gain)).toBeGreaterThan(0);
@@ -948,6 +971,13 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   expect(offlineAmazingCue.ok).toBe(true);
   expect(offlineAmazingCue.audioType).toBe(true);
   expect(offlineAmazingCue.bytes).toBeGreaterThan(160_000);
+  const offlineGreatCue = await page.evaluate(async () => {
+    const response = await fetch('/assets/audio/combo-great-reference.wav');
+    return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };
+  });
+  expect(offlineGreatCue.ok).toBe(true);
+  expect(offlineGreatCue.audioType).toBe(true);
+  expect(offlineGreatCue.bytes).toBeGreaterThan(80_000);
   const offlineFoundationCue = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/foundation-reference.wav');
     return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };
