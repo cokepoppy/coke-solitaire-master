@@ -671,14 +671,14 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   await page.goto('/');
   await page.evaluate(() => {
     window.audioCues = [];
+    window.referenceSampleCalls = [];
     const audio = window.solitaireAudio;
     const playCue = audio.playCue.bind(audio);
     audio.playCue = (cue) => { window.audioCues.push(cue); return playCue(cue); };
     const playSample = audio.playSample.bind(audio);
     audio.playSample = (buffer, ...args) => {
       if (buffer === audio.referenceMoveBuffer) {
-        window.referenceMoveSamplePlayed = true;
-        window.referenceMoveSampleGain = args[1];
+        window.referenceSampleCalls.push({ cue: window.audioCues.at(-1), gain: args[1] });
       }
       if (buffer === audio.referenceAmazingBuffer) {
         window.referenceAmazingSamplePlayed = true;
@@ -693,9 +693,18 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   await expect.poll(() => page.evaluate(() => window.audioCues.includes('draw'))).toBe(true);
   expect(await page.evaluate(() => window.solitaireAudio.noiseBuffer.length)).toBeGreaterThan(0);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceMoveBuffer?.duration)).toBeGreaterThan(0.37);
+  await expect.poll(() => page.evaluate(() => window.referenceSampleCalls.some((call) => call.cue === 'draw'))).toBe(true);
+  const drawOutputGain = await page.evaluate(() => {
+    const call = window.referenceSampleCalls.find((sample) => sample.cue === 'draw');
+    return call.gain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel;
+  });
+  expect(drawOutputGain).toBeCloseTo(1, 5);
   await page.evaluate(() => window.solitaireAudio.play('move'));
-  await expect.poll(() => page.evaluate(() => window.referenceMoveSamplePlayed)).toBe(true);
-  const moveOutputGain = await page.evaluate(() => window.referenceMoveSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  await expect.poll(() => page.evaluate(() => window.referenceSampleCalls.some((call) => call.cue === 'move'))).toBe(true);
+  const moveOutputGain = await page.evaluate(() => {
+    const call = window.referenceSampleCalls.find((sample) => sample.cue === 'move');
+    return call.gain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel;
+  });
   expect(moveOutputGain).toBeCloseTo(1, 5);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAmazingBuffer?.duration)).toBeGreaterThan(0.95);
   await page.evaluate(() => window.solitaireAudio.play('amazing'));
