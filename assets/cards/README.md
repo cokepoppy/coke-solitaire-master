@@ -47,13 +47,14 @@ The 8♥ crop uses source rectangle `(648, 428, 118, 177)` from the 95-second ga
 
 The matching reference PNG is selected at runtime and included in the offline shell cache. The remaining number-card faces are listed with their sources below.
 
-Three additional number-card faces are 118×177 source-frame crops from the full gameplay recording:
+Four additional number-card faces are 118×177 source-frame crops from the full gameplay recording:
 
 | Card image | PTS (time) | Crop origin (x, y) |
 | --- | ---: | ---: |
 | `7-of-diamonds-reference.png` | 3732480 (243s) | (622, 428) |
 | `9-of-diamonds-reference.png` | 6082560 (396s) | (622, 428) |
 | `2-of-hearts-reference.png` | 9231360 (601s) | (622, 428) |
+| `4-of-clubs-reference.png` | 11543040 (751.5s) | (622, 428) |
 
 Nine more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
 
@@ -79,4 +80,4 @@ Two more number-card faces are crops from the official [Google Play listing](htt
 | `ace-of-diamonds-reference.png` | 1 | (274, 152) | 116×172 |
 | `10-of-diamonds-reference.png` | 1 | (943, 480) | 114×170 |
 
-The runtime selects the matching reference PNG and includes these images in the offline shell cache. All twelve court cards and thirty number-card faces now use source-frame or official store crops; the remaining ten number-card faces use the credited CC0 deck artwork.
+The runtime selects the matching reference PNG and includes these images in the offline shell cache. All twelve court cards and thirty-one number-card faces now use source-frame or official store crops; the remaining nine number-card faces use the credited CC0 deck artwork.

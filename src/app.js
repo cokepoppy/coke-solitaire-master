@@ -50,6 +50,7 @@ const REFERENCE_CARD_ART = new Set([
   '9-of-diamonds',
   '2-of-hearts',
   '7-of-diamonds',
+  '4-of-clubs',
   'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
   '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
   'ace-of-diamonds', '10-of-diamonds', '3-of-spades',
