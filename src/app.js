@@ -17,6 +17,13 @@ const modalKicker = $('#modal-kicker');
 const modalContent = $('#modal-content');
 const toast = $('#toast');
 let firstDeal = true;
+tableauRoot.addEventListener('animationend', (event) => {
+  if (event.animationName === 'deal-face-reveal') {
+    event.target.closest('.card-enter')?.classList.remove('card-enter');
+  } else if (event.animationName === 'card-deal' && !event.target.classList.contains('card-face')) {
+    event.target.classList.remove('card-enter');
+  }
+});
 let toastTimer = null;
 let previousTap = null;
 let drag = null;
@@ -53,7 +60,7 @@ function isHintSource(source) {
 }
 
 function renderCard(card, source, options = {}) {
-  const { selectable = true, offset = 0, index = 0, deal = false } = options;
+  const { selectable = true, offset = 0, index = 0, deal = false, dealOrder = 0 } = options;
   const sourceAttrs = selectable ? `data-zone="${source.zone}" data-pile="${source.pile}" data-index="${source.index}" data-card-id="${escapeHtml(card.id)}"` : '';
   const selected = selectable && sourceMatches(source, game.state.selected);
   const hint = selectable && isHintSource(source);
@@ -62,7 +69,8 @@ function renderCard(card, source, options = {}) {
   if (hint) classes.push('is-hint');
   if (deal) classes.push('card-enter');
   else if (animatedCardIds.has(card.id)) classes.push('card-arrive');
-  const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${Math.min(index * 16, 160)}ms`;
+  const delay = deal ? dealOrder * 40 : Math.min(index * 16, 160);
+  const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${delay}ms`;
   const aria = card.faceUp ? cardName(card) : 'Face-down card';
   if (!card.faceUp) {
     return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false"></button>`;
@@ -108,17 +116,32 @@ function renderTopRow() {
 }
 
 function renderTableau() {
+  const animateDeal = firstDeal;
   tableauRoot.innerHTML = game.state.tableau.map((pile, column) => {
     const hintTarget = game.state.hint?.target?.zone === 'tableau' && game.state.hint.target.pile === column;
     const cards = pile.map((card, index) => {
       const previousFaceDown = pile.slice(0, index).filter((item) => !item.faceUp).length;
       const previousFaceUp = pile.slice(0, index).filter((item) => item.faceUp).length;
       const offset = previousFaceDown * 13 + previousFaceUp * 22;
-      return renderCard(card, { zone: 'tableau', pile: column, index }, { offset, index: column * 2 + index, deal: firstDeal });
+      const dealOrder = index * 7 - (index * (index - 1)) / 2 + column - index;
+      return renderCard(card, { zone: 'tableau', pile: column, index }, { offset, index: column * 2 + index, deal: animateDeal, dealOrder });
     }).join('');
     const empty = pile.length ? '' : '<span class="empty-tableau-mark" aria-hidden="true">K</span>';
     return `<div class="pile-column drop-target${hintTarget ? ' is-hint' : ''}" data-drop-zone="tableau" data-pile="${column}" aria-label="Tableau pile ${column + 1}">${empty}${cards}</div>`;
   }).join('');
+  if (animateDeal) {
+    const stock = document.querySelector('.stock-slot .playing-card')?.getBoundingClientRect();
+    if (stock) {
+      tableauRoot.querySelectorAll('.playing-card.card-enter').forEach((card) => {
+        const pile = card.closest('.pile-column');
+        const pileRect = pile.getBoundingClientRect();
+        const targetLeft = pileRect.left + card.offsetLeft;
+        const targetTop = pileRect.top + card.offsetTop;
+        card.style.setProperty('--deal-x', `${stock.left - targetLeft}px`);
+        card.style.setProperty('--deal-y', `${stock.top - targetTop}px`);
+      });
+    }
+  }
   firstDeal = false;
 }
 
