@@ -602,3 +602,4 @@ modalContent.addEventListener('click', (event) => {
 });
 
 window.solitaireGame = game;
+window.solitaireAudio = audio;

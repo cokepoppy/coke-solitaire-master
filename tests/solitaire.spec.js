@@ -189,6 +189,42 @@ test('the Magic control plays one legal suggestion and undo reverses it', async 
   await expect(page.locator('#magic-badge')).toHaveText('1');
 });
 
+test('mobile sound unlocks on a gesture and ambient music follows its switch', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.evaluate(() => {
+    window.audioCues = [];
+    const audio = window.solitaireAudio;
+    const playCue = audio.playCue.bind(audio);
+    audio.playCue = (cue) => { window.audioCues.push(cue); return playCue(cue); };
+  });
+
+  await page.locator('[data-action="stock"]').click();
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.context?.state)).toBe('running');
+  await expect.poll(() => page.evaluate(() => window.audioCues.includes('draw'))).toBe(true);
+  expect(await page.evaluate(() => window.solitaireAudio.noiseBuffer.length)).toBeGreaterThan(0);
+
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('switch', { name: 'Sound effects' }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(false);
+  await page.getByRole('switch', { name: 'Background music' }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicStep)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
+  await page.getByRole('switch', { name: 'Background music' }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicOn)).toBe(false);
+  expect(await page.evaluate(() => window.solitaireAudio.musicTimer)).toBeNull();
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+
+  const cuesBeforeMutedDraw = await page.evaluate(() => window.audioCues.length);
+  await page.locator('[data-action="stock"]').click();
+  await expect(page.locator('#moves-value')).toHaveText('2');
+  await page.waitForTimeout(50);
+  expect(await page.evaluate(() => window.audioCues.length)).toBe(cuesBeforeMutedDraw);
+  expect(pageErrors).toEqual([]);
+});
+
 test('the board fits a 320px phone and the installed shell loads offline', async ({ page, context }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/');
