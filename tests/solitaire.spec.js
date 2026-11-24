@@ -1029,3 +1029,48 @@ test('an illegal tableau tap does not alter the deal', async ({ page }) => {
   await expect(page.locator('#moves-value')).toHaveText('0');
   await expect(page.locator('#tableau .playing-card')).toHaveCount(28);
 });
+
+test('mobile stock recycle restores draw order and undo', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => document.querySelectorAll('#tableau .card-enter').length === 0);
+  const firstDrawnCardId = await page.evaluate(() => {
+    const game = window.solitaireGame;
+    game.state.score = 200;
+    game.save();
+    return game.state.stock.at(-1).id;
+  });
+
+  for (let draw = 1; draw <= 24; draw += 1) {
+    await page.locator('[data-action="stock"]').click();
+    if (draw < 24) await expect(page.locator('.stock-count')).toHaveText(String(24 - draw));
+  }
+  await expect(page.getByRole('button', { name: 'Turn the waste pile over' })).toBeVisible();
+  await expect(page.locator('.waste-slot .card-face')).toHaveCount(3);
+  expect(await page.evaluate(() => window.solitaireGame.state.waste.length)).toBe(24);
+
+  const stockBox = await page.locator('[data-action="stock"]').boundingBox();
+  await page.touchscreen.tap(stockBox.x + stockBox.width / 2, stockBox.y + stockBox.height / 2);
+  await expect(page.locator('.stock-count')).toHaveText('24');
+  const recycled = await page.evaluate(() => ({
+    stock: window.solitaireGame.state.stock.length,
+    waste: window.solitaireGame.state.waste.length,
+    allFaceDown: window.solitaireGame.state.stock.every((card) => !card.faceUp),
+    score: window.solitaireGame.state.score,
+    moves: window.solitaireGame.state.moves,
+  }));
+  expect(recycled).toEqual({ stock: 24, waste: 0, allFaceDown: true, score: 100, moves: 25 });
+
+  await page.locator('[data-action="stock"]').click();
+  await expect(page.locator('.stock-count')).toHaveText('23');
+  expect(await page.evaluate(() => window.solitaireGame.state.waste.at(-1).id)).toBe(firstDrawnCardId);
+  await page.getByRole('button', { name: 'Undo move' }).click();
+  await expect(page.locator('.stock-count')).toHaveText('24');
+  await page.getByRole('button', { name: 'Undo move' }).click();
+  const restored = await page.evaluate(() => ({
+    stock: window.solitaireGame.state.stock.length,
+    waste: window.solitaireGame.state.waste.length,
+    score: window.solitaireGame.state.score,
+    moves: window.solitaireGame.state.moves,
+  }));
+  expect(restored).toEqual({ stock: 0, waste: 24, score: 200, moves: 24 });
+});

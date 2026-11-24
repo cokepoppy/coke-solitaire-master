@@ -169,7 +169,9 @@ export class SolitaireGame {
       this.snapshot();
       this.state.comboCount = 0;
       this.state.comboLastMoveAt = 0;
-      this.state.stock = [...this.state.waste];
+      // Restore the original draw order so the first card drawn after recycling
+      // is the same card that was on top when this stock cycle began.
+      this.state.stock = [...this.state.waste].reverse();
       this.state.stock.forEach((card) => { card.faceUp = false; });
       this.state.waste = [];
       this.state.moves += 1;
