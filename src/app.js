@@ -238,12 +238,15 @@ function renderTopRow() {
 
 function renderTableau() {
   const animateDeal = firstDeal;
+  const cardHeight = Math.min(64, window.innerWidth * 0.1337) * 1.5;
+  const faceDownStep = cardHeight * 0.139;
+  const faceUpStep = cardHeight * 0.484;
   tableauRoot.innerHTML = game.state.tableau.map((pile, column) => {
     const hintTarget = game.state.hint?.target?.zone === 'tableau' && game.state.hint.target.pile === column;
     const cards = pile.map((card, index) => {
       const previousFaceDown = pile.slice(0, index).filter((item) => !item.faceUp).length;
       const previousFaceUp = pile.slice(0, index).filter((item) => item.faceUp).length;
-      const offset = previousFaceDown * 13 + previousFaceUp * 22;
+      const offset = previousFaceDown * faceDownStep + previousFaceUp * faceUpStep;
       const dealOrder = index * 7 - (index * (index - 1)) / 2 + column - index;
       return renderCard(card, { zone: 'tableau', pile: column, index }, { offset, index: column * 2 + index, deal: animateDeal, dealOrder });
     }).join('');
