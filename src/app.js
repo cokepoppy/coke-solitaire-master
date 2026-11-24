@@ -19,6 +19,7 @@ const toast = $('#toast');
 let firstDeal = true;
 board.addEventListener('animationend', (event) => {
   if (event.animationName === 'deal-face-reveal') {
+    event.target.closest('.card-reveal')?.classList.remove('card-reveal');
     event.target.closest('.card-enter')?.classList.remove('card-enter');
   } else if (event.animationName === 'card-deal' && !event.target.classList.contains('card-face')) {
     event.target.classList.remove('card-enter');
@@ -30,6 +31,8 @@ let toastTimer = null;
 let previousTap = null;
 let drag = null;
 let animatedCardIds = new Set();
+let revealedCardIds = new Set();
+let cardMoveIds = new Set();
 let cardFlight = null;
 let winShown = false;
 let comboFeedbackTimer = null;
@@ -160,6 +163,8 @@ function renderCard(card, source, options = {}) {
   if (hint) classes.push('is-hint');
   if (deal) classes.push('card-enter');
   else if (animatedCardIds.has(card.id)) classes.push('card-arrive');
+  if (revealedCardIds.has(card.id)) classes.push('card-reveal');
+  if (cardMoveIds.has(card.id)) classes.push('card-flight-pending');
   if (flight && card.faceUp) classes.push('card-stock-draw');
   const delay = deal ? dealOrder * 40 : Math.min(index * 16, 160);
   const drawX = flight ? flight.originX - flight.targetX : 0;
@@ -265,6 +270,8 @@ function render() {
   renderTableau();
   updateChrome();
   animatedCardIds = new Set();
+  revealedCardIds = new Set();
+  cardMoveIds = new Set();
   cardFlight = null;
   if (settlingDeal) dealSettlementTimer = setTimeout(() => {
     dealSettlementTimer = null;
@@ -286,8 +293,12 @@ function showComboFeedback(cardId) {
   label.setAttribute('role', 'status');
   label.setAttribute('aria-label', `Combo ${combo}`);
   label.innerHTML = `<span>COMBO</span><b>${combo}</b>`;
-  const requestedLeft = cardRect.left - boardRect.left + cardRect.width / 2;
-  label.style.top = `${cardRect.top - boardRect.top + cardRect.height / 2}px`;
+  const targetLeft = Number(card.dataset.motionTargetLeft);
+  const targetTop = Number(card.dataset.motionTargetTop);
+  const cardLeft = Number.isFinite(targetLeft) ? targetLeft : cardRect.left;
+  const cardTop = Number.isFinite(targetTop) ? targetTop : cardRect.top;
+  const requestedLeft = cardLeft - boardRect.left + cardRect.width / 2;
+  label.style.top = `${cardTop - boardRect.top + cardRect.height / 2}px`;
   board.append(label);
   const halfLabelWidth = label.offsetWidth / 2;
   const labelMargin = Math.max(64, halfLabelWidth + 5);
@@ -314,6 +325,38 @@ function animateStockCards(origin, cards) {
   if (!origin || !cards.length) return;
   animatedCardIds = new Set(cards.map((card) => card.id));
   cardFlight = { ...origin, ids: animatedCardIds, order: new Map(cards.map((card, index) => [card.id, index])) };
+}
+
+function captureCardOrigins(cardIds) {
+  const origins = new Map();
+  const wanted = new Set(cardIds);
+  board.querySelectorAll('.playing-card[data-card-id]').forEach((card) => {
+    if (!wanted.has(card.dataset.cardId)) return;
+    const rect = card.getBoundingClientRect();
+    origins.set(card.dataset.cardId, { left: rect.left, top: rect.top });
+  });
+  return origins;
+}
+
+function startCardMoveFlight(origins) {
+  if (!origins?.size) return;
+  for (const [cardId, origin] of origins) {
+    const card = [...board.querySelectorAll('.playing-card[data-card-id]')].find((element) => element.dataset.cardId === cardId);
+    if (!card) continue;
+    const target = card.getBoundingClientRect();
+    card.style.setProperty('--draw-x', `${origin.left - target.left}px`);
+    card.style.setProperty('--draw-y', `${origin.top - target.top}px`);
+    card.dataset.motionTargetLeft = String(target.left);
+    card.dataset.motionTargetTop = String(target.top);
+    card.classList.add('card-tableau-move');
+    card.classList.remove('card-flight-pending');
+  }
+}
+
+function markCardMove(movingIds, origins, revealedCardId = null) {
+  animatedCardIds = new Set(movingIds);
+  revealedCardIds = new Set(revealedCardId ? [revealedCardId] : []);
+  cardMoveIds = new Set(origins?.keys() ?? []);
 }
 
 function announce(message, duration = 2200) {
@@ -643,6 +686,8 @@ function handleMagic() {
   }
   const movingIds = game.sequenceAt(hint.source).map((card) => card.id);
   const exposed = hint.source.zone === 'tableau' ? game.state.tableau[hint.source.pile]?.[hint.source.index - 1] : null;
+  const revealedCardId = exposed && !exposed.faceUp ? exposed.id : null;
+  const origins = captureCardOrigins(movingIds);
   game.select(hint.source);
   if (!game.moveTo(hint.target)) {
     game.state.hint = null;
@@ -652,9 +697,10 @@ function handleMagic() {
   }
   game.state.magicCharges -= 1;
   game.save();
-  animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
+  markCardMove(movingIds, origins, revealedCardId);
   audio.play(game.state.won ? 'win' : hint.target.zone === 'foundation' ? 'foundation' : 'move');
   render();
+  startCardMoveFlight(origins);
   showComboFeedback(movingIds[0]);
   if (game.state.won) completeWin();
   announce('Magic move played');
@@ -671,12 +717,15 @@ function commitMove(target) {
   const source = game.state.selected;
   const movingIds = game.sequenceAt(source).map((card) => card.id);
   const exposed = source?.zone === 'tableau' ? game.state.tableau[source.pile]?.[source.index - 1] : null;
+  const revealedCardId = exposed && !exposed.faceUp ? exposed.id : null;
+  const origins = drag?.moved ? new Map() : captureCardOrigins(movingIds);
   const moved = game.moveTo({ zone: target.dataset.dropZone, pile: Number(target.dataset.pile) });
   if (moved) {
-    animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
+    markCardMove(movingIds, origins, revealedCardId);
     const foundationMove = target.dataset.dropZone === 'foundation';
     audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : 'move');
     render();
+    startCardMoveFlight(origins);
     showComboFeedback(movingIds[0]);
     if (game.state.won) completeWin();
   } else {
@@ -748,15 +797,19 @@ board.addEventListener('pointerup', (event) => {
     const now = Date.now();
     const repeated = previousTap && previousTap.id === current.card.dataset.cardId && now - previousTap.time < 420;
     let result;
-    const movingIds = game.state.selected ? game.sequenceAt(game.state.selected).map((card) => card.id) : [];
-    const exposed = game.state.selected?.zone === 'tableau' ? game.state.tableau[game.state.selected.pile]?.[game.state.selected.index - 1] : null;
+    const moveSource = repeated ? current.source : game.state.selected;
+    const movingIds = moveSource ? game.sequenceAt(moveSource).map((card) => card.id) : [];
+    const exposed = moveSource?.zone === 'tableau' ? game.state.tableau[moveSource.pile]?.[moveSource.index - 1] : null;
+    const revealedCardId = exposed && !exposed.faceUp ? exposed.id : null;
+    const origins = captureCardOrigins(movingIds);
     if (repeated && game.autoMove(current.source)) result = { action: 'foundation' };
     else result = game.tapCard(current.source);
-    if (result.action === 'move' || result.action === 'foundation') animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
+    if (result.action === 'move' || result.action === 'foundation') markCardMove(movingIds, origins, revealedCardId);
     previousTap = { id: current.card.dataset.cardId, time: now };
     if (result.action === 'move' || result.action === 'foundation') audio.play(game.state.won ? 'win' : result.action === 'foundation' ? 'foundation' : 'move');
     else if (result.action === 'select') audio.play('tap');
     render();
+    if (result.action === 'move' || result.action === 'foundation') startCardMoveFlight(origins);
     if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId);
     if (game.state.won) completeWin();
   }
@@ -779,12 +832,16 @@ board.addEventListener('click', (event) => {
   const target = event.target.closest('[data-drop-zone]');
   if (!target) return;
   if (target.dataset.dropZone === 'tableau' && !target.querySelector('.playing-card') && game.state.selected) {
-    const movingIds = game.sequenceAt(game.state.selected).map((card) => card.id);
-    const exposed = game.state.selected.zone === 'tableau' ? game.state.tableau[game.state.selected.pile]?.[game.state.selected.index - 1] : null;
+    const source = game.state.selected;
+    const movingIds = game.sequenceAt(source).map((card) => card.id);
+    const exposed = source.zone === 'tableau' ? game.state.tableau[source.pile]?.[source.index - 1] : null;
+    const revealedCardId = exposed && !exposed.faceUp ? exposed.id : null;
+    const origins = captureCardOrigins(movingIds);
     if (game.tapEmptyTableau(Number(target.dataset.pile))) {
-      animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
+      markCardMove(movingIds, origins, revealedCardId);
       audio.play('move');
       render();
+      startCardMoveFlight(origins);
       showComboFeedback(movingIds[0]);
     } else audio.play('invalid');
   } else if (target.dataset.dropZone === 'foundation' && game.state.selected) {

@@ -228,10 +228,32 @@ test('source opening replay matches the 20-second score, move count, and exposed
   expect(await page.evaluate(() => window.audioCues)).not.toContain('flip');
   await expect(page.locator('.pile-column[data-pile="5"] .card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
 
+  await page.evaluate(() => {
+    window.sourceMoveAnimations = [];
+    document.querySelector('#tableau').addEventListener('animationstart', (event) => {
+      const card = event.target.closest('.playing-card');
+      if (card?.classList.contains('card-tableau-move')) {
+        window.sourceMoveAnimations.push({ id: card.dataset.cardId, name: event.animationName, duration: getComputedStyle(card).animationDuration, offset: card.style.getPropertyValue('--draw-x') });
+      }
+      if (event.animationName === 'deal-face-reveal' && event.target.closest('.card-reveal')) {
+        window.sourceMoveAnimations.push({ id: event.target.closest('.card-reveal').dataset.cardId, name: event.animationName, duration: getComputedStyle(event.target).animationDuration });
+      }
+    }, true);
+  });
   await move(1, 1, 3, 3);
   await expect(page.locator('#score-value')).toHaveText('20');
   await expect(page.locator('#moves-value')).toHaveText('2');
   await expect(page.locator('.pile-column[data-pile="1"] .card-face-art')).toHaveAttribute('src', /6-of-clubs-reference\.png$/);
+  await expect.poll(() => page.evaluate(() => window.sourceMoveAnimations)).toEqual(expect.arrayContaining([
+    expect.objectContaining({ id: '♠-12', name: 'card-land', duration: '0.05s' }),
+    expect.objectContaining({ id: '♣-6', name: 'deal-face-reveal', duration: '0.05s' }),
+  ]));
+  const tableauFlight = await page.locator('.pile-column[data-pile="3"] .playing-card[data-card-id="♠-12"]').evaluate((card) => ({
+    hasFlightClass: card.classList.contains('card-tableau-move'),
+    x: Number.parseFloat(card.style.getPropertyValue('--draw-x')),
+  }));
+  expect(tableauFlight.hasFlightClass).toBe(true);
+  expect(Math.abs(tableauFlight.x)).toBeGreaterThan(40);
 
   await move(4, 4, 3, 4);
   await expect(page.locator('#score-value')).toHaveText('30');
