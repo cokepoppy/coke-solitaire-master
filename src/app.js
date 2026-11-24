@@ -81,6 +81,41 @@ function formatTime(seconds) {
   return `${String(minutes).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
 }
 
+const timerGlyphLayout = [
+  { left: 0, width: 21 },
+  { left: 24, width: 21 },
+  { left: 49, width: 4 },
+  { left: 57, width: 21 },
+  { left: 82, width: 21 },
+];
+
+function renderTimeDisplay(seconds) {
+  const display = formatTime(seconds);
+  const timer = $('#time-value');
+  timer.setAttribute('aria-label', display);
+  timer.replaceChildren();
+  if (display.length !== 5) {
+    timer.classList.add('timer-text-fallback');
+    timer.textContent = display;
+    return;
+  }
+  timer.classList.remove('timer-text-fallback');
+  for (const [index, character] of [...display].entries()) {
+    const glyph = document.createElement('img');
+    glyph.className = 'timer-glyph';
+    glyph.src = `/assets/ui/${character === ':' ? 'timer-colon' : `timer-digit-${character}`}.png`;
+    glyph.alt = '';
+    glyph.setAttribute('aria-hidden', 'true');
+    glyph.style.left = `${(timerGlyphLayout[index].left / 103) * 100}%`;
+    glyph.style.width = `${(timerGlyphLayout[index].width / 103) * 100}%`;
+    timer.append(glyph);
+  }
+  const accessibleText = document.createElement('span');
+  accessibleText.className = 'visually-hidden';
+  accessibleText.textContent = display;
+  timer.append(accessibleText);
+}
+
 function sourceMatches(source, selection) {
   return Boolean(source && selection && source.zone === selection.zone && source.pile === selection.pile && source.index >= selection.index);
 }
@@ -185,7 +220,7 @@ function renderTableau() {
 
 function updateChrome() {
   $('#score-value').textContent = String(game.state.score);
-  $('#time-value').textContent = formatTime(game.state.seconds);
+  renderTimeDisplay(game.state.seconds);
   $('#moves-value').textContent = String(game.state.moves);
   $('#undo-button').disabled = game.state.history.length === 0;
   const magicBadge = $('#magic-badge');
@@ -814,7 +849,7 @@ $('#stats-button')?.addEventListener('click', showStats);
 setInterval(() => {
   if (document.hidden) return;
   game.tick();
-  $('#time-value').textContent = formatTime(game.state.seconds);
+  renderTimeDisplay(game.state.seconds);
   if (game.state.seconds % 10 === 0) game.save();
 }, 1000);
 

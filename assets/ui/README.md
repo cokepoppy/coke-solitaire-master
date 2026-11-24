@@ -1,4 +1,4 @@
-# Source action icons
+# Source UI sprites
 
 These four transparent PNG glyphs are extracted from the game-action row in the audited third-party Solitaire Master gameplay recording: [source video](https://www.youtube.com/watch?v=gLd0HXtDt5I), 884×1920 at 60 fps. `action-play-plus.png`, `action-magic.png`, and `action-hint.png` use source PTS 153600 (10s); `action-undo.png` uses PTS 307200 (20s), where Undo is enabled and its white icon is unobscured. The crops retain the original glyph pixels and use an alpha mask to remove the felt around them. CSS supplies the circle outline/fill, labels, and live Magic badge.
 
@@ -8,4 +8,13 @@ The source-frame crops are part of the local ignored review derivatives. Regener
 
 `menu-source.png`, `stat-crown.png`, and `stat-moves.png` come from PTS 307200 (20s), where the values are Score 30 and Moves 3. The menu crop includes its 72×74 circle; the crown and mint move arrows are isolated into transparent PNGs from source rectangles `(119,317,52,40)` and `(653,316,34,42)`. The default felt menu uses its source crop, while alternate themes retain the vector menu. Score and move values remain live text. Regenerate these with `python3 tools/extract_statusbar_source_art.py`.
 
-`timer-frame-source.png` is a 286×100 crop from PTS 153600 (10s), source rectangle `(340,290,626,390)`. The changing `00:00` text was removed row by row from the flat center panel, and the felt was alpha-keyed so the browser can draw the live timer above the original frame. Regenerate it with `python3 tools/extract_timer_frame_source_art.py`; the asset is included in the service-worker shell cache. Alternate backgrounds continue to use the vector frame.
+`timer-frame-source.png` is a 286×100 crop from PTS 153600 (10s), source rectangle `(340,290,626,390)`. Its `00:00` digits are alpha-keyed as separate glyphs in `timer-digit-0.png` through `timer-digit-9.png` and `timer-colon.png`; the sprites preserve the source font's 21×31 px numeral cells, exact colon shape, and spacing. The selected source frames show `0` at 10s, `1` at 30s, `2` at 15s, `3` and `6` at 100s, `4` at 380s, `5` at 370s, `7` at 20s, `8` at 525s, and `9` at 695s. All assets are in the service-worker shell cache and render with a text equivalent for accessibility. Alternate backgrounds retain the vector frame but use the same captured digits.
+
+Rebuild the timer sprites from the source recording, preserving the requested and decoded frame times:
+
+```sh
+swift tools/extract_timer_frames.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 10 1000 5 /tmp/solitaire-timer-frames
+python3 tools/extract_timer_glyphs.py /tmp/solitaire-timer-frames
+```
+
+`extract_timer_frames.swift` uses AVFoundation with zero time tolerance and crops the 286×100 timer panel. `extract_timer_glyphs.py` keys the numeral pixels against the committed blank frame. The recording is third-party gameplay footage; the captures are documented visual references, not official asset files.

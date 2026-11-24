@@ -46,3 +46,5 @@ Images and downloaded videos are ignored by Git because they are review derivati
 3. Align audio analysis to the same media timestamps. Record the original audio stream details and source hash. A mixed promo soundtrack can locate audible events but cannot establish which sound belongs to a card action. Compare spectrum and waveform around isolated deal, draw, move, flip, undo, recycle, and win actions in an unedited play recording.
 4. For browser sound replication, separately verify AudioContext resume, scheduled cue state, captured output, and playback through a phone speaker. A running context does not prove that sound reaches the device.
 5. Keep observed facts, rule citations, and implementation guesses separate. Record any uncertainty in the session notes before tuning the game.
+
+For the dynamic timer's changing text, `tools/extract_timer_frames.swift` uses AVFoundation's zero-tolerance frame generator and records both the requested and actual media time in each output filename. The timer digit rebuild command and selected source times are in [the UI sprite notes](../assets/ui/README.md).
