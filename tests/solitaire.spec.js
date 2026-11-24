@@ -189,6 +189,7 @@ test('source opening replay matches the 20-second score, move count, and exposed
   await page.reload();
   await page.waitForTimeout(1450);
   await expect(page.locator('#tableau .card-back-art').first()).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
+  await expect(page.locator('.waste-slot .empty-slot-mark')).toHaveCSS('display', 'none');
   const initialStackSpacing = await page.locator('.pile-column[data-pile="6"] .card-back').evaluateAll((cards) => cards.slice(1).map((card, index) => card.getBoundingClientRect().top - cards[index].getBoundingClientRect().top));
   expect(initialStackSpacing).toHaveLength(5);
   for (const spacing of initialStackSpacing) expect(spacing).toBeCloseTo(12.33, 1);
@@ -480,6 +481,7 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  await expect(page.locator('.waste-slot .empty-slot-mark')).toHaveCSS('display', 'block');
   await expect(page.locator('.timer-frame-source')).toHaveCSS('display', 'none');
   await expect(page.locator('.timer-frame-vector')).toBeVisible();
   expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage)).toContain('/assets/themes/mountain-valley.jpg');
