@@ -56,6 +56,8 @@ export class SolitaireGame {
       tableau,
       moves: 0,
       score: 0,
+      comboCount: 0,
+      comboLastMoveAt: 0,
       seconds: 0,
       history: [],
       selected: null,
@@ -96,6 +98,8 @@ export class SolitaireGame {
       }
       this.state.magicCharges ??= 1;
       this.state.challenge ??= null;
+      this.state.comboCount = 0;
+      this.state.comboLastMoveAt = 0;
       if (this.state.theme === 'woodland') this.state.theme = 'mountain';
       if (!['felt', 'mountain', 'dusk', 'lagoon', 'emerald', 'midnight', 'plum', 'forest', 'violet'].includes(this.state.theme)) this.state.theme = 'felt';
       return true;
@@ -149,6 +153,8 @@ export class SolitaireGame {
     this.state.hint = null;
     if (this.state.stock.length) {
       this.snapshot();
+      this.state.comboCount = 0;
+      this.state.comboLastMoveAt = 0;
       const amount = Math.min(this.state.drawCount, this.state.stock.length);
       for (let i = 0; i < amount; i += 1) {
         const card = this.state.stock.pop();
@@ -161,6 +167,8 @@ export class SolitaireGame {
     }
     if (this.state.waste.length) {
       this.snapshot();
+      this.state.comboCount = 0;
+      this.state.comboLastMoveAt = 0;
       this.state.stock = [...this.state.waste];
       this.state.stock.forEach((card) => { card.faceUp = false; });
       this.state.waste = [];
@@ -248,6 +256,11 @@ export class SolitaireGame {
       else this.state.score += 5;
     }
     this.state.moves += 1;
+    const now = Date.now();
+    this.state.comboCount = this.state.comboLastMoveAt && now - this.state.comboLastMoveAt <= 5500
+      ? this.state.comboCount + 1
+      : 0;
+    this.state.comboLastMoveAt = now;
     this.state.selected = null;
     this.state.hint = null;
     this.state.won = this.state.foundations.reduce((sum, pile) => sum + pile.length, 0) === 52;

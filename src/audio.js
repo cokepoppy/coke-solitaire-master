@@ -14,6 +14,8 @@ export class GameAudio {
     this.noiseBuffer = null;
     this.referenceMoveBuffer = null;
     this.referenceMoveLoadPromise = null;
+    this.referenceAmazingBuffer = null;
+    this.referenceAmazingLoadPromise = null;
   }
 
   getContext() {
@@ -32,6 +34,7 @@ export class GameAudio {
       this.master.connect(this.context.destination);
       this.noiseBuffer = this.createNoiseBuffer(this.context);
       this.loadReferenceMove();
+      this.loadReferenceAmazing();
     }
     return this.context;
   }
@@ -65,6 +68,24 @@ export class GameAudio {
         .catch(() => null);
     }
     return this.referenceMoveLoadPromise;
+  }
+
+  loadReferenceAmazing() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceAmazingLoadPromise) {
+      this.referenceAmazingLoadPromise = fetch('/assets/audio/combo-amazing-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Amazing sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceAmazingBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceAmazingLoadPromise;
   }
 
   unlock() {
@@ -103,6 +124,7 @@ export class GameAudio {
       return;
     }
     if (cue === 'move') await this.referenceMoveLoadPromise;
+    if (cue === 'amazing') await this.referenceAmazingLoadPromise;
     this.playCue(cue);
   }
 
@@ -169,6 +191,12 @@ export class GameAudio {
       else {
         this.playNoise(2500, 420, 0.105, 0.12, now, 0.9);
         this.playTone(340, 240, 0.09, 0.04, 'triangle', now);
+      }
+    } else if (cue === 'amazing') {
+      if (this.referenceAmazingBuffer) this.playSample(this.referenceAmazingBuffer, now, 0.38);
+      else {
+        [587.33, 880, 1174.66].forEach((frequency, index) => this.playTone(frequency, frequency * 1.01, 0.28, 0.045, 'sine', now + index * 0.09));
+        this.playNoise(4600, 2100, 0.18, 0.035, now + 0.12, 0.55);
       }
     } else if (cue === 'flip') {
       this.playNoise(6200, 1250, 0.09, 0.14, now, 0.72);
