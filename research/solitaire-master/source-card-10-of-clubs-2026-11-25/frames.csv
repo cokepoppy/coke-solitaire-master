@@ -1,0 +1,2 @@
+frame_index,requested_seconds,actual_seconds,source_pts,source_timescale,full_frame_png_sha256,card,crop_x,crop_y,crop_width,crop_height,crop_png_sha256,filename
+0,120.000000000,120.000000000,1843200,15360,e3aa520b8af9a597225a85ded453706496863ac66a610b3c4e3c6f5855111057,10-of-clubs,633,916,118,177,c8e2b1f9e474c2e47ff9de7cb2cc84b01f963b829e83b769a69d2dd0f0a6e99c,10-of-clubs-reference.png
