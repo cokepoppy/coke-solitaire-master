@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v9';
+const CACHE = 'solitaire-master-v10';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));
@@ -31,6 +31,15 @@ const referencePipCards = [
   '/assets/cards/8-of-clubs-reference.png',
   '/assets/cards/10-of-hearts-reference.png',
   '/assets/cards/8-of-hearts-reference.png',
+  '/assets/cards/ace-of-hearts-reference.png',
+  '/assets/cards/7-of-clubs-reference.png',
+  '/assets/cards/3-of-diamonds-reference.png',
+  '/assets/cards/4-of-spades-reference.png',
+  '/assets/cards/8-of-spades-reference.png',
+  '/assets/cards/3-of-hearts-reference.png',
+  '/assets/cards/6-of-clubs-reference.png',
+  '/assets/cards/2-of-clubs-reference.png',
+  '/assets/cards/10-of-clubs-reference.png',
 ];
 const SHELL = ['/', '/index.html', '/src/styles.css', '/src/game.js', '/src/audio.js', '/src/app.js', '/manifest.webmanifest', '/assets/icon.svg', '/assets/themes/mountain-valley.jpg', '/assets/cards/back-red.svg', '/assets/cards/back-blue.svg', '/assets/cards/back-solitaire-master.svg', ...referenceCourtCards, ...referencePipCards, ...cardFaces];
 
