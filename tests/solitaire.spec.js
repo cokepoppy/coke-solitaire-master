@@ -47,7 +47,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   });
   expect(tableauLayout.foundation).toBeLessThan(tableauLayout.waste);
   expect(tableauLayout.waste).toBeLessThan(tableauLayout.stock);
-  expect(tableauLayout.newLabel).toBe('New Game');
+  expect(tableauLayout.newLabel).toBe('Play');
   const deckIntegrity = await page.evaluate(() => {
     const state = window.solitaireGame.state;
     const cards = [...state.stock, ...state.waste, ...state.foundations.flat(), ...state.tableau.flat()];
