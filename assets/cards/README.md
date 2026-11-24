@@ -14,7 +14,7 @@ The following 118×177 PNGs are crops of matching cards from the gameplay video 
 | `queen-of-spades-reference.png` | 153600 (10s) | (133, 679) |
 | `king-of-diamonds-reference.png` | 153600 (10s) | (383, 719) |
 | `jack-of-diamonds-reference.png` | 153600 (10s) | (508, 741) |
-| `queen-of-clubs-reference.png` | 460800 (30s) | (633, 744) |
+| `queen-of-clubs-reference.png` | 307200 (20s) | (633, 744) |
 | `queen-of-diamonds-reference.png` | 1152000 (75s) | (133, 734) |
 | `queen-of-hearts-reference.png` | 4608000 (300s) | (8, 735) |
 | `king-of-clubs-reference.png` | 14407680 (938s) | (622, 428) |
@@ -24,11 +24,16 @@ The following 118×177 PNGs are crops of matching cards from the gameplay video 
 | `jack-of-hearts-reference.png` | 1152000 (75s) | (633, 829) |
 | `jack-of-spades-reference.png` | 1612800 (105s) | (622, 428) |
 
-All twelve Jack, Queen, and King cards now use complete source-frame crops. Fifteen number-card faces also have 118×177 crops from the early default-deck section of the gameplay recording:
+All twelve Jack, Queen, and King cards use complete source-frame crops; the same table includes the 5♦. Nineteen further number-card faces have 118×177 crops from the gameplay recording:
 
 | Card image | PTS (time) |
 | --- | ---: |
 | `6-of-hearts-reference.png` | 353280 (23s) |
+| `6-of-clubs-reference.png` | 307200 (20s) |
+| `2-of-clubs-reference.png` | 307200 (20s) |
+| `4-of-clubs-reference.png` | 307200 (20s) |
+| `3-of-clubs-reference.png` | 307200 (20s) |
+| `9-of-diamonds-reference.png` | 307200 (20s) |
 | `9-of-spades-reference.png` | 814080 (53s) |
 | `2-of-diamonds-reference.png` | 844800 (55s) |
 | `ace-of-spades-reference.png` | 921600 (60s) |
@@ -45,18 +50,20 @@ All twelve Jack, Queen, and King cards now use complete source-frame crops. Fift
 
 The 8♥ crop uses source rectangle `(648, 428, 118, 177)` from the 95-second gameplay frame; the full card face is visible in that source frame.
 
+The 6♣, 2♣, 4♣, 3♣, Q♣, and 9♦ use complete crops from the 20-second opening frame at `(133,646)`, `(258,695)`, `(8,732)`, `(508,720)`, `(633,744)`, and `(758,794)`, respectively; each crop is 118×177 pixels. The 6♣ and 2♣ replace App Store crops whose blue-tinted clubs did not match the black artwork. These six visible faces now come from the exact frame used by the opening-board replay.
+
+On macOS, `sips -c 177 118 --cropOffset Y X source-frame.png --out card-reference.png` reproduces a 118×177 crop without resampling; replace `Y` and `X` with the documented source origin.
+
 The matching reference PNG is selected at runtime and included in the offline shell cache. The remaining number-card faces are listed with their sources below.
 
-Four additional number-card faces are 118×177 source-frame crops from the full gameplay recording:
+Two additional number-card faces are 118×177 source-frame crops from the full gameplay recording:
 
 | Card image | PTS (time) | Crop origin (x, y) |
 | --- | ---: | ---: |
 | `7-of-diamonds-reference.png` | 3732480 (243s) | (622, 428) |
-| `9-of-diamonds-reference.png` | 6082560 (396s) | (622, 428) |
 | `2-of-hearts-reference.png` | 9231360 (601s) | (622, 428) |
-| `4-of-clubs-reference.png` | 11543040 (751.5s) | (622, 428) |
 
-Ten more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
+Eight more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
 
 | Card image | Listing screenshot | Crop origin (x, y) |
 | --- | ---: | ---: |
@@ -66,8 +73,6 @@ Ten more number-card faces are crops from the official [App Store listing](https
 | `4-of-spades-reference.png` | 2 | (201, 1015) |
 | `8-of-spades-reference.png` | 2 | (443, 1061) |
 | `3-of-hearts-reference.png` | 3 | (563, 1084) |
-| `6-of-clubs-reference.png` | 3 | (927, 1130) |
-| `2-of-clubs-reference.png` | 3 | (201, 799) |
 | `10-of-clubs-reference.png` | 3 | (806, 799) |
 | `3-of-spades-reference.png` | 2 | (807, 1129) |
 
@@ -80,11 +85,10 @@ Two more number-card faces are crops from the official [Google Play listing](htt
 | `ace-of-diamonds-reference.png` | 1 | (274, 152) | 116×172 |
 | `10-of-diamonds-reference.png` | 1 | (943, 480) | 114×170 |
 
-Eight further number-card faces are complete crops from full gameplay frames. Each 118×177 crop was checked against the full 884×1920 source frame to ensure that another card, stock counter, selection glow, or UI overlay does not cover the face:
+Seven further number-card faces are complete crops from full gameplay frames. Each 118×177 crop was checked against the full 884×1920 source frame to ensure that another card, stock counter, selection glow, or UI overlay does not cover the face:
 
 | Card image | PTS (time) | Crop origin (x, y) |
 | --- | ---: | ---: |
-| `3-of-clubs-reference.png` | 6144000 (400s) | (758, 1040) |
 | `5-of-clubs-reference.png` | 8294400 (540s) | (508, 907) |
 | `8-of-diamonds-reference.png` | 9830400 (640s) | (8, 1077) |
 | `10-of-spades-reference.png` | 11059200 (720s) | (133, 907) |
