@@ -121,7 +121,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(pageErrors).toEqual([]);
 });
 
-test('reference court-card illustrations render on matching cards', async ({ page }) => {
+test('reference card illustrations render on matching cards', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {
     const suits = ['♠', '♥', '♦', '♣'];
@@ -137,9 +137,9 @@ test('reference court-card illustrations render on matching cards', async ({ pag
       [2, '♠', 12],
       [5, '♠', 13],
       [9, '♦', 13],
-      [14, '♦', 11],
-      [20, '♥', 11],
-      [27, '♣', 13],
+      [14, '♦', 2],
+      [20, '♥', 6],
+      [27, '♠', 9],
     ];
     const used = new Set();
     for (const [position, suit, rank] of referenceFaces) {
@@ -157,13 +157,13 @@ test('reference court-card illustrations render on matching cards', async ({ pag
   await page.reload();
   await page.waitForTimeout(1600);
   const referenceArt = [
-    'queen-of-spades-reference.png',
-    'king-of-diamonds-reference.png',
-    'jack-of-diamonds-reference.png',
     'queen-of-clubs-reference.png',
+    'queen-of-spades-reference.png',
     'king-of-spades-reference.png',
-    'jack-of-hearts-reference.png',
-    'king-of-clubs-reference.png',
+    'king-of-diamonds-reference.png',
+    '2-of-diamonds-reference.png',
+    '6-of-hearts-reference.png',
+    '9-of-spades-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
@@ -448,13 +448,17 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
       'king-of-clubs', 'king-of-hearts', 'king-of-spades',
       'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
+      '6-of-hearts', '9-of-spades', '2-of-diamonds', 'ace-of-spades',
+      '6-of-diamonds', '4-of-hearts', 'ace-of-clubs', '5-of-hearts',
+      '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
+      '10-of-hearts', '8-of-hearts',
     ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}-reference.png`);
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(12).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(26).fill(true));
   await context.setOffline(false);
 });
 
