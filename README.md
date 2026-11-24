@@ -1,6 +1,6 @@
 # Solitaire Master Mobile
 
-An installable, mobile-first web adaptation of Hungry Studio's classic Klondike solitaire. It supports tap and drag moves, Draw 1/Draw 3, undo, hints, daily deals, local statistics, card backs, backgrounds, sound effects, and offline play.
+An installable, mobile-first web adaptation of Hungry Studio's classic Klondike solitaire. It supports tap and drag moves, Draw 1/Draw 3, undo, hints, daily deals, local statistics, a three-tab theme gallery for table backgrounds/card backs/card faces, sound effects, and offline play.
 
 ## Run it
 

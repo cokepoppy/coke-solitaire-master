@@ -37,7 +37,11 @@ let winShown = false;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
-const CARD_BACK_FILES = { ruby: 'back-solitaire-master.svg', blue: 'back-blue.svg' };
+const CARD_BACK_FILES = {
+  ruby: 'back-solitaire-master.svg', blue: 'back-blue.svg', teal: 'back-teal-reference.png',
+  lattice: 'back-lattice-reference.png', spade: 'back-spade-reference.png', coral: 'back-coral-reference.png',
+  floral: 'back-floral-reference.png', amber: 'back-amber-reference.png',
+};
 const REFERENCE_CARD_ART = new Set([
   'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
   'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
@@ -109,7 +113,8 @@ function renderCard(card, source, options = {}) {
   const color = ['♥', '♦'].includes(card.suit) ? 'red' : 'black';
   const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
   const asset = REFERENCE_CARD_ART.has(artName) ? `${artName}-reference.png` : `${artName}.svg`;
-  return `<button class="${classes.join(' ')} ${color}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-face-art" src="/assets/cards/${asset}" alt="" draggable="false"></button>`;
+  const faceAsset = game.state.cardFaceStyle === 'classic' ? `${artName}.svg` : asset;
+  return `<button class="${classes.join(' ')} ${color}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-face-art" src="/assets/cards/${faceAsset}" alt="" draggable="false"></button>`;
 }
 
 function renderTopRow() {
@@ -188,6 +193,7 @@ function updateChrome() {
   magicBadge.setAttribute('aria-label', `${game.state.magicCharges} magic moves available`);
   document.body.dataset.theme = game.state.theme;
   document.body.dataset.cardBack = game.state.cardBack ?? 'ruby';
+  document.body.dataset.cardFaceStyle = game.state.cardFaceStyle ?? 'master';
   document.body.classList.toggle('left-hand', game.state.leftHand);
 }
 
@@ -232,6 +238,9 @@ function writeProfile(profile) {
 }
 
 function setModal(title, kicker, html) {
+  $('#modal-backdrop').classList.remove('theme-gallery-backdrop');
+  $('#modal-card').classList.remove('theme-gallery');
+  $('#modal-title').classList.remove('theme-gallery-title');
   modalTitle.textContent = title;
   modalKicker.textContent = kicker;
   modalContent.innerHTML = html;
@@ -267,8 +276,39 @@ function showSettings() {
       <button type="button" class="back-choice blue-diamond${cardBack === 'blue' ? ' chosen' : ''}" data-setting="cardBack" data-value="blue" aria-label="Blue diamond card back" aria-pressed="${cardBack === 'blue'}"><img src="/assets/cards/back-blue.svg" alt=""></button>
       <button type="button" class="back-choice ruby${cardBack === 'ruby' ? ' chosen' : ''}" data-setting="cardBack" data-value="ruby" aria-label="Ruby card back" aria-pressed="${cardBack === 'ruby'}"><img src="/assets/cards/back-solitaire-master.svg" alt=""></button>
     </div></div>
+    <button type="button" class="secondary-action theme-gallery-launch" data-theme-gallery>Open Themes</button>
     <div class="modal-footnote">Your game and preferences stay on this device.</div>
   `);
+}
+
+const THEME_BACKS = [
+  ['teal', 'Teal diamonds'], ['lattice', 'Blue lattice'], ['blue', 'Blue spade'],
+  ['spade', 'Blue spade'], ['ruby', 'Ruby ornament'], ['coral', 'Coral geometric'],
+  ['floral', 'Red floral'], ['amber', 'Amber diamonds'],
+];
+const TABLE_THEMES = [
+  ['lagoon', 'Lagoon', 'linear-gradient(145deg,#07827e,#075d60)'],
+  ['emerald', 'Emerald', 'radial-gradient(ellipse at 50% 30%,#119458,#07552f)'],
+  ['mountain', 'Mountain', 'url(/assets/themes/mountain-valley.jpg) center / cover'],
+  ['felt', 'Classic green', 'radial-gradient(ellipse at 50% 36%,#15824b,#066032 76%)'],
+  ['dusk', 'Dusk', 'radial-gradient(ellipse at 50% 38%,#55517a,#162c3a 78%)'],
+  ['midnight', 'Midnight teal', 'radial-gradient(ellipse at 50% 38%,#205562,#102f3c)'],
+  ['plum', 'Plum', 'radial-gradient(ellipse at 50% 38%,#67465b,#302031)'],
+  ['forest', 'Forest', 'radial-gradient(ellipse at 50% 38%,#14572c,#062f19)'],
+  ['violet', 'Violet', 'radial-gradient(ellipse at 50% 38%,#514163,#251c36)'],
+];
+
+function showThemeGallery(tab = 'background') {
+  const activeTab = ['background', 'back', 'face'].includes(tab) ? tab : 'background';
+  const { theme, cardBack = 'ruby', cardFaceStyle = 'master' } = game.state;
+  const backgroundTiles = TABLE_THEMES.map(([value, label, preview]) => `<button class="gallery-tile background-tile${theme === value ? ' chosen' : ''}" type="button" data-setting="theme" data-value="${value}" aria-label="${label} background" aria-pressed="${theme === value}"><span style="background:${preview}"></span>${theme === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
+  const backTiles = THEME_BACKS.map(([value, label]) => `<button class="gallery-tile back-tile${cardBack === value ? ' chosen' : ''}" type="button" data-setting="cardBack" data-value="${value}" aria-label="${label}" aria-pressed="${cardBack === value}"><img src="/assets/cards/${CARD_BACK_FILES[value]}" alt="">${cardBack === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
+  const faceTiles = [['master', 'Solitaire Master', '5-of-hearts-reference.png'], ['classic', 'Classic', '5-of-hearts.svg']].map(([value, label, preview]) => `<button class="gallery-tile face-tile${cardFaceStyle === value ? ' chosen' : ''}" type="button" data-setting="cardFaceStyle" data-value="${value}" aria-label="${label} card faces" aria-pressed="${cardFaceStyle === value}"><img src="/assets/cards/${preview}" alt=""><span>${label}</span>${cardFaceStyle === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
+  const tiles = activeTab === 'background' ? backgroundTiles : activeTab === 'back' ? backTiles : faceTiles;
+  setModal('Themes', '', `<nav class="gallery-tabs" aria-label="Theme categories"><button type="button" data-theme-tab="background" aria-label="Backgrounds" class="${activeTab === 'background' ? 'active' : ''}"><span aria-hidden="true">▧</span></button><button type="button" data-theme-tab="back" aria-label="Card backs" class="${activeTab === 'back' ? 'active' : ''}"><span class="tab-card-back" aria-hidden="true">◆</span></button><button type="button" data-theme-tab="face" aria-label="Card faces" class="${activeTab === 'face' ? 'active' : ''}"><span aria-hidden="true">♥</span></button></nav><div class="gallery-grid ${activeTab === 'background' ? 'background-grid' : activeTab === 'face' ? 'face-grid' : 'back-grid'}">${tiles}</div>`);
+  $('#modal-backdrop').classList.add('theme-gallery-backdrop');
+  $('#modal-card').classList.add('theme-gallery');
+  $('#modal-title').classList.add('theme-gallery-title');
 }
 
 function showNewGame() {
@@ -661,6 +701,15 @@ $('#magic-button').addEventListener('click', handleMagic);
 $('#modal-close').addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', (event) => { if (event.target === modalBackdrop) closeModal(); });
 modalContent.addEventListener('click', (event) => {
+  const themeTab = event.target.closest('[data-theme-tab]')?.dataset.themeTab;
+  if (themeTab) {
+    showThemeGallery(themeTab);
+    return;
+  }
+  if (event.target.closest('[data-theme-gallery]')) {
+    showThemeGallery('background');
+    return;
+  }
   const action = event.target.closest('[data-modal-action]')?.dataset.modalAction;
   if (action === 'close') closeModal();
   if (action === 'new') doNewGame(false);
@@ -690,6 +739,9 @@ modalContent.addEventListener('click', (event) => {
   }
   const control = event.target.closest('[data-setting]');
   if (!control) return;
+  const galleryTab = $('#modal-card').classList.contains('theme-gallery')
+    ? (modalContent.querySelector('[data-theme-tab].active')?.dataset.themeTab ?? 'background')
+    : null;
   const setting = control.dataset.setting;
   let value = control.dataset.value;
   if (setting === 'drawCount') value = Number(value);
@@ -698,7 +750,10 @@ modalContent.addEventListener('click', (event) => {
   if (setting === 'sound') audio.setSound(value);
   if (setting === 'music') audio.setMusic(value);
   render();
-  if (!modalBackdrop.classList.contains('hidden')) showSettings();
+  if (!modalBackdrop.classList.contains('hidden')) {
+    if (galleryTab) showThemeGallery(galleryTab);
+    else showSettings();
+  }
 });
 
 document.addEventListener('keydown', (event) => {

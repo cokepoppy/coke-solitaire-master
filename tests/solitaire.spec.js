@@ -315,6 +315,39 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
 });
 
+test('theme gallery switches backgrounds, card backs, and face styles on mobile', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('button', { name: 'Open Themes' }).click();
+  await expect(page.getByRole('dialog', { name: 'Themes' })).toBeVisible();
+  await expect(page.locator('.background-tile')).toHaveCount(9);
+  await expect(page.locator('.theme-gallery')).toHaveCSS('height', `${await page.evaluate(() => window.innerHeight)}px`);
+  await page.getByRole('button', { name: 'Mountain background' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  await expect(page.locator('.background-tile.chosen')).toHaveCount(1);
+
+  await page.getByRole('button', { name: 'Card backs' }).click();
+  await expect(page.locator('.back-tile')).toHaveCount(8);
+  await expect.poll(() => page.locator('.back-tile img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+  await page.screenshot({ path: 'test-results/theme-gallery-mobile.png' });
+  await page.getByRole('button', { name: 'Teal diamonds' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'teal');
+  await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', '/assets/cards/back-teal-reference.png');
+
+  await page.getByRole('button', { name: 'Card faces' }).click();
+  await expect(page.locator('.face-tile')).toHaveCount(2);
+  await page.getByRole('button', { name: 'Classic card faces' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'classic');
+  await expect(page.locator('.card-face-art').first()).toHaveAttribute('src', /\.svg$/);
+  await page.getByRole('button', { name: 'Solitaire Master card faces' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'master');
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await page.reload();
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'teal');
+  await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'master');
+});
+
 test('a legal hinted card can be dragged to its destination', async ({ page }) => {
   await page.goto('/');
   let hint = null;
@@ -515,7 +548,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v20');
+  expect(cacheNames).toContain('solitaire-master-v21');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -540,6 +573,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineCardBack).toEqual({ ok: true, type: 'image/svg+xml' });
+  const offlineThemeBack = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/back-teal-reference.png');
+    return { ok: response.ok, type: response.headers.get('content-type') };
+  });
+  expect(offlineThemeBack).toEqual({ ok: true, type: 'image/png' });
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
