@@ -333,7 +333,7 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 }
 .toast.visible { opacity: 1; transform: translate(-50%, 0); }
 
-.combo-feedback { position: absolute; z-index: 120; display: flex; align-items: baseline; gap: 4px; color: #ffdc51; font-size: clamp(17px, 5.2vw, 27px); font-weight: 900; line-height: 1; letter-spacing: -.045em; white-space: nowrap; pointer-events: none; -webkit-text-stroke: .8px #a52b22; text-shadow: 0 2px 0 #9e291d, 0 4px 6px rgba(19,20,9,.65); transform: translate(-50%, -50%) scale(.55); animation: combo-pop .92s cubic-bezier(.16,.78,.24,1) both; }
+.combo-feedback { position: absolute; z-index: 120; display: flex; align-items: baseline; gap: 4px; color: #ffdc51; font-size: clamp(14px, 4.1vw, 22px); font-weight: 900; line-height: 1; letter-spacing: -.045em; white-space: nowrap; pointer-events: none; -webkit-text-stroke: .8px #a52b22; text-shadow: 0 2px 0 #9e291d, 0 4px 6px rgba(19,20,9,.65); transform: translate(-50%, -50%) scale(.55); animation: combo-pop .92s cubic-bezier(.16,.78,.24,1) both; }
 .combo-feedback b { font-size: 1.18em; }
 .combo-feedback::before, .combo-feedback::after { position: absolute; color: #faf477; font-size: .7em; content: '✦'; text-shadow: 0 1px 3px rgba(13,35,15,.75); animation: combo-spark .72s ease-out both; }
 .combo-feedback::before { top: -12px; left: -14px; }
@@ -345,6 +345,11 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .combo-amazing i:nth-of-type(2) { top: 6px; right: 12%; animation-delay: .08s; }
 .combo-amazing i:nth-of-type(3) { bottom: -19px; left: 34%; color: #fff27a; animation-delay: .12s; }
 .combo-amazing i:nth-of-type(4) { top: -29px; right: 36%; color: #fff27a; animation-delay: .2s; }
+.combo-great { position: absolute; z-index: 119; top: 53%; left: 50%; pointer-events: none; transform: translate(-50%, -50%); animation: combo-reward-pop .82s cubic-bezier(.16,.78,.24,1) both; }
+.combo-great b { display: block; color: #ffc223; background-image: linear-gradient(180deg, #fff9be 0%, #ffd93f 32%, #fff0a3 48%, #f9a70e 65%, #ffd150 82%, #ffe48e 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: system-ui, sans-serif; font-size: clamp(26px, 7.5vw, 48px); font-weight: 950; line-height: 1; letter-spacing: -.045em; -webkit-text-stroke: 1px #fff0b0; paint-order: stroke fill; text-shadow: 0 2px 0 #b45a17, 0 4px 0 #674120, 0 7px 9px rgba(0,0,0,.42); }
+.combo-great i { position: absolute; color: #fff27a; font-size: clamp(10px, 3vw, 17px); font-style: normal; text-shadow: 0 0 5px rgba(255,235,95,.9), 0 1px 3px rgba(0,0,0,.4); animation: combo-spark .8s ease-out both; }
+.combo-great i:nth-of-type(1) { top: -8px; left: -12px; }
+.combo-great i:nth-of-type(2) { right: -12px; bottom: -4px; animation-delay: .12s; }
 
 .modal-backdrop {
   position: fixed;
@@ -503,6 +508,7 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 @keyframes modal-rise { from { opacity: .65; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes combo-pop { 0% { opacity: 0; transform: translate(-50%, 14px) scale(.55); } 20% { opacity: 1; transform: translate(-50%, -5px) scale(1.12); } 38% { transform: translate(-50%, 0) scale(1); } 76% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -22px) scale(.94); } }
 @keyframes combo-spark { 0% { opacity: 0; transform: scale(.2) rotate(-30deg); } 35% { opacity: 1; transform: scale(1.2) rotate(20deg); } 100% { opacity: 0; transform: translateY(-12px) scale(.5) rotate(50deg); } }
+@keyframes combo-reward-pop { 0% { opacity: 0; transform: translate(-50%, 10px) scale(.54); } 30% { opacity: 1; transform: translate(-50%, -2px) scale(1.08); } 48% { transform: translate(-50%, 0) scale(1); } 76% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -10px) scale(.98); } }
 @keyframes amazing-pop { 0% { opacity: 0; transform: translate(-50%, -50%) scale(.5) rotate(-3deg); } 16% { opacity: 1; transform: translate(-50%, -50%) scale(1.08) rotate(1deg); } 31% { transform: translate(-50%, -50%) scale(1) rotate(0); } 76% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -64%) scale(.94); } }
 @keyframes amazing-heart { 0% { opacity: 0; transform: translateY(12px) scale(.35) rotate(-12deg); } 28% { opacity: 1; transform: translateY(-8px) scale(1.1) rotate(8deg); } 100% { opacity: 0; transform: translateY(-38px) scale(.7) rotate(18deg); } }
 @keyframes win-glow { from { transform: scale(.96); filter: brightness(.95); } to { transform: scale(1.05); filter: brightness(1.18); } }
