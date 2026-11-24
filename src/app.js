@@ -147,7 +147,7 @@ function renderTopRow() {
     const top = pile.at(-1);
     const source = { zone: 'foundation', pile: index, index: pile.length - 1 };
     const isTarget = game.state.hint?.target?.zone === 'foundation' && game.state.hint.target.pile === index;
-    const card = top ? renderCard(top, source, { index }) : '<span class="foundation-mark" aria-hidden="true">A</span>';
+    const card = top ? renderCard(top, source, { index }) : `<span class="foundation-mark" aria-hidden="true"><img class="foundation-source-art" src="/assets/ui/foundation-empty-${index + 1}.png" alt=""><span class="foundation-theme-mark">A</span></span>`;
     return `<div class="slot foundation-slot drop-target${isTarget ? ' is-hint' : ''}" style="grid-column:${column};grid-row:1" data-drop-zone="foundation" data-pile="${index}" aria-label="Foundation ${index + 1}">${card}</div>`;
   }).join('');
   topRow.innerHTML = `${stockButton}${wasteSlot}${foundations}`;
