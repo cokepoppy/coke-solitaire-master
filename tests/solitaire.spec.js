@@ -462,6 +462,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await page.getByRole('button', { name: 'Card backs' }).click();
   await expect(page.locator('.back-tile')).toHaveCount(8);
   await expect.poll(() => page.locator('.back-tile img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+  await expect(page.locator('.back-tile[data-value="ruby"] .back-preview-source img')).toHaveCount(2);
   await page.screenshot({ path: 'test-results/theme-gallery-mobile.png' });
   await page.getByRole('button', { name: 'Teal diamonds' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'teal');
@@ -768,7 +769,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v31');
+  expect(cacheNames).toContain('solitaire-master-v32');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();

@@ -3,7 +3,7 @@
 
 from pathlib import Path
 
-from PIL import Image, ImageChops, ImageFilter
+from PIL import Image, ImageChops, ImageDraw
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,17 +21,11 @@ def main() -> None:
     source_crop.save(SOURCE_OUTPUT)
     crop = source_crop.convert("RGBA")
 
-    # The source stock counter is overlaid on the back at the lower-left. Clear
-    # just its bright glyphs so the live counter can be rendered above the crop.
+    # The source stock counter and its translucent badge are overlaid on the
+    # back at the lower-left. Clear that small area so the vector underlay can
+    # restore the pattern on tableau cards and in gallery previews.
     mask = Image.new("L", crop.size, 0)
-    source_pixels = crop.convert("RGB").load()
-    mask_pixels = mask.load()
-    for y in range(145, 171):
-        for x in range(4, 42):
-            red, green, blue = source_pixels[x, y]
-            if min(red, green, blue) > 180:
-                mask_pixels[x, y] = 255
-    mask = mask.filter(ImageFilter.MaxFilter(5))
+    ImageDraw.Draw(mask).rectangle((4, 144, 46, 171), fill=255)
     crop.putalpha(ImageChops.subtract(crop.getchannel("A"), mask))
     crop.save(OUTPUT)
 
