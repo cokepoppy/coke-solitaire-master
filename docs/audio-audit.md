@@ -21,6 +21,12 @@ A full-length 17:24 portrait gameplay recording is also available locally with A
 
 The complete 17:24 recording was also decoded with macOS `afconvert` to 44.1 kHz stereo PCM16. Its WAV SHA-256 is `69db2a5a1dd0b006f9f9df082578fed68f5f1550c1c4eb87e7198584e3f3fa64`. A 20 ms full-length pass produced 52,200 windows: median RMS `0.0000132`, P95 `0.09231466`, maximum `0.50907975`, with 23.11% of windows above RMS `0.01`. These wider results show repeated short audible events outside the earlier 0–120 second window.
 
+## Official-short waveform cross-check
+
+The official [Hungry Studio short](https://www.youtube.com/watch?v=Yvi1HA3OcxU) has 11.075918 seconds of decoded AAC audio. A normalized cross-correlation scan of that full track against the three existing gameplay crops found maximum absolute coefficients of `0.074825` for `card-move-reference.wav`, `0.097951` for `combo-amazing-reference.wav`, and `0.020598` for `foundation-reference.wav`. These low matches do not prove the game uses different sounds: the short is a mixed promo track and may use other timing, processing, or cue versions. They do show that these gameplay crops cannot be presented as waveform-identical copies of the official short's audio.
+
+The same tools were checked against a positive control: extracting 18.040–18.420 seconds from the long gameplay recording produces the exact `card-move-reference.wav` hash, and the matcher reports correlation `1.0` at original media time 18.040 seconds. Source hashes, extracted-window hashes, cue hashes, match times, and coefficients are in [`research/solitaire-master/official-audio-reference-2026-11-25`](../research/solitaire-master/official-audio-reference-2026-11-25/README.json). The WAV review crops stay local and are regenerated from the ignored source recordings.
+
 The opening move counter changes from 0 to 1 between 13.0 and 13.1 seconds; the 0.38 second move crop from 18.040–18.420 seconds has normalized cross-correlation 0.970 against PCM starting at 13.176 seconds. That opening move uncovers a face-down tableau card, so the evidence supports using the same captured `move` cue when a drag also flips a newly exposed card, instead of layering a procedural `flip` sound. The first stock-draw visual change occurs at 23.2167 seconds, but the waveform starting at 23.416 seconds correlates 0.970 with the same move crop. Treat these as separate visual and audio timeline evidence; the audio candidate is about 200 ms after the visual change, possibly due to stream offset or delayed sound. Later tableau moves at 18.22 and 26.12 seconds show counters 2 and 5; their snippets correlate at 0.895 after a 6.69 ms alignment shift. The build now uses the verified crop for both tableau moves and stock draws. A second 0.96 second crop from 72.820–73.780 seconds is aligned to the visible `COMBO 4` / `Amazing` feedback, and now plays at that combo tier. Both are source-matched cues from the mixed third-party recording, not clean isolated masters; provenance and hashes are in [the audio assets note](../assets/audio/README.md). Captured samples compensate for the browser's master/effects gain so their PCM level is preserved in the digital output. Other effects and ambient music remain approximations.
 
 Recreate the extraction and analysis from the preserved local source video:
@@ -28,9 +34,9 @@ Recreate the extraction and analysis from the preserved local source video:
 ```sh
 python3 -m venv /tmp/solitaire-audio-audit-venv
 /tmp/solitaire-audio-audit-venv/bin/python -m pip install -r tools/requirements-audio-audit.txt
-ffmpeg -copyts -t 120 -i research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 \
-  -map 0:a:0 -vn -ar 44100 -ac 2 -c:a pcm_s16le \
-  /tmp/gameplay-audio-0-120.wav
+python3 tools/extract_audio_window.py research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 \
+  --start 0 --end 120 --output /tmp/gameplay-audio-0-120.wav \
+  --url 'https://www.youtube.com/watch?v=gLd0HXtDt5I'
 /tmp/solitaire-audio-audit-venv/bin/python tools/audio_event_audit.py /tmp/gameplay-audio-0-120.wav \
   --output research/solitaire-master/gameplay-audio-opening-2025 \
   --url 'https://www.youtube.com/watch?v=gLd0HXtDt5I' \
@@ -39,6 +45,22 @@ ffmpeg -copyts -t 120 -i research/solitaire-master/source-videos/gLd0HXtDt5I.mp4
 ```
 
 The tool hashes its WAV input, writes per-window RMS/peak and broad-band spectral features, and records thresholded transient candidates in JSON. It accepts uncompressed mono or stereo PCM16 WAV. Use the matching video frame ledger and contact sheets to review any candidate at source time; use listening and action-by-action capture to decide what the sound actually is.
+
+`extract_audio_window.py` uses the built-in macOS `afconvert` decoder to convert source audio to stereo PCM16 and crop the requested absolute source-time range at exact 44.1 kHz sample indices. It writes a JSON sidecar with video hash, decoded-audio hash, sample range, and crop hash. AAC audio can end a few milliseconds before the video container, so the command rejects windows beyond the decoded audio duration. On systems with FFmpeg, an equivalent PCM window can be extracted with `ffmpeg -copyts -ss START -to END -i VIDEO -map 0:a:0 -vn -ar 44100 -ac 2 -c:a pcm_s16le OUTPUT.wav`; retain original source times in a sidecar rather than treating the cropped WAV's zero as the video start.
+
+Compare an extracted window with known cue samples using normalized waveform correlation:
+
+```sh
+python3 tools/audio_similarity_audit.py /tmp/solitaire-official-short-review.wav \
+  assets/audio/card-move-reference.wav \
+  assets/audio/combo-amazing-reference.wav \
+  assets/audio/foundation-reference.wav \
+  --output /tmp/official-short-cue-matches.json
+```
+
+The matcher writes the highest absolute, locally normalized correlations and candidate source times. A high match can help find a repeated waveform; a low match does not prove that a different sound is used. Pair it with frame evidence and listening.
+
+When the input WAV is a crop, pass `--source-offset-seconds` from its extraction manifest so every match is reported on the original video timeline. The default offset is zero.
 
 ## Reproducible analysis workflow
 

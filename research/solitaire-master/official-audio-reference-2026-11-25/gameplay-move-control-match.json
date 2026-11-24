@@ -1,0 +1,28 @@
+{
+  "source_file": "solitaire-gameplay-move-final.wav",
+  "source_sha256": "a158ffdfcc30fe2aa3ee140eff2ff5e6a5700fca649204de16fb12f9a483a819",
+  "source_sample_rate_hz": 44100,
+  "source_channels": 2,
+  "source_duration_seconds": 0.38,
+  "source_offset_seconds": 18.04,
+  "normalization": "Peak absolute Pearson-style normalized cross-correlation after mono downmix; positive and negative matches are ranked by absolute value.",
+  "references": [
+    {
+      "file": "card-move-reference.wav",
+      "sha256": "a158ffdfcc30fe2aa3ee140eff2ff5e6a5700fca649204de16fb12f9a483a819",
+      "channels": 2,
+      "duration_seconds": 0.38,
+      "top_matches": [
+        {
+          "start_seconds": 18.04,
+          "end_seconds": 18.42,
+          "window_relative_start_seconds": 0.0,
+          "signed_correlation": 1.0,
+          "absolute_correlation": 1.0
+        }
+      ]
+    }
+  ],
+  "audited_at_utc": "2026-11-24T19:00:21.883832+00:00",
+  "note": "Correlation peaks are waveform similarity candidates only; they do not identify an action or prove that a low score means the same sound is absent."
+}

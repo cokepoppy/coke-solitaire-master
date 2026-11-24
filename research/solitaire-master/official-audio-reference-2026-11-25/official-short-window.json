@@ -1,0 +1,23 @@
+{
+  "source_file": "Yvi1HA3OcxU.mp4",
+  "source_sha256": "d65fa047629339dbd1d115ae467bd7c3da1df5516c201986dc93c899bd5c897e",
+  "source_url": "https://www.youtube.com/watch?v=Yvi1HA3OcxU",
+  "decoder": "macOS afconvert",
+  "decoded_pcm_format": "44.1 kHz stereo signed PCM16 little-endian",
+  "decoded_full_pcm_sha256": "830a362e15bb5e76ccb49a6bfe29bac7ca53de0c58854f3586f542fdc328d698",
+  "requested_source_start_seconds": 0.0,
+  "requested_source_end_seconds": 11.075918367,
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "start_sample_frame": 0,
+  "end_sample_frame_exclusive": 488448,
+  "frame_count": 488448,
+  "actual_start_seconds": 0.0,
+  "actual_end_seconds": 11.075918367346938,
+  "duration_seconds": 11.075918367346938,
+  "output_file": "solitaire-official-short-final.wav",
+  "output_sha256": "7cd9de7389f94187245ee6264c2f9c983755731d2087df91f7bca4ce4c5b3ed8",
+  "extracted_at_utc": "2026-11-24T18:58:24.588903+00:00",
+  "note": "The WAV is cropped at the recorded source-time sample indices with no fade or timeline offset; keep this manifest beside it."
+}

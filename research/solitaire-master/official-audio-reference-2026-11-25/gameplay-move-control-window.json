@@ -1,0 +1,23 @@
+{
+  "source_file": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "decoder": "macOS afconvert",
+  "decoded_pcm_format": "44.1 kHz stereo signed PCM16 little-endian",
+  "decoded_full_pcm_sha256": "69db2a5a1dd0b006f9f9df082578fed68f5f1550c1c4eb87e7198584e3f3fa64",
+  "requested_source_start_seconds": 18.04,
+  "requested_source_end_seconds": 18.42,
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "start_sample_frame": 795564,
+  "end_sample_frame_exclusive": 812322,
+  "frame_count": 16758,
+  "actual_start_seconds": 18.04,
+  "actual_end_seconds": 18.42,
+  "duration_seconds": 0.38,
+  "output_file": "solitaire-gameplay-move-final.wav",
+  "output_sha256": "a158ffdfcc30fe2aa3ee140eff2ff5e6a5700fca649204de16fb12f9a483a819",
+  "extracted_at_utc": "2026-11-24T18:58:39.559983+00:00",
+  "note": "The WAV is cropped at the recorded source-time sample indices with no fade or timeline offset; keep this manifest beside it."
+}
