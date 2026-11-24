@@ -29,3 +29,4 @@ The mobile Chrome E2E suite checks the staggered initial deal, stock draw, undo,
 - [Official Hungry Studio Solitaire Classic short](https://www.youtube.com/watch?v=Yvi1HA3OcxU)
 - Card art source and license: [assets/cards/README.md](assets/cards/README.md)
 - Frame audit, rule notes, and known fidelity gaps: [docs/reference-study.md](docs/reference-study.md)
+- Official video audio evidence and capture workflow: [docs/audio-audit.md](docs/audio-audit.md)
