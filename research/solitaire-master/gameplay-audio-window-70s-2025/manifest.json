@@ -1,0 +1,109 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_file_name": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "audit_timestamp_utc": "2026-11-24T06:33:57.176219+00:00",
+  "ffmpeg_version": "ffmpeg version 9.0 Copyright (c) 2000-2026 the FFmpeg developers",
+  "decode_command": [
+    "ffmpeg",
+    "-hide_banner",
+    "-nostats",
+    "-loglevel",
+    "info",
+    "-copyts",
+    "-seek_timestamp",
+    "1",
+    "-ss",
+    "70.000000000",
+    "-t",
+    "5.000000000",
+    "-i",
+    "gLd0HXtDt5I.mp4",
+    "-map",
+    "0:v:0",
+    "-an",
+    "-vf",
+    "showinfo,format=rgb24",
+    "-fps_mode",
+    "passthrough",
+    "-pix_fmt",
+    "rgb24",
+    "-f",
+    "rawvideo",
+    "pipe:1"
+  ],
+  "requested_window_seconds": {
+    "start": 70.0,
+    "end": 75.0
+  },
+  "source_stream": {
+    "width": 884,
+    "height": 1920,
+    "nominal_fps": 60.0,
+    "time_base_denominator": 15360,
+    "container_duration": "00:17:24.06",
+    "video_stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 884x1920 [SAR 1:1 DAR 221:480], 711 kb/s, 60 fps, 60 tbr, 15360 tbn (default)",
+    "audio_stream": "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 127 kb/s (default)"
+  },
+  "decoded_frame_count": 300,
+  "first_frame": {
+    "index": 0,
+    "pts": 1075200,
+    "pts_time_seconds": 70.0
+  },
+  "last_frame": {
+    "index": 299,
+    "pts": 1151744,
+    "pts_time_seconds": 74.983333
+  },
+  "frames_csv": "frames.csv",
+  "contact_sheet_count": 3,
+  "keyframe_pts_requested": [
+    1119744,
+    1129728
+  ],
+  "keyframe_neighbor_pts": {
+    "1119744": {
+      "target_frame_index": 174,
+      "before_pts": 1119488,
+      "after_pts": 1120000
+    },
+    "1129728": {
+      "target_frame_index": 213,
+      "before_pts": 1129472,
+      "after_pts": 1129984
+    }
+  },
+  "independent_keyframe_hash_checks": {
+    "1119488": {
+      "expected_rgb_sha256": "d34020c785656b88445a5a08a388ca5e35c349eb45722de8dbf8b254c1e02540",
+      "independent_rgb_sha256": "d34020c785656b88445a5a08a388ca5e35c349eb45722de8dbf8b254c1e02540",
+      "match": true
+    },
+    "1119744": {
+      "expected_rgb_sha256": "1f844eed24e663bdf84be3696cbf38f02e61a1ec8393d63eefc83a9117449e84",
+      "independent_rgb_sha256": "1f844eed24e663bdf84be3696cbf38f02e61a1ec8393d63eefc83a9117449e84",
+      "match": true
+    },
+    "1120000": {
+      "expected_rgb_sha256": "48d1f5856cdf81aea95fb7cd939a3d20de4f661bb69ea03ae39e36c45498b8f4",
+      "independent_rgb_sha256": "48d1f5856cdf81aea95fb7cd939a3d20de4f661bb69ea03ae39e36c45498b8f4",
+      "match": true
+    },
+    "1129472": {
+      "expected_rgb_sha256": "cf8289a25556266792d2005249441a46c8bb261ceca66c3a7d29fb025c2c8bbf",
+      "independent_rgb_sha256": "cf8289a25556266792d2005249441a46c8bb261ceca66c3a7d29fb025c2c8bbf",
+      "match": true
+    },
+    "1129728": {
+      "expected_rgb_sha256": "69f3851b385537a85f152e73a1198a94199e4759bb8aab8fd585891de1f533b8",
+      "independent_rgb_sha256": "69f3851b385537a85f152e73a1198a94199e4759bb8aab8fd585891de1f533b8",
+      "match": true
+    },
+    "1129984": {
+      "expected_rgb_sha256": "1d0bf2939ba00106d82092b167e1985623bf0f2254d42d388f3f87ac16a7a55e",
+      "independent_rgb_sha256": "1d0bf2939ba00106d82092b167e1985623bf0f2254d42d388f3f87ac16a7a55e",
+      "match": true
+    }
+  }
+}
