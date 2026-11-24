@@ -219,8 +219,9 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   expect(stockBox.x).toBeLessThan(foundationBox.x);
   expect(stockBox.x).toBeLessThan(wasteBox.x);
   expect(wasteBox.x).toBeLessThan(foundationBox.x);
-  await page.getByRole('button', { name: 'Emerald card back' }).click();
-  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'emerald');
+  await expect(page.locator('.back-choice')).toHaveCount(2);
+  await page.getByRole('button', { name: 'Blue diamond card back' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
   await page.getByRole('button', { name: 'Ruby card back' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
@@ -232,6 +233,17 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await page.getByRole('button', { name: 'Close dialog' }).click();
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  for (const oldBack of ['emerald', 'midnight']) {
+    await page.evaluate((cardBack) => {
+      const save = JSON.parse(localStorage.getItem('solitaire-master-game-v1'));
+      save.state.cardBack = cardBack;
+      localStorage.setItem('solitaire-master-game-v1', JSON.stringify(save));
+    }, oldBack);
+    await page.reload();
+    await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
+    await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
+    await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('solitaire-master-game-v1')).state.cardBack)).toBe('blue');
+  }
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'woodland'));
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
@@ -255,11 +267,11 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.stock-count')).toHaveText('24');
   await expect(page.locator('.modal-backdrop')).toBeHidden();
   await expect(page.locator('body')).toHaveClass(/left-hand/);
-  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
   await page.reload();
   await expect(page.locator('#moves-value')).toHaveText('0');
   await expect(page.locator('body')).toHaveClass(/left-hand/);
-  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
 });
 
 test('a legal hinted card can be dragged to its destination', async ({ page }) => {
@@ -461,6 +473,9 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
+  const cacheNames = await page.evaluate(() => caches.keys());
+  expect(cacheNames).toContain('solitaire-master-v15');
+  expect(cacheNames).not.toContain('solitaire-master-v14');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
   await page.evaluate(() => navigator.serviceWorker.ready);

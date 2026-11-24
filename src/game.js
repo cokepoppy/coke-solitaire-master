@@ -87,6 +87,10 @@ export class SolitaireGame {
       if (saved?.version !== 1 || !saved.state?.tableau?.length) return false;
       this.state = { ...saved.state, history: [], selected: null, hint: null };
       this.state.cardBack ??= 'ruby';
+      if (this.state.cardBack === 'emerald' || this.state.cardBack === 'midnight') {
+        this.state.cardBack = 'blue';
+        this.save();
+      }
       this.state.magicCharges ??= 1;
       this.state.challenge ??= null;
       if (this.state.theme === 'woodland') this.state.theme = 'mountain';
