@@ -136,6 +136,8 @@ body[data-theme='felt'] .timer-frame-vector { display: none; }
 .timer-icon { fill: none; stroke: #9df128; stroke-width: 2.7; stroke-linecap: round; stroke-linejoin: round; }
 .moves-icon { width: clamp(16px, 4.1vw, 19px); height: clamp(19px, 4.7vw, 22px); object-fit: contain; }
 .stat strong { color: #f5f7e9; font-size: clamp(15px, 5vw, 21px); line-height: 1; font-variant-numeric: tabular-nums; font-weight: 700; }
+.stat strong.stat-value { display: flex; align-items: center; justify-content: flex-end; min-width: max-content; gap: 0; font-size: 0; line-height: 0; font-weight: 400; }
+.stat-digit { display: block; width: auto; height: clamp(10px, 3.5vw, 15.5px); flex: 0 0 auto; object-fit: fill; image-rendering: auto; }
 
 .board-wrap {
   --board-width: min(100%, 560px);

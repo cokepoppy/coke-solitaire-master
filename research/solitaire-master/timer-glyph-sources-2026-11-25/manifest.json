@@ -1,0 +1,131 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_file_name": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_dimensions": {
+    "width": 884,
+    "height": 1920
+  },
+  "source_time_scale": 15360,
+  "frame_method": "AVFoundation image generator; zero time tolerance before and after",
+  "crop": {
+    "x": 340,
+    "y": 290,
+    "width": 286,
+    "height": 100
+  },
+  "frame_hash_type": "SHA-256 of the saved PNG timer-crop bytes",
+  "glyph_samples": [
+    {
+      "glyph": "0",
+      "source_seconds": 10,
+      "observed_timer_text": "00:00",
+      "slot_index": 0,
+      "source_pts": 153600,
+      "source_timescale": 15360,
+      "png_sha256": "6d7e23cf8c744dc7e64854583439294648daec993b1078a769256a69d4e17391",
+      "filename": "time-010.000-actual-010.000.png"
+    },
+    {
+      "glyph": "1",
+      "source_seconds": 30,
+      "observed_timer_text": "00:17",
+      "slot_index": 3,
+      "source_pts": 460800,
+      "source_timescale": 15360,
+      "png_sha256": "d2ff9f82cb31aa1470aea1362994555117083e7e3bd28059c5cb94a326b19155",
+      "filename": "time-030.000-actual-030.000.png"
+    },
+    {
+      "glyph": "2",
+      "source_seconds": 15,
+      "observed_timer_text": "00:02",
+      "slot_index": 4,
+      "source_pts": 230400,
+      "source_timescale": 15360,
+      "png_sha256": "d1776912d61a062cf77f2a51d6531186e8f06243a9e48f8997b8e4a3f21936d3",
+      "filename": "time-015.000-actual-015.000.png"
+    },
+    {
+      "glyph": "3",
+      "source_seconds": 43,
+      "observed_timer_text": "00:30",
+      "slot_index": 3,
+      "source_pts": 660480,
+      "source_timescale": 15360,
+      "png_sha256": "78fb92844b98f59540387d01920da5a0b84dbde66551e93da40395609f64cf01",
+      "filename": "time-043.000-actual-043.000.png"
+    },
+    {
+      "glyph": "4",
+      "source_seconds": 380,
+      "observed_timer_text": "00:45",
+      "slot_index": 3,
+      "source_pts": 5836800,
+      "source_timescale": 15360,
+      "png_sha256": "68a55b38999d152a9110cdb3ee60126b6dada412c8e53a95c433792c22aab367",
+      "filename": "time-380.000-actual-380.000.png"
+    },
+    {
+      "glyph": "5",
+      "source_seconds": 370,
+      "observed_timer_text": "00:35",
+      "slot_index": 4,
+      "source_pts": 5683200,
+      "source_timescale": 15360,
+      "png_sha256": "db3da01f8354efad7cd065e29bfbba18ed4abd20e884b09b33007932bcc54a8c",
+      "filename": "time-370.000-actual-370.000.png"
+    },
+    {
+      "glyph": "6",
+      "source_seconds": 19,
+      "observed_timer_text": "00:06",
+      "slot_index": 4,
+      "source_pts": 291840,
+      "source_timescale": 15360,
+      "png_sha256": "a19ad9f1ad6c8118f515f30644d989acd6583355143fe31feacee0e6c6bb3135",
+      "filename": "time-019.000-actual-019.000.png"
+    },
+    {
+      "glyph": "7",
+      "source_seconds": 20,
+      "observed_timer_text": "00:07",
+      "slot_index": 4,
+      "source_pts": 307200,
+      "source_timescale": 15360,
+      "png_sha256": "18d58a850200fc49b18f21f793de48c07697cac07d5f7f581b9d221b06f8e825",
+      "filename": "time-020.000-actual-020.000.png"
+    },
+    {
+      "glyph": "8",
+      "source_seconds": 525,
+      "observed_timer_text": "00:08",
+      "slot_index": 4,
+      "source_pts": 8064000,
+      "source_timescale": 15360,
+      "png_sha256": "090f60afd37449ad0b786d9d4ab6fddf6ad9fa0af236aaaa1e20de8065cc7c6c",
+      "filename": "time-525.000-actual-525.000.png"
+    },
+    {
+      "glyph": "9",
+      "source_seconds": 695,
+      "observed_timer_text": "00:09",
+      "slot_index": 4,
+      "source_pts": 10675200,
+      "source_timescale": 15360,
+      "png_sha256": "5c3fc724d55027fef2fe6002c3b60d175a55f077c7ad5e4b9cb06ba67f7b6d66",
+      "filename": "time-695.000-actual-695.000.png"
+    },
+    {
+      "glyph": ":",
+      "source_seconds": 20,
+      "observed_timer_text": "00:07",
+      "slot_index": 2,
+      "source_pts": 307200,
+      "source_timescale": 15360,
+      "png_sha256": "18d58a850200fc49b18f21f793de48c07697cac07d5f7f581b9d221b06f8e825",
+      "filename": "time-020.000-actual-020.000.png"
+    }
+  ],
+  "note": "The 100-second full timer reads 01:27; it is not a valid source for glyphs 3 or 6. The corrected samples are 00:30 at 43s and 00:06 at 19s."
+}

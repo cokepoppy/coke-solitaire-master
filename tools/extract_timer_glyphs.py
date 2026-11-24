@@ -12,10 +12,10 @@ SAMPLES = {
     "0": (10, 0),
     "1": (30, 3),
     "2": (15, 4),
-    "3": (100, 3),
+    "3": (43, 3),
     "4": (380, 3),
     "5": (370, 4),
-    "6": (100, 4),
+    "6": (19, 4),
     "7": (20, 4),
     "8": (525, 4),
     "9": (695, 4),
@@ -27,11 +27,13 @@ TEXT_Y = 34
 TEXT_HEIGHT = 31
 
 
-def timer_frame(directory: Path, timestamp: int) -> Image.Image:
+def timer_frame(directories: list[Path], timestamp: int) -> Image.Image:
     prefix = f"time-{timestamp:07.3f}-actual-"
-    matches = sorted(directory.glob(f"{prefix}*.png"))
-    if len(matches) != 1:
-        raise FileNotFoundError(f"Expected one frame for source time {timestamp}s in {directory}; found {len(matches)}")
+    matches = sorted(frame for directory in directories for frame in directory.glob(f"{prefix}*.png"))
+    if not matches:
+        raise FileNotFoundError(f"Expected a frame for source time {timestamp}s in {directories}")
+    if any(frame.read_bytes() != matches[0].read_bytes() for frame in matches[1:]):
+        raise ValueError(f"Duplicate source frames for {timestamp}s differ: {matches}")
     image = Image.open(matches[0]).convert("RGB")
     if image.size != (286, 100):
         raise ValueError(f"{matches[0]} has size {image.size}, expected 286×100")
@@ -50,7 +52,7 @@ def alpha_for_pixel(foreground: tuple[int, int, int], background: tuple[int, int
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("frames", type=Path, help="timer crops produced by extract_timer_frames.swift")
+    parser.add_argument("frames", type=Path, nargs="+", help="one or more timer-crop directories produced by extract_timer_frames.swift")
     parser.add_argument("--base", type=Path, default=Path("assets/ui/timer-frame-source.png"))
     parser.add_argument("--output", type=Path, default=Path("assets/ui"))
     args = parser.parse_args()

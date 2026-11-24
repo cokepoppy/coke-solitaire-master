@@ -36,6 +36,14 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('.timer-frame-source')).toBeVisible();
   await expect(page.locator('.timer-frame-vector')).toHaveCSS('display', 'none');
   await expect.poll(() => page.locator('.timer-frame-source').evaluate((image) => [image.complete, image.naturalWidth, image.naturalHeight])).toEqual([true, 286, 100]);
+  await expect.poll(() => page.locator('.stat-digit').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth === 21 && image.naturalHeight === 31))).toBe(true);
+  const timerDigitHashes = await page.evaluate(async () => Promise.all(Array.from({ length: 10 }, async (_, digit) => {
+    const response = await fetch(`/assets/ui/timer-digit-${digit}.png`);
+    const bytes = await response.arrayBuffer();
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  })));
+  expect(new Set(timerDigitHashes).size).toBe(10);
   const timerFrameBounds = await page.evaluate(() => {
     const timer = document.querySelector('.time-stat').getBoundingClientRect();
     const frame = document.querySelector('.timer-frame').getBoundingClientRect();
@@ -273,6 +281,24 @@ test('source opening replay matches the 20-second score, move count, and exposed
     window.solitaireGame.state.seconds = 6;
     window.solitaireGame.save();
   });
+  const sourceStatGlyphs = await page.evaluate(() => ({
+    score: [...document.querySelectorAll('#score-value .stat-digit')].map((image) => image.getAttribute('src').split('/').at(-1)),
+    moves: [...document.querySelectorAll('#moves-value .stat-digit')].map((image) => image.getAttribute('src').split('/').at(-1)),
+  }));
+  expect(sourceStatGlyphs).toEqual({ score: ['timer-digit-3.png', 'timer-digit-0.png'], moves: ['timer-digit-3.png'] });
+  const sourceStatBounds = await page.evaluate(() => {
+    const bounds = (selector) => {
+      const { x, y, width, height } = document.querySelector(selector).getBoundingClientRect();
+      return { x, y, width, height };
+    };
+    return { score: bounds('#score-value'), moves: bounds('#moves-value') };
+  });
+  expect(sourceStatBounds.score.x).toBeCloseTo(112.7, 0);
+  expect(sourceStatBounds.score.y).toBeCloseTo(162.5, 0);
+  expect(sourceStatBounds.score.width).toBeCloseTo(20.9, 1);
+  expect(sourceStatBounds.moves.x).toBeCloseTo(387.1, 0);
+  expect(sourceStatBounds.moves.y).toBeCloseTo(162.5, 0);
+  expect(sourceStatBounds.moves.width).toBeCloseTo(10.5, 1);
   await expect(page.locator('.combo-feedback, .combo-amazing')).toHaveCount(0);
   const timeDisplay = page.locator('#time-value');
   await expect(timeDisplay).toHaveText('00:07');
@@ -821,7 +847,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v32');
+  expect(cacheNames).toContain('solitaire-master-v33');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
