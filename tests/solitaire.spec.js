@@ -28,6 +28,8 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
   await expect(page.locator('#tableau .card-face')).toHaveCount(7);
   await expect(page.locator('#tableau .card-back')).toHaveCount(21);
+  await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-source\.png$/);
+  await expect.poll(() => page.locator('.stock-slot .card-back-underlay').evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   await expect(page.locator('.stock-count')).toHaveText('24');
   await expect(page.locator('#time-value')).toHaveText(/^00:\d{2}$/);
   await expect(page.locator('.time-stat')).toHaveAttribute('aria-label', 'Time');
@@ -53,7 +55,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect.poll(() => page.locator('.foundation-source-art').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177))).toBe(true);
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
-  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
   const stockCountPosition = await page.evaluate(() => {
     const card = document.querySelector('.stock-slot .card-back').getBoundingClientRect();
     const count = document.querySelector('.stock-count').getBoundingClientRect();
@@ -86,6 +88,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   const stockTapBox = await page.locator('[data-action="stock"]').boundingBox();
   await page.touchscreen.tap(stockTapBox.x + stockTapBox.width / 2, stockTapBox.y + stockTapBox.height / 2);
   await expect(page.locator('.stock-count')).toHaveText('23');
+  await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('.waste-slot .card-face')).toHaveCount(1);
   const firstDrawFlight = await page.locator('.waste-slot .card-face').first().evaluate((card) => ({
@@ -176,6 +179,7 @@ test('source opening replay matches the 20-second score, move count, and exposed
   });
   await page.reload();
   await page.waitForTimeout(1450);
+  await expect(page.locator('#tableau .card-back-art').first()).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
   const sourceTimerFrame = await page.locator('.timer-frame-source').boundingBox();
   expect(sourceTimerFrame.x).toBeCloseTo(169.5, 1);
   expect(sourceTimerFrame.y).toBeCloseTo(145.2, 1);
@@ -388,7 +392,7 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
   await page.getByRole('button', { name: 'Ruby card back' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
-  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('.timer-frame-source')).toHaveCSS('display', 'none');
@@ -764,7 +768,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v30');
+  expect(cacheNames).toContain('solitaire-master-v31');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -785,10 +789,24 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   });
   expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
   const offlineCardBack = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/back-solitaire-master-reference.png');
+    return { ok: response.ok, type: response.headers.get('content-type'), bytes: (await response.arrayBuffer()).byteLength };
+  });
+  expect(offlineCardBack.ok).toBe(true);
+  expect(offlineCardBack.type).toBe('image/png');
+  expect(offlineCardBack.bytes).toBeGreaterThan(5_000);
+  const offlineCardBackSource = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/back-solitaire-master-source.png');
+    return { ok: response.ok, type: response.headers.get('content-type'), bytes: (await response.arrayBuffer()).byteLength };
+  });
+  expect(offlineCardBackSource.ok).toBe(true);
+  expect(offlineCardBackSource.type).toBe('image/png');
+  expect(offlineCardBackSource.bytes).toBeGreaterThan(5_000);
+  const offlineCardBackTransition = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/back-solitaire-master.svg');
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
-  expect(offlineCardBack).toEqual({ ok: true, type: 'image/svg+xml' });
+  expect(offlineCardBackTransition).toEqual({ ok: true, type: 'image/svg+xml' });
   const offlineThemeBack = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/back-teal-reference.png');
     return { ok: response.ok, type: response.headers.get('content-type') };
