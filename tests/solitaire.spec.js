@@ -137,6 +137,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
       [1, '♦', 1],
       [2, '♣', 7],
       [3, '♦', 10],
+      [4, '♥', 8],
       [5, '♦', 3],
       [6, '♠', 3],
       [9, '♠', 4],
@@ -159,6 +160,9 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     window.solitaireGame.state.tableau[1][0].faceUp = true;
     window.solitaireGame.state.tableau[2][0].faceUp = true;
     window.solitaireGame.state.tableau[3][0].faceUp = true;
+    const eightHearts = window.solitaireGame.state.tableau.flat().find((card) => card.suit === '♥' && card.rank === 8);
+    if (!eightHearts) throw new Error('The test deal did not place the eight of hearts in the tableau.');
+    eightHearts.faceUp = true;
     window.solitaireGame.save();
   });
   await page.reload();
@@ -174,12 +178,32 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     'ace-of-diamonds-reference.png',
     '10-of-diamonds-reference.png',
     '3-of-spades-reference.png',
+    '8-of-hearts-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
     await expect(image).toHaveCount(1);
     await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth === 118 && element.naturalHeight === 177)).toBe(true);
   }
+  const bluePixelsInEightHeartsCorner = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/8-of-hearts-reference.png');
+    const image = new Image();
+    image.src = URL.createObjectURL(await response.blob());
+    await image.decode();
+    const canvas = document.createElement('canvas');
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext('2d');
+    context.drawImage(image, 0, 0);
+    const pixels = context.getImageData(80, 70, 38, 107).data;
+    let count = 0;
+    for (let index = 0; index < pixels.length; index += 4) {
+      const [red, green, blue] = pixels.slice(index, index + 3);
+      if (blue > red * 1.15 && blue > green * 1.02 && blue > 75) count += 1;
+    }
+    return count;
+  });
+  expect(bluePixelsInEightHeartsCorner).toBe(0);
 });
 
 test('settings change draw count and hand layout; a new deal resets the board', async ({ page }) => {
