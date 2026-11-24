@@ -1,0 +1,88 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_file_name": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "audit_timestamp_utc": "2026-11-24T06:33:55.559675+00:00",
+  "ffmpeg_version": "ffmpeg version 9.0 Copyright (c) 2000-2026 the FFmpeg developers",
+  "decode_command": [
+    "ffmpeg",
+    "-hide_banner",
+    "-nostats",
+    "-loglevel",
+    "info",
+    "-copyts",
+    "-seek_timestamp",
+    "1",
+    "-ss",
+    "101.000000000",
+    "-t",
+    "4.000000000",
+    "-i",
+    "gLd0HXtDt5I.mp4",
+    "-map",
+    "0:v:0",
+    "-an",
+    "-vf",
+    "showinfo,format=rgb24",
+    "-fps_mode",
+    "passthrough",
+    "-pix_fmt",
+    "rgb24",
+    "-f",
+    "rawvideo",
+    "pipe:1"
+  ],
+  "requested_window_seconds": {
+    "start": 101.0,
+    "end": 105.0
+  },
+  "source_stream": {
+    "width": 884,
+    "height": 1920,
+    "nominal_fps": 60.0,
+    "time_base_denominator": 15360,
+    "container_duration": "00:17:24.06",
+    "video_stream": "Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 884x1920 [SAR 1:1 DAR 221:480], 711 kb/s, 60 fps, 60 tbr, 15360 tbn (default)",
+    "audio_stream": "Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 127 kb/s (default)"
+  },
+  "decoded_frame_count": 240,
+  "first_frame": {
+    "index": 0,
+    "pts": 1551360,
+    "pts_time_seconds": 101.0
+  },
+  "last_frame": {
+    "index": 239,
+    "pts": 1612544,
+    "pts_time_seconds": 104.983333
+  },
+  "frames_csv": "frames.csv",
+  "contact_sheet_count": 2,
+  "keyframe_pts_requested": [
+    1579776
+  ],
+  "keyframe_neighbor_pts": {
+    "1579776": {
+      "target_frame_index": 111,
+      "before_pts": 1579520,
+      "after_pts": 1580032
+    }
+  },
+  "independent_keyframe_hash_checks": {
+    "1579520": {
+      "expected_rgb_sha256": "cdf7bdd4fe7981825c6c6d396dc9ab6233fa5dda44d047116d74a2da1a2d51ac",
+      "independent_rgb_sha256": "cdf7bdd4fe7981825c6c6d396dc9ab6233fa5dda44d047116d74a2da1a2d51ac",
+      "match": true
+    },
+    "1579776": {
+      "expected_rgb_sha256": "ad04baab8f5656cf3048abd73799f339cd983b0c78b867035469e9d3a7addc2a",
+      "independent_rgb_sha256": "ad04baab8f5656cf3048abd73799f339cd983b0c78b867035469e9d3a7addc2a",
+      "match": true
+    },
+    "1580032": {
+      "expected_rgb_sha256": "245f6a45556eea6f2647df052af29be76485d63a457bb23ae66df59f597bd629",
+      "independent_rgb_sha256": "245f6a45556eea6f2647df052af29be76485d63a457bb23ae66df59f597bd629",
+      "match": true
+    }
+  }
+}

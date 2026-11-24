@@ -9,7 +9,32 @@
 
 These readings confirm an audio-bearing promo clip and provide approximate media-time locations for louder events. They do not identify the original effect or establish which peaks come from card actions. The clip does not expose isolated music and effects stems; its promotional audio and game sounds are mixed together. The MP4 and its source hash are now preserved locally, so exact source audio can be re-extracted, but the earlier browser RMS capture remains a rough timing note rather than a reference master.
 
-A full-length 17:24 portrait gameplay recording is also available locally with AAC 44.1 kHz stereo. Its audio should be inspected against exact source PTS for isolated card actions and music-loop boundaries. Until that event-aligned listen/analysis is complete, the existing Web Audio effects and ambient loop remain approximations; the presence of a mixed audio track alone is not evidence of a match.
+A full-length 17:24 portrait gameplay recording is also available locally with AAC 44.1 kHz stereo. A reproducible 0–120 second envelope pass is now recorded below. It finds short transients, including several near feedback overlays, but does not isolate a clean sound or prove which UI action produced it. The existing Web Audio effects and ambient loop therefore remain approximations.
+
+## Third-party gameplay audio envelope
+
+- Source: [IOSTouchplayHD gameplay](https://www.youtube.com/watch?v=gLd0HXtDt5I), local file `gLd0HXtDt5I.mp4`; source-video SHA-256 `56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928`.
+- Extracted range: source time 0–120 seconds, PCM16 stereo at 44.1 kHz. The extracted WAV SHA-256 is `a60436252a556d845ab473bbd026d461d1c90e78377cfb825c8db97202c9e2fd`.
+- Analysis: 2,400 contiguous 50 ms windows. Normalized RMS median is `0.00001166`, P95 is `0.06133980`, and max is `0.48727646`; 17.58% of windows exceed RMS `0.01`, and 7.13% exceed `0.05`. This is a sparse envelope with clear bursts and quiet intervals, not evidence of a continuously audible music bed in this segment. The recording may be muted, ducked, or otherwise altered, so this cannot establish that the game has no music.
+- Strong peak candidates begin at 72.900 s (RMS `0.33768201`), 73.550 s (`0.23930280`), and 102.850 s (`0.19234923`). The matching frame windows show “Combo 4 / Amazing”, its follow-through, and later “Great” feedback, respectively. These are plausible feedback-sound locations; the mixed track and lack of direct listening/A-B comparison mean their sound labels remain unverified.
+- Reproducible outputs: `research/solitaire-master/gameplay-audio-opening-2025/manifest.json` and `audio-windows.csv`. Candidate timestamps identify windows for review; they are not an automatic classifier for taps, card moves, music, or speech.
+
+Recreate the extraction and analysis from the preserved local source video:
+
+```sh
+python3 -m venv /tmp/solitaire-audio-audit-venv
+/tmp/solitaire-audio-audit-venv/bin/python -m pip install -r tools/requirements-audio-audit.txt
+ffmpeg -copyts -t 120 -i research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 \
+  -map 0:a:0 -vn -ar 44100 -ac 2 -c:a pcm_s16le \
+  /tmp/gameplay-audio-0-120.wav
+/tmp/solitaire-audio-audit-venv/bin/python tools/audio_event_audit.py /tmp/gameplay-audio-0-120.wav \
+  --output research/solitaire-master/gameplay-audio-opening-2025 \
+  --url 'https://www.youtube.com/watch?v=gLd0HXtDt5I' \
+  --video-sha256 56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928 \
+  --source-offset-seconds 0 --hop-ms 50
+```
+
+The tool hashes its WAV input, writes per-window RMS/peak and broad-band spectral features, and records thresholded transient candidates in JSON. It accepts uncompressed mono or stereo PCM16 WAV. Use the matching video frame ledger and contact sheets to review any candidate at source time; use listening and action-by-action capture to decide what the sound actually is.
 
 ## Reproducible analysis workflow
 
