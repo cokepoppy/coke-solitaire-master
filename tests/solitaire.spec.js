@@ -133,9 +133,13 @@ test('reference court-card illustrations render on matching cards', async ({ pag
     })));
     const dealOrder = Array(28).fill(null);
     const referenceFaces = [
+      [0, '♣', 12],
       [2, '♠', 12],
+      [5, '♠', 13],
       [9, '♦', 13],
       [14, '♦', 11],
+      [20, '♥', 11],
+      [27, '♠', 11],
     ];
     const used = new Set();
     for (const [position, suit, rank] of referenceFaces) {
@@ -156,6 +160,10 @@ test('reference court-card illustrations render on matching cards', async ({ pag
     'queen-of-spades-reference.png',
     'king-of-diamonds-reference.png',
     'jack-of-diamonds-reference.png',
+    'queen-of-clubs-reference.png',
+    'king-of-spades-reference.png',
+    'jack-of-hearts-reference.png',
+    'jack-of-spades-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
@@ -435,13 +443,18 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   });
   expect(offlineCardBack).toEqual({ ok: true, type: 'image/svg+xml' });
   const offlineReferenceCards = await page.evaluate(async () => {
-    const names = ['queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds'];
+    const names = [
+      'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
+      'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
+      'king-of-hearts', 'king-of-spades',
+      'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
+    ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}-reference.png`);
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual([true, true, true]);
+  expect(offlineReferenceCards).toEqual(Array(11).fill(true));
   await context.setOffline(false);
 });
 

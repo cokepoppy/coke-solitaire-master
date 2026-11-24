@@ -6,4 +6,20 @@ The source deck credits public-domain court-card art from vector-playing-cards, 
 
 `back-solitaire-master.svg` is a locally drawn vector recreation of the default red-and-gold ornamental back visible in the [gameplay reference video](https://www.youtube.com/watch?v=gLd0HXtDt5I), including its inset frame, corner flourishes, nested diamond, and center emblem. It is used for the Ruby deck choice and for deal/flip transitions when Ruby is selected.
 
-`queen-of-spades-reference.png`, `king-of-diamonds-reference.png`, and `jack-of-diamonds-reference.png` are 118×177 crops of the matching face cards from the gameplay frame at source PTS 153600 (10 seconds). Those known cards use the source-resolution art; other ranks and court cards use the CC0 SVG deck until matching reference frames are captured.
+The following 118×177 PNGs are crops of matching cards from the gameplay video [`gLd0HXtDt5I`](https://www.youtube.com/watch?v=gLd0HXtDt5I). Coordinates are source pixels in its 884×1920 frames; PTS uses its 1/15360 time base.
+
+| Card image | PTS (time) | Crop origin (x, y) |
+| --- | ---: | ---: |
+| `queen-of-spades-reference.png` | 153600 (10s) | (133, 679) |
+| `king-of-diamonds-reference.png` | 153600 (10s) | (383, 719) |
+| `jack-of-diamonds-reference.png` | 153600 (10s) | (508, 741) |
+| `queen-of-clubs-reference.png` | 460800 (30s) | (633, 744) |
+| `queen-of-diamonds-reference.png` | 1152000 (75s) | (133, 734) |
+| `queen-of-hearts-reference.png` | 4608000 (300s) | (8, 735) |
+| `king-of-hearts-reference.png` | 2764800 (180s) | (622, 428) |
+| `king-of-spades-reference.png` | 1382400 (90s) | (258, 647) |
+| `jack-of-clubs-reference.png` | 4147200 (270s) | (383, 823) |
+| `jack-of-hearts-reference.png` | 1152000 (75s) | (633, 829) |
+| `jack-of-spades-reference.png` | 1612800 (105s) | (622, 428) |
+
+The gameplay recording does not expose the full King of Clubs card. It remains on the tableau under a Queen of Diamonds throughout the recorded play, and a 5 fps scan did not find a fully revealed source frame. That single card continues to use the CC0 SVG until a complete reference crop is available; the partial video crop is not used.
