@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v17';
+const CACHE = 'solitaire-master-v18';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));
@@ -33,6 +33,7 @@ const referencePipCards = [
   '/assets/cards/8-of-hearts-reference.png',
   '/assets/cards/9-of-diamonds-reference.png',
   '/assets/cards/2-of-hearts-reference.png',
+  '/assets/cards/7-of-diamonds-reference.png',
   '/assets/cards/5-of-diamonds-reference.png',
   '/assets/cards/ace-of-hearts-reference.png',
   '/assets/cards/7-of-clubs-reference.png',
