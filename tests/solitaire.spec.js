@@ -29,6 +29,14 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('#tableau .card-face')).toHaveCount(7);
   await expect(page.locator('#tableau .card-back')).toHaveCount(21);
   await expect(page.locator('.stock-count')).toHaveText('24');
+  await expect(page.locator('#time-value')).toHaveText(/^00:\d{2}$/);
+  await expect(page.locator('.time-stat')).toHaveAttribute('aria-label', 'Time');
+  const timerFrameBounds = await page.evaluate(() => {
+    const timer = document.querySelector('.time-stat').getBoundingClientRect();
+    const frame = document.querySelector('.timer-frame').getBoundingClientRect();
+    return { wider: frame.width > timer.width, taller: frame.height > timer.height, left: frame.left < timer.left, right: frame.right > timer.right };
+  });
+  expect(timerFrameBounds).toEqual({ wider: true, taller: true, left: true, right: true });
   await expect(page.locator('#moves-value')).toHaveText('0');
   await expect(page.getByRole('button', { name: 'Game menu' })).toBeVisible();
   await expect(page.locator('.foundation-slot')).toHaveCount(4);
