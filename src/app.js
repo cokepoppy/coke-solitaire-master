@@ -35,11 +35,12 @@ let animatedCardIds = new Set();
 let cardFlight = null;
 let winShown = false;
 let comboFeedbackTimer = null;
+let dealSettlementTimer = null;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const CARD_BACK_FILES = {
-  ruby: 'back-solitaire-master.svg', blue: 'back-blue.svg', teal: 'back-teal-reference.png',
+  ruby: 'back-solitaire-master-reference.png', blue: 'back-blue.svg', teal: 'back-teal-reference.png',
   lattice: 'back-lattice-reference.png', spade: 'back-spade-reference.png', coral: 'back-coral-reference.png',
   floral: 'back-floral-reference.png', amber: 'back-amber-reference.png',
 };
@@ -66,6 +67,31 @@ const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 
 function cardBackFile() {
   return CARD_BACK_FILES[game.state.cardBack] ?? CARD_BACK_FILES.ruby;
+}
+
+function stockCardBackFile() {
+  return game.state.cardBack === 'ruby' && game.state.stock.length === 24
+    ? 'back-solitaire-master-source.png'
+    : cardBackFile();
+}
+
+function cardBackTransitionFile() {
+  return game.state.cardBack === 'ruby' ? 'back-solitaire-master.svg' : cardBackFile();
+}
+
+function cardBackImageMarkup({ deal = false } = {}) {
+  if (!deal && game.state.cardBack === 'ruby') {
+    return `<img class="card-back-underlay" src="/assets/cards/back-solitaire-master.svg" alt="" draggable="false"><img class="card-back-art" src="/assets/cards/back-solitaire-master-reference.png" alt="" draggable="false">`;
+  }
+  const asset = deal ? cardBackTransitionFile() : cardBackFile();
+  return `<img class="card-back-art" src="/assets/cards/${asset}" alt="" draggable="false">`;
+}
+
+function stockCardBackMarkup() {
+  if (game.state.cardBack === 'ruby') {
+    return `<img class="card-back-underlay" src="/assets/cards/back-solitaire-master.svg" alt="" draggable="false"><img class="card-back-art" src="/assets/cards/${stockCardBackFile()}" alt="" draggable="false">`;
+  }
+  return `<img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false">`;
 }
 
 function escapeHtml(value) {
@@ -131,6 +157,7 @@ function renderCard(card, source, options = {}) {
   const selected = selectable && sourceMatches(source, game.state.selected);
   const hint = selectable && isHintSource(source);
   const classes = ['playing-card', card.faceUp ? 'card-face' : 'card-back'];
+  if (!card.faceUp && game.state.cardBack === 'ruby' && !deal) classes.push('source-card-back');
   if (selected) classes.push('is-selected');
   if (hint) classes.push('is-hint');
   if (deal) classes.push('card-enter');
@@ -141,10 +168,10 @@ function renderCard(card, source, options = {}) {
   const drawY = flight ? flight.originY - flight.targetY : -5;
   const flightOrder = flight ? (flight.order.get(card.id) ?? 0) : drawOrder;
   const drawDelay = flight ? flightOrder * 55 : 0;
-  const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${delay}ms;--waste-offset:${wasteOffset};--draw-x:${drawX}px;--draw-y:${drawY}px;--draw-delay:${drawDelay}ms;--flip-back:url('/assets/cards/${cardBackFile()}')`;
+  const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${delay}ms;--waste-offset:${wasteOffset};--draw-x:${drawX}px;--draw-y:${drawY}px;--draw-delay:${drawDelay}ms;--flip-back:url('/assets/cards/${cardBackTransitionFile()}')`;
   const aria = card.faceUp ? cardName(card) : 'Face-down card';
   if (!card.faceUp) {
-    return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false"></button>`;
+    return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1">${cardBackImageMarkup({ deal })}</button>`;
   }
   const color = ['♥', '♦'].includes(card.suit) ? 'red' : 'black';
   const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
@@ -162,9 +189,9 @@ function renderTopRow() {
   const stockHint = game.state.hint?.source?.zone === 'stock';
   const stockButton = `<div class="slot stock-slot drop-target${stockHint ? ' is-hint' : ''}" style="grid-column:${stockCol};grid-row:1" data-drop-zone="stock" data-pile="0">
       <button class="stock-button${stockHint ? ' is-hint' : ''}" type="button" data-action="stock" aria-label="${stock.length ? `Draw a card, ${stock.length} cards remaining` : game.state.waste.length ? 'Turn the waste pile over' : 'Stock pile is empty'}">
-        ${stock.length ? `<span class="playing-card card-back"><img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false"></span>` : '<span class="empty-stock">↻</span>'}
+        ${stock.length ? `<span class="playing-card card-back${game.state.cardBack === 'ruby' ? ' source-card-back' : ''}">${stockCardBackMarkup()}</span>` : '<span class="empty-stock">↻</span>'}
       </button>
-      ${stock.length ? `<span class="stock-count">${stock.length}</span>` : ''}
+      ${stock.length ? `<span class="stock-count${game.state.cardBack === 'ruby' ? ` source-stock-count${stock.length === 24 ? ' source-stock-count-baked' : ''}` : ''}">${stock.length}</span>` : ''}
     </div>`;
   const wasteCards = game.state.waste.slice(-3);
   const wasteStart = game.state.waste.length - wasteCards.length;
@@ -234,11 +261,17 @@ function updateChrome() {
 }
 
 function render() {
+  const settlingDeal = firstDeal;
+  if (settlingDeal) clearTimeout(dealSettlementTimer);
   renderTopRow();
   renderTableau();
   updateChrome();
   animatedCardIds = new Set();
   cardFlight = null;
+  if (settlingDeal) dealSettlementTimer = setTimeout(() => {
+    dealSettlementTimer = null;
+    render();
+  }, 1320);
 }
 
 function showComboFeedback(cardId) {

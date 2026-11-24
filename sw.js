@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v30';
+const CACHE = 'solitaire-master-v31';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));
@@ -64,7 +64,7 @@ const foundationSlots = ['/assets/ui/foundation-empty-1.png', '/assets/ui/founda
 const statusBarIcons = ['/assets/ui/menu-source.png', '/assets/ui/stat-crown.png', '/assets/ui/stat-moves.png'];
 const sourceTimerFrame = ['/assets/ui/timer-frame-source.png'];
 const timerGlyphs = [...Array.from({ length: 10 }, (_, index) => `/assets/ui/timer-digit-${index}.png`), '/assets/ui/timer-colon.png'];
-const SHELL = ['/', '/index.html', '/src/styles.css', '/src/game.js', '/src/audio.js', '/src/app.js', '/manifest.webmanifest', '/assets/icon.svg', '/assets/themes/mountain-valley.jpg', '/assets/audio/card-move-reference.wav', '/assets/audio/combo-amazing-reference.wav', '/assets/audio/foundation-reference.wav', '/assets/cards/back-red.svg', '/assets/cards/back-blue.svg', '/assets/cards/back-solitaire-master.svg', ...referenceCardBacks, ...referenceCourtCards, ...referencePipCards, ...cardFaces, ...actionIcons, ...foundationSlots, ...statusBarIcons, ...sourceTimerFrame, ...timerGlyphs];
+const SHELL = ['/', '/index.html', '/src/styles.css', '/src/game.js', '/src/audio.js', '/src/app.js', '/manifest.webmanifest', '/assets/icon.svg', '/assets/themes/mountain-valley.jpg', '/assets/audio/card-move-reference.wav', '/assets/audio/combo-amazing-reference.wav', '/assets/audio/foundation-reference.wav', '/assets/cards/back-red.svg', '/assets/cards/back-blue.svg', '/assets/cards/back-solitaire-master.svg', '/assets/cards/back-solitaire-master-reference.png', '/assets/cards/back-solitaire-master-source.png', ...referenceCardBacks, ...referenceCourtCards, ...referencePipCards, ...cardFaces, ...actionIcons, ...foundationSlots, ...statusBarIcons, ...sourceTimerFrame, ...timerGlyphs];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));

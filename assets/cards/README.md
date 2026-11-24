@@ -4,7 +4,7 @@ The 52 base face-card SVGs and the alternate blue/red card-back SVGs in this dir
 
 The source deck credits public-domain court-card art from vector-playing-cards, CC0 suit pips and rank glyphs from Openclipart, and CC0 card-back artwork from OpenGameArt. The SVGs are served locally so the game can load and play offline.
 
-`back-solitaire-master.svg` is a locally drawn vector recreation of the default red-and-gold ornamental back visible in the [gameplay reference video](https://www.youtube.com/watch?v=gLd0HXtDt5I), including its inset frame, corner flourishes, nested diamond, and center emblem. It is used for the Ruby deck choice and for deal/flip transitions when Ruby is selected.
+`back-solitaire-master-source.png` is the unmodified 118×177 crop at `(758,429)` from PTS 153600 (10s) in the 884×1920 gameplay frame; it preserves the source stock's baked-in `24` counter and is used while all 24 cards remain. `back-solitaire-master-reference.png` is the same crop with only the bright counter glyphs made transparent. The vector back fills those few pixels beneath the live count after a draw and beneath face-down tableau stacks. `back-solitaire-master.svg` remains the transition art during deal and flip animations. Both PNGs and the SVG are cached for offline play. Regenerate them with `python3 tools/extract_source_card_back.py` after creating the keyframe described in [`docs/video-frame-audit.md`](../../docs/video-frame-audit.md).
 
 The following 118×177 PNGs are crops of matching cards from the gameplay video [`gLd0HXtDt5I`](https://www.youtube.com/watch?v=gLd0HXtDt5I). Coordinates are source pixels in its 884×1920 frames; PTS uses its 1/15360 time base.
 

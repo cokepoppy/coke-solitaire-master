@@ -224,6 +224,10 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .card-face.dragging { opacity: .22; transform: none; z-index: 80 !important; cursor: grabbing; }
 .card-face.is-hint { box-shadow: 0 0 0 2px #f7d879, 0 0 17px rgba(255, 216, 98, .7); z-index: 32 !important; }
 .card-back { position: absolute; left: 0; top: var(--card-offset, 0); border: 1px solid rgba(255,255,255,.86); background: #f5eee0; }
+.card-back.source-card-back { border: 0; background: transparent; box-shadow: none; }
+.source-card-back .card-back-underlay, .source-card-back .card-back-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+.stock-count.source-stock-count { bottom: calc(var(--card-height) * .045); left: calc(var(--card-width) * .04); width: calc(var(--card-width) * .3); height: calc(var(--card-height) * .135); min-width: 0; padding: 0; border-radius: 0; background: #21171a; font-size: clamp(8px, 2.4vw, 11px); }
+.stock-count.source-stock-count-baked { color: transparent; text-shadow: none; background: transparent; }
 .drag-ghost { position: fixed; z-index: 1000; width: var(--card-width); height: var(--card-height); pointer-events: none; filter: drop-shadow(0 13px 18px rgba(0,0,0,.42)); }
 .drag-ghost .playing-card { position: absolute; left: 0; width: var(--card-width); height: var(--card-height); pointer-events: none; }
 .card-back.is-hint, .stock-button.is-hint .playing-card { box-shadow: 0 0 0 2px #f7d879, 0 0 17px rgba(255, 216, 98, .72); }
