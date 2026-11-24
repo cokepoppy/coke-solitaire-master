@@ -234,9 +234,8 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .playing-card.card-enter { pointer-events: none; animation: card-deal .26s both cubic-bezier(.16,.76,.38,1); animation-delay: var(--deal-delay, 0ms); }
 .card-face.card-enter::before { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: inherit; background: var(--flip-back, url('/assets/cards/back-solitaire-master.svg')) center / 100% 100% no-repeat; transform-origin: center; animation: deal-back-flip .18s both ease-in-out; animation-delay: calc(var(--deal-delay, 0ms) + 180ms); }
 .card-face.card-enter .card-face-art { transform-origin: center; backface-visibility: hidden; animation: deal-face-reveal .18s both ease-in-out; animation-delay: calc(var(--deal-delay, 0ms) + 180ms); }
-.card-face.card-reveal::before { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: inherit; background: var(--flip-back, url('/assets/cards/back-solitaire-master.svg')) center / 100% 100% no-repeat; transform-origin: center; animation: deal-back-flip .18s both ease-in-out; animation-delay: calc(var(--draw-delay, 0ms) + 80ms); }
-.card-face.card-reveal .card-face-art { transform-origin: center; backface-visibility: hidden; animation: draw-face-reveal .18s both ease-in-out; animation-delay: calc(var(--draw-delay, 0ms) + 80ms); }
 .playing-card.card-arrive { animation: card-land .22s both cubic-bezier(.2,.8,.2,1); animation-delay: var(--draw-delay, 0ms); }
+.playing-card.card-arrive.card-stock-draw { animation-duration: .15s; animation-timing-function: linear; }
 .playing-card:active { filter: brightness(1.03); }
 .corner { position: absolute; display: flex; align-items: flex-start; flex-direction: row; gap: 1px; font-family: Arial, sans-serif; font-weight: 700; line-height: .9; }
 .corner b { font-size: clamp(10px, calc(var(--card-w) * .29), 19px); letter-spacing: -.04em; }
@@ -487,7 +486,6 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 @keyframes card-deal { from { opacity: .35; transform: translate(var(--deal-x, 0px), var(--deal-y, -8px)) scale(.94); } to { opacity: 1; transform: translate(0, 0) scale(1); } }
 @keyframes deal-back-flip { from { opacity: 1; transform: rotateY(0deg); } to { opacity: 0; transform: rotateY(90deg); } }
 @keyframes deal-face-reveal { from { opacity: 0; transform: rotateY(-90deg); } to { opacity: 1; transform: rotateY(0deg); } }
-@keyframes draw-face-reveal { from { opacity: 0; transform: rotateY(-90deg); } to { opacity: 1; transform: rotateY(0deg); } }
 @keyframes card-land { from { opacity: .64; filter: brightness(1.22); transform: translate(var(--draw-x, 0px), var(--draw-y, -5px)) scale(.94); } to { opacity: 1; filter: brightness(1); transform: translateX(calc(var(--card-width) * var(--waste-offset, 0))) translateY(0) scale(1); } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes modal-rise { from { opacity: .65; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -522,5 +520,4 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
   .playing-card.card-enter { animation-delay: 0ms !important; }
   .playing-card.card-arrive { animation-delay: 0ms !important; }
   .card-face.card-enter::before, .card-face.card-enter .card-face-art { animation-delay: 0ms !important; }
-  .card-face.card-reveal::before, .card-face.card-reveal .card-face-art { animation-delay: 0ms !important; }
 }

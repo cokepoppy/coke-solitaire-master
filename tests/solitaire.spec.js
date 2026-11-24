@@ -87,6 +87,13 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
 
   const stockTapBox = await page.locator('[data-action="stock"]').boundingBox();
   await page.touchscreen.tap(stockTapBox.x + stockTapBox.width / 2, stockTapBox.y + stockTapBox.height / 2);
+  const stockDrawMotion = await page.locator('.waste-slot .card-face').first().evaluate((card) => ({
+    active: card.classList.contains('card-stock-draw') && card.classList.contains('card-arrive'),
+    animation: getComputedStyle(card).animationName,
+    duration: getComputedStyle(card).animationDuration,
+    faceReveal: card.classList.contains('card-reveal'),
+  }));
+  expect(stockDrawMotion).toEqual({ active: true, animation: 'card-land', duration: '0.15s', faceReveal: false });
   await expect(page.locator('.stock-count')).toHaveText('23');
   await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
   await expect(page.locator('#moves-value')).toHaveText('1');
@@ -99,12 +106,6 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(firstDrawFlight.x).toBeCloseTo(tableauLayout.stock - tableauLayout.waste);
   expect(firstDrawFlight.y).toBe(0);
   expect(firstDrawFlight.fan).toBe(0);
-  const drawFlip = await page.locator('.waste-slot .card-face').first().evaluate((card) => ({
-    active: card.classList.contains('card-reveal'),
-    animation: getComputedStyle(card.querySelector('.card-face-art')).animationName,
-  }));
-  expect(drawFlip).toEqual({ active: true, animation: 'draw-face-reveal' });
-
   await page.getByRole('button', { name: 'Undo move' }).click();
   await expect(page.locator('.stock-count')).toHaveText('24');
   await expect(page.locator('.waste-slot .card-face')).toHaveCount(0);
