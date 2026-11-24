@@ -189,6 +189,9 @@ test('source opening replay matches the 20-second score, move count, and exposed
   await page.reload();
   await page.waitForTimeout(1450);
   await expect(page.locator('#tableau .card-back-art').first()).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
+  const initialStackSpacing = await page.locator('.pile-column[data-pile="6"] .card-back').evaluateAll((cards) => cards.slice(1).map((card, index) => card.getBoundingClientRect().top - cards[index].getBoundingClientRect().top));
+  expect(initialStackSpacing).toHaveLength(5);
+  for (const spacing of initialStackSpacing) expect(spacing).toBeCloseTo(12.33, 1);
   await page.evaluate(() => {
     window.audioCues = [];
     const audio = window.solitaireAudio;
@@ -266,6 +269,10 @@ test('source opening replay matches the 20-second score, move count, and exposed
   await move(4, 4, 3, 4);
   await expect(page.locator('#score-value')).toHaveText('30');
   await expect(page.locator('#moves-value')).toHaveText('3');
+  await page.waitForTimeout(200);
+  const faceUpStackSpacing = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.slice(1).map((card, index) => card.getBoundingClientRect().top - cards[index].getBoundingClientRect().top));
+  expect(faceUpStackSpacing).toHaveLength(2);
+  for (const spacing of faceUpStackSpacing) expect(spacing).toBeCloseTo(42.94, 1);
   const finalBoard = await page.evaluate(() => ({
     score: window.solitaireGame.state.score,
     moves: window.solitaireGame.state.moves,
