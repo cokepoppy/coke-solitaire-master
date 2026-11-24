@@ -65,6 +65,7 @@ export class SolitaireGame {
       leftHand: false,
       theme: 'felt',
       cardBack: 'ruby',
+      cardFaceStyle: 'master',
       challenge,
       sound: true,
       music: false,
@@ -87,6 +88,8 @@ export class SolitaireGame {
       if (saved?.version !== 1 || !saved.state?.tableau?.length) return false;
       this.state = { ...saved.state, history: [], selected: null, hint: null };
       this.state.cardBack ??= 'ruby';
+      this.state.cardFaceStyle ??= 'master';
+      if (!['master', 'classic'].includes(this.state.cardFaceStyle)) this.state.cardFaceStyle = 'master';
       if (this.state.cardBack === 'emerald' || this.state.cardBack === 'midnight') {
         this.state.cardBack = 'blue';
         this.save();
@@ -94,6 +97,7 @@ export class SolitaireGame {
       this.state.magicCharges ??= 1;
       this.state.challenge ??= null;
       if (this.state.theme === 'woodland') this.state.theme = 'mountain';
+      if (!['felt', 'mountain', 'dusk', 'lagoon', 'emerald', 'midnight', 'plum', 'forest', 'violet'].includes(this.state.theme)) this.state.theme = 'felt';
       return true;
     } catch {
       return false;
@@ -113,7 +117,7 @@ export class SolitaireGame {
   }
 
   setOption(name, value) {
-    if (['drawCount', 'leftHand', 'theme', 'cardBack', 'sound', 'music'].includes(name)) {
+    if (['drawCount', 'leftHand', 'theme', 'cardBack', 'cardFaceStyle', 'sound', 'music'].includes(name)) {
       this.state[name] = value;
       this.save();
     }
