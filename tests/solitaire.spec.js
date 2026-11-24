@@ -284,6 +284,28 @@ test('source opening replay matches the 20-second score, move count, and exposed
     }),
   }));
   expect(finalBoard).toEqual({ score: 30, moves: 3, stock: 24, topCards: ['4♣', '6♣', '2♣', '11♦', '3♣', '12♣', '9♦'] });
+  await expect(page.locator('.pile-column[data-pile="0"] .card-face-art[src$="4-of-clubs-reference.png"]')).toHaveCount(1);
+  await expect(page.locator('.pile-column[data-pile="1"] .card-face-art')).toHaveAttribute('src', /6-of-clubs-reference\.png$/);
+  await expect(page.locator('.pile-column[data-pile="2"] .card-face-art')).toHaveAttribute('src', /2-of-clubs-reference\.png$/);
+  await expect(page.locator('.pile-column[data-pile="4"] .card-face-art')).toHaveAttribute('src', /3-of-clubs-reference\.png$/);
+  await expect(page.locator('.pile-column[data-pile="5"] .card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
+  await expect(page.locator('.pile-column[data-pile="6"] .card-face-art')).toHaveAttribute('src', /9-of-diamonds-reference\.png$/);
+  const sourceOpeningArtHashes = await page.evaluate(async () => Promise.all([
+    '4-of-clubs-reference.png', '6-of-clubs-reference.png', '2-of-clubs-reference.png',
+    '3-of-clubs-reference.png', 'queen-of-clubs-reference.png', '9-of-diamonds-reference.png',
+  ].map(async (name) => {
+    const response = await fetch(`/assets/cards/${name}`);
+    const digest = await crypto.subtle.digest('SHA-256', await response.arrayBuffer());
+    return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  })));
+  expect(sourceOpeningArtHashes).toEqual([
+    'dcee976a4570c9a7d11a6e453d8459026f9ed8f8b92b65cae3ad5314f6bb3c7a',
+    '23f0adda1b258b7cbf2f7a50c97cf7d85e91f83e16182209f1886816916468cc',
+    'ec4998abc2b3cbcfd435e3b1b31d4e97520c9d3f71db968260953125f8783224',
+    '8a2782e4521c464c99bed25dba221c7417bd5bfef41052e883ba06a72f173716',
+    'f6fe7ebe952b93ad9354bbe780eddebda8a379cba30c155c3ad893031d7cb700',
+    'f1b22bc4bbf2ff02412e19b44a71a00df7899bb43a7d35a4e49a9518c27bd4a0',
+  ]);
   await page.waitForTimeout(1000);
   await page.evaluate(() => {
     window.solitaireGame.state.seconds = 6;
