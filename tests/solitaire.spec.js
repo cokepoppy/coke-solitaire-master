@@ -11,6 +11,25 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('#tableau .card-back')).toHaveCount(21);
   await expect(page.locator('.stock-count')).toHaveText('24');
   await expect(page.locator('#moves-value')).toHaveText('0');
+  await expect(page.getByRole('button', { name: 'Game menu' })).toBeVisible();
+  await expect(page.locator('.foundation-slot')).toHaveCount(4);
+  await expect(page.locator('.action-button')).toHaveCount(4);
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
+  await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
+  await expect.poll(() => page.locator('.card-back-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
+  const tableauLayout = await page.evaluate(() => {
+    const box = (selector) => document.querySelector(selector).getBoundingClientRect();
+    return {
+      foundation: box('.foundation-slot[data-pile="0"]').left,
+      waste: box('.waste-slot').left,
+      stock: box('.stock-slot').left,
+      newLabel: document.querySelector('#new-game-button').innerText.trim(),
+    };
+  });
+  expect(tableauLayout.foundation).toBeLessThan(tableauLayout.waste);
+  expect(tableauLayout.waste).toBeLessThan(tableauLayout.stock);
+  expect(tableauLayout.newLabel).toBe('New Game');
   const deckIntegrity = await page.evaluate(() => {
     const state = window.solitaireGame.state;
     const cards = [...state.stock, ...state.waste, ...state.foundations.flat(), ...state.tableau.flat()];
@@ -56,13 +75,14 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
 
 test('settings change draw count and hand layout; a new deal resets the board', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Settings' }).click();
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
   await page.getByRole('button', { name: 'Draw 3' }).click();
   await page.getByRole('switch', { name: /Left-hand mode/ }).click();
   await expect(page.locator('body')).toHaveClass(/left-hand/);
   const stockBox = await page.locator('.stock-slot').boundingBox();
   const foundationBox = await page.locator('.foundation-slot[data-pile="0"]').boundingBox();
-  expect(stockBox.x).toBeGreaterThan(foundationBox.x);
+  expect(stockBox.x).toBeLessThan(foundationBox.x);
   await page.getByRole('button', { name: 'Ruby card back' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -122,7 +142,7 @@ test('a legal hinted card can be dragged to its destination', async ({ page }) =
 
 test('the daily deal is repeatable and the game restores on reload', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'More game options' }).click();
+  await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: /Daily challenge/ }).click();
   const dailyDate = await page.evaluate(() => window.solitaireGame.state.challenge);
   const firstCard = await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id);
@@ -134,10 +154,21 @@ test('the daily deal is repeatable and the game restores on reload', async ({ pa
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('.stock-count')).toHaveText('23');
 
-  await page.getByRole('button', { name: 'More game options' }).click();
+  await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: new RegExp(dailyDate) }).click();
   await expect(page.locator('#moves-value')).toHaveText('0');
   expect(await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id)).toBe(firstCard);
+});
+
+test('the Magic control plays one legal suggestion and undo reverses it', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('#magic-badge')).toHaveText('1');
+  await page.getByRole('button', { name: 'Use magic move' }).click();
+  await expect(page.locator('#moves-value')).toHaveText('1');
+  await expect(page.locator('#magic-badge')).toBeHidden();
+  await page.getByRole('button', { name: 'Undo move' }).click();
+  await expect(page.locator('#moves-value')).toHaveText('0');
+  await expect(page.locator('#magic-badge')).toHaveText('1');
 });
 
 test('the board fits a 320px phone and the installed shell loads offline', async ({ page, context }) => {
@@ -152,6 +183,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.reload();
   await expect(page).toHaveTitle('Solitaire Master');
   await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
+  await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   await context.setOffline(false);
 });
 

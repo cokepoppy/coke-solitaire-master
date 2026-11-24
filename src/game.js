@@ -61,9 +61,10 @@ export class SolitaireGame {
       selected: null,
       hint: null,
       drawCount: 1,
+      magicCharges: 1,
       leftHand: false,
-      theme: 'woodland',
-      cardBack: 'emerald',
+      theme: 'felt',
+      cardBack: 'ruby',
       challenge,
       sound: true,
       music: false,
@@ -85,7 +86,8 @@ export class SolitaireGame {
       const saved = JSON.parse(stored);
       if (saved?.version !== 1 || !saved.state?.tableau?.length) return false;
       this.state = { ...saved.state, history: [], selected: null, hint: null };
-      this.state.cardBack ??= 'emerald';
+      this.state.cardBack ??= 'ruby';
+      this.state.magicCharges ??= 1;
       this.state.challenge ??= null;
       return true;
     } catch {

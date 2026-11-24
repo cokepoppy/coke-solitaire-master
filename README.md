@@ -26,4 +26,6 @@ The mobile Chrome E2E suite checks the initial deal, stock draw, undo, hinted ta
 - [Solitaire Master! on Google Play](https://play.google.com/store/apps/details?id=solitaire.classic.hungrystudio.free.klondike.card.patience)
 - [Hungry Studio on YouTube](https://www.youtube.com/@hungrystudio_games)
 - [Solitaire Master! gameplay recording](https://www.youtube.com/watch?v=gLd0HXtDt5I)
+- [Official Hungry Studio Solitaire Classic short](https://www.youtube.com/watch?v=Yvi1HA3OcxU)
+- Card art source and license: [assets/cards/README.md](assets/cards/README.md)
 - Frame audit, rule notes, and known fidelity gaps: [docs/reference-study.md](docs/reference-study.md)
