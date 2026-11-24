@@ -338,9 +338,12 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .combo-feedback::before, .combo-feedback::after { position: absolute; color: #faf477; font-size: .7em; content: '✦'; text-shadow: 0 1px 3px rgba(13,35,15,.75); animation: combo-spark .72s ease-out both; }
 .combo-feedback::before { top: -12px; left: -14px; }
 .combo-feedback::after { right: -15px; bottom: -8px; animation-delay: .1s; }
-.combo-amazing { position: absolute; z-index: 119; top: 48%; left: 50%; color: #ffb90e; pointer-events: none; transform: translate(-50%, -50%); animation: amazing-pop .62s cubic-bezier(.14,.78,.24,1) both; }
-.combo-amazing b { display: block; color: #ffc223; font-family: system-ui, sans-serif; font-size: clamp(39px, 15vw, 70px); font-weight: 950; line-height: 1; letter-spacing: -.05em; -webkit-text-stroke: 1.5px #fff0b0; paint-order: stroke fill; text-shadow: 0 3px 0 #b45a17, 0 6px 0 #674120, 0 11px 13px rgba(0,0,0,.45); }
-.combo-amazing i { position: absolute; color: #f23b55; font-size: 25px; font-style: normal; text-shadow: 0 1px 4px rgba(0,0,0,.3); animation: amazing-heart 1.35s ease-out both; }
+.combo-amazing { position: absolute; z-index: 119; top: 48%; left: 50%; pointer-events: none; transform: translate(-50%, -50%); }
+.combo-amazing .combo-reward-art { width: min(59vw, 260px); }
+.combo-amazing > b { display: none; color: #ffc223; font-family: system-ui, sans-serif; font-size: clamp(39px, 15vw, 70px); font-weight: 950; line-height: 1; letter-spacing: -.05em; -webkit-text-stroke: 1.5px #fff0b0; paint-order: stroke fill; text-shadow: 0 3px 0 #b45a17, 0 6px 0 #674120, 0 11px 13px rgba(0,0,0,.45); }
+.combo-amazing.sprite-failed > b { display: block; animation: amazing-pop .62s cubic-bezier(.14,.78,.24,1) both; }
+.combo-amazing i { display: none; position: absolute; color: #f23b55; font-size: 25px; font-style: normal; text-shadow: 0 1px 4px rgba(0,0,0,.3); animation: amazing-heart 1.35s ease-out both; }
+.combo-amazing.sprite-failed i { display: block; }
 .combo-amazing i:nth-of-type(1) { top: -24px; left: 14%; }
 .combo-amazing i:nth-of-type(2) { top: 6px; right: 12%; animation-delay: .08s; }
 .combo-amazing i:nth-of-type(3) { bottom: -19px; left: 34%; color: #fff27a; animation-delay: .12s; }
@@ -348,6 +351,7 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .combo-good, .combo-great { position: absolute; z-index: 119; top: 53%; left: 50%; pointer-events: none; transform: translate(-50%, -50%); }
 .combo-reward-art { display: block; width: min(27.6vw, 244px); height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .combo-good > b, .combo-great > b { display: none; color: #ffc223; background-image: linear-gradient(180deg, #fff9be 0%, #ffd93f 32%, #fff0a3 48%, #f9a70e 65%, #ffd150 82%, #ffe48e 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: system-ui, sans-serif; font-size: clamp(26px, 7.5vw, 48px); font-weight: 950; line-height: 1; letter-spacing: -.045em; -webkit-text-stroke: 1px #fff0b0; paint-order: stroke fill; text-shadow: 0 2px 0 #b45a17, 0 4px 0 #674120, 0 7px 9px rgba(0,0,0,.42); }
+.combo-good.sprite-failed .combo-reward-art, .combo-great.sprite-failed .combo-reward-art, .combo-amazing.sprite-failed .combo-reward-art { display: none; }
 .combo-good.sprite-failed > b, .combo-great.sprite-failed > b { display: block; animation: combo-reward-pop .82s cubic-bezier(.16,.78,.24,1) both; }
 
 .modal-backdrop {

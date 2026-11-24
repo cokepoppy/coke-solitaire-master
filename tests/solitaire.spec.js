@@ -679,9 +679,9 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
 test('foundation placements show source feedback and sound only at observed combo tiers', async ({ page }) => {
   await page.goto('/');
   const tiers = [
-    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good' },
-    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great' },
-    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing' },
+    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good', width: 244 },
+    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great', width: 244 },
+    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520 },
   ];
   for (const tier of tiers) {
     await page.evaluate((targetCombo) => {
@@ -726,11 +726,9 @@ test('foundation placements show source feedback and sound only at observed comb
     await expect(page.locator(tier.selector)).toContainText(tier.name);
     await expect.poll(() => page.evaluate((cue) => window.rewardCues.includes(cue), tier.cue)).toBe(true);
     await expect(page.locator('.combo-good, .combo-great, .combo-amazing')).toHaveCount(1);
-    if (tier.name !== 'Amazing') {
-      const art = page.locator(`${tier.selector} .combo-reward-art`);
-      await expect(art).toHaveAttribute('src', `/assets/feedback/combo-${tier.cue}.webp`);
-      await expect.poll(() => art.evaluate((image) => image.complete && image.naturalWidth === 244)).toBe(true);
-    }
+    const art = page.locator(`${tier.selector} .combo-reward-art`);
+    await expect(art).toHaveAttribute('src', `/assets/feedback/combo-${tier.cue}.webp`);
+    await expect.poll(() => art.evaluate((image) => image.complete && image.naturalWidth)).toBe(tier.width);
     await page.waitForTimeout(350);
     await page.screenshot({ path: `test-results/foundation-reward-${tier.name.toLowerCase()}.png` });
   }
@@ -989,7 +987,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v35');
+  expect(cacheNames).toContain('solitaire-master-v36');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -1054,12 +1052,13 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   expect(offlineGreatCue.ok).toBe(true);
   expect(offlineGreatCue.audioType).toBe(true);
   expect(offlineGreatCue.bytes).toBeGreaterThan(80_000);
-  const offlineRewardSprites = await page.evaluate(async () => Promise.all(['good', 'great'].map(async (name) => {
+  const offlineRewardSprites = await page.evaluate(async () => Promise.all(['good', 'great', 'amazing'].map(async (name) => {
     const response = await fetch(`/assets/feedback/combo-${name}.webp`);
     const bytes = (await response.arrayBuffer()).byteLength;
     return { ok: response.ok, type: response.headers.get('content-type'), bytes };
   })));
   expect(offlineRewardSprites.map(({ ok, type, bytes }) => [ok, type, bytes > 500_000])).toEqual([
+    [true, 'image/webp', true],
     [true, 'image/webp', true],
     [true, 'image/webp', true],
   ]);
