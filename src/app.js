@@ -300,8 +300,8 @@ function render() {
   }, 1320);
 }
 
-function showComboFeedback(cardId) {
-  board.querySelectorAll('.combo-feedback, .combo-great, .combo-amazing').forEach((effect) => effect.remove());
+function showComboFeedback(cardId, foundationMove = false) {
+  board.querySelectorAll('.combo-feedback, .combo-good, .combo-great, .combo-amazing').forEach((effect) => effect.remove());
   clearTimeout(comboFeedbackTimer);
   if (game.state.comboCount < 1 || !cardId || game.state.won) return;
   const card = [...board.querySelectorAll('[data-card-id]')].find((element) => element.dataset.cardId === cardId);
@@ -315,22 +315,22 @@ function showComboFeedback(cardId) {
   label.style.top = '-20px';
   label.style.left = '50%';
   board.append(label);
-  if (combo === 2) {
-    audio.play('great');
-    const great = document.createElement('div');
-    great.className = 'combo-great';
-    great.setAttribute('aria-hidden', 'true');
-    great.innerHTML = '<b>Great</b><i>✦</i><i>✦</i>';
-    board.append(great);
-  } else if (combo === 4) {
-    audio.play('amazing');
-    const amazing = document.createElement('div');
-    amazing.className = 'combo-amazing';
-    amazing.setAttribute('aria-hidden', 'true');
-    amazing.innerHTML = '<b>Amazing</b><i>♥</i><i>♥</i><i>✦</i><i>✦</i>';
-    board.append(amazing);
+  const reward = foundationMove ? {
+    1: { name: 'Good', cue: 'good', className: 'combo-good' },
+    2: { name: 'Great', cue: 'great', className: 'combo-great' },
+    4: { name: 'Amazing', cue: 'amazing', className: 'combo-amazing' },
+  }[combo] : null;
+  if (reward) {
+    audio.play(reward.cue);
+    const banner = document.createElement('div');
+    banner.className = reward.className;
+    banner.setAttribute('aria-hidden', 'true');
+    banner.innerHTML = reward.name === 'Amazing'
+      ? '<b>Amazing</b><i>♥</i><i>♥</i><i>✦</i><i>✦</i>'
+      : `<b>${reward.name}</b><i>✦</i><i>✦</i>`;
+    board.append(banner);
   }
-  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-great, .combo-amazing').forEach((effect) => effect.remove()), combo === 4 ? 620 : 920);
+  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-good, .combo-great, .combo-amazing').forEach((effect) => effect.remove()), combo === 4 ? 620 : 920);
 }
 
 function captureStockFlight() {
@@ -720,7 +720,7 @@ function handleMagic() {
   audio.play(game.state.won ? 'win' : hint.target.zone === 'foundation' ? 'foundation' : 'move');
   render();
   startCardMoveFlight(origins);
-  showComboFeedback(movingIds[0]);
+  showComboFeedback(movingIds[0], hint.target.zone === 'foundation');
   if (game.state.won) completeWin();
   announce('Magic move played');
 }
@@ -745,7 +745,7 @@ function commitMove(target) {
     audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : 'move');
     render();
     startCardMoveFlight(origins);
-    showComboFeedback(movingIds[0]);
+    showComboFeedback(movingIds[0], foundationMove);
     if (game.state.won) completeWin();
   } else {
     game.state.selected = null;
@@ -829,7 +829,7 @@ board.addEventListener('pointerup', (event) => {
     else if (result.action === 'select') audio.play('tap');
     render();
     if (result.action === 'move' || result.action === 'foundation') startCardMoveFlight(origins);
-    if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId);
+    if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId, result.action === 'foundation');
     if (game.state.won) completeWin();
   }
   drag = null;

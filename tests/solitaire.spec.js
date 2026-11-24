@@ -329,7 +329,7 @@ test('source opening replay matches the 20-second score, move count, and exposed
   expect(sourceStatBounds.moves.x).toBeCloseTo(387.1, 0);
   expect(sourceStatBounds.moves.y).toBeCloseTo(162.5, 0);
   expect(sourceStatBounds.moves.width).toBeCloseTo(10.5, 1);
-  await expect(page.locator('.combo-feedback, .combo-great, .combo-amazing')).toHaveCount(0);
+  await expect(page.locator('.combo-feedback, .combo-good, .combo-great, .combo-amazing')).toHaveCount(0);
   const timeDisplay = page.locator('#time-value');
   await expect(timeDisplay).toHaveText('00:07');
   await expect(timeDisplay.locator('.timer-glyph')).toHaveCount(5);
@@ -642,10 +642,10 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   await move('♣-9', '♥-10');
   await expect(page.locator('#moves-value')).toHaveText('3');
   await expect(page.locator('.combo-feedback')).toHaveText('COMBO2');
-  await expect(page.locator('.combo-great')).toContainText('Great');
-  await expect.poll(() => page.evaluate(() => window.comboAudioCues.includes('great'))).toBe(true);
+  await expect(page.locator('.combo-good, .combo-great, .combo-amazing')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.comboAudioCues.includes('great'))).toBe(false);
   await page.waitForTimeout(150);
-  await page.screenshot({ path: 'test-results/mobile-combo-great.png' });
+  await page.screenshot({ path: 'test-results/mobile-combo-2-tableau.png' });
   await page.locator('.pile-column[data-pile="6"] [data-card-id="♠-13"]').click();
   await page.locator('.pile-column[data-pile="0"]').click();
   await expect(page.locator('#moves-value')).toHaveText('4');
@@ -653,8 +653,8 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   await move('♥-12', '♠-13');
   await expect(page.locator('#moves-value')).toHaveText('5');
   await expect(page.locator('.combo-feedback')).toHaveText('COMBO4');
-  await expect(page.locator('.combo-amazing')).toContainText('Amazing');
-  await expect.poll(() => page.evaluate(() => window.comboAudioCues.includes('amazing'))).toBe(true);
+  await expect(page.locator('.combo-good, .combo-great, .combo-amazing')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.comboAudioCues.includes('amazing'))).toBe(false);
   const comboBounds = await page.locator('.combo-feedback').evaluate((label) => {
     const labelRect = label.getBoundingClientRect();
     const boardRect = label.parentElement.getBoundingClientRect();
@@ -664,7 +664,7 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   expect(comboBounds.centerY - comboBounds.boardTop).toBeGreaterThan(-5);
   expect(comboBounds.centerY - comboBounds.boardTop).toBeLessThan(40);
   await page.waitForTimeout(150);
-  await page.screenshot({ path: 'test-results/mobile-combo-amazing.png' });
+  await page.screenshot({ path: 'test-results/mobile-combo-4-tableau.png' });
   await page.evaluate(() => {
     const state = window.solitaireGame.state;
     state.comboLastMoveAt = Date.now() - 5501;
@@ -674,6 +674,61 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
   await expect(page.locator('#moves-value')).toHaveText('6');
   await expect(page.locator('.combo-feedback')).toHaveCount(0);
   await expect.poll(() => page.evaluate(() => window.solitaireGame.state.comboCount)).toBe(0);
+});
+
+test('foundation placements show source feedback and sound only at observed combo tiers', async ({ page }) => {
+  await page.goto('/');
+  const tiers = [
+    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good' },
+    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great' },
+    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing' },
+  ];
+  for (const tier of tiers) {
+    await page.evaluate((targetCombo) => {
+      const game = window.solitaireGame;
+      const state = game.state;
+      const ace = [...state.stock, ...state.waste, ...state.tableau.flat(), ...state.foundations.flat()]
+        .find((card) => card.suit === '♥' && card.rank === 1);
+      if (!ace) throw new Error('The test deal is missing the ace of hearts.');
+      const removeAce = (pile) => {
+        for (let index = pile.length - 1; index >= 0; index -= 1) if (pile[index].id === ace.id) pile.splice(index, 1);
+      };
+      removeAce(state.stock);
+      removeAce(state.waste);
+      state.tableau.forEach(removeAce);
+      state.foundations.forEach(removeAce);
+      ace.id = 'test-ace-hearts';
+      ace.faceUp = true;
+      state.tableau[0] = [ace];
+      state.foundations = [[], [], [], []];
+      state.comboCount = 0;
+      state.comboLastMoveAt = 0;
+      state.moves = targetCombo - 1;
+      state.score = 0;
+      state.history = [];
+      state.selected = null;
+      state.hint = null;
+      state.won = false;
+      game.save();
+    }, tier.combo);
+    await page.reload();
+    await page.waitForTimeout(1200);
+    await page.evaluate((targetCombo) => {
+      window.solitaireGame.state.comboCount = targetCombo - 1;
+      window.solitaireGame.state.comboLastMoveAt = Date.now() - 1000;
+      window.solitaireGame.save();
+      window.rewardCues = [];
+      window.solitaireAudio.play = async (cue) => { window.rewardCues.push(cue); };
+    }, tier.combo);
+    await page.locator('[data-card-id="test-ace-hearts"]').click();
+    await page.locator('.foundation-slot[data-pile="0"]').click();
+    await expect(page.locator('.combo-feedback')).toHaveAttribute('aria-label', `Combo ${tier.combo}`);
+    await expect(page.locator(tier.selector)).toContainText(tier.name);
+    await expect.poll(() => page.evaluate((cue) => window.rewardCues.includes(cue), tier.cue)).toBe(true);
+    await expect(page.locator('.combo-good, .combo-great, .combo-amazing')).toHaveCount(1);
+    await page.waitForTimeout(150);
+    await page.screenshot({ path: `test-results/foundation-reward-${tier.name.toLowerCase()}.png` });
+  }
 });
 
 test('a legal hinted card can be dragged to its destination', async ({ page }) => {
@@ -842,6 +897,10 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
       if (buffer === audio.referenceMoveBuffer) {
         window.referenceSampleCalls.push({ cue: window.audioCues.at(-1), gain: args[1] });
       }
+      if (buffer === audio.referenceGoodBuffer) {
+        window.referenceGoodSamplePlayed = true;
+        window.referenceGoodSampleGain = args[1];
+      }
       if (buffer === audio.referenceAmazingBuffer) {
         window.referenceAmazingSamplePlayed = true;
         window.referenceAmazingSampleGain = args[1];
@@ -875,6 +934,11 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
     return call.gain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel;
   });
   expect(moveOutputGain).toBeCloseTo(1, 5);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceGoodBuffer?.duration)).toBeGreaterThan(0.75);
+  await page.evaluate(() => window.solitaireAudio.play('good'));
+  await expect.poll(() => page.evaluate(() => window.referenceGoodSamplePlayed)).toBe(true);
+  const goodOutputGain = await page.evaluate(() => window.referenceGoodSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(goodOutputGain).toBeCloseTo(1, 5);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAmazingBuffer?.duration)).toBeGreaterThan(0.95);
   await page.evaluate(() => window.solitaireAudio.play('amazing'));
   await expect.poll(() => page.evaluate(() => window.referenceAmazingSamplePlayed)).toBe(true);
@@ -920,7 +984,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v33');
+  expect(cacheNames).toContain('solitaire-master-v34');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -971,6 +1035,13 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   expect(offlineAmazingCue.ok).toBe(true);
   expect(offlineAmazingCue.audioType).toBe(true);
   expect(offlineAmazingCue.bytes).toBeGreaterThan(160_000);
+  const offlineGoodCue = await page.evaluate(async () => {
+    const response = await fetch('/assets/audio/combo-good-reference.wav');
+    return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };
+  });
+  expect(offlineGoodCue.ok).toBe(true);
+  expect(offlineGoodCue.audioType).toBe(true);
+  expect(offlineGoodCue.bytes).toBeGreaterThan(130_000);
   const offlineGreatCue = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/combo-great-reference.wav');
     return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };

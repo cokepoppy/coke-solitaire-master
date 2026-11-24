@@ -16,6 +16,8 @@ export class GameAudio {
     this.noiseBuffer = null;
     this.referenceMoveBuffer = null;
     this.referenceMoveLoadPromise = null;
+    this.referenceGoodBuffer = null;
+    this.referenceGoodLoadPromise = null;
     this.referenceAmazingBuffer = null;
     this.referenceAmazingLoadPromise = null;
     this.referenceGreatBuffer = null;
@@ -40,6 +42,7 @@ export class GameAudio {
       this.master.connect(this.context.destination);
       this.noiseBuffer = this.createNoiseBuffer(this.context);
       this.loadReferenceMove();
+      this.loadReferenceGood();
       this.loadReferenceAmazing();
       this.loadReferenceGreat();
       this.loadReferenceFoundation();
@@ -76,6 +79,24 @@ export class GameAudio {
         .catch(() => null);
     }
     return this.referenceMoveLoadPromise;
+  }
+
+  loadReferenceGood() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceGoodLoadPromise) {
+      this.referenceGoodLoadPromise = fetch('/assets/audio/combo-good-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Good sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceGoodBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceGoodLoadPromise;
   }
 
   loadReferenceAmazing() {
@@ -168,6 +189,7 @@ export class GameAudio {
       return;
     }
     if (cue === 'move' || cue === 'draw') await this.referenceMoveLoadPromise;
+    if (cue === 'good') await this.referenceGoodLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
     if (cue === 'great') await this.referenceGreatLoadPromise;
     if (cue === 'foundation') await this.referenceFoundationLoadPromise;
@@ -246,6 +268,13 @@ export class GameAudio {
       else {
         this.playNoise(2500, 420, 0.105, 0.12, now, 0.9);
         this.playTone(340, 240, 0.09, 0.04, 'triangle', now);
+      }
+    } else if (cue === 'good') {
+      if (this.referenceGoodBuffer) this.playCapturedSample(this.referenceGoodBuffer, now);
+      else {
+        this.playTone(523.25, 659.25, 0.2, 0.035, 'sine', now);
+        this.playTone(783.99, 783.99, 0.24, 0.028, 'sine', now + 0.08);
+        this.playNoise(3800, 1800, 0.12, 0.026, now + 0.04, 0.6);
       }
     } else if (cue === 'amazing') {
       if (this.referenceAmazingBuffer) this.playCapturedSample(this.referenceAmazingBuffer, now);
