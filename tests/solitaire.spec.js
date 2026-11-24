@@ -214,12 +214,27 @@ test('source opening replay matches the 20-second score, move count, and exposed
   expect(finalBoard).toEqual({ score: 30, moves: 3, stock: 24, topCards: ['4♣', '6♣', '2♣', '11♦', '3♣', '12♣', '9♦'] });
   await page.waitForTimeout(1000);
   await page.evaluate(() => {
-    window.solitaireGame.state.seconds = 7;
+    window.solitaireGame.state.seconds = 6;
     window.solitaireGame.save();
-    document.querySelector('#time-value').textContent = '00:07';
   });
   await expect(page.locator('.combo-feedback, .combo-amazing')).toHaveCount(0);
-  await expect(page.locator('#time-value')).toHaveText('00:07');
+  const timeDisplay = page.locator('#time-value');
+  await expect(timeDisplay).toHaveText('00:07');
+  await expect(timeDisplay.locator('.timer-glyph')).toHaveCount(5);
+  const timerTextBox = await timeDisplay.boundingBox();
+  expect(timerTextBox.width).toBeCloseTo(51.5, 1);
+  expect(timerTextBox.height).toBeCloseTo(15.5, 1);
+  const sourceGlyphs = await timeDisplay.locator('.timer-glyph').evaluateAll((images) => images.map((image) => ({
+    file: image.getAttribute('src').split('/').at(-1),
+    size: [image.naturalWidth, image.naturalHeight],
+  })));
+  expect(sourceGlyphs).toEqual([
+    { file: 'timer-digit-0.png', size: [21, 31] },
+    { file: 'timer-digit-0.png', size: [21, 31] },
+    { file: 'timer-colon.png', size: [4, 31] },
+    { file: 'timer-digit-0.png', size: [21, 31] },
+    { file: 'timer-digit-7.png', size: [21, 31] },
+  ]);
   await page.screenshot({ path: 'test-results/source-opening-replay.png', fullPage: true });
 });
 
@@ -749,7 +764,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v29');
+  expect(cacheNames).toContain('solitaire-master-v30');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -808,6 +823,14 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
   expect(offlineStatusIcons).toEqual(Array(4).fill(true));
+  const offlineTimerGlyphs = await page.evaluate(async () => Promise.all([
+    ...Array.from({ length: 10 }, (_, index) => `timer-digit-${index}`),
+    'timer-colon',
+  ].map(async (name) => {
+    const response = await fetch(`/assets/ui/${name}.png`);
+    return response.ok && response.headers.get('content-type') === 'image/png';
+  })));
+  expect(offlineTimerGlyphs).toEqual(Array(11).fill(true));
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
