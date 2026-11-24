@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs><linearGradient id="g" x2="0" y2="1"><stop stop-color="#1d684d"/><stop offset="1" stop-color="#0e382d"/></linearGradient></defs>
+  <rect width="128" height="128" rx="28" fill="url(#g)"/>
+  <rect x="23" y="17" width="54" height="76" rx="8" fill="#fffdf7" transform="rotate(-9 23 17)"/>
+  <rect x="50" y="34" width="55" height="77" rx="8" fill="#fffdf7" transform="rotate(8 50 34)"/>
+  <text x="63" y="60" font-family="Georgia,serif" font-weight="bold" font-size="24" fill="#bc2629">A</text>
+  <text x="61" y="84" font-family="Georgia,serif" font-size="22" fill="#bc2629">♥</text>
+  <text x="32" y="49" font-family="Georgia,serif" font-weight="bold" font-size="19" fill="#18231f">K</text>
+  <text x="29" y="68" font-family="Georgia,serif" font-size="18" fill="#18231f">♠</text>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#254c3e"/><stop offset=".5" stop-color="#5f7658"/><stop offset="1" stop-color="#b1a47b"/></linearGradient>
+    <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#536444"/><stop offset="1" stop-color="#172f28"/></linearGradient>
+    <radialGradient id="sun"><stop stop-color="#d6c997" stop-opacity=".5"/><stop offset="1" stop-color="#d6c997" stop-opacity="0"/></radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="28"/></filter>
+  </defs>
+  <rect width="1200" height="2400" fill="url(#sky)"/>
+  <ellipse cx="600" cy="740" rx="570" ry="620" fill="url(#sun)"/>
+  <g opacity=".33" filter="url(#soft)" fill="#d4cb9d"><circle cx="150" cy="730" r="165"/><circle cx="990" cy="850" r="180"/><circle cx="630" cy="540" r="220"/></g>
+  <g fill="#1d4638" opacity=".78">
+    <path d="M0 1120 210 400l220 720Zm190 60L520 290l290 890Zm385 15 205-720 225 720Zm375-25 155-650 175 650Z"/>
+    <path d="M0 1010 165 500l177 510Zm550 40 175-570 180 570Zm390-20 145-510 160 510Z" fill="#315740"/>
+  </g>
+  <path d="M0 1050c215-130 400-10 590-45s430-135 610-40v1435H0Z" fill="url(#ground)"/>
+  <g fill="#94a46b" opacity=".33"><path d="M0 1240c260-100 420-55 620 0s380 32 580-50v180c-310 115-450 35-650 7s-340-35-550 38Z"/><path d="M0 1590c230-65 420 30 610 70s360-20 590-95v155c-230 90-390 100-615 25S240 1710 0 1790Z"/></g>
+  <g opacity=".85" fill="#233e30"><path d="M0 0h100v2400H0zM1120 0h80v2400h-80z"/><path d="M20 900c100-170 210-180 280-70-100 8-140 92-160 170 80-70 147-72 215-24-130 4-185 88-203 160H20Zm880-520c90-150 176-152 240-62-90 12-128 75-144 140 72-55 130-52 184-14-110 8-154 72-170 130h-110Z" fill="#486b45"/></g>
+  <!-- Quiet, original woodland companions sit low in the scene beneath the card field. -->
+  <g transform="translate(305 1650)">
+    <ellipse cx="260" cy="345" rx="275" ry="48" fill="#142c23" opacity=".45"/>
+    <path d="M115 262c-25-100 20-238 130-247 93-7 165 64 170 153l-10 116H138Z" fill="#bc8c4e"/>
+    <path d="M146 75C76 4 65 87 95 163l70 19Zm236-7c63-72 84-4 58 83l-61 23Z" fill="#8b5f37"/>
+    <ellipse cx="270" cy="163" rx="101" ry="96" fill="#d1a365"/>
+    <ellipse cx="270" cy="214" rx="61" ry="41" fill="#e4c28c"/>
+    <ellipse cx="270" cy="194" rx="18" ry="13" fill="#35271f"/>
+    <circle cx="234" cy="153" r="8" fill="#241c18"/><circle cx="306" cy="153" r="8" fill="#241c18"/>
+    <path d="M253 231q17 19 34 0" fill="none" stroke="#694331" stroke-width="7" stroke-linecap="round"/>
+    <path d="M124 264q-72 78-42 114m270-108q64 66 43 109" fill="none" stroke="#a8753f" stroke-width="34" stroke-linecap="round"/>
+    <path d="M149 225q120 56 242 0" fill="none" stroke="#e5c25c" stroke-width="13"/>
+    <circle cx="270" cy="242" r="12" fill="#dfb84d"/>
+    <g transform="translate(422 258)">
+      <path d="M20 48 0-12l66 32 68-39-15 70c-5 65-25 116-57 119C28 171 10 112 20 48Z" fill="#72786d"/>
+      <path d="m13 6 26 33-30-1Zm107-7L91 37l38-1Z" fill="#ba8b83"/>
+      <ellipse cx="69" cy="80" rx="48" ry="39" fill="#c9c4ac"/>
+      <circle cx="52" cy="65" r="6" fill="#20231f"/><circle cx="88" cy="65" r="6" fill="#20231f"/>
+      <path d="m64 88 8-5 8 5-8 8Z" fill="#463c37"/><path d="M72 96q-10 13-20 0m20 0q10 13 20 0" fill="none" stroke="#675c50" stroke-width="3"/>
+      <path d="M25 140q-50 32-32 72" fill="none" stroke="#696f65" stroke-width="16" stroke-linecap="round"/>
+    </g>
+  </g>
+  <rect width="1200" height="2400" fill="#102f27" opacity=".28"/>
+</svg>
