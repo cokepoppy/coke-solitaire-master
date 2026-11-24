@@ -327,10 +327,12 @@ function showComboFeedback(cardId, foundationMove = false) {
     banner.setAttribute('aria-hidden', 'true');
     banner.innerHTML = reward.name === 'Amazing'
       ? '<b>Amazing</b><i>♥</i><i>♥</i><i>✦</i><i>✦</i>'
-      : `<b>${reward.name}</b><i>✦</i><i>✦</i>`;
+      : `<img class="combo-reward-art" src="/assets/feedback/combo-${reward.cue}.webp" alt=""><b>${reward.name}</b>`;
+    banner.querySelector('.combo-reward-art')?.addEventListener('error', () => banner.classList.add('sprite-failed'), { once: true });
     board.append(banner);
   }
-  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-good, .combo-great, .combo-amazing').forEach((effect) => effect.remove()), combo === 4 ? 620 : 920);
+  const rewardDuration = reward?.cue === 'good' || reward?.cue === 'great' ? 1080 : combo === 4 ? 620 : 920;
+  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-good, .combo-great, .combo-amazing').forEach((effect) => effect.remove()), rewardDuration);
 }
 
 function captureStockFlight() {
