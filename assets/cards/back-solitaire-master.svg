@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 1050">
+  <defs>
+    <linearGradient id="ruby" x2="0" y2="1">
+      <stop stop-color="#b12a38"/>
+      <stop offset=".48" stop-color="#851727"/>
+      <stop offset="1" stop-color="#a91f31"/>
+    </linearGradient>
+    <pattern id="brocade" width="30" height="30" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 15H30M15 0V30" fill="none" stroke="#e7b85f" stroke-opacity=".3" stroke-width="1.6"/>
+      <path d="M0 0L30 30M30 0L0 30" fill="none" stroke="#4a101b" stroke-opacity=".32" stroke-width="1.4"/>
+      <circle cx="15" cy="15" r="3.3" fill="#f2d27e" fill-opacity=".62"/>
+    </pattern>
+    <g id="corner" fill="none" stroke="#f3d17a" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M72 182C73 122 98 82 158 73C187 69 207 81 222 103C235 121 233 141 220 153C207 165 189 160 184 147C180 136 188 128 198 129C195 112 179 101 157 104C123 108 106 132 108 164C111 192 129 207 154 207C176 207 188 193 187 177C176 183 164 177 165 165C166 153 181 148 193 155C215 169 211 197 191 215C164 241 123 238 97 213C80 197 73 191 72 182Z" stroke-width="5"/>
+      <path d="M80 148C100 137 120 136 139 146C124 148 115 159 112 176M98 101C107 115 108 130 103 144M143 79C148 91 147 101 141 111M178 79C177 92 171 101 161 107" stroke-width="3.5"/>
+      <path d="M89 183C105 181 119 188 126 201C113 198 104 203 99 214M133 217C138 202 151 192 168 194C158 202 157 212 161 222" stroke-width="3"/>
+      <path d="M79 77L95 93M93 66L109 82M66 94L82 110" stroke-width="3"/>
+      <circle cx="77" cy="77" r="5" fill="#f3d17a" stroke="none"/>
+      <path d="M157 73C149 61 150 52 160 44C170 54 170 64 157 73ZM72 182C60 174 51 175 43 185C53 195 63 195 72 182ZM191 215C201 228 210 229 220 220C211 210 202 208 191 215Z" fill="#f3d17a" stroke="none"/>
+    </g>
+    <g id="petal" fill="#f3d17a">
+      <path d="M0-18C-13-30-13-43 0-52C13-43 13-30 0-18ZM18 0C30-13 43-13 52 0C43 13 30 13 18 0ZM0 18C13 30 13 43 0 52C-13 43-13 30 0 18ZM-18 0C-30 13-43 13-52 0C-43-13-30-13-18 0Z"/>
+      <circle r="12" fill="#f8e19a"/>
+    </g>
+  </defs>
+
+  <rect width="750" height="1050" rx="38" fill="#fffdf5"/>
+  <rect x="24" y="20" width="702" height="1010" rx="30" fill="#64101e"/>
+  <rect x="37" y="33" width="676" height="984" rx="23" fill="url(#ruby)" stroke="#f4d17a" stroke-width="5"/>
+  <rect x="53" y="49" width="644" height="952" rx="17" fill="url(#brocade)" stroke="#f6d987" stroke-width="2.5"/>
+  <rect x="68" y="64" width="614" height="922" rx="13" fill="none" stroke="#54101c" stroke-opacity=".9" stroke-width="5"/>
+  <rect x="77" y="73" width="596" height="904" rx="10" fill="none" stroke="#f2cd72" stroke-width="2.5"/>
+
+  <use href="#corner"/>
+  <use href="#corner" transform="translate(750 0) scale(-1 1)"/>
+  <use href="#corner" transform="translate(0 1050) scale(1 -1)"/>
+  <use href="#corner" transform="translate(750 1050) scale(-1 -1)"/>
+
+  <g fill="none" stroke="#f3d17a" stroke-linejoin="round">
+    <path d="M375 286L585 525L375 764L165 525Z" stroke-width="8"/>
+    <path d="M375 319L557 525L375 731L193 525Z" stroke-width="3.5"/>
+    <path d="M375 352L529 525L375 698L221 525Z" stroke="#55111e" stroke-width="8"/>
+    <path d="M375 369L514 525L375 681L236 525Z" stroke-width="4"/>
+    <path d="M375 290L375 351M375 699L375 760M169 525L234 525M516 525L581 525" stroke-width="5"/>
+    <path d="M278 414L310 450M472 414L440 450M278 636L310 600M472 636L440 600" stroke-width="4"/>
+  </g>
+  <path d="M375 389L511 525L375 661L239 525Z" fill="#711323" fill-opacity=".92" stroke="#edc263" stroke-width="3"/>
+  <circle cx="375" cy="525" r="92" fill="#a62234" stroke="#f5d47e" stroke-width="6"/>
+  <circle cx="375" cy="525" r="78" fill="none" stroke="#53101d" stroke-width="4"/>
+  <circle cx="375" cy="525" r="68" fill="none" stroke="#f3d17a" stroke-width="2.5" stroke-dasharray="2 8"/>
+  <g transform="translate(375 525)"><use href="#petal"/></g>
+  <path d="M375 490C352 510 342 520 344 535C346 552 362 555 375 543C388 555 404 552 406 535C408 520 398 510 375 490Z" fill="#7c1426" stroke="#fff0bd" stroke-width="4"/>
+  <path d="M375 543C375 558 369 566 360 574M375 543C375 558 381 566 390 574" fill="none" stroke="#fff0bd" stroke-linecap="round" stroke-width="4"/>
+  <circle cx="375" cy="525" r="8" fill="#f7df9a"/>
+
+  <g fill="#f3d17a" stroke="#6a1423" stroke-width="3">
+    <path d="M375 245L390 267L375 289L360 267Z"/>
+    <path d="M375 761L390 783L375 805L360 783Z"/>
+    <path d="M127 525L149 510L171 525L149 540Z"/>
+    <path d="M579 525L601 510L623 525L601 540Z"/>
+  </g>
+</svg>

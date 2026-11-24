@@ -5,19 +5,6 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   await page.goto('/');
-  await expect(page).toHaveTitle('Solitaire Master');
-  await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
-  await expect(page.locator('#tableau .card-face')).toHaveCount(7);
-  await expect(page.locator('#tableau .card-back')).toHaveCount(21);
-  await expect(page.locator('.stock-count')).toHaveText('24');
-  await expect(page.locator('#moves-value')).toHaveText('0');
-  await expect(page.getByRole('button', { name: 'Game menu' })).toBeVisible();
-  await expect(page.locator('.foundation-slot')).toHaveCount(4);
-  await expect(page.locator('.action-button')).toHaveCount(4);
-  await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
-  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
-  await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
-  await expect.poll(() => page.locator('.card-back-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   const dealMotion = await page.evaluate(() => {
     const first = document.querySelector('#tableau .pile-column[data-pile="0"] .playing-card');
     const last = document.querySelector('#tableau .pile-column[data-pile="6"] .playing-card[data-index="6"]');
@@ -36,6 +23,27 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(dealMotion.firstX).toBeGreaterThan(180);
   expect(dealMotion.lastY).toBeLessThan(-100);
   expect(dealMotion.faceFlip).toBe('deal-face-reveal');
+
+  await expect(page).toHaveTitle('Solitaire Master');
+  await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
+  await expect(page.locator('#tableau .card-face')).toHaveCount(7);
+  await expect(page.locator('#tableau .card-back')).toHaveCount(21);
+  await expect(page.locator('.stock-count')).toHaveText('24');
+  await expect(page.locator('#moves-value')).toHaveText('0');
+  await expect(page.getByRole('button', { name: 'Game menu' })).toBeVisible();
+  await expect(page.locator('.foundation-slot')).toHaveCount(4);
+  await expect(page.locator('.action-button')).toHaveCount(4);
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
+  const stockCountPosition = await page.evaluate(() => {
+    const card = document.querySelector('.stock-slot .card-back').getBoundingClientRect();
+    const count = document.querySelector('.stock-count').getBoundingClientRect();
+    return { topInset: count.top - card.top, bottomInset: card.bottom - count.bottom };
+  });
+  expect(stockCountPosition.bottomInset).toBeLessThan(stockCountPosition.topInset);
+  await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
+  await expect.poll(() => page.locator('.card-back-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   const tableauLayout = await page.evaluate(() => {
     const box = (selector) => document.querySelector(selector).getBoundingClientRect();
     return {
@@ -118,8 +126,12 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   expect(stockBox.x).toBeLessThan(foundationBox.x);
   expect(stockBox.x).toBeLessThan(wasteBox.x);
   expect(wasteBox.x).toBeLessThan(foundationBox.x);
+  await page.getByRole('button', { name: 'Emerald card back' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'emerald');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
   await page.getByRole('button', { name: 'Ruby card back' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage)).toContain('/assets/themes/mountain-valley.jpg');
@@ -360,11 +372,17 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
   await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
+  await expect.poll(() => page.locator('.card-back-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   const offlineThemeImage = await page.evaluate(async () => {
     const response = await fetch('/assets/themes/mountain-valley.jpg');
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
+  const offlineCardBack = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/back-solitaire-master.svg');
+    return { ok: response.ok, type: response.headers.get('content-type') };
+  });
+  expect(offlineCardBack).toEqual({ ok: true, type: 'image/svg+xml' });
   await context.setOffline(false);
 });
 

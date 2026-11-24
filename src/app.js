@@ -37,10 +37,11 @@ let winShown = false;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
+const CARD_BACK_FILES = { ruby: 'back-solitaire-master.svg', emerald: 'back-blue.svg', midnight: 'back-blue.svg' };
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 
 function cardBackFile() {
-  return game.state.cardBack === 'ruby' ? 'back-red.svg' : 'back-blue.svg';
+  return CARD_BACK_FILES[game.state.cardBack] ?? CARD_BACK_FILES.ruby;
 }
 
 function escapeHtml(value) {
@@ -244,7 +245,7 @@ function showSettings() {
     </div></div>
     <div class="settings-group theme-group"><div class="settings-heading">Card back</div><div class="back-options" role="group" aria-label="Card back">
       <button type="button" class="back-choice emerald${cardBack === 'emerald' ? ' chosen' : ''}" data-setting="cardBack" data-value="emerald" aria-label="Emerald card back" aria-pressed="${cardBack === 'emerald'}"><img src="/assets/cards/back-blue.svg" alt=""></button>
-      <button type="button" class="back-choice ruby${cardBack === 'ruby' ? ' chosen' : ''}" data-setting="cardBack" data-value="ruby" aria-label="Ruby card back" aria-pressed="${cardBack === 'ruby'}"><img src="/assets/cards/back-red.svg" alt=""></button>
+      <button type="button" class="back-choice ruby${cardBack === 'ruby' ? ' chosen' : ''}" data-setting="cardBack" data-value="ruby" aria-label="Ruby card back" aria-pressed="${cardBack === 'ruby'}"><img src="/assets/cards/back-solitaire-master.svg" alt=""></button>
       <button type="button" class="back-choice midnight${cardBack === 'midnight' ? ' chosen' : ''}" data-setting="cardBack" data-value="midnight" aria-label="Midnight card back" aria-pressed="${cardBack === 'midnight'}"><img src="/assets/cards/back-blue.svg" alt=""></button>
     </div></div>
     <div class="modal-footnote">Your game and preferences stay on this device.</div>
