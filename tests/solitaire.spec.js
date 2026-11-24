@@ -120,7 +120,16 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   expect(wasteBox.x).toBeLessThan(foundationBox.x);
   await page.getByRole('button', { name: 'Ruby card back' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
+  await page.getByRole('button', { name: 'Mountain background' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage)).toContain('/assets/themes/mountain-valley.jpg');
+  expect((await page.request.get('/assets/themes/mountain-valley.jpg')).ok()).toBe(true);
   await page.getByRole('button', { name: 'Close dialog' }).click();
+  await page.reload();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  await page.evaluate(() => window.solitaireGame.setOption('theme', 'woodland'));
+  await page.reload();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
 
   await page.locator('[data-action="stock"]').click();
   await expect(page.locator('#moves-value')).toHaveText('1');
@@ -272,15 +281,23 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
   await page.evaluate(() => navigator.serviceWorker.ready);
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   const screenWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   expect(screenWidth).toBeLessThanOrEqual(320);
   await context.setOffline(true);
   await page.reload();
   await expect(page).toHaveTitle('Solitaire Master');
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
   await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
+  const offlineThemeImage = await page.evaluate(async () => {
+    const response = await fetch('/assets/themes/mountain-valley.jpg');
+    return { ok: response.ok, type: response.headers.get('content-type') };
+  });
+  expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
   await context.setOffline(false);
 });
 

@@ -235,7 +235,7 @@ function showSettings() {
     <div class="settings-row"><div><b>Sound effects</b><small>Card taps, flips, and moves</small></div><button class="switch${sound ? ' on' : ''}" type="button" role="switch" aria-label="Sound effects" aria-checked="${sound}" data-setting="sound" data-value="${!sound}"><span></span></button></div>
     <div class="settings-row"><div><b>Background music</b><small>A soft original ambient loop</small></div><button class="switch${music ? ' on' : ''}" type="button" role="switch" aria-label="Background music" aria-checked="${music}" data-setting="music" data-value="${!music}"><span></span></button></div>
     <div class="settings-group theme-group"><div class="settings-heading">Table background</div><div class="theme-options">
-      <button type="button" class="theme-choice woodland${theme === 'woodland' ? ' chosen' : ''}" data-setting="theme" data-value="woodland" aria-label="Woodland background" aria-pressed="${theme === 'woodland'}"><span>Woodland</span></button>
+      <button type="button" class="theme-choice mountain${theme === 'mountain' ? ' chosen' : ''}" data-setting="theme" data-value="mountain" aria-label="Mountain background" aria-pressed="${theme === 'mountain'}"><span>Mountain</span></button>
       <button type="button" class="theme-choice felt${theme === 'felt' ? ' chosen' : ''}" data-setting="theme" data-value="felt" aria-label="Classic felt background" aria-pressed="${theme === 'felt'}"><span>Felt</span></button>
       <button type="button" class="theme-choice dusk${theme === 'dusk' ? ' chosen' : ''}" data-setting="theme" data-value="dusk" aria-label="Dusk background" aria-pressed="${theme === 'dusk'}"><span>Dusk</span></button>
     </div></div>
