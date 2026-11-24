@@ -43,6 +43,8 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('.action-button')).toHaveCount(4);
   await expect(page.locator('.action-source-icon')).toHaveCount(4);
   await expect.poll(() => page.locator('.action-source-icon').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+  await expect(page.locator('.foundation-source-art')).toHaveCount(4);
+  await expect.poll(() => page.locator('.foundation-source-art').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177))).toBe(true);
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
@@ -420,6 +422,8 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('.background-tile.chosen')).toHaveCount(1);
+  await expect(page.locator('.foundation-source-art').first()).toHaveCSS('display', 'none');
+  await expect(page.locator('.foundation-theme-mark').first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Card backs' }).click();
   await expect(page.locator('.back-tile')).toHaveCount(8);
@@ -699,7 +703,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v25');
+  expect(cacheNames).toContain('solitaire-master-v26');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -741,6 +745,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
   expect(offlineActionIcons).toEqual(Array(4).fill(true));
+  const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
+    const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);
+    return response.ok && response.headers.get('content-type') === 'image/png';
+  })));
+  expect(offlineFoundationSlots).toEqual(Array(4).fill(true));
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
