@@ -1,0 +1,13 @@
+{
+  "name": "Solitaire Master",
+  "short_name": "Solitaire",
+  "description": "A relaxing game of classic Klondike solitaire.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#143c31",
+  "theme_color": "#143c31",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

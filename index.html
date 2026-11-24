@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#143c31" />
+    <meta name="description" content="A relaxing, mobile-first Klondike solitaire game." />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <title>Solitaire Master</title>
+  </head>
+  <body>
+    <main class="game-shell" id="game-shell">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">♠</div>
+        <div class="brand-copy">
+          <div class="brand-title">Solitaire Master</div>
+          <div class="brand-subtitle">Classic Klondike</div>
+        </div>
+        <button class="icon-button settings-button" id="settings-button" aria-label="Settings" title="Settings">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Zm9 4.95v-2.5l-2.18-.4a7.1 7.1 0 0 0-.72-1.73l1.26-1.82-1.77-1.77-1.82 1.26a7.1 7.1 0 0 0-1.73-.72L13.65 3h-2.5l-.4 2.18a7.1 7.1 0 0 0-1.73.72L7.2 4.64 5.43 6.4 6.7 8.22a7.1 7.1 0 0 0-.72 1.73L3.8 10.35v2.5l2.18.4a7.1 7.1 0 0 0 .72 1.73l-1.26 1.82 1.77 1.77 1.82-1.26a7.1 7.1 0 0 0 1.73.72l.4 2.18h2.5l.4-2.18a7.1 7.1 0 0 0 1.73-.72l1.82 1.26 1.77-1.77-1.26-1.82a7.1 7.1 0 0 0 .72-1.73l2.18-.4Z"/></svg>
+        </button>
+      </header>
+
+      <section class="scorebar" aria-label="Game statistics">
+        <div class="stat"><span class="stat-label">SCORE</span><strong id="score-value">0</strong></div>
+        <div class="stat"><span class="stat-label">TIME</span><strong id="time-value">0:00</strong></div>
+        <div class="stat"><span class="stat-label">MOVES</span><strong id="moves-value">0</strong></div>
+      </section>
+
+      <section class="board-wrap" aria-label="Solitaire board">
+        <div class="top-row" id="top-row"></div>
+        <div class="tableau" id="tableau" aria-label="Seven tableau piles"></div>
+      </section>
+
+      <nav class="action-bar" aria-label="Game actions">
+        <button class="action-button" id="undo-button" aria-label="Undo move" title="Undo">
+          <span class="action-icon" aria-hidden="true">↶</span><span>Undo</span>
+        </button>
+        <button class="action-button" id="hint-button" aria-label="Show a hint" title="Hint">
+          <span class="action-icon hint-icon" aria-hidden="true">✦</span><span>Hint</span>
+        </button>
+        <button class="action-button" id="new-game-button" aria-label="Start a new game" title="New game">
+          <span class="action-icon" aria-hidden="true">＋</span><span>New</span>
+        </button>
+        <button class="action-button sound-toggle" id="sound-button" aria-label="Turn sound on" title="Sound">
+          <span class="action-icon" id="sound-icon" aria-hidden="true">♫</span><span>Sound</span>
+        </button>
+      </nav>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+
+    <div class="modal-backdrop hidden" id="modal-backdrop">
+      <section class="modal-card" id="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close icon-button" id="modal-close" aria-label="Close dialog">×</button>
+        <div class="modal-kicker" id="modal-kicker">GAME SETTINGS</div>
+        <h1 id="modal-title">Settings</h1>
+        <div id="modal-content"></div>
+      </section>
+    </div>
+    <script type="module" src="/src/app.js"></script>
+  </body>
+</html>
