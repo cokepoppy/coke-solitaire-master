@@ -1,0 +1,8 @@
+# Public video sources and derived frame images remain local; commit only text evidence.
+source-videos/
+**/*.mp4
+**/*.m4a
+**/*.mov
+**/*.wav
+**/*.png
+**/*.jpg
