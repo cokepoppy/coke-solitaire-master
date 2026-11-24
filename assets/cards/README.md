@@ -58,6 +58,9 @@ Nine more number-card faces are crops from the official [App Store listing](http
 | `6-of-clubs-reference.png` | 3 | (927, 1130) |
 | `2-of-clubs-reference.png` | 3 | (201, 799) |
 | `10-of-clubs-reference.png` | 3 | (806, 799) |
+| `3-of-spades-reference.png` | 2 | (807, 1129) |
+
+The 3♠ shown in screenshot 2 has a gold selected-card glow. Its rank, suit, and center artwork remain source pixels; the 6-pixel perimeter is reconstructed from the unselected 4♠ card frame in the same screenshot so the selection glow does not become part of the default deck.
 
 Two more number-card faces are crops from the official [Google Play listing](https://play.google.com/store/apps/details?id=solitaire.classic.hungrystudio.free.klondike.card.patience). They come from the 1200×675 first listing image; the listed source rectangles are resized to 118×177:
 
@@ -66,4 +69,4 @@ Two more number-card faces are crops from the official [Google Play listing](htt
 | `ace-of-diamonds-reference.png` | 1 | (274, 152) | 116×172 |
 | `10-of-diamonds-reference.png` | 1 | (943, 480) | 114×170 |
 
-The runtime selects the matching reference PNG and includes these images in the offline shell cache. All twelve court cards and twenty-six number-card faces now use source-frame or official store crops; the remaining fourteen number-card faces use the credited CC0 deck artwork.
+The runtime selects the matching reference PNG and includes these images in the offline shell cache. All twelve court cards and twenty-seven number-card faces now use source-frame or official store crops; the remaining thirteen number-card faces use the credited CC0 deck artwork.

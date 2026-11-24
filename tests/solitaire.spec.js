@@ -138,6 +138,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
       [2, '♣', 7],
       [3, '♦', 10],
       [5, '♦', 3],
+      [6, '♠', 3],
       [9, '♠', 4],
       [14, '♠', 8],
       [20, '♥', 3],
@@ -157,6 +158,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     window.solitaireGame.newGame([...stock, ...dealOrder.reverse()]);
     window.solitaireGame.state.tableau[1][0].faceUp = true;
     window.solitaireGame.state.tableau[2][0].faceUp = true;
+    window.solitaireGame.state.tableau[3][0].faceUp = true;
     window.solitaireGame.save();
   });
   await page.reload();
@@ -171,6 +173,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     '6-of-clubs-reference.png',
     'ace-of-diamonds-reference.png',
     '10-of-diamonds-reference.png',
+    '3-of-spades-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
@@ -470,14 +473,14 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       '5-of-diamonds',
       'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
       '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
-      'ace-of-diamonds', '10-of-diamonds',
+      'ace-of-diamonds', '10-of-diamonds', '3-of-spades',
     ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}-reference.png`);
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(38).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(39).fill(true));
   const offlineMoveSample = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/card-move-reference.wav');
     return response.ok && (await response.arrayBuffer()).byteLength > 0;
