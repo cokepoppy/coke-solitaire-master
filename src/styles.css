@@ -349,7 +349,44 @@ body[data-card-back='midnight'] .card-back-pattern { background-color: #2874bf; 
 .stats-grid span { color: #b4c4b5; font-size: 10px; }
 .win-emblem { margin: -5px auto 5px; color: #eedb90; font-size: 47px; text-align: center; text-shadow: 0 0 25px rgba(238,219,144,.5); animation: win-glow 1.5s ease-in-out infinite alternate; }
 .win-copy { margin: 0 0 18px; color: #d4dfd3; font-family: Georgia, 'Times New Roman', serif; text-align: center; }
-.win-summary { display: flex; justify-content: space-around; margin: 0 0 20px; color: #b7c7b8; font-size: 10px; }
+.daily-calendar { padding: 0 0 2px; }
+.calendar-heading { display: grid; grid-template-columns: 38px 1fr 38px; align-items: center; margin: -7px 0 8px; text-align: center; }
+.calendar-heading strong { color: #fff7e6; font-family: Georgia, 'Times New Roman', serif; font-size: 16px; }
+.calendar-nav { width: 34px; height: 34px; border: 0; border-radius: 50%; color: #f4e5aa; font-size: 27px; line-height: 1; background: rgba(6,24,19,.28); cursor: pointer; }
+.calendar-nav:disabled { opacity: .3; cursor: default; }
+.calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); text-align: center; }
+.calendar-weekdays { margin: 0 0 5px; color: #c6d6c8; font-size: 9px; font-weight: 700; }
+.calendar-grid { gap: 2px 1px; padding: 5px; border-radius: 14px; background: #f5f5ee; }
+.calendar-empty, .calendar-day { display: grid; min-width: 0; height: 34px; place-items: center; }
+.calendar-day { position: relative; padding: 0; border: 0; border-radius: 50%; color: #29392f; font-size: 10px; font-weight: 600; background: transparent; cursor: pointer; }
+.calendar-day.today { box-shadow: inset 0 0 0 1px rgba(28,104,70,.48); }
+.calendar-day.selected { color: #fff; background: #287d5b; box-shadow: 0 2px 7px rgba(20,78,57,.32); }
+.calendar-day.completed:not(.selected)::after { content: ''; position: absolute; inset: 2px; border: 1px solid #dfb951; border-radius: 50%; }
+.calendar-day i { position: absolute; top: -2px; right: -1px; color: #d99e2f; font-size: 9px; font-style: normal; }
+.calendar-day:disabled { color: #9aa39b; opacity: .42; cursor: default; }
+.daily-progress { margin: 12px 1px 0; }
+.daily-progress-label { display: flex; justify-content: space-between; margin-bottom: 6px; color: #d7e2d3; font-size: 9px; }
+.daily-progress-label b { color: #f0dfa2; font-variant-numeric: tabular-nums; }
+.daily-progress-track { height: 5px; overflow: hidden; border-radius: 6px; background: rgba(4,21,16,.47); }
+.daily-progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #f2c94c, #f6e6a3); }
+.daily-rewards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 7px; }
+.daily-reward { display: flex; flex-direction: column; align-items: center; gap: 1px; min-height: 31px; color: #97aa9a; }
+.daily-reward span { color: #8f9b8f; font-size: 16px; line-height: 18px; }
+.daily-reward small { font-size: 8px; }
+.daily-reward.earned span, .daily-reward.earned small { color: #f3d578; }
+.daily-selected-date { display: flex; justify-content: space-between; gap: 8px; margin: 10px 1px 12px; color: #acbfaf; font-size: 9px; }
+.daily-selected-date b { color: #fff3ca; text-align: right; }
+.win-celebration { position: relative; display: grid; min-height: 92px; place-items: center; margin: -8px 0 5px; overflow: hidden; }
+.win-rays { position: absolute; width: 144px; aspect-ratio: 1; border-radius: 50%; background: repeating-conic-gradient(from 0deg, rgba(249,208,83,.3) 0deg 7deg, transparent 7deg 15deg); mask-image: radial-gradient(circle, #000 0 14%, transparent 72%); animation: win-rays-turn 22s linear infinite; }
+.win-ribbon { position: relative; display: flex; align-items: center; gap: 8px; padding: 8px 19px; border: 1px solid #ffe78b; border-radius: 7px; color: #ffe27d; background: linear-gradient(180deg, #d53932, #9f1d29); box-shadow: 0 5px 13px rgba(0,0,0,.3), inset 0 1px rgba(255,255,255,.5); transform: rotate(-2deg); }
+.win-ribbon::before, .win-ribbon::after { content: '★'; color: #ffe795; font-size: 11px; }
+.win-ribbon b { font-family: Georgia, 'Times New Roman', serif; font-size: 18px; letter-spacing: .06em; text-shadow: 0 2px 2px rgba(95,25,12,.55); }
+.win-ribbon span { color: #ffdf70; font-size: 24px; text-shadow: 0 1px #873a10; }
+.win-score-line { display: flex; align-items: baseline; justify-content: center; gap: 8px; margin: 7px 0; color: #d9e3d5; font-size: 11px; }
+.win-score-line strong { color: #ffc847; font-family: Georgia, 'Times New Roman', serif; font-size: 26px; text-shadow: 0 1px 7px rgba(255,195,45,.22); }
+.win-best { padding: 2px 5px; border: 1px solid rgba(255,215,97,.6); border-radius: 8px; color: #ffe287; font-size: 8px; transform: rotate(7deg); }
+.win-copy { margin: 3px 0 17px; color: #d4dfd3; font-size: 10px; text-align: center; }
+.win-summary { display: flex; justify-content: center; gap: 45px; margin: 0 0 20px; color: #b7c7b8; font-size: 10px; }
 .win-summary span { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .win-summary b { color: #fff6dd; font-size: 15px; font-variant-numeric: tabular-nums; }
 .more-list { display: flex; flex-direction: column; gap: 8px; margin-top: -8px; }
@@ -366,6 +403,7 @@ body[data-card-back='midnight'] .card-back-pattern { background-color: #2874bf; 
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes modal-rise { from { opacity: .65; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes win-glow { from { transform: scale(.96); filter: brightness(.95); } to { transform: scale(1.05); filter: brightness(1.18); } }
+@keyframes win-rays-turn { to { transform: rotate(360deg); } }
 @keyframes confetti-fall { 0% { opacity: 0; transform: translateY(-12px) rotate(-8deg); } 15% { opacity: .9; } 100% { opacity: 0; transform: translateY(72vh) rotate(40deg); } }
 
 @media (min-width: 600px) {

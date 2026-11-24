@@ -199,8 +199,11 @@ function announce(message, duration = 2200) {
 }
 
 function readProfile() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_PROFILE)) ?? { games: 0, wins: 0, bestScore: 0 }; }
-  catch { return { games: 0, wins: 0, bestScore: 0 }; }
+  const defaults = { games: 0, wins: 0, bestScore: 0, dailyCompleted: [] };
+  try {
+    const profile = JSON.parse(localStorage.getItem(STORAGE_PROFILE));
+    return { ...defaults, ...(profile ?? {}), dailyCompleted: Array.isArray(profile?.dailyCompleted) ? profile.dailyCompleted : [] };
+  } catch { return defaults; }
 }
 
 function writeProfile(profile) {
@@ -284,6 +287,64 @@ function showStats() {
   `);
 }
 
+function localDateKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function dateFromKey(key) {
+  const [year, month, day] = key.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function dateLabel(key, options = { month: 'long', day: 'numeric', year: 'numeric' }) {
+  return new Intl.DateTimeFormat(undefined, options).format(dateFromKey(key));
+}
+
+function showDailyCalendar(selectedDate = game.state.challenge || localDateKey(new Date())) {
+  const profile = readProfile();
+  const selected = dateFromKey(selectedDate);
+  const today = new Date();
+  const month = new Date(selected.getFullYear(), selected.getMonth(), 1);
+  const monthKey = `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`;
+  const daysInMonth = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  const firstWeekday = month.getDay();
+  const completedThisMonth = profile.dailyCompleted.filter((day) => day.startsWith(`${monthKey}-`)).length;
+  const milestones = [6, 10, 20, 30];
+  const dayCells = [
+    ...Array.from({ length: firstWeekday }, () => '<span class="calendar-empty" aria-hidden="true"></span>'),
+    ...Array.from({ length: daysInMonth }, (_, index) => {
+      const day = index + 1;
+      const key = `${monthKey}-${String(day).padStart(2, '0')}`;
+      const complete = profile.dailyCompleted.includes(key);
+      const isSelected = key === selectedDate;
+      const isToday = key === localDateKey(today);
+      const future = dateFromKey(key) > new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      return `<button type="button" class="calendar-day${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}${complete ? ' completed' : ''}" data-daily-date="${key}" aria-label="${dateLabel(key)}${complete ? ', completed' : ''}" aria-pressed="${isSelected}" ${future ? 'disabled' : ''}><span>${day}</span>${complete ? '<i aria-hidden="true">♛</i>' : ''}</button>`;
+    }),
+  ].join('');
+  const rewardCells = milestones.map((target, index) => `<div class="daily-reward${completedThisMonth >= target ? ' earned' : ''}" aria-label="${target} daily wins reward${completedThisMonth >= target ? ', earned' : ''}"><span aria-hidden="true">${['♛', '♨', '✦', '♛'][index]}</span><small>${target}</small></div>`).join('');
+  const nextMonth = new Date(month.getFullYear(), month.getMonth() + 1, 1);
+  const nextDisabled = nextMonth > new Date(today.getFullYear(), today.getMonth(), 1);
+  setModal('Daily Challenge', 'A NEW DEAL EVERY DAY', `
+    <section class="daily-calendar" data-month="${monthKey}" data-selected-date="${selectedDate}" aria-label="Daily challenge calendar">
+      <div class="calendar-heading">
+        <button type="button" class="calendar-nav" data-calendar-month="-1" aria-label="Previous month">‹</button>
+        <strong>${new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(month)}</strong>
+        <button type="button" class="calendar-nav" data-calendar-month="1" aria-label="Next month" ${nextDisabled ? 'disabled' : ''}>›</button>
+      </div>
+      <div class="calendar-weekdays" aria-hidden="true">${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => `<span>${day}</span>`).join('')}</div>
+      <div class="calendar-grid">${dayCells}</div>
+      <div class="daily-progress" aria-label="${completedThisMonth} of ${daysInMonth} challenges completed this month">
+        <div class="daily-progress-label"><span>Monthly progress</span><b>${completedThisMonth} / ${daysInMonth}</b></div>
+        <div class="daily-progress-track"><span style="width:${Math.min(100, completedThisMonth / daysInMonth * 100)}%"></span></div>
+        <div class="daily-rewards">${rewardCells}</div>
+      </div>
+      <p class="daily-selected-date">Selected challenge <b>${dateLabel(selectedDate)}</b></p>
+      <div class="modal-actions"><button class="primary-action" type="button" data-modal-action="play-daily">Play</button></div>
+    </section>
+  `);
+}
+
 function showMoreOptions() {
   const dailyLabel = game.state.challenge ? `Daily challenge · ${game.state.challenge}` : 'Daily challenge';
   setModal('More options', 'YOUR GAME', `
@@ -295,9 +356,7 @@ function showMoreOptions() {
     </div>`);
 }
 
-function startDailyGame() {
-  const now = new Date();
-  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+function startDailyGame(day = localDateKey(new Date())) {
   const profile = readProfile();
   const options = {
     drawCount: game.state.drawCount,
@@ -307,7 +366,7 @@ function startDailyGame() {
     sound: game.state.sound,
     music: game.state.music,
   };
-  game.newDailyGame(today);
+  game.newDailyGame(day);
   Object.assign(game.state, options);
   game.save();
   profile.games += 1;
@@ -317,21 +376,26 @@ function startDailyGame() {
   $('.game-shell').classList.remove('won');
   closeModal();
   render();
-  announce(`Today's daily deal · ${today}`);
+  announce(`Daily challenge · ${dateLabel(day)}`);
 }
 
 function completeWin() {
   if (winShown) return;
   winShown = true;
   const profile = readProfile();
+  const previousBest = profile.bestScore;
   profile.wins += 1;
   profile.bestScore = Math.max(profile.bestScore, game.state.score);
+  if (game.state.challenge) profile.dailyCompleted = [...new Set([...profile.dailyCompleted, game.state.challenge])].sort();
   writeProfile(profile);
-  setModal('You did it!', 'WELL PLAYED', `
-    <div class="win-emblem" aria-hidden="true">✦</div>
-    <p class="win-copy">All 52 cards are home.</p>
-    <div class="win-summary"><span>Score <b>${game.state.score}</b></span><span>Time <b>${formatTime(game.state.seconds)}</b></span><span>Moves <b>${game.state.moves}</b></span></div>
-    <div class="modal-actions"><button class="primary-action" type="button" data-modal-action="new">Play again</button></div>
+  const newBest = game.state.score > previousBest;
+  const challengeCopy = game.state.challenge ? `Daily challenge completed · ${dateLabel(game.state.challenge)}` : 'All 52 cards are home.';
+  setModal('You win!', 'WELL PLAYED', `
+    <div class="win-celebration" aria-label="You win"><div class="win-rays" aria-hidden="true"></div><div class="win-ribbon"><span aria-hidden="true">♛</span><b>YOU WIN</b><span aria-hidden="true">♛</span></div></div>
+    <div class="win-score-line"><span>Score</span><strong>${game.state.score}</strong>${newBest ? '<b class="win-best">Best!</b>' : ''}</div>
+    <p class="win-copy">${challengeCopy}</p>
+    <div class="win-summary"><span>Time <b>${formatTime(game.state.seconds)}</b></span><span>Moves <b>${game.state.moves}</b></span></div>
+    <div class="modal-actions"><button class="primary-action" type="button" data-modal-action="new">New Deal</button></div>
   `);
   $('.game-shell').classList.add('won');
 }
@@ -526,6 +590,7 @@ board.addEventListener('pointerup', (event) => {
     if (result.action === 'move' || result.action === 'foundation') audio.play(game.state.won ? 'win' : result.action === 'foundation' ? 'foundation' : 'move');
     else if (result.action === 'select') audio.play('tap');
     render();
+    if (game.state.won) completeWin();
   }
   drag = null;
 });
@@ -580,6 +645,29 @@ modalContent.addEventListener('click', (event) => {
   if (action === 'close') closeModal();
   if (action === 'new') doNewGame(false);
   if (action === 'restart') doNewGame(true);
+  if (action === 'play-daily') {
+    const selectedDate = modalContent.querySelector('.daily-calendar')?.dataset.selectedDate;
+    if (selectedDate) startDailyGame(selectedDate);
+    return;
+  }
+  const dailyDate = event.target.closest('[data-daily-date]')?.dataset.dailyDate;
+  if (dailyDate) {
+    showDailyCalendar(dailyDate);
+    return;
+  }
+  const monthOffset = Number(event.target.closest('[data-calendar-month]')?.dataset.calendarMonth);
+  if (monthOffset) {
+    const currentMonth = modalContent.querySelector('.daily-calendar')?.dataset.month;
+    if (!currentMonth) return;
+    const [year, month] = currentMonth.split('-').map(Number);
+    const target = new Date(year, month - 1 + monthOffset, 1);
+    const now = new Date();
+    if (target > new Date(now.getFullYear(), now.getMonth(), 1)) return;
+    const targetKey = `${target.getFullYear()}-${String(target.getMonth() + 1).padStart(2, '0')}`;
+    const day = target.getFullYear() === now.getFullYear() && target.getMonth() === now.getMonth() ? now.getDate() : 1;
+    showDailyCalendar(`${targetKey}-${String(day).padStart(2, '0')}`);
+    return;
+  }
   const control = event.target.closest('[data-setting]');
   if (!control) return;
   const setting = control.dataset.setting;
@@ -617,7 +705,7 @@ setInterval(() => {
 render();
   let hasProfile = false;
   try { hasProfile = Boolean(localStorage.getItem(STORAGE_PROFILE)); } catch { /* storage is optional */ }
-  if (!hasProfile) writeProfile({ games: 1, wins: 0, bestScore: 0 });
+if (!hasProfile) writeProfile({ games: 1, wins: 0, bestScore: 0, dailyCompleted: [] });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 
 modalContent.addEventListener('click', (event) => {
@@ -625,7 +713,7 @@ modalContent.addEventListener('click', (event) => {
   if (more === 'settings') showSettings();
   if (more === 'help') showHelp();
   if (more === 'stats') showStats();
-  if (more === 'daily') startDailyGame();
+  if (more === 'daily') showDailyCalendar();
 });
 
 window.solitaireGame = game;

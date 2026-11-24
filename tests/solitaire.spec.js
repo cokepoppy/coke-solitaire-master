@@ -214,6 +214,8 @@ test('the daily deal is repeatable and the game restores on reload', async ({ pa
   await page.goto('/');
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: /Daily challenge/ }).click();
+  await expect(page.getByRole('heading', { name: 'Daily Challenge' })).toBeVisible();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   const dailyDate = await page.evaluate(() => window.solitaireGame.state.challenge);
   const firstCard = await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id);
   expect(dailyDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
@@ -226,8 +228,73 @@ test('the daily deal is repeatable and the game restores on reload', async ({ pa
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: new RegExp(dailyDate) }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(page.locator('#moves-value')).toHaveText('0');
   expect(await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id)).toBe(firstCard);
+});
+
+test('daily calendar browses past months and starts the selected deterministic deal', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: /Daily challenge/ }).click();
+  const calendarBox = await page.locator('.modal-card').boundingBox();
+  expect(calendarBox.x).toBeGreaterThanOrEqual(0);
+  expect(calendarBox.x + calendarBox.width).toBeLessThanOrEqual(320);
+  expect(calendarBox.y + calendarBox.height).toBeLessThanOrEqual(640);
+  await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
+  const currentMonth = await page.locator('.daily-calendar').getAttribute('data-month');
+  await page.getByRole('button', { name: 'Previous month' }).click();
+  const previousMonth = await page.locator('.daily-calendar').getAttribute('data-month');
+  expect(previousMonth).not.toBe(currentMonth);
+  const firstDay = `${previousMonth}-01`;
+  await page.locator(`[data-daily-date="${firstDay}"]`).click();
+  await expect(page.locator(`[data-daily-date="${firstDay}"]`)).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireGame.state.challenge)).toBe(firstDay);
+  const firstCard = await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id);
+  await page.reload();
+  expect(await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id)).toBe(firstCard);
+});
+
+test('winning shows a result card and records a completed daily challenge', async ({ page }) => {
+  await page.goto('/');
+  const challengeDate = await page.evaluate(() => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  });
+  await page.evaluate((day) => {
+    const game = window.solitaireGame;
+    const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
+    const suits = ['♠', '♥', '♦', '♣'];
+    game.state.stock = [];
+    game.state.waste = [];
+    game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 13).sort((a, b) => a.rank - b.rank));
+    game.state.tableau = [...suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13)]), [], [], []];
+    game.state.moves = 184;
+    game.state.score = 350;
+    game.state.seconds = 184;
+    game.state.challenge = day;
+    game.state.won = false;
+    game.save();
+  }, challengeDate);
+  await page.reload();
+
+  for (let pile = 0; pile < 4; pile += 1) {
+    await page.locator(`#tableau .pile-column[data-pile="${pile}"] .playing-card`).click();
+    await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
+  }
+
+  await expect(page.locator('.win-ribbon')).toContainText('YOU WIN');
+  await expect(page.locator('.win-score-line strong')).toHaveText('390');
+  await expect(page.locator('.win-copy')).toContainText('Daily challenge completed');
+  await expect(page.locator('.win-summary')).toContainText(/Time\s+\d+:\d{2}/);
+  await expect(page.locator('.win-summary')).toContainText('188');
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: new RegExp(challengeDate) }).click();
+  await expect(page.locator(`[data-daily-date="${challengeDate}"]`)).toHaveClass(/completed/);
+  await expect(page.locator('.daily-progress')).toHaveAttribute('aria-label', /1 of .* challenges completed this month/);
 });
 
 test('the Magic control plays one legal suggestion and undo reverses it', async ({ page }) => {
