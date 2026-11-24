@@ -1,0 +1,17 @@
+{
+  "output": "combo-amazing.webp",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "frame_count": 66,
+  "frame_delay_ms": 17,
+  "crop_in_extracted_frames": [
+    0,
+    34,
+    520,
+    186
+  ],
+  "background_reference": "reward-amazing-clean",
+  "background_reference_frame_count": 24,
+  "alpha_threshold": 20.0,
+  "alpha_range": 45.0,
+  "alpha_method": "pixel difference from the clean frame or median of clean frames with inverse-alpha foreground recovery"
+}

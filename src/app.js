@@ -325,13 +325,11 @@ function showComboFeedback(cardId, foundationMove = false) {
     const banner = document.createElement('div');
     banner.className = reward.className;
     banner.setAttribute('aria-hidden', 'true');
-    banner.innerHTML = reward.name === 'Amazing'
-      ? '<b>Amazing</b><i>♥</i><i>♥</i><i>✦</i><i>✦</i>'
-      : `<img class="combo-reward-art" src="/assets/feedback/combo-${reward.cue}.webp" alt=""><b>${reward.name}</b>`;
+    banner.innerHTML = `<img class="combo-reward-art" src="/assets/feedback/combo-${reward.cue}.webp" alt=""><b>${reward.name}</b>`;
     banner.querySelector('.combo-reward-art')?.addEventListener('error', () => banner.classList.add('sprite-failed'), { once: true });
     board.append(banner);
   }
-  const rewardDuration = reward?.cue === 'good' || reward?.cue === 'great' ? 1080 : combo === 4 ? 620 : 920;
+  const rewardDuration = reward ? 1080 : 920;
   comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-good, .combo-great, .combo-amazing').forEach((effect) => effect.remove()), rewardDuration);
 }
 
