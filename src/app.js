@@ -41,7 +41,7 @@ const CARD_BACK_FILES = { ruby: 'back-solitaire-master.svg', emerald: 'back-blue
 const REFERENCE_COURT_CARDS = new Set([
   'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
   'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
-  'king-of-hearts', 'king-of-spades',
+  'king-of-clubs', 'king-of-hearts', 'king-of-spades',
   'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
 ]);
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';

@@ -139,7 +139,7 @@ test('reference court-card illustrations render on matching cards', async ({ pag
       [9, '♦', 13],
       [14, '♦', 11],
       [20, '♥', 11],
-      [27, '♠', 11],
+      [27, '♣', 13],
     ];
     const used = new Set();
     for (const [position, suit, rank] of referenceFaces) {
@@ -163,7 +163,7 @@ test('reference court-card illustrations render on matching cards', async ({ pag
     'queen-of-clubs-reference.png',
     'king-of-spades-reference.png',
     'jack-of-hearts-reference.png',
-    'jack-of-spades-reference.png',
+    'king-of-clubs-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
@@ -446,7 +446,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
       'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
-      'king-of-hearts', 'king-of-spades',
+      'king-of-clubs', 'king-of-hearts', 'king-of-spades',
       'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
     ];
     return Promise.all(names.map(async (name) => {
@@ -454,7 +454,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(11).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(12).fill(true));
   await context.setOffline(false);
 });
 
