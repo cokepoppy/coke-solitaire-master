@@ -143,6 +143,24 @@ function renderTimeDisplay(seconds) {
   timer.append(accessibleText);
 }
 
+function renderStatNumber(element, value) {
+  const display = String(value);
+  element.replaceChildren();
+  for (const digit of display) {
+    const glyph = document.createElement('img');
+    glyph.className = 'stat-digit';
+    glyph.src = `/assets/ui/timer-digit-${digit}.png`;
+    glyph.alt = '';
+    glyph.setAttribute('aria-hidden', 'true');
+    glyph.draggable = false;
+    element.append(glyph);
+  }
+  const accessibleText = document.createElement('span');
+  accessibleText.className = 'visually-hidden';
+  accessibleText.textContent = display;
+  element.append(accessibleText);
+}
+
 function sourceMatches(source, selection) {
   return Boolean(source && selection && source.zone === selection.zone && source.pile === selection.pile && source.index >= selection.index);
 }
@@ -249,9 +267,9 @@ function renderTableau() {
 }
 
 function updateChrome() {
-  $('#score-value').textContent = String(game.state.score);
+  renderStatNumber($('#score-value'), game.state.score);
   renderTimeDisplay(game.state.seconds);
-  $('#moves-value').textContent = String(game.state.moves);
+  renderStatNumber($('#moves-value'), game.state.moves);
   $('#undo-button').disabled = game.state.history.length === 0;
   const magicBadge = $('#magic-badge');
   magicBadge.textContent = String(game.state.magicCharges);

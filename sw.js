@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v32';
+const CACHE = 'solitaire-master-v33';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));

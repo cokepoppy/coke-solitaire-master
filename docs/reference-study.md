@@ -24,7 +24,7 @@ The mobile visual pass compares the 10-second reference frame with a 442×960 CS
 
 For audio, first obtain a clean gameplay recording with music and game effects audible, then keep a timestamped action log aligned to video. Extract audio without rebasing its source timeline, listen to short event windows, and compare duration, pitch contour, attack/decay, noise texture, stereo position, and music loop period. Keep one sample per event (tap, draw, flip, move, invalid drop, foundation, win) and compare browser PCM capture separately from the source. A successful `AudioContext.resume()`, cue scheduling, PCM output, and audible phone-speaker playback are separate checks; passing the first two alone does not prove the last two.
 
-The default-felt menu, score crown, and move arrows now use source pixels from the 20-second frame; the menu falls back to its vector form on alternate backgrounds. Score and move placement uses the source's left-aligned icon and right-aligned number. The live timer uses source-captured numeral and colon sprites at the same normalized positions as the 10-second reference frame; text remains available to assistive technology.
+The default-felt menu, score crown, and move arrows now use source pixels from the 20-second frame; the menu falls back to its vector form on alternate backgrounds. Score and move placement uses the source's left-aligned icon and right-aligned number, and both values now use the captured timer numeral sprites instead of browser-bold text. The live timer uses source-captured numeral and colon sprites at the same normalized positions as the 10-second reference frame; accessible text remains available for all three values.
 
 ## Rules and state model
 
