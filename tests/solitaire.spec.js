@@ -41,6 +41,8 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.getByRole('button', { name: 'Game menu' })).toBeVisible();
   await expect(page.locator('.foundation-slot')).toHaveCount(4);
   await expect(page.locator('.action-button')).toHaveCount(4);
+  await expect(page.locator('.action-source-icon')).toHaveCount(4);
+  await expect.poll(() => page.locator('.action-source-icon').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
@@ -610,7 +612,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v24');
+  expect(cacheNames).toContain('solitaire-master-v25');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -647,6 +649,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   expect(offlineAmazingCue.ok).toBe(true);
   expect(offlineAmazingCue.audioType).toBe(true);
   expect(offlineAmazingCue.bytes).toBeGreaterThan(160_000);
+  const offlineActionIcons = await page.evaluate(async () => Promise.all(['action-play-plus', 'action-magic', 'action-hint', 'action-undo'].map(async (name) => {
+    const response = await fetch(`/assets/ui/${name}.png`);
+    return response.ok && response.headers.get('content-type') === 'image/png';
+  })));
+  expect(offlineActionIcons).toEqual(Array(4).fill(true));
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
