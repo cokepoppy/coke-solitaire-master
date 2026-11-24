@@ -395,12 +395,20 @@ test('mobile sound unlocks on a gesture and ambient music follows its switch', a
     const audio = window.solitaireAudio;
     const playCue = audio.playCue.bind(audio);
     audio.playCue = (cue) => { window.audioCues.push(cue); return playCue(cue); };
+    const playSample = audio.playSample.bind(audio);
+    audio.playSample = (buffer, ...args) => {
+      window.referenceMoveSamplePlayed = buffer === audio.referenceMoveBuffer;
+      return playSample(buffer, ...args);
+    };
   });
 
   await page.locator('[data-action="stock"]').click();
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.context?.state)).toBe('running');
   await expect.poll(() => page.evaluate(() => window.audioCues.includes('draw'))).toBe(true);
   expect(await page.evaluate(() => window.solitaireAudio.noiseBuffer.length)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceMoveBuffer?.duration)).toBeGreaterThan(0.37);
+  await page.evaluate(() => window.solitaireAudio.play('move'));
+  await expect.poll(() => page.evaluate(() => window.referenceMoveSamplePlayed)).toBe(true);
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
@@ -462,13 +470,19 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       '5-of-diamonds',
       'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
       '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
+      'ace-of-diamonds', '10-of-diamonds',
     ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}-reference.png`);
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(36).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(38).fill(true));
+  const offlineMoveSample = await page.evaluate(async () => {
+    const response = await fetch('/assets/audio/card-move-reference.wav');
+    return response.ok && (await response.arrayBuffer()).byteLength > 0;
+  });
+  expect(offlineMoveSample).toBe(true);
   await context.setOffline(false);
 });
 

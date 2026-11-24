@@ -12,6 +12,8 @@ export class GameAudio {
     this.soundBus = null;
     this.musicBus = null;
     this.noiseBuffer = null;
+    this.referenceMoveBuffer = null;
+    this.referenceMoveLoadPromise = null;
   }
 
   getContext() {
@@ -29,6 +31,7 @@ export class GameAudio {
       this.musicBus.connect(this.master);
       this.master.connect(this.context.destination);
       this.noiseBuffer = this.createNoiseBuffer(this.context);
+      this.loadReferenceMove();
     }
     return this.context;
   }
@@ -44,6 +47,24 @@ export class GameAudio {
       samples[index] = previous;
     }
     return buffer;
+  }
+
+  loadReferenceMove() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceMoveLoadPromise) {
+      this.referenceMoveLoadPromise = fetch('/assets/audio/card-move-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Move sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceMoveBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceMoveLoadPromise;
   }
 
   unlock() {
@@ -81,7 +102,19 @@ export class GameAudio {
       if (this.pending.length < 8) this.pending.push(cue);
       return;
     }
+    if (cue === 'move') await this.referenceMoveLoadPromise;
     this.playCue(cue);
+  }
+
+  playSample(buffer, at = this.context.currentTime, amplitude = 1) {
+    const source = this.context.createBufferSource();
+    const envelope = this.context.createGain();
+    source.buffer = buffer;
+    envelope.gain.setValueAtTime(amplitude, at);
+    source.connect(envelope);
+    envelope.connect(this.soundBus);
+    source.start(at);
+    return source;
   }
 
   playNoise(startFrequency, endFrequency, duration, amplitude, at = this.context.currentTime, quality = 0.8) {
@@ -132,8 +165,11 @@ export class GameAudio {
       this.playNoise(3600, 480, 0.15, 0.17, now, 0.62);
       this.playTone(250, 150, 0.13, 0.045, 'sine', now);
     } else if (cue === 'move') {
-      this.playNoise(2500, 420, 0.105, 0.12, now, 0.9);
-      this.playTone(340, 240, 0.09, 0.04, 'triangle', now);
+      if (this.referenceMoveBuffer) this.playSample(this.referenceMoveBuffer, now, 0.35);
+      else {
+        this.playNoise(2500, 420, 0.105, 0.12, now, 0.9);
+        this.playTone(340, 240, 0.09, 0.04, 'triangle', now);
+      }
     } else if (cue === 'flip') {
       this.playNoise(6200, 1250, 0.09, 0.14, now, 0.72);
       this.playTone(680, 420, 0.11, 0.027, 'sine', now);

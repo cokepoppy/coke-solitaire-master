@@ -19,6 +19,10 @@ A full-length 17:24 portrait gameplay recording is also available locally with A
 - Strong peak candidates begin at 72.900 s (RMS `0.33768201`), 73.550 s (`0.23930280`), and 102.850 s (`0.19234923`). The matching frame windows show “Combo 4 / Amazing”, its follow-through, and later “Great” feedback, respectively. These are plausible feedback-sound locations; the mixed track and lack of direct listening/A-B comparison mean their sound labels remain unverified.
 - Reproducible outputs: `research/solitaire-master/gameplay-audio-opening-2025/manifest.json` and `audio-windows.csv`. Candidate timestamps identify windows for review; they are not an automatic classifier for taps, card moves, music, or speech.
 
+The complete 17:24 recording was also decoded with macOS `afconvert` to 44.1 kHz stereo PCM16. Its WAV SHA-256 is `69db2a5a1dd0b006f9f9df082578fed68f5f1550c1c4eb87e7198584e3f3fa64`. A 20 ms full-length pass produced 52,200 windows: median RMS `0.0000132`, P95 `0.09231466`, maximum `0.50907975`, with 23.11% of windows above RMS `0.01`. These wider results show repeated short audible events outside the earlier 0–120 second window.
+
+Two reviewed event candidates at 18.22 and 26.12 seconds align with visible tableau actions: the move counter is 2 and 5, respectively. Their waveform snippets correlate at 0.895 after a 6.69 ms alignment shift. The build now plays a 0.38 second reference crop from 18.040–18.420 seconds for tableau moves; crop provenance and hash are in [the audio assets note](../assets/audio/README.md). This is a source-matched cue from a mixed third-party recording, not a clean isolated master. The remaining effects and ambient music are still approximations.
+
 Recreate the extraction and analysis from the preserved local source video:
 
 ```sh
