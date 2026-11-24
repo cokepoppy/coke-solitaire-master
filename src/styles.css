@@ -118,7 +118,11 @@ body[data-theme='felt'] .menu-theme-icon { display: none; }
 .stat[aria-label='Score'], .stat[aria-label='Moves'] { justify-content: space-between; gap: 0; padding: 0 clamp(18px, 6.2vw, 28px) 0 4px; }
 .scorebar-flourish { display: grid; height: 34px; place-items: center; color: rgba(18, 76, 48, .86); font-size: 20px; line-height: 1; }
 .time-stat { position: relative; z-index: 2; overflow: visible; border-radius: 0; background: transparent; }
-.timer-frame { position: absolute; z-index: 0; top: -7px; left: -14px; width: calc(100% + 28px); height: calc(100% + 14px); overflow: visible; pointer-events: none; }
+.timer-frame { position: absolute; z-index: 0; top: -8px; left: 50%; width: calc(100% + 39px); height: calc(100% + 16px); overflow: visible; transform: translateX(-50%); pointer-events: none; }
+.timer-frame-source { display: none; object-fit: fill; }
+.timer-frame-vector { display: block; }
+body[data-theme='felt'] .timer-frame-source { display: block; }
+body[data-theme='felt'] .timer-frame-vector { display: none; }
 .timer-frame-shape { fill: rgba(18, 53, 25, .82); stroke: rgba(8, 40, 28, .52); stroke-width: 2; }
 .timer-frame-detail { fill: none; stroke: rgba(8, 72, 47, .82); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .timer-frame-jewel { fill: #165438; stroke: rgba(8, 40, 28, .62); stroke-width: 1.5; }
