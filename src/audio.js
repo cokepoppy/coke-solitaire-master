@@ -18,6 +18,8 @@ export class GameAudio {
     this.referenceMoveLoadPromise = null;
     this.referenceAmazingBuffer = null;
     this.referenceAmazingLoadPromise = null;
+    this.referenceFoundationBuffer = null;
+    this.referenceFoundationLoadPromise = null;
   }
 
   getContext() {
@@ -37,6 +39,7 @@ export class GameAudio {
       this.noiseBuffer = this.createNoiseBuffer(this.context);
       this.loadReferenceMove();
       this.loadReferenceAmazing();
+      this.loadReferenceFoundation();
     }
     return this.context;
   }
@@ -90,6 +93,24 @@ export class GameAudio {
     return this.referenceAmazingLoadPromise;
   }
 
+  loadReferenceFoundation() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceFoundationLoadPromise) {
+      this.referenceFoundationLoadPromise = fetch('/assets/audio/foundation-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Foundation sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceFoundationBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceFoundationLoadPromise;
+  }
+
   unlock() {
     const context = this.getContext();
     if (!context) return Promise.resolve(false);
@@ -127,6 +148,7 @@ export class GameAudio {
     }
     if (cue === 'move' || cue === 'draw') await this.referenceMoveLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
+    if (cue === 'foundation') await this.referenceFoundationLoadPromise;
     this.playCue(cue);
   }
 
@@ -213,9 +235,12 @@ export class GameAudio {
       this.playNoise(6200, 1250, 0.09, 0.14, now, 0.72);
       this.playTone(680, 420, 0.11, 0.027, 'sine', now);
     } else if (cue === 'foundation') {
-      this.playNoise(4200, 1800, 0.075, 0.055, now, 1.2);
-      this.playTone(587.33, 587.33, 0.24, 0.08, 'sine', now);
-      this.playTone(880, 880, 0.32, 0.055, 'sine', now + 0.085);
+      if (this.referenceFoundationBuffer) this.playCapturedSample(this.referenceFoundationBuffer, now + 0.29);
+      else {
+        this.playNoise(4200, 1800, 0.075, 0.055, now, 1.2);
+        this.playTone(587.33, 587.33, 0.24, 0.08, 'sine', now);
+        this.playTone(880, 880, 0.32, 0.055, 'sine', now + 0.085);
+      }
     } else if (cue === 'invalid') {
       this.playNoise(1450, 280, 0.075, 0.075, now, 0.75);
       this.playTone(205, 132, 0.09, 0.045, 'triangle', now);
