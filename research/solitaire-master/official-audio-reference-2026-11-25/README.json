@@ -1,0 +1,27 @@
+{
+  "official_promo_source": "https://www.youtube.com/watch?v=Yvi1HA3OcxU",
+  "official_promo_video_sha256": "d65fa047629339dbd1d115ae467bd7c3da1df5516c201986dc93c899bd5c897e",
+  "gameplay_source": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "gameplay_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "official_promo_audio_seconds": 11.075918,
+  "official_promo_reference_match_abs_correlation": {
+    "card-move-reference.wav": 0.07482467,
+    "combo-amazing-reference.wav": 0.09795051,
+    "foundation-reference.wav": 0.02059814
+  },
+  "positive_control": {
+    "gameplay_source_window_seconds": [
+      18.04,
+      18.42
+    ],
+    "matches_card_move_reference_sha256": "a158ffdfcc30fe2aa3ee140eff2ff5e6a5700fca649204de16fb12f9a483a819",
+    "absolute_correlation": 1.0
+  },
+  "interpretation": "The official short does not contain a close waveform match to the three currently captured gameplay cue files. The exact source-window positive control validates extraction and correlation tooling. Low similarity does not prove that the official game uses different sounds; the promo is a mixed AAC track and may use different processing or timing.",
+  "reports": [
+    "official-short-window.json",
+    "official-short-cue-matches.json",
+    "gameplay-move-control-window.json",
+    "gameplay-move-control-match.json"
+  ]
+}
