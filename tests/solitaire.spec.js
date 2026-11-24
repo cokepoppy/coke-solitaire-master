@@ -386,6 +386,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
       [19, '♦', 4],
       [21, '♣', 9],
       [22, '♥', 9],
+      [24, '♣', 10],
     ];
     const used = new Set();
     for (const [position, suit, rank] of referenceFaces) {
@@ -420,6 +421,9 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     const fourClubs = window.solitaireGame.state.tableau.flat().find((card) => card.suit === '♣' && card.rank === 4);
     if (!fourClubs) throw new Error('The test deal did not place the four of clubs in the tableau.');
     fourClubs.faceUp = true;
+    const tenClubs = window.solitaireGame.state.tableau.flat().find((card) => card.suit === '♣' && card.rank === 10);
+    if (!tenClubs) throw new Error('The test deal did not place the ten of clubs in the tableau.');
+    tenClubs.faceUp = true;
     for (const [suit, rank] of [['♣', 3], ['♣', 5], ['♦', 8], ['♠', 10], ['♠', 5], ['♠', 7], ['♦', 4], ['♣', 9]]) {
       const card = window.solitaireGame.state.tableau.flat().find((candidate) => candidate.suit === suit && candidate.rank === rank);
       if (!card) throw new Error(`The test deal did not place ${rank}${suit} in the tableau.`);
@@ -454,12 +458,20 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     '2-of-hearts-reference.png',
     '7-of-diamonds-reference.png',
     '4-of-clubs-reference.png',
+    '10-of-clubs-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
     await expect(image).toHaveCount(1);
     await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth === 118 && element.naturalHeight === 177)).toBe(true);
   }
+  const tenClubsAssetHash = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/10-of-clubs-reference.png');
+    const bytes = await response.arrayBuffer();
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  });
+  expect(tenClubsAssetHash).toBe('c8e2b1f9e474c2e47ff9de7cb2cc84b01f963b829e83b769a69d2dd0f0a6e99c');
   const bluePixelsInEightHeartsCorner = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/8-of-hearts-reference.png');
     const image = new Image();

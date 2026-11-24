@@ -56,14 +56,15 @@ On macOS, `sips -c 177 118 --cropOffset Y X source-frame.png --out card-referenc
 
 The matching reference PNG is selected at runtime and included in the offline shell cache. The remaining number-card faces are listed with their sources below.
 
-Two additional number-card faces are 118×177 source-frame crops from the full gameplay recording:
+Three additional number-card faces are 118×177 source-frame crops from the full gameplay recording:
 
 | Card image | PTS (time) | Crop origin (x, y) |
 | --- | ---: | ---: |
+| `10-of-clubs-reference.png` | 1843200 (120s) | (633, 916) |
 | `7-of-diamonds-reference.png` | 3732480 (243s) | (622, 428) |
 | `2-of-hearts-reference.png` | 9231360 (601s) | (622, 428) |
 
-Eight more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
+Seven more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
 
 | Card image | Listing screenshot | Crop origin (x, y) |
 | --- | ---: | ---: |
@@ -73,7 +74,6 @@ Eight more number-card faces are crops from the official [App Store listing](htt
 | `4-of-spades-reference.png` | 2 | (201, 1015) |
 | `8-of-spades-reference.png` | 2 | (443, 1061) |
 | `3-of-hearts-reference.png` | 3 | (563, 1084) |
-| `10-of-clubs-reference.png` | 3 | (806, 799) |
 | `3-of-spades-reference.png` | 2 | (807, 1129) |
 
 The 3♠ shown in screenshot 2 has a gold selected-card glow. Its rank, suit, and center artwork remain source pixels; the 6-pixel perimeter is reconstructed from the unselected 4♠ card frame in the same screenshot so the selection glow does not become part of the default deck.
@@ -97,6 +97,8 @@ Seven further number-card faces are complete crops from full gameplay frames. Ea
 | `4-of-diamonds-reference.png` | 14745600 (960s) | (383, 428) |
 | `9-of-clubs-reference.png` | 15052800 (980s) | (383, 994) |
 
-The runtime selects these crops for their matching cards and includes them in the offline shell cache. All twelve court cards and thirty-nine number-card faces use source-frame or official store crops.
+The 10♣ crop comes from the default black-suit gameplay frame at 120 seconds. It was re-extracted independently from the full source frame and pixel-compared with the committed 118×177 crop; the complete face is unobstructed. Source PTS, frame hash, crop hash, and extraction coordinates are recorded in [`research/solitaire-master/source-card-10-of-clubs-2026-11-25`](../../research/solitaire-master/source-card-10-of-clubs-2026-11-25).
+
+The runtime selects these crops for their matching cards and includes them in the offline shell cache. All twelve court cards and thirty-nine number-card faces use source-frame or official store crops; the 9♥ is the remaining source-style composite.
 
 The 9♥ reference PNG is a source-style composite rather than a direct 9♥ screenshot crop. It keeps the 9♦ source capture's rank, frame, and card placement, removes its two diamond pips, and places the corner and center heart shapes from the 5♥ source capture. The composite is built reproducibly with `python3 tools/build_nine_hearts_reference.py`. This removes the last CC0 face from the default Solitaire Master face style, while preserving the distinction that the 9♥ silhouette has not been captured directly from the original game.

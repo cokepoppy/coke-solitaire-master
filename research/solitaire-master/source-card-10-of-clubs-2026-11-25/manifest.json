@@ -1,0 +1,19 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_file": "gLd0HXtDt5I.mp4",
+  "source_dimensions": [884, 1920],
+  "source_time_scale": 15360,
+  "requested_time_seconds": 120.0,
+  "actual_time_seconds": 120.0,
+  "source_pts": 1843200,
+  "decoder": "AVFoundation, zero tolerance",
+  "full_frame_png_sha256": "e3aa520b8af9a597225a85ded453706496863ac66a610b3c4e3c6f5855111057",
+  "card": "10 of clubs",
+  "crop_rectangle_xywh": [633, 916, 118, 177],
+  "crop_png_sha256": "c8e2b1f9e474c2e47ff9de7cb2cc84b01f963b829e83b769a69d2dd0f0a6e99c",
+  "dimensions_verified": [118, 177],
+  "independent_reextraction_pixel_equal": true,
+  "unobstructed_full_face_verified": true,
+  "note": "The committed crop is taken from the default black-suit gameplay frame. It replaces the resized App Store screenshot crop."
+}
