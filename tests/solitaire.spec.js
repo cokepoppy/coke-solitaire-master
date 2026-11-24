@@ -478,7 +478,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     const digest = await crypto.subtle.digest('SHA-256', bytes);
     return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
   });
-  expect(nineHeartsAssetHash).toBe('26eac62522d2f635907ad6ff3876e6cd9d266c059c9311c3105d17004005a0db');
+  expect(nineHeartsAssetHash).toBe('07232b5f3ad93fd8240e9e17beffa56be5168aa787a71be7811d03c52b2dba1f');
   const bluePixelsInEightHeartsCorner = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/8-of-hearts-reference.png');
     const image = new Image();

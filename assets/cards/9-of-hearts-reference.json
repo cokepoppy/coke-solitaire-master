@@ -1,0 +1,23 @@
+{
+  "card": "9 of hearts",
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_file": "gLd0HXtDt5I.mp4",
+  "source_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_seconds": 301.0,
+  "source_pts": 4623360,
+  "source_time_scale": 15360,
+  "source_dimensions": [
+    884,
+    1920
+  ],
+  "crop_xywh": [
+    133,
+    990,
+    118,
+    177
+  ],
+  "crop_png": "9-of-hearts-reference.png",
+  "crop_png_sha256": "07232b5f3ad93fd8240e9e17beffa56be5168aa787a71be7811d03c52b2dba1f",
+  "full_frame_png_sha256": "494d2a22cf6fc018426005761dada85109bb91ef162806e18b7d7e1e9bf17576",
+  "visibility_note": "Complete face-up card at the bottom of tableau column 2; no card overlaps it and no selection or win effect covers the face."
+}
