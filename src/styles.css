@@ -234,8 +234,12 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .playing-card.card-enter { pointer-events: none; animation: card-deal .26s both cubic-bezier(.16,.76,.38,1); animation-delay: var(--deal-delay, 0ms); }
 .card-face.card-enter::before { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: inherit; background: var(--flip-back, url('/assets/cards/back-solitaire-master.svg')) center / 100% 100% no-repeat; transform-origin: center; animation: deal-back-flip .18s both ease-in-out; animation-delay: calc(var(--deal-delay, 0ms) + 180ms); }
 .card-face.card-enter .card-face-art { transform-origin: center; backface-visibility: hidden; animation: deal-face-reveal .18s both ease-in-out; animation-delay: calc(var(--deal-delay, 0ms) + 180ms); }
+.card-face.card-reveal::before { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: inherit; background: var(--flip-back, url('/assets/cards/back-solitaire-master.svg')) center / 100% 100% no-repeat; transform-origin: center; animation: deal-back-flip .05s both linear; }
+.card-face.card-reveal .card-face-art { transform-origin: center; backface-visibility: hidden; animation: deal-face-reveal .05s both linear; }
 .playing-card.card-arrive { animation: card-land .22s both cubic-bezier(.2,.8,.2,1); animation-delay: var(--draw-delay, 0ms); }
 .playing-card.card-arrive.card-stock-draw { animation-duration: .15s; animation-timing-function: linear; }
+.playing-card.card-arrive.card-tableau-move { animation-duration: .05s; animation-timing-function: linear; }
+.playing-card.card-flight-pending, .playing-card.card-reveal { animation: none !important; }
 .playing-card:active { filter: brightness(1.03); }
 .corner { position: absolute; display: flex; align-items: flex-start; flex-direction: row; gap: 1px; font-family: Arial, sans-serif; font-weight: 700; line-height: .9; }
 .corner b { font-size: clamp(10px, calc(var(--card-w) * .29), 19px); letter-spacing: -.04em; }

@@ -53,6 +53,10 @@ Images and downloaded videos are ignored by Git because they are review derivati
 
 A zero-tolerance AVFoundation review of the 60 fps source frames around the first stock draw found the first changed frame at 23.216667 s: the stock count changes from 24 to 23, the move count advances from 3 to 4, and the 6♥ is already face up. The card moves left from the stock toward the waste and reaches the waste slot at about 23.35 s. The source PTS and per-frame PNG hashes for this transition are recorded in the [frame ledger](../research/solitaire-master/stock-draw-2026-11-25/frames.csv) and [manifest](../research/solitaire-master/stock-draw-2026-11-25/manifest.json); regenerate the omitted review images with the AVFoundation command above. The mixed-audio transient candidate begins near 23.416 s, about 200 ms later. That gap may be stream offset or delayed sound, so keep the audio and visual timestamps separate when tuning. The web version uses a 150 ms linear flight and shows the face immediately.
 
+## Observed tableau-move transition
+
+In the same 60 fps recording, the selected 4♣ remains at its source position at 13.050 s, has started moving by 13.0667 s, and is settled by 13.100 s. The newly uncovered Q♣ flips face up in that window. This brackets the flight to roughly 50 ms and the visible flip to no more than two frame intervals; the web version uses a 50 ms linear flight and a 50 ms flip. Exact PTS and PNG-byte hashes are in the [tableau-move ledger](../research/solitaire-master/tableau-move-2026-11-25/frames.csv) and [manifest](../research/solitaire-master/tableau-move-2026-11-25/manifest.json). The PNG review frames stay local and can be regenerated with the same AVFoundation command.
+
 ## Reviewing interactions and sound
 
 1. Start with the overview and contact sheets to identify likely actions. Use the CSV to jump to exact PTS, then compare a target image with its saved before/after frames.
