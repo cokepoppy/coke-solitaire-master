@@ -31,6 +31,9 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('.stock-count')).toHaveText('24');
   await expect(page.locator('#time-value')).toHaveText(/^00:\d{2}$/);
   await expect(page.locator('.time-stat')).toHaveAttribute('aria-label', 'Time');
+  await expect(page.locator('.timer-frame-source')).toBeVisible();
+  await expect(page.locator('.timer-frame-vector')).toHaveCSS('display', 'none');
+  await expect.poll(() => page.locator('.timer-frame-source').evaluate((image) => [image.complete, image.naturalWidth, image.naturalHeight])).toEqual([true, 286, 100]);
   const timerFrameBounds = await page.evaluate(() => {
     const timer = document.querySelector('.time-stat').getBoundingClientRect();
     const frame = document.querySelector('.timer-frame').getBoundingClientRect();
@@ -173,6 +176,11 @@ test('source opening replay matches the 20-second score, move count, and exposed
   });
   await page.reload();
   await page.waitForTimeout(1450);
+  const sourceTimerFrame = await page.locator('.timer-frame-source').boundingBox();
+  expect(sourceTimerFrame.x).toBeCloseTo(169.5, 1);
+  expect(sourceTimerFrame.y).toBeCloseTo(145.2, 1);
+  expect(sourceTimerFrame.width).toBe(143);
+  expect(sourceTimerFrame.height).toBe(50);
 
   const move = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
     await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).click();
@@ -368,6 +376,8 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master.svg');
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  await expect(page.locator('.timer-frame-source')).toHaveCSS('display', 'none');
+  await expect(page.locator('.timer-frame-vector')).toBeVisible();
   expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage)).toContain('/assets/themes/mountain-valley.jpg');
   expect((await page.request.get('/assets/themes/mountain-valley.jpg')).ok()).toBe(true);
   await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -708,7 +718,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v27');
+  expect(cacheNames).toContain('solitaire-master-v28');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -755,11 +765,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
   expect(offlineFoundationSlots).toEqual(Array(4).fill(true));
-  const offlineStatusIcons = await page.evaluate(async () => Promise.all(['menu-source', 'stat-crown', 'stat-moves'].map(async (name) => {
+  const offlineStatusIcons = await page.evaluate(async () => Promise.all(['menu-source', 'stat-crown', 'stat-moves', 'timer-frame-source'].map(async (name) => {
     const response = await fetch(`/assets/ui/${name}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
-  expect(offlineStatusIcons).toEqual(Array(3).fill(true));
+  expect(offlineStatusIcons).toEqual(Array(4).fill(true));
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
