@@ -121,6 +121,49 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(pageErrors).toEqual([]);
 });
 
+test('reference court-card illustrations render on matching cards', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const suits = ['♠', '♥', '♦', '♣'];
+    const cards = suits.flatMap((suit) => Array.from({ length: 13 }, (_, index) => ({
+      id: `${suit}-${index + 1}`,
+      suit,
+      rank: index + 1,
+      faceUp: false,
+    })));
+    const dealOrder = Array(28).fill(null);
+    const referenceFaces = [
+      [2, '♠', 12],
+      [9, '♦', 13],
+      [14, '♦', 11],
+    ];
+    const used = new Set();
+    for (const [position, suit, rank] of referenceFaces) {
+      const card = cards.find((candidate) => candidate.suit === suit && candidate.rank === rank);
+      dealOrder[position] = card;
+      used.add(card.id);
+    }
+    const remaining = cards.filter((card) => !used.has(card.id));
+    for (let position = 0; position < dealOrder.length; position += 1) {
+      if (!dealOrder[position]) dealOrder[position] = remaining.shift();
+    }
+    const stock = cards.filter((card) => !dealOrder.some((dealt) => dealt.id === card.id));
+    window.solitaireGame.newGame([...stock, ...dealOrder.reverse()]);
+  });
+  await page.reload();
+  await page.waitForTimeout(1600);
+  const referenceArt = [
+    'queen-of-spades-reference.png',
+    'king-of-diamonds-reference.png',
+    'jack-of-diamonds-reference.png',
+  ];
+  for (const filename of referenceArt) {
+    const image = page.locator(`.card-face-art[src$="${filename}"]`);
+    await expect(image).toHaveCount(1);
+    await expect.poll(() => image.evaluate((element) => element.complete && element.naturalWidth === 118 && element.naturalHeight === 177)).toBe(true);
+  }
+});
+
 test('settings change draw count and hand layout; a new deal resets the board', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Game menu' }).click();
@@ -391,6 +434,14 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineCardBack).toEqual({ ok: true, type: 'image/svg+xml' });
+  const offlineReferenceCards = await page.evaluate(async () => {
+    const names = ['queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds'];
+    return Promise.all(names.map(async (name) => {
+      const response = await fetch(`/assets/cards/${name}-reference.png`);
+      return response.ok && response.headers.get('content-type') === 'image/png';
+    }));
+  });
+  expect(offlineReferenceCards).toEqual([true, true, true]);
   await context.setOffline(false);
 });
 
