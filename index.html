@@ -18,7 +18,9 @@
         </button>
         <section class="scorebar" aria-label="Game statistics">
           <div class="stat" aria-label="Score"><svg class="metric-icon crown-icon" viewBox="0 0 32 28" aria-hidden="true"><path d="M3 8 9 13 15 3l5 10 9-7-3 15H6L3 8Z"/><path d="M7 24h19"/></svg><strong id="score-value">0</strong></div>
-          <div class="stat" aria-label="Time"><svg class="metric-icon timer-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="12"/><path d="M12 3h8M16 10v8l5 3"/></svg><strong id="time-value">0:00</strong></div>
+          <span class="scorebar-flourish" aria-hidden="true">✦</span>
+          <div class="stat time-stat" aria-label="Time"><strong id="time-value">0:00</strong></div>
+          <span class="scorebar-flourish" aria-hidden="true">✦</span>
           <div class="stat" aria-label="Moves"><svg class="metric-icon moves-icon" viewBox="0 0 36 30" aria-hidden="true"><path d="M4 10h23m-6-6 7 6-7 6M32 20H9m6-6-7 6 7 6"/></svg><strong id="moves-value">0</strong></div>
         </section>
       </header>
@@ -30,7 +32,7 @@
 
       <nav class="action-bar" aria-label="Game actions">
         <button class="action-button new-action" id="new-game-button" aria-label="Start a new game" title="New game">
-          <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 11v26M11 24h26"/></svg></span><span>New Game</span>
+          <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 11v26M11 24h26"/></svg></span><span>Play</span>
         </button>
         <button class="action-button" id="magic-button" aria-label="Use magic move" title="Magic">
           <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="m13 35 20-22M11 12l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5ZM34 25l2 4 4 2-4 2-2 4-2-4-4-2 4-2 2-4Z"/></svg><i class="action-badge" id="magic-badge">1</i></span><span>Magic</span>
