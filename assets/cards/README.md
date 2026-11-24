@@ -10,6 +10,7 @@ The following 118×177 PNGs are crops of matching cards from the gameplay video 
 
 | Card image | PTS (time) | Crop origin (x, y) |
 | --- | ---: | ---: |
+| `5-of-diamonds-reference.png` | 153600 (10s) | (8, 646) |
 | `queen-of-spades-reference.png` | 153600 (10s) | (133, 679) |
 | `king-of-diamonds-reference.png` | 153600 (10s) | (383, 719) |
 | `jack-of-diamonds-reference.png` | 153600 (10s) | (508, 741) |
@@ -23,7 +24,7 @@ The following 118×177 PNGs are crops of matching cards from the gameplay video 
 | `jack-of-hearts-reference.png` | 1152000 (75s) | (633, 829) |
 | `jack-of-spades-reference.png` | 1612800 (105s) | (622, 428) |
 
-All twelve Jack, Queen, and King cards now use complete source-frame crops. Fourteen number-card faces also have 118×177 crops from the early default-deck section of the gameplay recording:
+All twelve Jack, Queen, and King cards now use complete source-frame crops. Fifteen number-card faces also have 118×177 crops from the early default-deck section of the gameplay recording:
 
 | Card image | PTS (time) |
 | --- | ---: |
