@@ -89,6 +89,7 @@ export class SolitaireGame {
       this.state.cardBack ??= 'ruby';
       this.state.magicCharges ??= 1;
       this.state.challenge ??= null;
+      if (this.state.theme === 'woodland') this.state.theme = 'mountain';
       return true;
     } catch {
       return false;
