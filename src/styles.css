@@ -105,7 +105,12 @@ button:focus-visible { outline: 3px solid #f4d67a; outline-offset: 2px; }
 
 .stat { display: flex; min-width: 0; height: 34px; align-items: center; justify-content: center; gap: clamp(5px, 1.5vw, 10px); border-radius: 4px; background: rgba(18, 53, 25, .78); }
 .scorebar-flourish { display: grid; height: 34px; place-items: center; color: rgba(18, 76, 48, .86); font-size: 20px; line-height: 1; }
-.time-stat { border-radius: 28px; background: rgba(18, 53, 25, .78); }
+.time-stat { position: relative; z-index: 2; overflow: visible; border-radius: 0; background: transparent; }
+.timer-frame { position: absolute; z-index: 0; top: -7px; left: -14px; width: calc(100% + 28px); height: calc(100% + 14px); overflow: visible; pointer-events: none; }
+.timer-frame-shape { fill: rgba(18, 53, 25, .82); stroke: rgba(8, 40, 28, .52); stroke-width: 2; }
+.timer-frame-detail { fill: none; stroke: rgba(8, 72, 47, .82); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.timer-frame-jewel { fill: #165438; stroke: rgba(8, 40, 28, .62); stroke-width: 1.5; }
+.time-stat strong { position: relative; z-index: 1; }
 .stat[aria-label='Time'] .timer-icon { display: none; }
 .metric-icon { width: clamp(17px, 5vw, 23px); height: clamp(17px, 5vw, 23px); flex: 0 0 auto; overflow: visible; }
 .crown-icon { fill: #f5c637; stroke: #f5c637; stroke-width: 1.5; }
