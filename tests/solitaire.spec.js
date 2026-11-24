@@ -148,6 +148,14 @@ test('reference card illustrations render on matching cards', async ({ page }) =
       [14, '♠', 8],
       [20, '♥', 3],
       [27, '♣', 6],
+      [12, '♣', 3],
+      [13, '♣', 5],
+      [15, '♦', 8],
+      [16, '♠', 10],
+      [17, '♠', 5],
+      [18, '♠', 7],
+      [19, '♦', 4],
+      [21, '♣', 9],
     ];
     const used = new Set();
     for (const [position, suit, rank] of referenceFaces) {
@@ -179,6 +187,11 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     const fourClubs = window.solitaireGame.state.tableau.flat().find((card) => card.suit === '♣' && card.rank === 4);
     if (!fourClubs) throw new Error('The test deal did not place the four of clubs in the tableau.');
     fourClubs.faceUp = true;
+    for (const [suit, rank] of [['♣', 3], ['♣', 5], ['♦', 8], ['♠', 10], ['♠', 5], ['♠', 7], ['♦', 4], ['♣', 9]]) {
+      const card = window.solitaireGame.state.tableau.flat().find((candidate) => candidate.suit === suit && candidate.rank === rank);
+      if (!card) throw new Error(`The test deal did not place ${rank}${suit} in the tableau.`);
+      card.faceUp = true;
+    }
     window.solitaireGame.save();
   });
   await page.reload();
@@ -194,6 +207,14 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     'ace-of-diamonds-reference.png',
     '10-of-diamonds-reference.png',
     '3-of-spades-reference.png',
+    '3-of-clubs-reference.png',
+    '5-of-clubs-reference.png',
+    '8-of-diamonds-reference.png',
+    '10-of-spades-reference.png',
+    '5-of-spades-reference.png',
+    '7-of-spades-reference.png',
+    '4-of-diamonds-reference.png',
+    '9-of-clubs-reference.png',
     '8-of-hearts-reference.png',
     '9-of-diamonds-reference.png',
     '2-of-hearts-reference.png',
@@ -494,8 +515,8 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v19');
-  expect(cacheNames).not.toContain('solitaire-master-v18');
+  expect(cacheNames).toContain('solitaire-master-v20');
+  expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
   await page.evaluate(() => navigator.serviceWorker.ready);
@@ -537,13 +558,15 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
       '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
       'ace-of-diamonds', '10-of-diamonds', '3-of-spades',
+      '3-of-clubs', '5-of-clubs', '8-of-diamonds', '10-of-spades',
+      '5-of-spades', '7-of-spades', '4-of-diamonds', '9-of-clubs',
     ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}-reference.png`);
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(43).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(51).fill(true));
   const offlineMoveSample = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/card-move-reference.wav');
     return response.ok && (await response.arrayBuffer()).byteLength > 0;

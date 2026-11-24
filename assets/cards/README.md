@@ -56,7 +56,7 @@ Four additional number-card faces are 118×177 source-frame crops from the full 
 | `2-of-hearts-reference.png` | 9231360 (601s) | (622, 428) |
 | `4-of-clubs-reference.png` | 11543040 (751.5s) | (622, 428) |
 
-Nine more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
+Ten more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
 
 | Card image | Listing screenshot | Crop origin (x, y) |
 | --- | ---: | ---: |
@@ -80,4 +80,17 @@ Two more number-card faces are crops from the official [Google Play listing](htt
 | `ace-of-diamonds-reference.png` | 1 | (274, 152) | 116×172 |
 | `10-of-diamonds-reference.png` | 1 | (943, 480) | 114×170 |
 
-The runtime selects the matching reference PNG and includes these images in the offline shell cache. All twelve court cards and thirty-one number-card faces now use source-frame or official store crops; the remaining nine number-card faces use the credited CC0 deck artwork.
+Eight further number-card faces are complete crops from full gameplay frames. Each 118×177 crop was checked against the full 884×1920 source frame to ensure that another card, stock counter, selection glow, or UI overlay does not cover the face:
+
+| Card image | PTS (time) | Crop origin (x, y) |
+| --- | ---: | ---: |
+| `3-of-clubs-reference.png` | 6144000 (400s) | (758, 1040) |
+| `5-of-clubs-reference.png` | 8294400 (540s) | (508, 907) |
+| `8-of-diamonds-reference.png` | 9830400 (640s) | (8, 1077) |
+| `10-of-spades-reference.png` | 11059200 (720s) | (133, 907) |
+| `7-of-spades-reference.png` | 11212800 (730s) | (383, 1217) |
+| `5-of-spades-reference.png` | 11673600 (760s) | (133, 428) |
+| `4-of-diamonds-reference.png` | 14745600 (960s) | (383, 428) |
+| `9-of-clubs-reference.png` | 15052800 (980s) | (383, 994) |
+
+The runtime selects these crops for their matching cards and includes them in the offline shell cache. All twelve court cards and thirty-nine number-card faces now use source-frame or official store crops; only the nine of hearts still uses the credited CC0 deck artwork.
