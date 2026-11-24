@@ -1,0 +1,14 @@
+{
+  "output": "combo-good.webp",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "frame_count": 60,
+  "frame_delay_ms": 17,
+  "crop_in_extracted_frames": [
+    40,
+    0,
+    244,
+    130
+  ],
+  "background_reference": "frame-00000-req-065.500000-pts-1006080.png",
+  "alpha_method": "pixel difference from the clean frame with inverse-alpha foreground recovery"
+}

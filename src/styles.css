@@ -345,11 +345,10 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .combo-amazing i:nth-of-type(2) { top: 6px; right: 12%; animation-delay: .08s; }
 .combo-amazing i:nth-of-type(3) { bottom: -19px; left: 34%; color: #fff27a; animation-delay: .12s; }
 .combo-amazing i:nth-of-type(4) { top: -29px; right: 36%; color: #fff27a; animation-delay: .2s; }
-.combo-good, .combo-great { position: absolute; z-index: 119; top: 53%; left: 50%; pointer-events: none; transform: translate(-50%, -50%); animation: combo-reward-pop .82s cubic-bezier(.16,.78,.24,1) both; }
-.combo-good b, .combo-great b { display: block; color: #ffc223; background-image: linear-gradient(180deg, #fff9be 0%, #ffd93f 32%, #fff0a3 48%, #f9a70e 65%, #ffd150 82%, #ffe48e 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: system-ui, sans-serif; font-size: clamp(26px, 7.5vw, 48px); font-weight: 950; line-height: 1; letter-spacing: -.045em; -webkit-text-stroke: 1px #fff0b0; paint-order: stroke fill; text-shadow: 0 2px 0 #b45a17, 0 4px 0 #674120, 0 7px 9px rgba(0,0,0,.42); }
-.combo-good i, .combo-great i { position: absolute; color: #fff27a; font-size: clamp(10px, 3vw, 17px); font-style: normal; text-shadow: 0 0 5px rgba(255,235,95,.9), 0 1px 3px rgba(0,0,0,.4); animation: combo-spark .8s ease-out both; }
-.combo-good i:nth-of-type(1), .combo-great i:nth-of-type(1) { top: -8px; left: -12px; }
-.combo-good i:nth-of-type(2), .combo-great i:nth-of-type(2) { right: -12px; bottom: -4px; animation-delay: .12s; }
+.combo-good, .combo-great { position: absolute; z-index: 119; top: 53%; left: 50%; pointer-events: none; transform: translate(-50%, -50%); }
+.combo-reward-art { display: block; width: min(27.6vw, 244px); height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.combo-good > b, .combo-great > b { display: none; color: #ffc223; background-image: linear-gradient(180deg, #fff9be 0%, #ffd93f 32%, #fff0a3 48%, #f9a70e 65%, #ffd150 82%, #ffe48e 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: system-ui, sans-serif; font-size: clamp(26px, 7.5vw, 48px); font-weight: 950; line-height: 1; letter-spacing: -.045em; -webkit-text-stroke: 1px #fff0b0; paint-order: stroke fill; text-shadow: 0 2px 0 #b45a17, 0 4px 0 #674120, 0 7px 9px rgba(0,0,0,.42); }
+.combo-good.sprite-failed > b, .combo-great.sprite-failed > b { display: block; animation: combo-reward-pop .82s cubic-bezier(.16,.78,.24,1) both; }
 
 .modal-backdrop {
   position: fixed;
