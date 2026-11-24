@@ -71,6 +71,28 @@ def main() -> None:
         erase_pip(result, erase_box)
         sprite = pip_sprite(five_hearts, source_box)
         result.paste(sprite, target, sprite)
+
+    # The 243-second gameplay frame shows an unobstructed top 80px of the
+    # 9♥ before the next tableau card overlaps it. Prefer those source pixels
+    # for its rank, corner pip, frame, and paper texture.
+    source_top = Image.open(CARDS / "9-of-hearts-source-top.png").convert("RGB")
+    if source_top.size != (118, 80):
+        raise ValueError(f"Expected an unoccluded 118×80 source strip, got {source_top.size}.")
+    reconstructed = result.copy()
+    result.paste(source_top, (0, 0))
+    # Blend only the paper texture at the cut edge; keep red source ink intact.
+    blend_start, blend_end = 50, 80
+    source_band = source_top.crop((0, blend_start, 118, blend_end))
+    base_band = reconstructed.crop((0, blend_start, 118, blend_end))
+    mask = Image.new("L", (118, blend_end - blend_start))
+    source_pixels = source_band.load()
+    mask_pixels = mask.load()
+    for y in range(blend_end - blend_start):
+        row_alpha = round(255 * (blend_end - blend_start - 1 - y) / (blend_end - blend_start - 1))
+        for x in range(118):
+            red, green, blue = source_pixels[x, y]
+            mask_pixels[x, y] = 255 if red > green * 1.12 and red > blue * 1.12 and red > 100 else row_alpha
+    result.paste(Image.composite(source_band, base_band, mask), (0, blend_start))
     result.save(CARDS / "9-of-hearts-reference.png")
 
 
