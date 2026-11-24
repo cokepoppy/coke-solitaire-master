@@ -43,6 +43,8 @@ All twelve Jack, Queen, and King cards now use complete source-frame crops. Fift
 | `10-of-hearts-reference.png` | 1367040 (89s) |
 | `8-of-hearts-reference.png` | 1459200 (95s) |
 
+The 8♥ crop uses source rectangle `(648, 428, 118, 177)` from the 95-second gameplay frame; the full card face is visible in that source frame.
+
 The matching reference PNG is selected at runtime and included in the offline shell cache. The remaining number-card faces are listed with their sources below.
 
 Nine more number-card faces are crops from the official [App Store listing](https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad), from its 1242×2688 screenshot renditions. Each listed 116×174 source rectangle is resized to the app's 118×177 card art size:
