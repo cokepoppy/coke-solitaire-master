@@ -57,7 +57,8 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await page.waitForTimeout(1700);
   await page.screenshot({ path: 'test-results/mobile-home.png', fullPage: true });
 
-  await page.locator('[data-action="stock"]').click();
+  const stockTapBox = await page.locator('[data-action="stock"]').boundingBox();
+  await page.touchscreen.tap(stockTapBox.x + stockTapBox.width / 2, stockTapBox.y + stockTapBox.height / 2);
   await expect(page.locator('.stock-count')).toHaveText('23');
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('.waste-slot .card-face')).toHaveCount(1);
@@ -174,11 +175,29 @@ test('a legal hinted card can be dragged to its destination', async ({ page }) =
   const targetBox = await page.locator(targetSelector).boundingBox();
   if (!sourceBox || !targetBox) throw new Error('The hinted source or destination was not visible.');
   const movesBefore = Number(await page.locator('#moves-value').innerText());
-  await page.mouse.move(sourceBox.x + Math.min(11, sourceBox.width / 3), sourceBox.y + 8);
-  await page.mouse.down();
-  await page.mouse.move(sourceBox.x + sourceBox.width / 2, sourceBox.y + 16, { steps: 3 });
-  await page.mouse.move(targetBox.x + targetBox.width / 2, targetBox.y + 12, { steps: 12 });
-  await page.mouse.up();
+  const touch = await page.context().newCDPSession(page);
+  const startX = sourceBox.x + Math.min(11, sourceBox.width / 3);
+  const startY = sourceBox.y + 8;
+  const endX = targetBox.x + targetBox.width / 2;
+  const endY = targetBox.y + 12;
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: startX, y: startY, id: 1, radiusX: 2, radiusY: 2, force: 1 }] });
+  for (let step = 1; step <= 12; step += 1) {
+    const progress = step / 12;
+    await touch.send('Input.dispatchTouchEvent', {
+      type: 'touchMove',
+      touchPoints: [{
+        x: startX + (endX - startX) * progress,
+        y: startY + (endY - startY) * progress,
+        id: 1,
+        radiusX: 2,
+        radiusY: 2,
+        force: 1,
+      }],
+    });
+    await page.waitForTimeout(8);
+  }
+  await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await touch.detach();
   await expect(page.locator('#moves-value')).toHaveText(String(movesBefore + 1));
 });
 
