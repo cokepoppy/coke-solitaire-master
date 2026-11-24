@@ -16,10 +16,11 @@ The following 118×177 PNGs are crops of matching cards from the gameplay video 
 | `queen-of-clubs-reference.png` | 460800 (30s) | (633, 744) |
 | `queen-of-diamonds-reference.png` | 1152000 (75s) | (133, 734) |
 | `queen-of-hearts-reference.png` | 4608000 (300s) | (8, 735) |
+| `king-of-clubs-reference.png` | 14407680 (938s) | (622, 428) |
 | `king-of-hearts-reference.png` | 2764800 (180s) | (622, 428) |
 | `king-of-spades-reference.png` | 1382400 (90s) | (258, 647) |
 | `jack-of-clubs-reference.png` | 4147200 (270s) | (383, 823) |
 | `jack-of-hearts-reference.png` | 1152000 (75s) | (633, 829) |
 | `jack-of-spades-reference.png` | 1612800 (105s) | (622, 428) |
 
-The gameplay recording does not expose the full King of Clubs card. It remains on the tableau under a Queen of Diamonds throughout the recorded play, and a 5 fps scan did not find a fully revealed source frame. That single card continues to use the CC0 SVG until a complete reference crop is available; the partial video crop is not used.
+All twelve Jack, Queen, and King cards now use complete source-frame crops. The game chooses the matching PNG at runtime and includes every reference image in its offline shell cache.
