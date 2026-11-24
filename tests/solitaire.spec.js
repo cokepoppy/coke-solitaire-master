@@ -133,13 +133,13 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     })));
     const dealOrder = Array(28).fill(null);
     const referenceFaces = [
-      [0, '♣', 12],
-      [2, '♠', 12],
-      [5, '♠', 13],
-      [9, '♦', 13],
-      [14, '♦', 2],
-      [20, '♥', 6],
-      [27, '♠', 9],
+      [0, '♥', 1],
+      [2, '♣', 7],
+      [5, '♦', 3],
+      [9, '♠', 4],
+      [14, '♠', 8],
+      [20, '♥', 3],
+      [27, '♣', 6],
     ];
     const used = new Set();
     for (const [position, suit, rank] of referenceFaces) {
@@ -157,13 +157,13 @@ test('reference card illustrations render on matching cards', async ({ page }) =
   await page.reload();
   await page.waitForTimeout(1600);
   const referenceArt = [
-    'queen-of-clubs-reference.png',
-    'queen-of-spades-reference.png',
-    'king-of-spades-reference.png',
-    'king-of-diamonds-reference.png',
-    '2-of-diamonds-reference.png',
-    '6-of-hearts-reference.png',
-    '9-of-spades-reference.png',
+    'ace-of-hearts-reference.png',
+    '7-of-clubs-reference.png',
+    '3-of-diamonds-reference.png',
+    '4-of-spades-reference.png',
+    '8-of-spades-reference.png',
+    '3-of-hearts-reference.png',
+    '6-of-clubs-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
@@ -452,13 +452,15 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       '6-of-diamonds', '4-of-hearts', 'ace-of-clubs', '5-of-hearts',
       '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
       '10-of-hearts', '8-of-hearts',
+      'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
+      '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
     ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}-reference.png`);
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(26).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(35).fill(true));
   await context.setOffline(false);
 });
 

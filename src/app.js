@@ -47,6 +47,8 @@ const REFERENCE_CARD_ART = new Set([
   '6-of-diamonds', '4-of-hearts', 'ace-of-clubs', '5-of-hearts',
   '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
   '10-of-hearts', '8-of-hearts',
+  'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
+  '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
 ]);
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 
