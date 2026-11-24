@@ -38,7 +38,12 @@ let winShown = false;
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const CARD_BACK_FILES = { ruby: 'back-solitaire-master.svg', emerald: 'back-blue.svg', midnight: 'back-blue.svg' };
-const REFERENCE_COURT_CARDS = new Set(['queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds']);
+const REFERENCE_COURT_CARDS = new Set([
+  'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
+  'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
+  'king-of-hearts', 'king-of-spades',
+  'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
+]);
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 
 function cardBackFile() {
