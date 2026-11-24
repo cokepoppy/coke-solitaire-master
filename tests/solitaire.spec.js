@@ -181,12 +181,39 @@ test('source opening replay matches the 20-second score, move count, and exposed
   await page.reload();
   await page.waitForTimeout(1450);
   await expect(page.locator('#tableau .card-back-art').first()).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
+  await page.evaluate(() => {
+    window.audioCues = [];
+    const audio = window.solitaireAudio;
+    const play = audio.play.bind(audio);
+    audio.play = (cue) => { window.audioCues.push(cue); return play(cue); };
+  });
   const sourceTimerFrame = await page.locator('.timer-frame-source').boundingBox();
   expect(sourceTimerFrame.x).toBeCloseTo(169.5, 1);
   expect(sourceTimerFrame.y).toBeCloseTo(145.2, 1);
   expect(sourceTimerFrame.width).toBe(143);
   expect(sourceTimerFrame.height).toBe(50);
 
+  const dragMove = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
+    const sourceBox = await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).boundingBox();
+    const targetBox = await page.locator(`.pile-column[data-pile="${targetPile}"] .playing-card[data-index="${targetIndex}"]`).boundingBox();
+    const touch = await page.context().newCDPSession(page);
+    const startX = sourceBox.x + Math.min(11, sourceBox.width / 3);
+    const startY = sourceBox.y + 8;
+    const endX = targetBox.x + targetBox.width / 2;
+    const endY = targetBox.y + 12;
+    await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: startX, y: startY, id: 1, radiusX: 2, radiusY: 2, force: 1 }] });
+    for (let step = 1; step <= 12; step += 1) {
+      const progress = step / 12;
+      await touch.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{
+        x: startX + (endX - startX) * progress,
+        y: startY + (endY - startY) * progress,
+        id: 1, radiusX: 2, radiusY: 2, force: 1,
+      }] });
+      await page.waitForTimeout(8);
+    }
+    await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+    await touch.detach();
+  };
   const move = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
     await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).click();
     await page.locator(`.pile-column[data-pile="${targetPile}"] .playing-card[data-index="${targetIndex}"]`).click();
@@ -194,9 +221,11 @@ test('source opening replay matches the 20-second score, move count, and exposed
 
   // In the reference opening, the 4♣, Q♠, and J♦ join the 5♦/K♦ sequence;
   // each move also uncovers one card, matching the observed +10 score steps.
-  await move(5, 5, 0, 0);
+  await dragMove(5, 5, 0, 0);
   await expect(page.locator('#score-value')).toHaveText('10');
   await expect(page.locator('#moves-value')).toHaveText('1');
+  expect(await page.evaluate(() => window.audioCues)).toContain('move');
+  expect(await page.evaluate(() => window.audioCues)).not.toContain('flip');
   await expect(page.locator('.pile-column[data-pile="5"] .card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
 
   await move(1, 1, 3, 3);
