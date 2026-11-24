@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#143c31" />
+    <meta name="theme-color" content="#1d5128" />
     <meta name="description" content="A relaxing, mobile-first Klondike solitaire game." />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="icon" href="/assets/icon.svg" type="image/svg+xml" />
@@ -12,22 +12,16 @@
   </head>
   <body>
     <main class="game-shell" id="game-shell">
-      <header class="topbar">
-        <div class="brand-mark" aria-hidden="true">♠</div>
-        <div class="brand-copy">
-          <div class="brand-title">Solitaire Master</div>
-          <div class="brand-subtitle">Classic Klondike</div>
-        </div>
-        <button class="icon-button settings-button" id="settings-button" aria-label="Settings" title="Settings">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Zm9 4.95v-2.5l-2.18-.4a7.1 7.1 0 0 0-.72-1.73l1.26-1.82-1.77-1.77-1.82 1.26a7.1 7.1 0 0 0-1.73-.72L13.65 3h-2.5l-.4 2.18a7.1 7.1 0 0 0-1.73.72L7.2 4.64 5.43 6.4 6.7 8.22a7.1 7.1 0 0 0-.72 1.73L3.8 10.35v2.5l2.18.4a7.1 7.1 0 0 0 .72 1.73l-1.26 1.82 1.77 1.77 1.82-1.26a7.1 7.1 0 0 0 1.73.72l.4 2.18h2.5l.4-2.18a7.1 7.1 0 0 0 1.73-.72l1.82 1.26 1.77-1.77-1.26-1.82a7.1 7.1 0 0 0 .72-1.73l2.18-.4Z"/></svg>
+      <header class="game-topbar" aria-label="Game status and menu">
+        <button class="menu-button" id="menu-button" type="button" aria-label="Game menu" title="Game menu">
+          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9h18M7 16h18M7 23h18" /></svg>
         </button>
+        <section class="scorebar" aria-label="Game statistics">
+          <div class="stat" aria-label="Score"><svg class="metric-icon crown-icon" viewBox="0 0 32 28" aria-hidden="true"><path d="M3 8 9 13 15 3l5 10 9-7-3 15H6L3 8Z"/><path d="M7 24h19"/></svg><strong id="score-value">0</strong></div>
+          <div class="stat" aria-label="Time"><svg class="metric-icon timer-icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="17" r="12"/><path d="M12 3h8M16 10v8l5 3"/></svg><strong id="time-value">0:00</strong></div>
+          <div class="stat" aria-label="Moves"><svg class="metric-icon moves-icon" viewBox="0 0 36 30" aria-hidden="true"><path d="M4 10h23m-6-6 7 6-7 6M32 20H9m6-6-7 6 7 6"/></svg><strong id="moves-value">0</strong></div>
+        </section>
       </header>
-
-      <section class="scorebar" aria-label="Game statistics">
-        <div class="stat"><span class="stat-label">SCORE</span><strong id="score-value">0</strong></div>
-        <div class="stat"><span class="stat-label">TIME</span><strong id="time-value">0:00</strong></div>
-        <div class="stat"><span class="stat-label">MOVES</span><strong id="moves-value">0</strong></div>
-      </section>
 
       <section class="board-wrap" aria-label="Solitaire board">
         <div class="top-row" id="top-row"></div>
@@ -35,17 +29,17 @@
       </section>
 
       <nav class="action-bar" aria-label="Game actions">
-        <button class="action-button" id="undo-button" aria-label="Undo move" title="Undo">
-          <span class="action-icon" aria-hidden="true">↶</span><span>Undo</span>
+        <button class="action-button new-action" id="new-game-button" aria-label="Start a new game" title="New game">
+          <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 11v26M11 24h26"/></svg></span><span>New Game</span>
+        </button>
+        <button class="action-button" id="magic-button" aria-label="Use magic move" title="Magic">
+          <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="m13 35 20-22M11 12l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5ZM34 25l2 4 4 2-4 2-2 4-2-4-4-2 4-2 2-4Z"/></svg><i class="action-badge" id="magic-badge">1</i></span><span>Magic</span>
         </button>
         <button class="action-button" id="hint-button" aria-label="Show a hint" title="Hint">
-          <span class="action-icon hint-icon" aria-hidden="true">✦</span><span>Hint</span>
+          <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5a13 13 0 0 0-8 23c2 1 3 3 3 5h10c0-2 1-4 3-5a13 13 0 0 0-8-23ZM19 38h10M20 43h8"/><path d="M20 17a5 5 0 0 1 5-5"/></svg></span><span>Hint</span>
         </button>
-        <button class="action-button" id="new-game-button" aria-label="Start a new game" title="New game">
-          <span class="action-icon" aria-hidden="true">＋</span><span>New</span>
-        </button>
-        <button class="action-button sound-toggle" id="sound-button" aria-label="Turn sound on" title="Sound">
-          <span class="action-icon" id="sound-icon" aria-hidden="true">♫</span><span>Sound</span>
+        <button class="action-button" id="undo-button" aria-label="Undo move" title="Undo">
+          <span class="action-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M11 17H5l8-8 8 8h-6c11-1 18 5 18 14 0 4-2 7-5 9"/></svg></span><span>Undo</span>
         </button>
       </nav>
       <div class="toast" id="toast" role="status" aria-live="polite"></div>

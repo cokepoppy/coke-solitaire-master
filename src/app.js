@@ -23,20 +23,13 @@ let drag = null;
 let animatedCardIds = new Set();
 let winShown = false;
 
-const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-const PIP_LAYOUT = {
-  2: [[50, 25, 0], [50, 75, 180]],
-  3: [[50, 22, 0], [50, 50, 0], [50, 78, 180]],
-  4: [[34, 27, 0], [66, 27, 0], [34, 73, 180], [66, 73, 180]],
-  5: [[34, 27, 0], [66, 27, 0], [50, 50, 0], [34, 73, 180], [66, 73, 180]],
-  6: [[34, 23, 0], [66, 23, 0], [34, 50, 0], [66, 50, 180], [34, 77, 180], [66, 77, 180]],
-  7: [[50, 20, 0], [34, 23, 0], [66, 23, 0], [34, 50, 0], [66, 50, 180], [34, 77, 180], [66, 77, 180]],
-  8: [[34, 20, 0], [66, 20, 0], [34, 40, 0], [66, 40, 180], [34, 60, 0], [66, 60, 180], [34, 80, 180], [66, 80, 180]],
-  9: [[34, 18, 0], [66, 18, 0], [34, 36, 0], [66, 36, 180], [50, 50, 0], [34, 64, 0], [66, 64, 180], [34, 82, 180], [66, 82, 180]],
-  10: [[34, 17, 0], [66, 17, 0], [34, 33, 0], [66, 33, 180], [34, 50, 0], [66, 50, 180], [34, 67, 0], [66, 67, 180], [34, 83, 180], [66, 83, 180]],
-};
-const FOUNDATION_SUITS = ['♠', '♥', '♦', '♣'];
+const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
+const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
+
+function cardBackFile() {
+  return game.state.cardBack === 'ruby' ? 'back-red.svg' : 'back-blue.svg';
+}
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -72,36 +65,23 @@ function renderCard(card, source, options = {}) {
   const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${Math.min(index * 16, 160)}ms`;
   const aria = card.faceUp ? cardName(card) : 'Face-down card';
   if (!card.faceUp) {
-    return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><span class="card-back-pattern" aria-hidden="true"></span></button>`;
+    return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false"></button>`;
   }
   const color = ['♥', '♦'].includes(card.suit) ? 'red' : 'black';
-  const rank = RANKS[card.rank - 1];
-  let center;
-  if (card.rank === 1) {
-    center = `<span class="card-center ace" aria-hidden="true">${card.suit}</span>`;
-  } else if (card.rank <= 10) {
-    center = `<span class="pip-field" aria-hidden="true">${PIP_LAYOUT[card.rank].map(([x, y, rotation]) => `<i class="card-pip" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${rotation}deg)">${card.suit}</i>`).join('')}</span>`;
-  } else {
-    const royal = card.rank === 13 ? '♚' : card.rank === 12 ? '♛' : '♞';
-    center = `<span class="court-card" aria-hidden="true"><i>${rank}</i><b>${royal}</b><em>${card.suit}</em><b class="court-mirror">${royal}</b></span>`;
-  }
-  return `<button class="${classes.join(' ')} ${color}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1">
-    <span class="corner corner-top"><b>${rank}</b><i>${card.suit}</i></span>
-    ${center}
-    <span class="corner corner-bottom"><b>${rank}</b><i>${card.suit}</i></span>
-  </button>`;
+  const asset = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}.svg`;
+  return `<button class="${classes.join(' ')} ${color}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-face-art" src="/assets/cards/${asset}" alt="" draggable="false"></button>`;
 }
 
 function renderTopRow() {
   const leftHand = game.state.leftHand;
-  const stockCol = leftHand ? 6 : 1;
-  const wasteCol = leftHand ? 7 : 2;
-  const foundationStart = leftHand ? 1 : 4;
+  const stockCol = leftHand ? 1 : 7;
+  const wasteCol = leftHand ? 3 : 5;
+  const foundationStart = leftHand ? 4 : 1;
   const stock = game.state.stock;
   const stockHint = game.state.hint?.source?.zone === 'stock';
-  const stockButton = `<div class="slot stock-slot drop-target${stockHint ? ' is-hint' : ''}" style="grid-column:${stockCol}" data-drop-zone="stock" data-pile="0">
+  const stockButton = `<div class="slot stock-slot drop-target${stockHint ? ' is-hint' : ''}" style="grid-column:${stockCol};grid-row:1" data-drop-zone="stock" data-pile="0">
       <button class="stock-button${stockHint ? ' is-hint' : ''}" type="button" data-action="stock" aria-label="${stock.length ? `Draw a card, ${stock.length} cards remaining` : game.state.waste.length ? 'Turn the waste pile over' : 'Stock pile is empty'}">
-        ${stock.length ? '<span class="playing-card card-back"><span class="card-back-pattern" aria-hidden="true"></span></span>' : '<span class="empty-stock">↻</span>'}
+        ${stock.length ? `<span class="playing-card card-back"><img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false"></span>` : '<span class="empty-stock">↻</span>'}
       </button>
       ${stock.length ? `<span class="stock-count">${stock.length}</span>` : ''}
     </div>`;
@@ -114,15 +94,15 @@ function renderTopRow() {
       const top = actualIndex === game.state.waste.length - 1;
       return renderCard(card, { zone: 'waste', pile: 0, index: actualIndex }, { selectable: top, offset: 0, index: visibleIndex });
     }).join('')
-    : '<span class="empty-slot-mark">♧</span>';
-  const wasteSlot = `<div class="slot waste-slot drop-target${wasteHint ? ' is-hint' : ''}" style="grid-column:${wasteCol}" data-drop-zone="waste" data-pile="0">${wasteMarkup}</div>`;
+    : '<span class="empty-slot-mark" aria-hidden="true"></span>';
+  const wasteSlot = `<div class="slot waste-slot drop-target${wasteHint ? ' is-hint' : ''}" style="grid-column:${wasteCol};grid-row:1" data-drop-zone="waste" data-pile="0">${wasteMarkup}</div>`;
   const foundations = game.state.foundations.map((pile, index) => {
     const column = foundationStart + index;
     const top = pile.at(-1);
     const source = { zone: 'foundation', pile: index, index: pile.length - 1 };
     const isTarget = game.state.hint?.target?.zone === 'foundation' && game.state.hint.target.pile === index;
-    const card = top ? renderCard(top, source, { index }) : `<span class="foundation-mark" aria-hidden="true">${FOUNDATION_SUITS[index]}</span>`;
-    return `<div class="slot foundation-slot drop-target${isTarget ? ' is-hint' : ''}" style="grid-column:${column}" data-drop-zone="foundation" data-pile="${index}" aria-label="Foundation ${index + 1}">${card}</div>`;
+    const card = top ? renderCard(top, source, { index }) : '<span class="foundation-mark" aria-hidden="true">A</span>';
+    return `<div class="slot foundation-slot drop-target${isTarget ? ' is-hint' : ''}" style="grid-column:${column};grid-row:1" data-drop-zone="foundation" data-pile="${index}" aria-label="Foundation ${index + 1}">${card}</div>`;
   }).join('');
   topRow.innerHTML = `${stockButton}${wasteSlot}${foundations}`;
 }
@@ -147,10 +127,12 @@ function updateChrome() {
   $('#time-value').textContent = formatTime(game.state.seconds);
   $('#moves-value').textContent = String(game.state.moves);
   $('#undo-button').disabled = game.state.history.length === 0;
-  $('#sound-icon').textContent = game.state.sound ? '♫' : '♪';
-  $('#sound-button').setAttribute('aria-label', game.state.sound ? 'Turn sound off' : 'Turn sound on');
+  const magicBadge = $('#magic-badge');
+  magicBadge.textContent = String(game.state.magicCharges);
+  magicBadge.hidden = game.state.magicCharges < 1;
+  magicBadge.setAttribute('aria-label', `${game.state.magicCharges} magic moves available`);
   document.body.dataset.theme = game.state.theme;
-  document.body.dataset.cardBack = game.state.cardBack ?? 'emerald';
+  document.body.dataset.cardBack = game.state.cardBack ?? 'ruby';
   document.body.classList.toggle('left-hand', game.state.leftHand);
 }
 
@@ -192,7 +174,7 @@ function closeModal() {
 }
 
 function showSettings() {
-  const { drawCount, leftHand, music, sound, theme, cardBack = 'emerald' } = game.state;
+  const { drawCount, leftHand, music, sound, theme, cardBack = 'ruby' } = game.state;
   setModal('Settings', 'MAKE IT YOURS', `
     <div class="settings-group">
       <div class="settings-heading">Draw style</div>
@@ -201,7 +183,7 @@ function showSettings() {
         <button type="button" class="segment${drawCount === 3 ? ' active' : ''}" data-setting="drawCount" data-value="3" aria-pressed="${drawCount === 3}">Draw 3</button>
       </div>
     </div>
-    <div class="settings-row"><div><b>Left-hand mode</b><small>Move the stock to the right</small></div><button class="switch${leftHand ? ' on' : ''}" type="button" role="switch" aria-label="Left-hand mode" aria-checked="${leftHand}" data-setting="leftHand" data-value="${!leftHand}"><span></span></button></div>
+    <div class="settings-row"><div><b>Left-hand mode</b><small>Move the stock to the left</small></div><button class="switch${leftHand ? ' on' : ''}" type="button" role="switch" aria-label="Left-hand mode" aria-checked="${leftHand}" data-setting="leftHand" data-value="${!leftHand}"><span></span></button></div>
     <div class="settings-row"><div><b>Sound effects</b><small>Card taps, flips, and moves</small></div><button class="switch${sound ? ' on' : ''}" type="button" role="switch" aria-label="Sound effects" aria-checked="${sound}" data-setting="sound" data-value="${!sound}"><span></span></button></div>
     <div class="settings-row"><div><b>Background music</b><small>A soft original ambient loop</small></div><button class="switch${music ? ' on' : ''}" type="button" role="switch" aria-label="Background music" aria-checked="${music}" data-setting="music" data-value="${!music}"><span></span></button></div>
     <div class="settings-group theme-group"><div class="settings-heading">Table background</div><div class="theme-options">
@@ -210,9 +192,9 @@ function showSettings() {
       <button type="button" class="theme-choice dusk${theme === 'dusk' ? ' chosen' : ''}" data-setting="theme" data-value="dusk" aria-label="Dusk background" aria-pressed="${theme === 'dusk'}"><span>Dusk</span></button>
     </div></div>
     <div class="settings-group theme-group"><div class="settings-heading">Card back</div><div class="back-options" role="group" aria-label="Card back">
-      <button type="button" class="back-choice emerald${cardBack === 'emerald' ? ' chosen' : ''}" data-setting="cardBack" data-value="emerald" aria-label="Emerald card back" aria-pressed="${cardBack === 'emerald'}"><span class="card-back-pattern"></span></button>
-      <button type="button" class="back-choice ruby${cardBack === 'ruby' ? ' chosen' : ''}" data-setting="cardBack" data-value="ruby" aria-label="Ruby card back" aria-pressed="${cardBack === 'ruby'}"><span class="card-back-pattern"></span></button>
-      <button type="button" class="back-choice midnight${cardBack === 'midnight' ? ' chosen' : ''}" data-setting="cardBack" data-value="midnight" aria-label="Midnight card back" aria-pressed="${cardBack === 'midnight'}"><span class="card-back-pattern"></span></button>
+      <button type="button" class="back-choice emerald${cardBack === 'emerald' ? ' chosen' : ''}" data-setting="cardBack" data-value="emerald" aria-label="Emerald card back" aria-pressed="${cardBack === 'emerald'}"><img src="/assets/cards/back-blue.svg" alt=""></button>
+      <button type="button" class="back-choice ruby${cardBack === 'ruby' ? ' chosen' : ''}" data-setting="cardBack" data-value="ruby" aria-label="Ruby card back" aria-pressed="${cardBack === 'ruby'}"><img src="/assets/cards/back-red.svg" alt=""></button>
+      <button type="button" class="back-choice midnight${cardBack === 'midnight' ? ' chosen' : ''}" data-setting="cardBack" data-value="midnight" aria-label="Midnight card back" aria-pressed="${cardBack === 'midnight'}"><img src="/assets/cards/back-blue.svg" alt=""></button>
     </div></div>
     <div class="modal-footnote">Your game and preferences stay on this device.</div>
   `);
@@ -258,6 +240,7 @@ function showMoreOptions() {
   const dailyLabel = game.state.challenge ? `Daily challenge · ${game.state.challenge}` : 'Daily challenge';
   setModal('More options', 'YOUR GAME', `
     <div class="more-list">
+      <button type="button" data-more="settings"><span>Settings and themes</span><b>›</b></button>
       <button type="button" data-more="daily"><span>${dailyLabel}</span><b>›</b></button>
       <button type="button" data-more="help"><span>How to play</span><b>›</b></button>
       <button type="button" data-more="stats"><span>Your statistics</span><b>›</b></button>
@@ -272,7 +255,7 @@ function startDailyGame() {
     drawCount: game.state.drawCount,
     leftHand: game.state.leftHand,
     theme: game.state.theme,
-    cardBack: game.state.cardBack ?? 'emerald',
+    cardBack: game.state.cardBack ?? 'ruby',
     sound: game.state.sound,
     music: game.state.music,
   };
@@ -320,7 +303,7 @@ function doNewGame(restart = false) {
     drawCount: previous.drawCount,
     leftHand: previous.leftHand,
     theme: previous.theme,
-    cardBack: previous.cardBack ?? 'emerald',
+    cardBack: previous.cardBack ?? 'ruby',
     sound: previous.sound,
     music: previous.music,
   };
@@ -349,6 +332,51 @@ function handleHint() {
   else if (hint.source.zone === 'stock') announce('Try drawing from the stock');
   else announce('A helpful move is highlighted');
   audio.play('tap');
+}
+
+function handleMagic() {
+  if (game.state.magicCharges < 1) {
+    announce('No magic moves remain in this deal');
+    return;
+  }
+  const hint = game.hintMove();
+  if (!hint) {
+    render();
+    announce('No more moves are available');
+    return;
+  }
+  if (hint.source.zone === 'stock') {
+    const action = game.drawFromStock();
+    if (action === 'empty') {
+      game.state.hint = null;
+      render();
+      announce('No magic move is available');
+      return;
+    }
+    if (action === 'draw') animatedCardIds = new Set(game.state.waste.slice(-game.state.drawCount).map((card) => card.id));
+    game.state.magicCharges -= 1;
+    game.save();
+    audio.play(action === 'recycle' ? 'flip' : 'draw');
+    render();
+    announce('Magic revealed a new card');
+    return;
+  }
+  const movingIds = game.sequenceAt(hint.source).map((card) => card.id);
+  const exposed = hint.source.zone === 'tableau' ? game.state.tableau[hint.source.pile]?.[hint.source.index - 1] : null;
+  game.select(hint.source);
+  if (!game.moveTo(hint.target)) {
+    game.state.hint = null;
+    render();
+    announce('No magic move is available');
+    return;
+  }
+  game.state.magicCharges -= 1;
+  game.save();
+  animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
+  audio.play(game.state.won ? 'win' : hint.target.zone === 'foundation' ? 'foundation' : 'move');
+  render();
+  if (game.state.won) completeWin();
+  announce('Magic move played');
 }
 
 function parseSource(element) {
@@ -493,15 +521,8 @@ $('#undo-button').addEventListener('click', () => {
 });
 $('#hint-button').addEventListener('click', handleHint);
 $('#new-game-button').addEventListener('click', showNewGame);
-$('#settings-button').addEventListener('click', showSettings);
-$('#sound-button').addEventListener('click', () => {
-  const enabled = !game.state.sound;
-  game.setOption('sound', enabled);
-  audio.setSound(enabled);
-  render();
-  announce(enabled ? 'Sound effects on' : 'Sound effects off');
-  if (enabled) audio.play('tap');
-});
+$('#menu-button').addEventListener('click', showMoreOptions);
+$('#magic-button').addEventListener('click', handleMagic);
 $('#modal-close').addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', (event) => { if (event.target === modalBackdrop) closeModal(); });
 modalContent.addEventListener('click', (event) => {
@@ -549,17 +570,9 @@ render();
   if (!hasProfile) writeProfile({ games: 1, wins: 0, bestScore: 0 });
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(() => {});
 
-// These controls live in the settings modal but are useful as quick-access labels in the app shell.
-const actionBar = $('.action-bar');
-const quickMore = document.createElement('button');
-quickMore.className = 'action-button more-button';
-quickMore.type = 'button';
-quickMore.setAttribute('aria-label', 'More game options');
-quickMore.innerHTML = '<span class="action-icon" aria-hidden="true">⋯</span><span>More</span>';
-quickMore.addEventListener('click', showMoreOptions);
-actionBar.append(quickMore);
 modalContent.addEventListener('click', (event) => {
   const more = event.target.closest('[data-more]')?.dataset.more;
+  if (more === 'settings') showSettings();
   if (more === 'help') showHelp();
   if (more === 'stats') showStats();
   if (more === 'daily') startDailyGame();
