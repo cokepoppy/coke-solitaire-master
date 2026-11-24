@@ -134,7 +134,9 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     const dealOrder = Array(28).fill(null);
     const referenceFaces = [
       [0, '♦', 5],
+      [1, '♦', 1],
       [2, '♣', 7],
+      [3, '♦', 10],
       [5, '♦', 3],
       [9, '♠', 4],
       [14, '♠', 8],
@@ -153,6 +155,9 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     }
     const stock = cards.filter((card) => !dealOrder.some((dealt) => dealt.id === card.id));
     window.solitaireGame.newGame([...stock, ...dealOrder.reverse()]);
+    window.solitaireGame.state.tableau[1][0].faceUp = true;
+    window.solitaireGame.state.tableau[2][0].faceUp = true;
+    window.solitaireGame.save();
   });
   await page.reload();
   await page.waitForTimeout(1600);
@@ -164,6 +169,8 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     '8-of-spades-reference.png',
     '3-of-hearts-reference.png',
     '6-of-clubs-reference.png',
+    'ace-of-diamonds-reference.png',
+    '10-of-diamonds-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
