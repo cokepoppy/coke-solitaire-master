@@ -675,8 +675,7 @@ function commitMove(target) {
   if (moved) {
     animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
     const foundationMove = target.dataset.dropZone === 'foundation';
-    const revealed = game.state.score > (drag?.score ?? game.state.score);
-    audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : revealed ? 'flip' : 'move');
+    audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : 'move');
     render();
     showComboFeedback(movingIds[0]);
     if (game.state.won) completeWin();
@@ -717,7 +716,7 @@ board.addEventListener('pointerdown', (event) => {
   const source = parseSource(element);
   if (!source || !game.sequenceAt(source).length) return;
   const rect = element.getBoundingClientRect();
-  drag = { source, startX: event.clientX, startY: event.clientY, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top, moved: false, score: game.state.score, card: element, ghost: null };
+  drag = { source, startX: event.clientX, startY: event.clientY, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top, moved: false, card: element, ghost: null };
   try { element.setPointerCapture(event.pointerId); } catch { /* pointer capture is optional */ }
 });
 
