@@ -133,7 +133,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     })));
     const dealOrder = Array(28).fill(null);
     const referenceFaces = [
-      [0, '♥', 1],
+      [0, '♦', 5],
       [2, '♣', 7],
       [5, '♦', 3],
       [9, '♠', 4],
@@ -157,7 +157,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
   await page.reload();
   await page.waitForTimeout(1600);
   const referenceArt = [
-    'ace-of-hearts-reference.png',
+    '5-of-diamonds-reference.png',
     '7-of-clubs-reference.png',
     '3-of-diamonds-reference.png',
     '4-of-spades-reference.png',
@@ -452,6 +452,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       '6-of-diamonds', '4-of-hearts', 'ace-of-clubs', '5-of-hearts',
       '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
       '10-of-hearts', '8-of-hearts',
+      '5-of-diamonds',
       'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
       '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
     ];
@@ -460,7 +461,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(35).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(36).fill(true));
   await context.setOffline(false);
 });
 

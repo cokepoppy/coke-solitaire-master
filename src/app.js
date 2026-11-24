@@ -43,7 +43,7 @@ const REFERENCE_CARD_ART = new Set([
   'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
   'king-of-clubs', 'king-of-hearts', 'king-of-spades',
   'jack-of-clubs', 'jack-of-hearts', 'jack-of-spades',
-  '6-of-hearts', '9-of-spades', '2-of-diamonds', 'ace-of-spades',
+  '6-of-hearts', '9-of-spades', '2-of-diamonds', 'ace-of-spades', '5-of-diamonds',
   '6-of-diamonds', '4-of-hearts', 'ace-of-clubs', '5-of-hearts',
   '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
   '10-of-hearts', '8-of-hearts',
