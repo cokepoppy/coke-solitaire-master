@@ -17,17 +17,22 @@ const modalKicker = $('#modal-kicker');
 const modalContent = $('#modal-content');
 const toast = $('#toast');
 let firstDeal = true;
-tableauRoot.addEventListener('animationend', (event) => {
+board.addEventListener('animationend', (event) => {
   if (event.animationName === 'deal-face-reveal') {
     event.target.closest('.card-enter')?.classList.remove('card-enter');
+  } else if (event.animationName === 'draw-face-reveal') {
+    event.target.closest('.card-reveal')?.classList.remove('card-reveal', 'card-arrive');
   } else if (event.animationName === 'card-deal' && !event.target.classList.contains('card-face')) {
     event.target.classList.remove('card-enter');
+  } else if (event.animationName === 'card-land') {
+    event.target.classList.remove('card-arrive');
   }
 });
 let toastTimer = null;
 let previousTap = null;
 let drag = null;
 let animatedCardIds = new Set();
+let cardFlight = null;
 let winShown = false;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
@@ -60,8 +65,9 @@ function isHintSource(source) {
 }
 
 function renderCard(card, source, options = {}) {
-  const { selectable = true, offset = 0, index = 0, deal = false, dealOrder = 0 } = options;
-  const sourceAttrs = selectable ? `data-zone="${source.zone}" data-pile="${source.pile}" data-index="${source.index}" data-card-id="${escapeHtml(card.id)}"` : '';
+  const { selectable = true, offset = 0, index = 0, deal = false, dealOrder = 0, wasteOffset = 0, drawOrder = 0 } = options;
+  const sourceAttrs = `${selectable ? `data-zone="${source.zone}" data-pile="${source.pile}" data-index="${source.index}"` : ''} data-card-id="${escapeHtml(card.id)}"`;
+  const flight = cardFlight?.ids.has(card.id) ? cardFlight : null;
   const selected = selectable && sourceMatches(source, game.state.selected);
   const hint = selectable && isHintSource(source);
   const classes = ['playing-card', card.faceUp ? 'card-face' : 'card-back'];
@@ -69,8 +75,13 @@ function renderCard(card, source, options = {}) {
   if (hint) classes.push('is-hint');
   if (deal) classes.push('card-enter');
   else if (animatedCardIds.has(card.id)) classes.push('card-arrive');
+  if (flight && card.faceUp) classes.push('card-reveal');
   const delay = deal ? dealOrder * 40 : Math.min(index * 16, 160);
-  const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${delay}ms`;
+  const drawX = flight ? flight.originX - flight.targetX : 0;
+  const drawY = flight ? flight.originY - flight.targetY : -5;
+  const flightOrder = flight ? (flight.order.get(card.id) ?? 0) : drawOrder;
+  const drawDelay = flight ? flightOrder * 55 : 0;
+  const style = `--card-offset:${offset}px;--stack-index:${index};--deal-delay:${delay}ms;--waste-offset:${wasteOffset};--draw-x:${drawX}px;--draw-y:${drawY}px;--draw-delay:${drawDelay}ms;--flip-back:url('/assets/cards/${cardBackFile()}')`;
   const aria = card.faceUp ? cardName(card) : 'Face-down card';
   if (!card.faceUp) {
     return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-back-art" src="/assets/cards/${cardBackFile()}" alt="" draggable="false"></button>`;
@@ -83,7 +94,7 @@ function renderCard(card, source, options = {}) {
 function renderTopRow() {
   const leftHand = game.state.leftHand;
   const stockCol = leftHand ? 1 : 7;
-  const wasteCol = leftHand ? 3 : 5;
+  const wasteCol = leftHand ? 2 : 5;
   const foundationStart = leftHand ? 4 : 1;
   const stock = game.state.stock;
   const stockHint = game.state.hint?.source?.zone === 'stock';
@@ -100,7 +111,7 @@ function renderTopRow() {
     ? wasteCards.map((card, visibleIndex) => {
       const actualIndex = wasteStart + visibleIndex;
       const top = actualIndex === game.state.waste.length - 1;
-      return renderCard(card, { zone: 'waste', pile: 0, index: actualIndex }, { selectable: top, offset: 0, index: visibleIndex });
+      return renderCard(card, { zone: 'waste', pile: 0, index: actualIndex }, { selectable: top, offset: 0, index: visibleIndex, wasteOffset: visibleIndex * 0.47, drawOrder: visibleIndex });
     }).join('')
     : '<span class="empty-slot-mark" aria-hidden="true"></span>';
   const wasteSlot = `<div class="slot waste-slot drop-target${wasteHint ? ' is-hint' : ''}" style="grid-column:${wasteCol};grid-row:1" data-drop-zone="waste" data-pile="0">${wasteMarkup}</div>`;
@@ -164,6 +175,20 @@ function render() {
   renderTableau();
   updateChrome();
   animatedCardIds = new Set();
+  cardFlight = null;
+}
+
+function captureStockFlight() {
+  const stock = document.querySelector('.stock-slot')?.getBoundingClientRect();
+  const waste = document.querySelector('.waste-slot')?.getBoundingClientRect();
+  if (!stock || !waste) return null;
+  return { originX: stock.left, originY: stock.top, targetX: waste.left, targetY: waste.top };
+}
+
+function animateStockCards(origin, cards) {
+  if (!origin || !cards.length) return;
+  animatedCardIds = new Set(cards.map((card) => card.id));
+  cardFlight = { ...origin, ids: animatedCardIds, order: new Map(cards.map((card, index) => [card.id, index])) };
 }
 
 function announce(message, duration = 2200) {
@@ -312,9 +337,10 @@ function completeWin() {
 }
 
 function handleStock() {
+  const origin = captureStockFlight();
   const action = game.drawFromStock();
   if (action === 'empty') return;
-  if (action === 'draw') animatedCardIds = new Set(game.state.waste.slice(-game.state.drawCount).map((card) => card.id));
+  if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
   audio.play(action === 'recycle' ? 'flip' : 'draw');
   render();
 }
@@ -369,6 +395,7 @@ function handleMagic() {
     return;
   }
   if (hint.source.zone === 'stock') {
+    const origin = captureStockFlight();
     const action = game.drawFromStock();
     if (action === 'empty') {
       game.state.hint = null;
@@ -376,7 +403,7 @@ function handleMagic() {
       announce('No magic move is available');
       return;
     }
-    if (action === 'draw') animatedCardIds = new Set(game.state.waste.slice(-game.state.drawCount).map((card) => card.id));
+    if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
     game.state.magicCharges -= 1;
     game.save();
     audio.play(action === 'recycle' ? 'flip' : 'draw');

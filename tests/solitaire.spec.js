@@ -61,6 +61,19 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('.stock-count')).toHaveText('23');
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('.waste-slot .card-face')).toHaveCount(1);
+  const firstDrawFlight = await page.locator('.waste-slot .card-face').first().evaluate((card) => ({
+    x: Number.parseFloat(card.style.getPropertyValue('--draw-x')),
+    y: Number.parseFloat(card.style.getPropertyValue('--draw-y')),
+    fan: Number.parseFloat(card.style.getPropertyValue('--waste-offset')),
+  }));
+  expect(firstDrawFlight.x).toBeCloseTo(tableauLayout.stock - tableauLayout.waste);
+  expect(firstDrawFlight.y).toBe(0);
+  expect(firstDrawFlight.fan).toBe(0);
+  const drawFlip = await page.locator('.waste-slot .card-face').first().evaluate((card) => ({
+    active: card.classList.contains('card-reveal'),
+    animation: getComputedStyle(card.querySelector('.card-face-art')).animationName,
+  }));
+  expect(drawFlip).toEqual({ active: true, animation: 'draw-face-reveal' });
 
   await page.getByRole('button', { name: 'Undo move' }).click();
   await expect(page.locator('.stock-count')).toHaveText('24');
@@ -99,8 +112,11 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await page.getByRole('switch', { name: /Left-hand mode/ }).click();
   await expect(page.locator('body')).toHaveClass(/left-hand/);
   const stockBox = await page.locator('.stock-slot').boundingBox();
+  const wasteBox = await page.locator('.waste-slot').boundingBox();
   const foundationBox = await page.locator('.foundation-slot[data-pile="0"]').boundingBox();
   expect(stockBox.x).toBeLessThan(foundationBox.x);
+  expect(stockBox.x).toBeLessThan(wasteBox.x);
+  expect(wasteBox.x).toBeLessThan(foundationBox.x);
   await page.getByRole('button', { name: 'Ruby card back' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -109,6 +125,14 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('#tableau')).toHaveAttribute('aria-label', 'Seven tableau piles');
   await expect(page.locator('.stock-count')).toHaveText('21');
+  await expect(page.locator('.waste-slot .card-face')).toHaveCount(3);
+  const threeCardFan = await page.locator('.waste-slot .card-face').evaluateAll((cards) => cards.map((card) => ({
+    offset: Number.parseFloat(card.style.getPropertyValue('--waste-offset')),
+    delay: Number.parseFloat(card.style.getPropertyValue('--draw-delay')),
+  })));
+  expect(threeCardFan).toEqual([{ offset: 0, delay: 0 }, { offset: 0.47, delay: 55 }, { offset: 0.94, delay: 110 }]);
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: 'test-results/mobile-draw3-left-hand.png', fullPage: true });
 
   await page.getByRole('button', { name: 'Start a new game' }).click();
   await page.getByRole('button', { name: 'Deal a new game' }).click();
