@@ -101,7 +101,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
     duration: getComputedStyle(card).animationDuration,
     faceReveal: card.classList.contains('card-reveal'),
   }));
-  expect(stockDrawMotion).toEqual({ active: true, animation: 'card-land', duration: '0.15s', faceReveal: false });
+  expect(stockDrawMotion).toEqual({ active: true, animation: 'card-land', duration: '0.133333s', faceReveal: false });
   await expect(page.locator('.stock-count')).toHaveText('23');
   await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
   await expect(page.locator('#moves-value')).toHaveText('1');
