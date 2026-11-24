@@ -11,6 +11,8 @@ export class GameAudio {
     this.master = null;
     this.soundBus = null;
     this.musicBus = null;
+    this.masterLevel = 0.82;
+    this.soundLevel = 0.68;
     this.noiseBuffer = null;
     this.referenceMoveBuffer = null;
     this.referenceMoveLoadPromise = null;
@@ -26,8 +28,8 @@ export class GameAudio {
       this.master = this.context.createGain();
       this.soundBus = this.context.createGain();
       this.musicBus = this.context.createGain();
-      this.master.gain.value = 0.82;
-      this.soundBus.gain.value = this.soundOn ? 0.68 : 0;
+      this.master.gain.value = this.masterLevel;
+      this.soundBus.gain.value = this.soundOn ? this.soundLevel : 0;
       this.musicBus.gain.value = this.musicOn ? 0.42 : 0;
       this.soundBus.connect(this.master);
       this.musicBus.connect(this.master);
@@ -139,6 +141,12 @@ export class GameAudio {
     return source;
   }
 
+  playCapturedSample(buffer, at = this.context.currentTime) {
+    const outputGain = this.master.gain.value * (this.soundOn ? this.soundLevel : 0);
+    const compensation = outputGain > 0 ? 1 / outputGain : 1;
+    return this.playSample(buffer, at, compensation);
+  }
+
   playNoise(startFrequency, endFrequency, duration, amplitude, at = this.context.currentTime, quality = 0.8) {
     const source = this.context.createBufferSource();
     const filter = this.context.createBiquadFilter();
@@ -187,13 +195,13 @@ export class GameAudio {
       this.playNoise(3600, 480, 0.15, 0.17, now, 0.62);
       this.playTone(250, 150, 0.13, 0.045, 'sine', now);
     } else if (cue === 'move') {
-      if (this.referenceMoveBuffer) this.playSample(this.referenceMoveBuffer, now, 0.35);
+      if (this.referenceMoveBuffer) this.playCapturedSample(this.referenceMoveBuffer, now);
       else {
         this.playNoise(2500, 420, 0.105, 0.12, now, 0.9);
         this.playTone(340, 240, 0.09, 0.04, 'triangle', now);
       }
     } else if (cue === 'amazing') {
-      if (this.referenceAmazingBuffer) this.playSample(this.referenceAmazingBuffer, now, 0.38);
+      if (this.referenceAmazingBuffer) this.playCapturedSample(this.referenceAmazingBuffer, now);
       else {
         [587.33, 880, 1174.66].forEach((frequency, index) => this.playTone(frequency, frequency * 1.01, 0.28, 0.045, 'sine', now + index * 0.09));
         this.playNoise(4600, 2100, 0.18, 0.035, now + 0.12, 0.55);
@@ -260,7 +268,7 @@ export class GameAudio {
   setSound(enabled) {
     this.soundOn = Boolean(enabled);
     if (!this.soundOn) this.pending = [];
-    if (this.soundBus && this.context) this.soundBus.gain.setTargetAtTime(this.soundOn ? 0.68 : 0, this.context.currentTime, 0.025);
+    if (this.soundBus && this.context) this.soundBus.gain.setTargetAtTime(this.soundOn ? this.soundLevel : 0, this.context.currentTime, 0.025);
   }
 
   setMusic(enabled) {

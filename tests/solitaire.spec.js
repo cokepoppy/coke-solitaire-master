@@ -665,7 +665,7 @@ test('the Magic control plays one legal suggestion and undo reverses it', async 
   await expect(page.locator('#magic-badge')).toHaveText('1');
 });
 
-test('mobile sound unlocks on a gesture and ambient music follows its switch', async ({ page }) => {
+test('mobile sound unlocks, captured cues retain source level, and ambient music follows its switch', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
   await page.goto('/');
@@ -676,8 +676,14 @@ test('mobile sound unlocks on a gesture and ambient music follows its switch', a
     audio.playCue = (cue) => { window.audioCues.push(cue); return playCue(cue); };
     const playSample = audio.playSample.bind(audio);
     audio.playSample = (buffer, ...args) => {
-      window.referenceMoveSamplePlayed = buffer === audio.referenceMoveBuffer;
-      window.referenceAmazingSamplePlayed = buffer === audio.referenceAmazingBuffer;
+      if (buffer === audio.referenceMoveBuffer) {
+        window.referenceMoveSamplePlayed = true;
+        window.referenceMoveSampleGain = args[1];
+      }
+      if (buffer === audio.referenceAmazingBuffer) {
+        window.referenceAmazingSamplePlayed = true;
+        window.referenceAmazingSampleGain = args[1];
+      }
       return playSample(buffer, ...args);
     };
   });
@@ -689,9 +695,13 @@ test('mobile sound unlocks on a gesture and ambient music follows its switch', a
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceMoveBuffer?.duration)).toBeGreaterThan(0.37);
   await page.evaluate(() => window.solitaireAudio.play('move'));
   await expect.poll(() => page.evaluate(() => window.referenceMoveSamplePlayed)).toBe(true);
+  const moveOutputGain = await page.evaluate(() => window.referenceMoveSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(moveOutputGain).toBeCloseTo(1, 5);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAmazingBuffer?.duration)).toBeGreaterThan(0.95);
   await page.evaluate(() => window.solitaireAudio.play('amazing'));
   await expect.poll(() => page.evaluate(() => window.referenceAmazingSamplePlayed)).toBe(true);
+  const amazingOutputGain = await page.evaluate(() => window.referenceAmazingSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(amazingOutputGain).toBeCloseTo(1, 5);
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
