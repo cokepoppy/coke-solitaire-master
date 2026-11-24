@@ -123,6 +123,93 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(pageErrors).toEqual([]);
 });
 
+test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
+  await page.setViewportSize({ width: 442, height: 960 });
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const suits = ['♠', '♥', '♦', '♣'];
+    const deck = suits.flatMap((suit) => Array.from({ length: 13 }, (_, index) => ({
+      id: `${suit}-${index + 1}`,
+      suit,
+      rank: index + 1,
+      faceUp: false,
+    })));
+    game.newGame(deck);
+    const remaining = new Map(deck.map((card) => [card.id, { ...card, faceUp: false }]));
+    const take = (suit, rank, faceUp) => {
+      const id = `${suit}-${rank}`;
+      const card = remaining.get(id);
+      if (!card) throw new Error(`Duplicate reference card ${id}`);
+      remaining.delete(id);
+      return { ...card, faceUp };
+    };
+    const hidden = () => {
+      const card = remaining.values().next().value;
+      if (!card) throw new Error('The reference deal exhausted the deck.');
+      remaining.delete(card.id);
+      return card;
+    };
+    game.state.tableau = [
+      [take('♦', 5, true)],
+      [take('♣', 6, false), take('♠', 12, true)],
+      [hidden(), hidden(), take('♣', 2, true)],
+      [hidden(), hidden(), hidden(), take('♦', 13, true)],
+      [hidden(), hidden(), hidden(), take('♣', 3, false), take('♦', 11, true)],
+      [hidden(), hidden(), hidden(), hidden(), take('♣', 12, false), take('♣', 4, true)],
+      [hidden(), hidden(), hidden(), hidden(), hidden(), hidden(), take('♦', 9, true)],
+    ];
+    game.state.stock = [...remaining.values()];
+    game.state.moves = 0;
+    game.state.score = 0;
+    game.state.seconds = 0;
+    game.state.history = [];
+    game.save();
+  });
+  await page.reload();
+  await page.waitForTimeout(1450);
+
+  const move = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
+    await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).click();
+    await page.locator(`.pile-column[data-pile="${targetPile}"] .playing-card[data-index="${targetIndex}"]`).click();
+  };
+
+  // In the reference opening, the 4♣, Q♠, and J♦ join the 5♦/K♦ sequence;
+  // each move also uncovers one card, matching the observed +10 score steps.
+  await move(5, 5, 0, 0);
+  await expect(page.locator('#score-value')).toHaveText('10');
+  await expect(page.locator('#moves-value')).toHaveText('1');
+  await expect(page.locator('.pile-column[data-pile="5"] .card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
+
+  await move(1, 1, 3, 3);
+  await expect(page.locator('#score-value')).toHaveText('20');
+  await expect(page.locator('#moves-value')).toHaveText('2');
+  await expect(page.locator('.pile-column[data-pile="1"] .card-face-art')).toHaveAttribute('src', /6-of-clubs-reference\.png$/);
+
+  await move(4, 4, 3, 4);
+  await expect(page.locator('#score-value')).toHaveText('30');
+  await expect(page.locator('#moves-value')).toHaveText('3');
+  const finalBoard = await page.evaluate(() => ({
+    score: window.solitaireGame.state.score,
+    moves: window.solitaireGame.state.moves,
+    stock: window.solitaireGame.state.stock.length,
+    topCards: window.solitaireGame.state.tableau.map((pile) => {
+      const card = pile.at(-1);
+      return `${card.rank}${card.suit}`;
+    }),
+  }));
+  expect(finalBoard).toEqual({ score: 30, moves: 3, stock: 24, topCards: ['4♣', '6♣', '2♣', '11♦', '3♣', '12♣', '9♦'] });
+  await page.waitForTimeout(1000);
+  await page.evaluate(() => {
+    window.solitaireGame.state.seconds = 7;
+    window.solitaireGame.save();
+    document.querySelector('#time-value').textContent = '00:07';
+  });
+  await expect(page.locator('.combo-feedback, .combo-amazing')).toHaveCount(0);
+  await expect(page.locator('#time-value')).toHaveText('00:07');
+  await page.screenshot({ path: 'test-results/source-opening-replay.png', fullPage: true });
+});
+
 test('reference card illustrations render on matching cards', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {
