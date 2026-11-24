@@ -48,4 +48,6 @@ The tool hashes its WAV input, writes per-window RMS/peak and broad-band spectra
 4. Match peaks against the frame ledger for deal, draw, flip, move, undo, recycle, and win. Treat a mixed promo track as evidence only when an event can be separated by timing and spectrum.
 5. Compare browser `AudioContext` state, scheduled cues, captured PCM, and physical phone-speaker output as separate checks. UI state and a running context alone do not establish audible playback.
 
-The implementation currently uses independent procedural Web Audio sounds and an ambient chord loop. The official short's mixed track is not copied into the app, and the procedural sounds remain an approximation until a clean game-only source can be compared.
+The implementation uses source-matched crops for tableau moves, stock draws, combo feedback, and foundation placement, plus procedural sounds for actions without a cleanly matched event and an ambient chord loop. The official short's mixed track is not copied into the app. These source-matched effects are still excerpts from a mixed third-party recording, not isolated original sound stems.
+
+For the foundation cue, 100 ms video frames show a second Ace entering the foundation at 60.7 seconds and a flare over it at 61.0 seconds. The mixed audio transient begins at 60.99 seconds and has maximum normalized correlation 0.058 against the move cue. The 60.980–61.800 second sample is therefore scheduled 0.29 seconds after the action. Sample details, hash, and extraction command are in [the audio assets note](../assets/audio/README.md).

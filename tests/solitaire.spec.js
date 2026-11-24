@@ -684,6 +684,9 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
         window.referenceAmazingSamplePlayed = true;
         window.referenceAmazingSampleGain = args[1];
       }
+      if (buffer === audio.referenceFoundationBuffer) {
+        window.referenceFoundationSampleCall = { gain: args[1], offset: args[0] - audio.context.currentTime };
+      }
       return playSample(buffer, ...args);
     };
   });
@@ -711,6 +714,15 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   await expect.poll(() => page.evaluate(() => window.referenceAmazingSamplePlayed)).toBe(true);
   const amazingOutputGain = await page.evaluate(() => window.referenceAmazingSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(amazingOutputGain).toBeCloseTo(1, 5);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceFoundationBuffer?.duration)).toBeGreaterThan(0.8);
+  await page.evaluate(() => window.solitaireAudio.play('foundation'));
+  await expect.poll(() => page.evaluate(() => window.referenceFoundationSampleCall?.gain)).toBeGreaterThan(0);
+  const foundationAudio = await page.evaluate(() => ({
+    gain: window.referenceFoundationSampleCall.gain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel,
+    offset: window.referenceFoundationSampleCall.offset,
+  }));
+  expect(foundationAudio.gain).toBeCloseTo(1, 5);
+  expect(foundationAudio.offset).toBeCloseTo(0.29, 1);
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
@@ -737,7 +749,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v28');
+  expect(cacheNames).toContain('solitaire-master-v29');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -774,6 +786,13 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   expect(offlineAmazingCue.ok).toBe(true);
   expect(offlineAmazingCue.audioType).toBe(true);
   expect(offlineAmazingCue.bytes).toBeGreaterThan(160_000);
+  const offlineFoundationCue = await page.evaluate(async () => {
+    const response = await fetch('/assets/audio/foundation-reference.wav');
+    return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };
+  });
+  expect(offlineFoundationCue.ok).toBe(true);
+  expect(offlineFoundationCue.audioType).toBe(true);
+  expect(offlineFoundationCue.bytes).toBeGreaterThan(100_000);
   const offlineActionIcons = await page.evaluate(async () => Promise.all(['action-play-plus', 'action-magic', 'action-hint', 'action-undo'].map(async (name) => {
     const response = await fetch(`/assets/ui/${name}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';
