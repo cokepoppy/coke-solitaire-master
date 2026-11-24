@@ -141,6 +141,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
       [5, '♦', 3],
       [6, '♠', 3],
       [7, '♦', 9],
+      [8, '♥', 2],
       [9, '♠', 4],
       [14, '♠', 8],
       [20, '♥', 3],
@@ -167,6 +168,9 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     const nineDiamonds = window.solitaireGame.state.tableau.flat().find((card) => card.suit === '♦' && card.rank === 9);
     if (!nineDiamonds) throw new Error('The test deal did not place the nine of diamonds in the tableau.');
     nineDiamonds.faceUp = true;
+    const twoHearts = window.solitaireGame.state.tableau.flat().find((card) => card.suit === '♥' && card.rank === 2);
+    if (!twoHearts) throw new Error('The test deal did not place the two of hearts in the tableau.');
+    twoHearts.faceUp = true;
     window.solitaireGame.save();
   });
   await page.reload();
@@ -184,6 +188,7 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     '3-of-spades-reference.png',
     '8-of-hearts-reference.png',
     '9-of-diamonds-reference.png',
+    '2-of-hearts-reference.png',
   ];
   for (const filename of referenceArt) {
     const image = page.locator(`.card-face-art[src$="${filename}"]`);
@@ -479,8 +484,8 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v16');
-  expect(cacheNames).not.toContain('solitaire-master-v15');
+  expect(cacheNames).toContain('solitaire-master-v17');
+  expect(cacheNames).not.toContain('solitaire-master-v16');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
   await page.evaluate(() => navigator.serviceWorker.ready);
@@ -515,6 +520,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       '6-of-spades', '7-of-hearts', '2-of-spades', '8-of-clubs',
       '10-of-hearts', '8-of-hearts',
       '9-of-diamonds',
+      '2-of-hearts',
       '5-of-diamonds',
       'ace-of-hearts', '7-of-clubs', '3-of-diamonds', '4-of-spades',
       '8-of-spades', '3-of-hearts', '6-of-clubs', '2-of-clubs', '10-of-clubs',
@@ -525,7 +531,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       return response.ok && response.headers.get('content-type') === 'image/png';
     }));
   });
-  expect(offlineReferenceCards).toEqual(Array(40).fill(true));
+  expect(offlineReferenceCards).toEqual(Array(41).fill(true));
   const offlineMoveSample = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/card-move-reference.wav');
     return response.ok && (await response.arrayBuffer()).byteLength > 0;
