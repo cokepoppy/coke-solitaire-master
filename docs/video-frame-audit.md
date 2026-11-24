@@ -39,6 +39,10 @@ python3 tools/video_frame_audit.py path/to/source.mp4 \
 
 Images and downloaded videos are ignored by Git because they are review derivatives of public video. Commit the CSV/JSON timestamp and hash evidence plus written observations, not copied source footage.
 
+## Observed stock-draw transition
+
+A zero-tolerance AVFoundation review of the 60 fps source frames around the first stock draw found the first changed frame at 23.216667 s: the stock count changes from 24 to 23, the move count advances from 3 to 4, and the 6♥ is already face up. The card moves left from the stock toward the waste and reaches the waste slot at about 23.35 s. The mixed-audio transient candidate begins near 23.416 s, about 200 ms later. That gap may be stream offset or delayed sound, so keep the audio and visual timestamps separate when tuning. The web version uses a 150 ms linear flight and shows the face immediately.
+
 ## Reviewing interactions and sound
 
 1. Start with the overview and contact sheets to identify likely actions. Use the CSV to jump to exact PTS, then compare a target image with its saved before/after frames.

@@ -20,8 +20,6 @@ let firstDeal = true;
 board.addEventListener('animationend', (event) => {
   if (event.animationName === 'deal-face-reveal') {
     event.target.closest('.card-enter')?.classList.remove('card-enter');
-  } else if (event.animationName === 'draw-face-reveal') {
-    event.target.closest('.card-reveal')?.classList.remove('card-reveal', 'card-arrive');
   } else if (event.animationName === 'card-deal' && !event.target.classList.contains('card-face')) {
     event.target.classList.remove('card-enter');
   } else if (event.animationName === 'card-land') {
@@ -162,7 +160,7 @@ function renderCard(card, source, options = {}) {
   if (hint) classes.push('is-hint');
   if (deal) classes.push('card-enter');
   else if (animatedCardIds.has(card.id)) classes.push('card-arrive');
-  if (flight && card.faceUp) classes.push('card-reveal');
+  if (flight && card.faceUp) classes.push('card-stock-draw');
   const delay = deal ? dealOrder * 40 : Math.min(index * 16, 160);
   const drawX = flight ? flight.originX - flight.targetX : 0;
   const drawY = flight ? flight.originY - flight.targetY : -5;
