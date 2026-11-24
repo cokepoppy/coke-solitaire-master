@@ -93,4 +93,6 @@ Eight further number-card faces are complete crops from full gameplay frames. Ea
 | `4-of-diamonds-reference.png` | 14745600 (960s) | (383, 428) |
 | `9-of-clubs-reference.png` | 15052800 (980s) | (383, 994) |
 
-The runtime selects these crops for their matching cards and includes them in the offline shell cache. All twelve court cards and thirty-nine number-card faces now use source-frame or official store crops; only the nine of hearts still uses the credited CC0 deck artwork.
+The runtime selects these crops for their matching cards and includes them in the offline shell cache. All twelve court cards and thirty-nine number-card faces use source-frame or official store crops.
+
+The 9♥ reference PNG is a source-style composite rather than a direct 9♥ screenshot crop. It keeps the 9♦ source capture's rank, frame, and card placement, removes its two diamond pips, and places the corner and center heart shapes from the 5♥ source capture. The composite is built reproducibly with `python3 tools/build_nine_hearts_reference.py`. This removes the last CC0 face from the default Solitaire Master face style, while preserving the distinction that the 9♥ silhouette has not been captured directly from the original game.
