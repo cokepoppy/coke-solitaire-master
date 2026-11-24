@@ -39,6 +39,9 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(timerFrameBounds).toEqual({ wider: true, taller: true, left: true, right: true });
   await expect(page.locator('#moves-value')).toHaveText('0');
   await expect(page.getByRole('button', { name: 'Game menu' })).toBeVisible();
+  await expect(page.locator('.menu-source-art')).toHaveCSS('display', 'block');
+  await expect(page.locator('.metric-source-icon')).toHaveCount(2);
+  await expect.poll(() => page.locator('.metric-source-icon').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
   await expect(page.locator('.foundation-slot')).toHaveCount(4);
   await expect(page.locator('.action-button')).toHaveCount(4);
   await expect(page.locator('.action-source-icon')).toHaveCount(4);
@@ -422,6 +425,8 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('.background-tile.chosen')).toHaveCount(1);
+  await expect(page.locator('.menu-source-art')).toHaveCSS('display', 'none');
+  await expect(page.locator('.menu-theme-icon')).toBeVisible();
   await expect(page.locator('.foundation-source-art').first()).toHaveCSS('display', 'none');
   await expect(page.locator('.foundation-theme-mark').first()).toBeVisible();
 
@@ -703,7 +708,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v26');
+  expect(cacheNames).toContain('solitaire-master-v27');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -750,6 +755,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
   expect(offlineFoundationSlots).toEqual(Array(4).fill(true));
+  const offlineStatusIcons = await page.evaluate(async () => Promise.all(['menu-source', 'stat-crown', 'stat-moves'].map(async (name) => {
+    const response = await fetch(`/assets/ui/${name}.png`);
+    return response.ok && response.headers.get('content-type') === 'image/png';
+  })));
+  expect(offlineStatusIcons).toEqual(Array(3).fill(true));
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',

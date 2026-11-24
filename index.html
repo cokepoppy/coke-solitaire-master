@@ -14,10 +14,11 @@
     <main class="game-shell" id="game-shell">
       <header class="game-topbar" aria-label="Game status and menu">
         <button class="menu-button" id="menu-button" type="button" aria-label="Game menu" title="Game menu">
-          <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9h18M7 16h18M7 23h18" /></svg>
+          <img class="menu-source-art" src="/assets/ui/menu-source.png" alt="">
+          <svg class="menu-theme-icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 9h18M7 16h18M7 23h18" /></svg>
         </button>
         <section class="scorebar" aria-label="Game statistics">
-          <div class="stat" aria-label="Score"><svg class="metric-icon crown-icon" viewBox="0 0 32 28" aria-hidden="true"><path d="M3 8 9 13 15 3l5 10 9-7-3 15H6L3 8Z"/><path d="M7 24h19"/></svg><strong id="score-value">0</strong></div>
+          <div class="stat" aria-label="Score"><img class="metric-icon crown-icon metric-source-icon" src="/assets/ui/stat-crown.png" alt=""><strong id="score-value">0</strong></div>
           <span class="scorebar-flourish" aria-hidden="true">✦</span>
           <div class="stat time-stat" aria-label="Time">
             <svg class="timer-frame" viewBox="0 0 300 96" preserveAspectRatio="none" aria-hidden="true">
@@ -28,7 +29,7 @@
             <strong id="time-value">0:00</strong>
           </div>
           <span class="scorebar-flourish" aria-hidden="true">✦</span>
-          <div class="stat" aria-label="Moves"><svg class="metric-icon moves-icon" viewBox="0 0 36 30" aria-hidden="true"><path d="M4 10h23m-6-6 7 6-7 6M32 20H9m6-6-7 6 7 6"/></svg><strong id="moves-value">0</strong></div>
+          <div class="stat" aria-label="Moves"><img class="metric-icon moves-icon metric-source-icon" src="/assets/ui/stat-moves.png" alt=""><strong id="moves-value">0</strong></div>
         </section>
       </header>
 
