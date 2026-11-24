@@ -34,6 +34,7 @@ let drag = null;
 let animatedCardIds = new Set();
 let cardFlight = null;
 let winShown = false;
+let comboFeedbackTimer = null;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
@@ -203,6 +204,37 @@ function render() {
   updateChrome();
   animatedCardIds = new Set();
   cardFlight = null;
+}
+
+function showComboFeedback(cardId) {
+  board.querySelectorAll('.combo-feedback, .combo-amazing').forEach((effect) => effect.remove());
+  clearTimeout(comboFeedbackTimer);
+  if (game.state.comboCount < 1 || !cardId || game.state.won) return;
+  const card = [...board.querySelectorAll('[data-card-id]')].find((element) => element.dataset.cardId === cardId);
+  if (!card) return;
+  const boardRect = board.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  const combo = game.state.comboCount;
+  const label = document.createElement('div');
+  label.className = 'combo-feedback';
+  label.setAttribute('role', 'status');
+  label.setAttribute('aria-label', `Combo ${combo}`);
+  label.innerHTML = `<span>COMBO</span><b>${combo}</b>`;
+  const requestedLeft = cardRect.left - boardRect.left + cardRect.width / 2;
+  label.style.top = `${cardRect.top - boardRect.top + cardRect.height / 2}px`;
+  board.append(label);
+  const halfLabelWidth = label.offsetWidth / 2;
+  const labelMargin = Math.max(64, halfLabelWidth + 5);
+  label.style.left = `${Math.max(labelMargin, Math.min(boardRect.width - labelMargin, requestedLeft))}px`;
+  if (combo === 4) {
+    audio.play('amazing');
+    const amazing = document.createElement('div');
+    amazing.className = 'combo-amazing';
+    amazing.setAttribute('aria-hidden', 'true');
+    amazing.innerHTML = '<b>Amazing</b><i>♥</i><i>♥</i><i>✦</i><i>✦</i>';
+    board.append(amazing);
+  }
+  comboFeedbackTimer = setTimeout(() => board.querySelectorAll('.combo-feedback, .combo-amazing').forEach((effect) => effect.remove()), combo === 4 ? 620 : 920);
 }
 
 function captureStockFlight() {
@@ -436,6 +468,7 @@ function startDailyGame(day = localDateKey(new Date())) {
   $('.game-shell').classList.remove('won');
   closeModal();
   render();
+  showComboFeedback();
   announce(`Daily challenge · ${dateLabel(day)}`);
 }
 
@@ -467,6 +500,7 @@ function handleStock() {
   if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
   audio.play(action === 'recycle' ? 'flip' : 'draw');
   render();
+  showComboFeedback();
 }
 
 function doNewGame(restart = false) {
@@ -495,6 +529,7 @@ function doNewGame(restart = false) {
   firstDeal = true;
   closeModal();
   render();
+  showComboFeedback();
   announce(restart ? 'Deal restarted' : 'New game dealt');
 }
 
@@ -549,6 +584,7 @@ function handleMagic() {
   animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
   audio.play(game.state.won ? 'win' : hint.target.zone === 'foundation' ? 'foundation' : 'move');
   render();
+  showComboFeedback(movingIds[0]);
   if (game.state.won) completeWin();
   announce('Magic move played');
 }
@@ -571,6 +607,7 @@ function commitMove(target) {
     const revealed = game.state.score > (drag?.score ?? game.state.score);
     audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : revealed ? 'flip' : 'move');
     render();
+    showComboFeedback(movingIds[0]);
     if (game.state.won) completeWin();
   } else {
     game.state.selected = null;
@@ -650,6 +687,7 @@ board.addEventListener('pointerup', (event) => {
     if (result.action === 'move' || result.action === 'foundation') audio.play(game.state.won ? 'win' : result.action === 'foundation' ? 'foundation' : 'move');
     else if (result.action === 'select') audio.play('tap');
     render();
+    if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId);
     if (game.state.won) completeWin();
   }
   drag = null;
@@ -677,6 +715,7 @@ board.addEventListener('click', (event) => {
       animatedCardIds = new Set([...movingIds, ...(exposed && !exposed.faceUp ? [exposed.id] : [])]);
       audio.play('move');
       render();
+      showComboFeedback(movingIds[0]);
     } else audio.play('invalid');
   } else if (target.dataset.dropZone === 'foundation' && game.state.selected) {
     commitMove(target);
@@ -692,6 +731,7 @@ $('#undo-button').addEventListener('click', () => {
   audio.play('tap');
   $('.game-shell').classList.remove('won');
   render();
+  showComboFeedback(null);
   announce('Last move undone');
 });
 $('#hint-button').addEventListener('click', handleHint);
@@ -763,6 +803,7 @@ document.addEventListener('keydown', (event) => {
     if (game.undo()) {
       if (!game.state.won) winShown = false;
       render();
+      showComboFeedback(null);
     }
   }
 });

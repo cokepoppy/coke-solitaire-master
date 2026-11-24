@@ -348,6 +348,59 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'master');
 });
 
+test('source-matched combo feedback appears on quick consecutive moves and resets after a pause', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const deck = ['♠', '♥', '♦', '♣'].flatMap((suit) => Array.from({ length: 13 }, (_, index) => ({ id: `${suit}-${index + 1}`, suit, rank: index + 1, faceUp: false })));
+    const tops = [[51, '♠', 5], [49, '♥', 6], [46, '♦', 7], [42, '♣', 8], [37, '♣', 9], [31, '♥', 10], [24, '♠', 13], [25, '♥', 12], [26, '♣', 11]];
+    for (const [index, suit, rank] of tops) {
+      const cardIndex = deck.findIndex((card) => card.id === `${suit}-${rank}`);
+      [deck[index], deck[cardIndex]] = [deck[cardIndex], deck[index]];
+    }
+    window.solitaireGame.newGame(deck);
+  });
+  await page.reload();
+  await page.waitForTimeout(1200);
+  const move = async (card, target) => {
+    await page.locator(`[data-card-id="${card}"]`).click();
+    await page.locator(`[data-card-id="${target}"]`).click();
+  };
+  await move('♠-5', '♥-6');
+  await expect(page.locator('#moves-value')).toHaveText('1');
+  await expect(page.locator('.combo-feedback')).toHaveCount(0);
+  await move('♦-7', '♣-8');
+  await expect(page.locator('#moves-value')).toHaveText('2');
+  await expect(page.locator('.combo-feedback')).toHaveText('COMBO1');
+  await expect(page.locator('.combo-feedback')).toHaveAttribute('aria-label', 'Combo 1');
+  await page.waitForTimeout(150);
+  await page.screenshot({ path: 'test-results/mobile-combo-1.png' });
+  await move('♣-9', '♥-10');
+  await expect(page.locator('#moves-value')).toHaveText('3');
+  await expect(page.locator('.combo-feedback')).toHaveText('COMBO2');
+  await page.locator('.pile-column[data-pile="6"] [data-card-id="♠-13"]').click();
+  await page.locator('.pile-column[data-pile="0"]').click();
+  await expect(page.locator('#moves-value')).toHaveText('4');
+  await expect(page.locator('.combo-feedback')).toHaveText('COMBO3');
+  await move('♥-12', '♠-13');
+  await expect(page.locator('#moves-value')).toHaveText('5');
+  await expect(page.locator('.combo-feedback')).toHaveText('COMBO4');
+  await expect(page.locator('.combo-amazing')).toContainText('Amazing');
+  const comboBounds = await page.locator('.combo-feedback').evaluate((label) => ({ left: label.offsetLeft, right: label.offsetLeft + label.offsetWidth, width: label.parentElement.clientWidth }));
+  expect(comboBounds.left).toBeGreaterThanOrEqual(0);
+  expect(comboBounds.right).toBeLessThanOrEqual(comboBounds.width);
+  await page.waitForTimeout(150);
+  await page.screenshot({ path: 'test-results/mobile-combo-amazing.png' });
+  await page.evaluate(() => {
+    const state = window.solitaireGame.state;
+    state.comboLastMoveAt = Date.now() - 5501;
+    window.solitaireGame.save();
+  });
+  await move('♣-11', '♥-12');
+  await expect(page.locator('#moves-value')).toHaveText('6');
+  await expect(page.locator('.combo-feedback')).toHaveCount(0);
+  await expect.poll(() => page.evaluate(() => window.solitaireGame.state.comboCount)).toBe(0);
+});
+
 test('a legal hinted card can be dragged to its destination', async ({ page }) => {
   await page.goto('/');
   let hint = null;
@@ -511,6 +564,7 @@ test('mobile sound unlocks on a gesture and ambient music follows its switch', a
     const playSample = audio.playSample.bind(audio);
     audio.playSample = (buffer, ...args) => {
       window.referenceMoveSamplePlayed = buffer === audio.referenceMoveBuffer;
+      window.referenceAmazingSamplePlayed = buffer === audio.referenceAmazingBuffer;
       return playSample(buffer, ...args);
     };
   });
@@ -522,6 +576,9 @@ test('mobile sound unlocks on a gesture and ambient music follows its switch', a
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceMoveBuffer?.duration)).toBeGreaterThan(0.37);
   await page.evaluate(() => window.solitaireAudio.play('move'));
   await expect.poll(() => page.evaluate(() => window.referenceMoveSamplePlayed)).toBe(true);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAmazingBuffer?.duration)).toBeGreaterThan(0.95);
+  await page.evaluate(() => window.solitaireAudio.play('amazing'));
+  await expect.poll(() => page.evaluate(() => window.referenceAmazingSamplePlayed)).toBe(true);
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
@@ -548,7 +605,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v21');
+  expect(cacheNames).toContain('solitaire-master-v23');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -578,6 +635,13 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineThemeBack).toEqual({ ok: true, type: 'image/png' });
+  const offlineAmazingCue = await page.evaluate(async () => {
+    const response = await fetch('/assets/audio/combo-amazing-reference.wav');
+    return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };
+  });
+  expect(offlineAmazingCue.ok).toBe(true);
+  expect(offlineAmazingCue.audioType).toBe(true);
+  expect(offlineAmazingCue.bytes).toBeGreaterThan(160_000);
   const offlineReferenceCards = await page.evaluate(async () => {
     const names = [
       'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
