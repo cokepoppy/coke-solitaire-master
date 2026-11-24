@@ -18,7 +18,7 @@ npm run check
 npm run test:e2e
 ```
 
-The mobile Chrome E2E suite checks the initial deal, stock draw, undo, hinted tap moves, drag moves, settings, daily deal repeatability, and saved-game restoration.
+The mobile Chrome E2E suite checks the staggered initial deal, stock draw, undo, hinted tap moves, drag moves, settings, daily deal repeatability, saved-game restoration, offline card images, and Web Audio unlock/music controls.
 
 ## Reference
 
