@@ -125,7 +125,7 @@ export class GameAudio {
       if (this.pending.length < 8) this.pending.push(cue);
       return;
     }
-    if (cue === 'move') await this.referenceMoveLoadPromise;
+    if (cue === 'move' || cue === 'draw') await this.referenceMoveLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
     this.playCue(cue);
   }
@@ -192,8 +192,11 @@ export class GameAudio {
       this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
       this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
     } else if (cue === 'draw') {
-      this.playNoise(3600, 480, 0.15, 0.17, now, 0.62);
-      this.playTone(250, 150, 0.13, 0.045, 'sine', now);
+      if (this.referenceMoveBuffer) this.playCapturedSample(this.referenceMoveBuffer, now);
+      else {
+        this.playNoise(3600, 480, 0.15, 0.17, now, 0.62);
+        this.playTone(250, 150, 0.13, 0.045, 'sine', now);
+      }
     } else if (cue === 'move') {
       if (this.referenceMoveBuffer) this.playCapturedSample(this.referenceMoveBuffer, now);
       else {
