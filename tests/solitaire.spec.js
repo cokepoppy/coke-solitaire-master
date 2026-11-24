@@ -18,6 +18,24 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   await expect.poll(() => page.locator('.card-back-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
+  const dealMotion = await page.evaluate(() => {
+    const first = document.querySelector('#tableau .pile-column[data-pile="0"] .playing-card');
+    const last = document.querySelector('#tableau .pile-column[data-pile="6"] .playing-card[data-index="6"]');
+    return {
+      count: document.querySelectorAll('#tableau .playing-card.card-enter').length,
+      firstDelay: Number.parseFloat(first.style.getPropertyValue('--deal-delay')),
+      lastDelay: Number.parseFloat(last.style.getPropertyValue('--deal-delay')),
+      firstX: Number.parseFloat(first.style.getPropertyValue('--deal-x')),
+      lastY: Number.parseFloat(last.style.getPropertyValue('--deal-y')),
+      faceFlip: getComputedStyle(document.querySelector('#tableau .card-face.card-enter .card-face-art')).animationName,
+    };
+  });
+  expect(dealMotion.count).toBe(28);
+  expect(dealMotion.firstDelay).toBe(0);
+  expect(dealMotion.lastDelay).toBe(1080);
+  expect(dealMotion.firstX).toBeGreaterThan(180);
+  expect(dealMotion.lastY).toBeLessThan(-100);
+  expect(dealMotion.faceFlip).toBe('deal-face-reveal');
   const tableauLayout = await page.evaluate(() => {
     const box = (selector) => document.querySelector(selector).getBoundingClientRect();
     return {
@@ -36,7 +54,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
     return { total: cards.length, unique: new Set(cards.map((card) => card.id)).size };
   });
   expect(deckIntegrity).toEqual({ total: 52, unique: 52 });
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1700);
   await page.screenshot({ path: 'test-results/mobile-home.png', fullPage: true });
 
   await page.locator('[data-action="stock"]').click();
@@ -189,6 +207,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
 
 test('an illegal tableau tap does not alter the deal', async ({ page }) => {
   await page.goto('/');
+  await page.waitForFunction(() => document.querySelectorAll('#tableau .card-enter').length === 0);
   const pair = await page.evaluate(() => {
     const game = window.solitaireGame;
     for (let sourcePile = 0; sourcePile < 7; sourcePile += 1) {
