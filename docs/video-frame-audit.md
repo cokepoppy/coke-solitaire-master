@@ -27,6 +27,16 @@ python3 tools/video_frame_audit.py path/to/source.mp4 \
 
 The script does not download, transcode, or modify the source. It streams each decoded frame, reads its PTS and time from FFmpeg `showinfo`, writes a CSV row with the SHA-256 of the decoded RGB pixels, and renders aspect-preserving contact sheets. Requested PTS values get a full-resolution image and the immediately adjacent decoded frames. It independently extracts and hashes all available retained PTS values; a mismatch stops the run. `manifest.json` records source SHA-256, FFmpeg version, stream metadata, time window, requested PTS values, neighbors, and verification results.
 
+On macOS, if FFmpeg is unavailable, use the AVFoundation window extractor for focused transition reviews. It requests each frame with zero time tolerance and writes PNGs plus a CSV and manifest containing requested and actual media times, source PTS/time scale, source-file SHA-256, and each PNG's SHA-256. An optional crop keeps transition sets small enough to review in Finder or Preview:
+
+```sh
+swift tools/extract_video_window.swift path/to/source.mp4 \
+  23.18 23.40 0.016666667 research/solitaire-master/stock-draw-window \
+  0 250 884 800
+```
+
+The last four arguments are crop `x y width height`; omit them to retain each full frame. The frame list is recorded at the actual decoded source times, which may differ from the requested times by one frame. Keep this AVFoundation PNG-byte hash evidence distinct from the Python auditor's decoded-RGB hashes.
+
 For a short section of a long video, pass absolute source timestamps. Source PTS are retained, rather than reset to zero:
 
 ```sh
@@ -41,7 +51,7 @@ Images and downloaded videos are ignored by Git because they are review derivati
 
 ## Observed stock-draw transition
 
-A zero-tolerance AVFoundation review of the 60 fps source frames around the first stock draw found the first changed frame at 23.216667 s: the stock count changes from 24 to 23, the move count advances from 3 to 4, and the 6♥ is already face up. The card moves left from the stock toward the waste and reaches the waste slot at about 23.35 s. The mixed-audio transient candidate begins near 23.416 s, about 200 ms later. That gap may be stream offset or delayed sound, so keep the audio and visual timestamps separate when tuning. The web version uses a 150 ms linear flight and shows the face immediately.
+A zero-tolerance AVFoundation review of the 60 fps source frames around the first stock draw found the first changed frame at 23.216667 s: the stock count changes from 24 to 23, the move count advances from 3 to 4, and the 6♥ is already face up. The card moves left from the stock toward the waste and reaches the waste slot at about 23.35 s. The source PTS and per-frame PNG hashes for this transition are recorded in the [frame ledger](../research/solitaire-master/stock-draw-2026-11-25/frames.csv) and [manifest](../research/solitaire-master/stock-draw-2026-11-25/manifest.json); regenerate the omitted review images with the AVFoundation command above. The mixed-audio transient candidate begins near 23.416 s, about 200 ms later. That gap may be stream offset or delayed sound, so keep the audio and visual timestamps separate when tuning. The web version uses a 150 ms linear flight and shows the face immediately.
 
 ## Reviewing interactions and sound
 
