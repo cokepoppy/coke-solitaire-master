@@ -465,7 +465,7 @@ function scheduleAutoCollect() {
 
 const FOUNDATION_COMBO_REWARDS = {
   1: { name: 'Good', cue: 'good', className: 'combo-good', eventIncludesFoundation: true },
-  2: { name: 'Great', cue: 'great', className: 'combo-great' },
+  2: { name: 'Great', cue: 'great', className: 'combo-great', audioDelaySeconds: 0.7 },
   4: { name: 'Amazing', cue: 'amazing', className: 'combo-amazing' },
 };
 
@@ -492,7 +492,7 @@ function showComboFeedback(cardId, foundationMove = false) {
   board.append(label);
   const reward = foundationMove ? FOUNDATION_COMBO_REWARDS[combo] : null;
   if (reward) {
-    audio.play(reward.cue);
+    audio.play(reward.cue, reward.audioDelaySeconds ?? 0);
     const banner = document.createElement('div');
     banner.className = reward.className;
     banner.setAttribute('aria-hidden', 'true');

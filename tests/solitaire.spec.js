@@ -776,9 +776,9 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
 test('foundation placements show source feedback and sound only at observed combo tiers', async ({ page }) => {
   await page.goto('/');
   const tiers = [
-    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good', width: 244, actionCues: ['good'] },
-    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great', width: 244, actionCues: ['foundation', 'great'] },
-    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520, actionCues: ['foundation', 'amazing'] },
+    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good', width: 244, actionCues: [{ cue: 'good', delaySeconds: 0 }] },
+    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great', width: 244, actionCues: [{ cue: 'foundation', delaySeconds: 0 }, { cue: 'great', delaySeconds: 0.7 }] },
+    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520, actionCues: [{ cue: 'foundation', delaySeconds: 0 }, { cue: 'amazing', delaySeconds: 0 }] },
   ];
   for (const tier of tiers) {
     await page.evaluate((targetCombo) => {
@@ -815,14 +815,14 @@ test('foundation placements show source feedback and sound only at observed comb
       window.solitaireGame.state.comboLastMoveAt = Date.now() - 1000;
       window.solitaireGame.save();
       window.rewardCues = [];
-      window.solitaireAudio.play = async (cue) => { window.rewardCues.push(cue); };
+      window.solitaireAudio.play = async (cue, delaySeconds = 0) => { window.rewardCues.push({ cue, delaySeconds }); };
     }, tier.combo);
     await page.locator('[data-card-id="test-ace-hearts"]').click();
     await page.evaluate(() => { window.rewardCues = []; });
     await page.locator('.foundation-slot[data-pile="0"]').click();
     await expect(page.locator('.combo-feedback')).toHaveAttribute('aria-label', `Combo ${tier.combo}`);
     await expect(page.locator(tier.selector)).toContainText(tier.name);
-    await expect.poll(() => page.evaluate((cue) => window.rewardCues.includes(cue), tier.cue)).toBe(true);
+    await expect.poll(() => page.evaluate((cue) => window.rewardCues.some((event) => event.cue === cue), tier.cue)).toBe(true);
     await expect.poll(() => page.evaluate(() => window.rewardCues)).toEqual(tier.actionCues);
     await expect(page.locator('.combo-good, .combo-great, .combo-amazing')).toHaveCount(1);
     const art = page.locator(`${tier.selector} .combo-reward-art`);
@@ -1119,7 +1119,12 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
     window.referenceSampleCalls = [];
     const audio = window.solitaireAudio;
     const playCue = audio.playCue.bind(audio);
-    audio.playCue = (cue) => { window.audioCues.push(cue); return playCue(cue); };
+    window.audioCueEvents = [];
+    audio.playCue = (cue, delaySeconds = 0) => {
+      window.audioCues.push(cue);
+      window.audioCueEvents.push({ cue, delaySeconds });
+      return playCue(cue, delaySeconds);
+    };
     const playSample = audio.playSample.bind(audio);
     audio.playSample = (buffer, ...args) => {
       if (buffer === audio.referenceMoveBuffer) {
@@ -1136,6 +1141,7 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
       if (buffer === audio.referenceGreatBuffer) {
         window.referenceGreatSamplePlayed = true;
         window.referenceGreatSampleGain = args[1];
+        window.referenceGreatSampleOffset = args[0] - audio.context.currentTime;
       }
       if (buffer === audio.referenceFoundationBuffer) {
         window.referenceFoundationSampleCall = { gain: args[1], offset: args[0] - audio.context.currentTime };
@@ -1177,10 +1183,15 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   const amazingOutputGain = await page.evaluate(() => window.referenceAmazingSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(amazingOutputGain).toBeCloseTo(1, 5);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceGreatBuffer?.duration)).toBeCloseTo(0.5, 2);
-  await page.evaluate(() => window.solitaireAudio.play('great'));
+  await page.evaluate(() => window.solitaireAudio.play('great', 0.7));
   await expect.poll(() => page.evaluate(() => window.referenceGreatSamplePlayed)).toBe(true);
-  const greatOutputGain = await page.evaluate(() => window.referenceGreatSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  const greatAudio = await page.evaluate(() => ({
+    gain: window.referenceGreatSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel,
+    offset: window.referenceGreatSampleOffset,
+  }));
+  const greatOutputGain = greatAudio.gain;
   expect(greatOutputGain).toBeCloseTo(1, 5);
+  expect(greatAudio.offset).toBeCloseTo(0.7, 1);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceFoundationBuffer?.duration)).toBeGreaterThan(0.8);
   await page.evaluate(() => window.solitaireAudio.play('foundation'));
   await expect.poll(() => page.evaluate(() => window.referenceFoundationSampleCall?.gain)).toBeGreaterThan(0);
