@@ -1,0 +1,39 @@
+{
+  "source_url": "",
+  "source_video_sha256": "",
+  "source_wav_name": "solitaire-recycle-audio-94-99.wav",
+  "source_wav_sha256": "cd3274a7b9eb5802edfeddb63ccb29ba4d5ecf082bd09ae375fb9a25a86adfd7",
+  "audit_timestamp_utc": "2026-11-25T02:33:53.886601+00:00",
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "source_duration_seconds": 5.0,
+  "source_offset_seconds": 94.0,
+  "analysis_hop_ms": 10,
+  "analysis_window_count": 500,
+  "global_rms_median": 0.0,
+  "global_rms_p95": 0.01538056,
+  "global_rms_max": 0.11635178,
+  "windows_above_rms_0_01": 33,
+  "fraction_windows_above_rms_0_01": 0.066,
+  "windows_above_rms_0_05": 7,
+  "fraction_windows_above_rms_0_05": 0.014,
+  "candidate_events": [
+    {
+      "source_time_seconds": 95.28,
+      "rms": 0.11635178,
+      "peak": 0.46633911,
+      "high_band_fraction": 0.686346,
+      "spectral_centroid_hz": 4051.42
+    },
+    {
+      "source_time_seconds": 98.61,
+      "rms": 0.08100895,
+      "peak": 0.47180176,
+      "high_band_fraction": 0.552796,
+      "spectral_centroid_hz": 5453.16
+    }
+  ],
+  "features_csv": "audio-windows.csv",
+  "note": "Thresholded peaks are event candidates in a mixed track, not verified action-to-effect labels."
+}

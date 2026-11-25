@@ -332,7 +332,9 @@ export class GameAudio {
         [659.25, 987.77].forEach((frequency, index) => this.playTone(frequency, frequency * 1.01, 0.22, 0.04, 'sine', now + index * 0.08));
         this.playNoise(4200, 2100, 0.14, 0.03, now + 0.07, 0.55);
       }
-    } else if (cue === 'flip') {
+    } else if (cue === 'flip' || cue === 'recycle') {
+      // The mixed source video does not isolate a recycle-only effect. Keep a
+      // distinct game event while using the existing procedural flip fallback.
       this.playNoise(6200, 1250, 0.09, 0.14, now, 0.72);
       this.playTone(680, 420, 0.11, 0.027, 'sine', now);
     } else if (cue === 'foundation') {

@@ -877,7 +877,7 @@ function handleStock() {
   const action = game.drawFromStock();
   if (action === 'empty') return;
   if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
-  audio.play(action === 'recycle' ? 'flip' : 'draw');
+  audio.play(action === 'recycle' ? 'recycle' : 'draw');
   render();
   showComboFeedback();
   scheduleAutoCollect();
@@ -956,7 +956,7 @@ function handleMagic() {
     if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
     game.state.magicCharges -= 1;
     game.save();
-    audio.play(action === 'recycle' ? 'flip' : 'draw');
+    audio.play(action === 'recycle' ? 'recycle' : 'draw');
     render();
     announce('Magic revealed a new card');
     scheduleAutoCollect();
