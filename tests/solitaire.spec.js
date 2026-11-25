@@ -1185,6 +1185,47 @@ test('daily calendar browses past months and starts the selected deterministic d
   expect(await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id)).toBe(firstCard);
 });
 
+test('daily calendar matches the official mobile screen and starts the selected deal', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => localStorage.setItem('solitaire-master-profile-v1', JSON.stringify({ games: 1, wins: 1, bestScore: 0, dailyCompleted: ['2026-05-05'] })));
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: /Daily challenge/ }).click();
+
+  const calendar = page.locator('.daily-calendar');
+  for (let month = 0; month < 6; month += 1) await page.getByRole('button', { name: 'Previous month' }).click();
+  await expect(calendar).toHaveAttribute('data-month', '2026-05');
+  await calendar.locator('[data-daily-date="2026-05-06"]').click();
+  await expect(calendar.locator('[data-daily-date="2026-05-06"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.daily-reward small').first()).toHaveText('6/31');
+  await expect(page.getByRole('button', { name: 'Monthly rewards' })).toBeVisible();
+
+  const layout = await page.evaluate(() => {
+    const box = (selector) => {
+      const { x, y, width, height } = document.querySelector(selector).getBoundingClientRect();
+      return { x, y, width, height };
+    };
+    return {
+      modal: box('#modal-card'),
+      calendar: box('.calendar-grid'),
+      rewards: box('.daily-rewards-tray'),
+      play: box('.daily-calendar-play'),
+      images: [...document.querySelectorAll('.daily-calendar img, .daily-reward img')].map((image) => ({ complete: image.complete, width: image.naturalWidth, height: image.naturalHeight })),
+    };
+  });
+  expect(layout.modal).toEqual({ x: 0, y: 0, width: 390, height: 844 });
+  expect(layout.calendar.x).toBeGreaterThanOrEqual(0);
+  expect(layout.calendar.y / 844).toBeCloseTo(0.308, 2);
+  expect(layout.rewards.y / 844).toBeCloseTo(0.618, 2);
+  expect(layout.play.y / 844).toBeCloseTo(0.788, 2);
+  expect(layout.images.every((image) => image.complete && image.width > 0 && image.height > 0)).toBe(true);
+  await page.screenshot({ path: '/tmp/solitaire-master-daily-calendar-390x844.png' });
+
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireGame.state.challenge)).toBe('2026-05-06');
+  await expect(page.locator('#modal-backdrop')).toHaveClass(/hidden/);
+});
+
 test.describe('source-sized win result', () => {
   test.use({ viewport: { width: 442, height: 960 }, deviceScaleFactor: 2 });
 
@@ -1347,7 +1388,7 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.locator('[data-more="daily"]').click();
   await expect(page.locator(`[data-daily-date="${challengeDate}"]`)).toHaveClass(/completed/);
-  await expect(page.locator('.daily-progress')).toHaveAttribute('aria-label', /1 of .* challenges completed this month/);
+  await expect(page.locator('.daily-rewards-tray')).toHaveAttribute('aria-label', /1 of .* daily challenges complete/);
 });
 
 test('win clear sequence advances to the result without input', async ({ page }) => {
@@ -1592,7 +1633,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v55');
+  expect(cacheNames).toContain('solitaire-master-v56');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1777,6 +1818,20 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
   expect(offlineFoundationSlots).toEqual(Array(4).fill(true));
+  const offlineDailyCalendarArt = await page.evaluate(async () => Promise.all([
+    'daily-reward-crown-reference', 'daily-reward-bronze-reference', 'daily-reward-silver-reference', 'daily-reward-gold-reference',
+    'daily-calendar-completed-crown-reference', 'daily-calendar-play-reference', 'daily-calendar-rewards-button-reference',
+  ].map(async (name) => {
+    const response = await fetch(`/assets/ui/${name}.png`);
+    const image = await createImageBitmap(await response.blob());
+    return response.ok && response.headers.get('content-type') === 'image/png' && image.width > 0 && image.height > 0;
+  })));
+  expect(offlineDailyCalendarArt).toEqual(Array(7).fill(true));
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: /Daily challenge/ }).click();
+  await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
+  await expect.poll(() => page.locator('.daily-calendar-play img').evaluate((image) => image.complete && image.naturalWidth === 142)).toBe(true);
+  await page.getByRole('button', { name: 'Close dialog' }).click();
   const offlineStatusIcons = await page.evaluate(async () => Promise.all(['menu-source', 'stat-crown', 'stat-moves', 'timer-frame-source'].map(async (name) => {
     const response = await fetch(`/assets/ui/${name}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';

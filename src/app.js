@@ -596,18 +596,22 @@ function setModal(title, kicker, html, variant = '') {
   $('#modal-title').classList.remove('theme-gallery-title');
   $('#modal-backdrop').classList.toggle('win-result-backdrop', variant === 'win-result');
   $('#modal-card').classList.toggle('win-result-card', variant === 'win-result');
+  $('#modal-backdrop').classList.toggle('daily-calendar-backdrop', variant === 'daily-calendar');
+  $('#modal-card').classList.toggle('daily-calendar-card', variant === 'daily-calendar');
   $('#modal-backdrop').classList.toggle('win-streak-backdrop', variant === 'win-streak');
   $('#modal-card').classList.toggle('win-streak-card', variant === 'win-streak');
   const settingsVariant = variant === 'settings';
   $('#modal-backdrop').classList.toggle('source-settings-backdrop', settingsVariant);
   $('#modal-card').classList.toggle('source-settings-card-shell', settingsVariant);
   modalTitle.textContent = title;
+  modalTitle.classList.toggle('visually-hidden', variant === 'daily-calendar');
   modalKicker.textContent = kicker;
   modalContent.innerHTML = html;
   modalBackdrop.classList.remove('hidden');
   document.body.classList.add('modal-open');
   if (variant === 'win-result') modalContent.querySelector('[data-modal-action="new"]')?.focus();
   else if (variant === 'win-streak') modalContent.querySelector('[data-modal-action="continue"]')?.focus();
+  else if (variant === 'daily-calendar') $('#modal-close').focus();
   else $('#modal-close').focus();
 }
 
@@ -808,30 +812,29 @@ function showDailyCalendar(selectedDate = game.state.challenge || localDateKey(n
       const isSelected = key === selectedDate;
       const isToday = key === localDateKey(today);
       const future = dateFromKey(key) > new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      return `<button type="button" class="calendar-day${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}${complete ? ' completed' : ''}" data-daily-date="${key}" aria-label="${dateLabel(key)}${complete ? ', completed' : ''}" aria-pressed="${isSelected}" ${future ? 'disabled' : ''}><span>${day}</span>${complete ? '<i aria-hidden="true">♛</i>' : ''}</button>`;
+      return `<button type="button" class="calendar-day${isSelected ? ' selected' : ''}${isToday ? ' today' : ''}${complete ? ' completed' : ''}" data-daily-date="${key}" aria-label="${dateLabel(key)}${complete ? ', completed' : ''}" aria-pressed="${isSelected}" ${future ? 'disabled' : ''}>${complete ? '<img src="/assets/ui/daily-calendar-completed-crown-reference.png" alt="" aria-hidden="true">' : `<span>${day}</span>`}</button>`;
     }),
   ].join('');
-  const rewardCells = milestones.map((target, index) => `<div class="daily-reward${completedThisMonth >= target ? ' earned' : ''}" aria-label="${target} daily wins reward${completedThisMonth >= target ? ', earned' : ''}"><span aria-hidden="true">${['♛', '♨', '✦', '♛'][index]}</span><small>${target}</small></div>`).join('');
+  const rewardAssets = ['crown', 'bronze', 'silver', 'gold'];
+  const rewardCells = milestones.map((target, index) => `<div class="daily-reward${completedThisMonth >= target ? ' earned' : ''}" aria-label="${target} daily wins reward${completedThisMonth >= target ? ', earned' : ''}"><img src="/assets/ui/daily-reward-${rewardAssets[index]}-reference.png" alt=""><small>${index === 0 ? `${selected.getDate()}/${daysInMonth}` : target}</small></div>`).join('');
   const nextMonth = new Date(month.getFullYear(), month.getMonth() + 1, 1);
   const nextDisabled = nextMonth > new Date(today.getFullYear(), today.getMonth(), 1);
-  setModal('Daily Challenge', 'A NEW DEAL EVERY DAY', `
+  setModal('Daily challenge', '', `
     <section class="daily-calendar" data-month="${monthKey}" data-selected-date="${selectedDate}" aria-label="Daily challenge calendar">
       <div class="calendar-heading">
         <button type="button" class="calendar-nav" data-calendar-month="-1" aria-label="Previous month">‹</button>
-        <strong>${new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(month)}</strong>
+        <strong>${new Intl.DateTimeFormat(undefined, { month: 'long' }).format(month)}</strong>
         <button type="button" class="calendar-nav" data-calendar-month="1" aria-label="Next month" ${nextDisabled ? 'disabled' : ''}>›</button>
       </div>
       <div class="calendar-weekdays" aria-hidden="true">${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => `<span>${day}</span>`).join('')}</div>
       <div class="calendar-grid">${dayCells}</div>
-      <div class="daily-progress" aria-label="${completedThisMonth} of ${daysInMonth} challenges completed this month">
-        <div class="daily-progress-label"><span>Monthly progress</span><b>${completedThisMonth} / ${daysInMonth}</b></div>
-        <div class="daily-progress-track"><span style="width:${Math.min(100, completedThisMonth / daysInMonth * 100)}%"></span></div>
+      <div class="daily-rewards-tray" id="daily-rewards-tray" aria-label="Monthly rewards, ${completedThisMonth} of ${daysInMonth} daily challenges complete">
         <div class="daily-rewards">${rewardCells}</div>
       </div>
-      <p class="daily-selected-date">Selected challenge <b>${dateLabel(selectedDate)}</b></p>
-      <div class="modal-actions"><button class="primary-action" type="button" data-modal-action="play-daily">Play</button></div>
+      <button class="daily-calendar-play" type="button" data-modal-action="play-daily" aria-label="Play"><img src="/assets/ui/daily-calendar-play-reference.png" alt=""><span class="visually-hidden">Play</span></button>
+      <button class="daily-calendar-rewards-button" type="button" aria-label="Monthly rewards"><img src="/assets/ui/daily-calendar-rewards-button-reference.png" alt=""></button>
     </section>
-  `);
+  `, 'daily-calendar');
 }
 
 function showMoreOptions() {
