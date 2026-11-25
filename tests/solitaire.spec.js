@@ -398,6 +398,8 @@ async function runSourceOpeningReplay(page) {
   const sourceOpeningArtHashes = await page.evaluate(async () => Promise.all([
     '4-of-clubs-reference.png', '6-of-clubs-reference.png', '2-of-clubs-reference.png',
     '3-of-clubs-reference.png', 'queen-of-clubs-reference.png', '9-of-diamonds-reference.png',
+    '5-of-diamonds-reference.png', 'queen-of-spades-reference.png',
+    'king-of-diamonds-reference.png', 'jack-of-diamonds-reference.png',
   ].map(async (name) => {
     const response = await fetch(`/assets/cards/${name}`);
     const digest = await crypto.subtle.digest('SHA-256', await response.arrayBuffer());
@@ -410,6 +412,10 @@ async function runSourceOpeningReplay(page) {
     'a54a4aedea42aea3e038b65517b4e0dd2584ab1eb035945d49d44a1da5539c5e',
     '5713c1e95398cfef3c997cc4aa6b59a8a2781ecbf96e65730f929a58745019f1',
     'b4fd3c038e2079f1c870bf1f44149441a08586e2e1a3cc140e7aaccb53adf641',
+    '67985e657e216dd656d95b0858caf7d8b612b3f6705d175653eddca14a835bb4',
+    'b8cd93f39439f2f482c1fc2e4f3f457659197ad2c75c852d6b131933f5f4d745',
+    '89e59ecf6e1b61cf7c7d16ac877d4f0e0127be927cd76287dd6fc1c6aa23dbbc',
+    'd63420ba5a2354a81cb77ca639d6bc196fb60aeb535ed8e255f88e227795b9e9',
   ]);
   await page.waitForTimeout(1000);
   await page.evaluate(() => {
