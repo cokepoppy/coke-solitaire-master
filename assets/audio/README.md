@@ -15,3 +15,13 @@ The app plays this source-matched cue for combo 4 on a foundation placement, wit
 `foundation-reference.wav` is a 0.82-second, 44.1 kHz stereo PCM crop from the same mixed recording, at 60.980–61.800 seconds, with an 8 ms edge fade. The SHA-256 is `9867cc3463d2d5fca5df6791225d2516e641965d9e033ebf093edbdffb22223d`. The source shows the second Ace entering the foundation at 60.7 seconds, then a flare over it at 61.0 seconds; the audio transient starts at 60.99 seconds and has maximum normalized correlation 0.058 with the move sample. The browser schedules this sample 0.29 seconds after the foundation action to align its onset with that later flare. It remains a mixed third-party reference cue, not an isolated original stem. Recreate the crop with `python3 tools/extract_audio_reference.py /tmp/solitaire-master-reference-full.wav assets/audio/foundation-reference.wav --start 60.980 --end 61.800 --fade-ms 8`.
 
 `win-reference.wav` is a 2.14-second stereo crop at 308.180–310.320 seconds, with an 8 ms edge fade and SHA-256 `d74b47bb6a69181f6b43f4067dac1bfef5d1cc5501b4712e3f17cb14221d4cf6`. Its start coincides with the first clear RMS event during the source's final card-clear/result sequence; the crop spans the source result appearing by 309 seconds. The app uses it for the win cue and preserves the sample level in Web Audio. This is a candidate excerpt from a mixed gameplay recording, not an isolated win sound master. Recreate it with `python3 tools/extract_audio_reference.py /tmp/solitaire-master-reference-full.wav assets/audio/win-reference.wav --start 308.180 --end 310.320 --fade-ms 8`.
+
+`auto-collect-reference.wav` is a 2.20-second stereo event crop from 301.000–303.200 seconds, with an 8 ms edge fade and SHA-256 `93bc8de72dc0d4abc1833e87015eadba8e9069e26fe8e4334c7b4687d7f395bd`. It spans the source's rapid automatic foundation sweep. Waveform similarity against the move, foundation, and win references peaks at 0.262, 0.330, and 0.095, respectively, so the clip is kept as one event-level cue rather than assigned to each card. The mobile version plays it once when auto collection starts; the win sample plays when the result transition begins. This remains a mixed third-party recording crop, not an isolated sound effect. Recreate it with:
+
+```sh
+python3 tools/extract_audio_window.py research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 \
+  --start 300.700 --end 303.500 --output /tmp/solitaire-audio-autocollect.wav \
+  --url 'https://www.youtube.com/watch?v=gLd0HXtDt5I'
+python3 tools/extract_audio_reference.py /tmp/solitaire-audio-autocollect.wav \
+  assets/audio/auto-collect-reference.wav --start 0.300 --end 2.500 --fade-ms 8
+```
