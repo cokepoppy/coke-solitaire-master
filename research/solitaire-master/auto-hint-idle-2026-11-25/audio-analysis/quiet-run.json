@@ -1,0 +1,14 @@
+{
+  "window_count": 650,
+  "window_hop_seconds": 0.01999999999998181,
+  "thresholds": [
+    {
+      "rms_lte": 0.0001,
+      "window_count": 593,
+      "fraction": 0.9123076923076923,
+      "longest_run_seconds": 11.49999999998954,
+      "longest_run_start_seconds": 636.18,
+      "longest_run_end_exclusive_seconds": 647.6799999999895
+    }
+  ]
+}

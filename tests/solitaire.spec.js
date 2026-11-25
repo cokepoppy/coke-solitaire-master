@@ -1260,7 +1260,8 @@ test('auto collect sweeps visible cards into foundations after the final move', 
   expect(await page.evaluate(() => window.autoActionCues.at(-1))).toBe('win');
 });
 
-test('auto hints suggest a move after idle; manual hints remain available when auto hints are off', async ({ page }) => {
+test('source-bounded auto hints wait through a long idle; manual hints remain available when disabled', async ({ page }) => {
+  await page.clock.install();
   await page.goto('/');
   await page.evaluate(() => {
     const game = window.solitaireGame;
@@ -1275,7 +1276,11 @@ test('auto hints suggest a move after idle; manual hints remain available when a
     game.save();
   });
   await page.reload();
-  await expect(page.locator('.card-face.is-hint')).toHaveCount(1, { timeout: 7000 });
+  await page.clock.fastForward(2_000);
+  await page.clock.fastForward(11_500);
+  await expect(page.locator('.card-face.is-hint')).toHaveCount(0);
+  await page.clock.fastForward(600);
+  await expect(page.locator('.card-face.is-hint')).toHaveCount(1);
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
   await page.getByRole('switch', { name: 'Auto Hints' }).click();
@@ -1433,7 +1438,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v53');
+  expect(cacheNames).toContain('solitaire-master-v54');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

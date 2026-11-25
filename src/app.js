@@ -83,6 +83,7 @@ let autoHintTimer = null;
 let autoCollectTimer = null;
 let autoCollectRunning = false;
 
+const AUTO_HINT_DELAY_MS = 12_000;
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const CARD_BACK_FILES = {
@@ -403,7 +404,7 @@ function scheduleAutoHint() {
     autoHintTimer = null;
     if (!game.state.autoHints || game.state.won || game.state.hint || game.state.selected || drag || autoCollectRunning || !modalBackdrop.classList.contains('hidden')) return;
     if (game.hintMove()) render();
-  }, 5000);
+  }, AUTO_HINT_DELAY_MS);
 }
 
 function cancelAutoCollect() {
