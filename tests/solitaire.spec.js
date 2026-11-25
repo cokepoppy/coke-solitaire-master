@@ -489,6 +489,35 @@ test.describe('source-sized visual comparison', () => {
     await expect(page.locator('#modal-title')).toHaveText('How to play');
     await expect(page.getByText('Build the foundations')).toBeVisible();
   });
+
+});
+
+test.describe('source-sized face gallery', () => {
+  test.use({ viewport: { width: 442, height: 960 }, deviceScaleFactor: 2 });
+
+  test('five face-style preview strips align to the 325-second source frame', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Game menu' }).click();
+    await page.getByRole('button', { name: 'Settings and themes' }).click();
+    await page.getByRole('button', { name: 'Themes' }).click();
+    await page.getByRole('button', { name: 'Card faces' }).click();
+    await page.locator('.theme-gallery').evaluate(async (element) => {
+      await Promise.all(element.getAnimations({ subtree: true }).map((animation) => animation.finished.catch(() => {})));
+    });
+    await expect.poll(() => page.locator('.face-tile img').evaluateAll((images) => images.length === 5 && images.every((image) => image.complete && image.naturalWidth === 607 && image.naturalHeight === 197))).toBe(true);
+    const sourcePixelRects = await page.locator('.face-tile img').evaluateAll((images) => images.map((image) => {
+      const rect = image.getBoundingClientRect();
+      return [rect.x * devicePixelRatio, rect.y * devicePixelRatio, rect.width * devicePixelRatio, rect.height * devicePixelRatio];
+    }));
+    expect(sourcePixelRects).toEqual([
+      [139, 554, 607, 197],
+      [139, 809, 607, 197],
+      [139, 1063, 607, 197],
+      [139, 1318, 607, 197],
+      [139, 1574, 607, 197],
+    ]);
+    await page.screenshot({ path: 'test-results/theme-face-gallery-source.png' });
+  });
 });
 
 test('reference card illustrations render on matching cards', async ({ page }) => {
@@ -749,7 +778,14 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
 
   await page.getByRole('button', { name: 'Card faces' }).click();
   await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-faces-reference.png');
-  await expect(page.locator('.face-tile')).toHaveCount(2);
+  await expect(page.locator('.face-tile')).toHaveCount(5);
+  await expect.poll(() => page.locator('.face-tile img').evaluateAll((images) => images.length === 5 && images.every((image) => image.complete && image.naturalWidth === 607 && image.naturalHeight === 197))).toBe(true);
+  await page.locator('.face-tile[data-value="style-3"]').click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'style-3');
+  await expect(page.locator('.face-tile[data-value="style-3"]')).toHaveAttribute('aria-pressed', 'true');
+  await page.locator('.face-tile[data-value="style-5"]').click();
+  await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'style-5');
+  await expect(page.locator('.face-tile[data-value="style-5"]')).toHaveAttribute('aria-pressed', 'true');
   await page.getByRole('button', { name: 'Classic card faces' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'classic');
   await expect(page.locator('.card-face-art').first()).toHaveAttribute('src', /\.svg$/);
@@ -1302,7 +1338,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v47');
+  expect(cacheNames).toContain('solitaire-master-v48');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1438,6 +1474,12 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     { ok: true, width: 884, height: 156, expectedWidth: 884, expectedHeight: 156 },
     { ok: true, width: 884, height: 156, expectedWidth: 884, expectedHeight: 156 },
   ]);
+  const offlineFaceGalleryArt = await page.evaluate(async () => Promise.all([1, 2, 3, 4, 5].map(async (style) => {
+    const response = await fetch(`/assets/ui/theme-face-style-${style}-reference.png`);
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, width: image.width, height: image.height };
+  })));
+  expect(offlineFaceGalleryArt).toEqual(Array(5).fill({ ok: true, width: 607, height: 197 }));
   const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
     const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';

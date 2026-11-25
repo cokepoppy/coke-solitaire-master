@@ -231,7 +231,7 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .drop-target.is-moveable { outline: 2px solid rgba(73,239,155,.95); outline-offset: 2px; border-radius: 8px; filter: drop-shadow(0 0 7px rgba(58,245,151,.74)); }
 .card-back { position: absolute; left: 0; top: var(--card-offset, 0); border: 1px solid rgba(255,255,255,.86); background: #f5eee0; }
 .card-back.source-card-back { border: 0; background: transparent; box-shadow: none; }
-.source-card-back .card-back-underlay, .source-card-back .card-back-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
+.source-card-back .card-back-underlay, .source-card-back .card-back-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; }
 .stock-count.source-stock-count { bottom: calc(var(--card-height) * .045); left: calc(var(--card-width) * .04); width: calc(var(--card-width) * .3); height: calc(var(--card-height) * .135); min-width: 0; padding: 0; border-radius: 0; background: #21171a; font-size: clamp(8px, 2.4vw, 11px); }
 .stock-count.source-stock-count-baked { color: transparent; text-shadow: none; background: transparent; }
 .drag-ghost { position: fixed; z-index: 1000; width: var(--card-width); height: var(--card-height); pointer-events: none; filter: drop-shadow(0 13px 18px rgba(0,0,0,.42)); }
@@ -478,7 +478,8 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .gallery-tabs .tab-card-back { width: 29px; height: 37px; border: 2px solid currentColor; border-radius: 3px; font-size: 22px; }
 .gallery-grid { display: grid; grid-auto-rows: max-content; justify-content: center; align-content: start; gap: 22px 18px; padding: 12px min(10vw, 46px) 24px; }
 .back-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.background-grid, .face-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 24px; }
+.background-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 24px; }
+.face-grid { grid-template-columns: 1fr; justify-items: center; gap: 29px; padding: 30px 0 24px; }
 .gallery-tile { position: relative; min-width: 0; padding: 0; overflow: hidden; border: 2px solid #c9c7cd; border-radius: 9px; background: #faf9fc; box-shadow: 0 2px 3px rgba(28,27,33,.2); cursor: pointer; }
 .gallery-tile.chosen { border: 4px solid #14d526; box-shadow: 0 0 0 1px rgba(20,213,38,.3), 0 2px 4px rgba(28,27,33,.25); }
 .back-tile { aspect-ratio: 2 / 3; }
@@ -488,9 +489,12 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .background-tile { aspect-ratio: 1; }
 .background-tile > span { display: block; width: 100%; height: 100%; }
 .gallery-tile > i { position: absolute; right: -1px; bottom: -1px; display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; color: #fff; background: #10d323; font-size: 20px; font-style: normal; font-weight: 800; box-shadow: 0 1px 4px rgba(0,0,0,.22); }
-.face-tile { display: flex; min-height: 172px; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: #35353b; font-size: 11px; font-weight: 600; }
-.face-tile img { display: block; width: 62px; height: 94px; }
-.face-tile > span { padding-bottom: 8px; }
+.face-tile { width: 68.66516vw; max-width: calc(100vw - 36px); aspect-ratio: 607 / 197; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.face-tile:nth-child(3), .face-tile:nth-child(4) { transform: translateY(-.5px); }
+.face-tile.chosen { border: 0; box-shadow: none; }
+.face-tile > img { display: block; width: 100%; height: 100%; object-fit: fill; transform: translateX(.25px); }
+.face-tile.chosen::before { position: absolute; z-index: 1; inset: -3px; border: 3px solid #14d526; border-radius: 10px; content: ''; pointer-events: none; }
+.face-tile.chosen > i { z-index: 2; right: -7px; bottom: -7px; }
 .theme-gallery-launch { width: 100%; margin-top: 2px; }
 .modal-footnote { margin-top: 15px; color: #97ad9c; font-size: 9px; text-align: center; }
 .modal-description { margin: -7px 0 20px; color: #c5d0c4; font-size: 12px; line-height: 1.55; }
