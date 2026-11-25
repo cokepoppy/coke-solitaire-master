@@ -1,0 +1,136 @@
+{
+  "crop" : {
+    "height" : 550,
+    "width" : 884,
+    "x" : 0,
+    "y" : 1050
+  },
+  "frame_count" : 14,
+  "frame_hash_type" : "SHA-256 of the saved PNG file bytes",
+  "frames" : [
+    {
+      "actual_seconds" : 9,
+      "filename" : "frame-00000-req-009.000000-pts-138240.png",
+      "index" : 0,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 9,
+      "source_pts" : 138240
+    },
+    {
+      "actual_seconds" : 10,
+      "filename" : "frame-00001-req-010.000000-pts-153600.png",
+      "index" : 1,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 10,
+      "source_pts" : 153600
+    },
+    {
+      "actual_seconds" : 11,
+      "filename" : "frame-00002-req-011.000000-pts-168960.png",
+      "index" : 2,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 11,
+      "source_pts" : 168960
+    },
+    {
+      "actual_seconds" : 12,
+      "filename" : "frame-00003-req-012.000000-pts-184320.png",
+      "index" : 3,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 12,
+      "source_pts" : 184320
+    },
+    {
+      "actual_seconds" : 13,
+      "filename" : "frame-00004-req-013.000000-pts-199680.png",
+      "index" : 4,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 13,
+      "source_pts" : 199680
+    },
+    {
+      "actual_seconds" : 14,
+      "filename" : "frame-00005-req-014.000000-pts-215040.png",
+      "index" : 5,
+      "png_sha256" : "2311de50028bb0bedcdf9e123c26e3ccda24f152d2ddb6d3d385db720b93b866",
+      "requested_seconds" : 14,
+      "source_pts" : 215040
+    },
+    {
+      "actual_seconds" : 15,
+      "filename" : "frame-00006-req-015.000000-pts-230400.png",
+      "index" : 6,
+      "png_sha256" : "7f28a36667f555e59337cab8a401f3bcc41785c76ab9e5f891b3741755a64609",
+      "requested_seconds" : 15,
+      "source_pts" : 230400
+    },
+    {
+      "actual_seconds" : 16,
+      "filename" : "frame-00007-req-016.000000-pts-245760.png",
+      "index" : 7,
+      "png_sha256" : "92dc4e87c613f955fee1e6d68f15e3a925b32d71aaa7f296e4ab78cc4d42ae22",
+      "requested_seconds" : 16,
+      "source_pts" : 245760
+    },
+    {
+      "actual_seconds" : 17,
+      "filename" : "frame-00008-req-017.000000-pts-261120.png",
+      "index" : 8,
+      "png_sha256" : "7f7f12a940de30572c125d8cbe793c47768d8c3d4991a9d37e0c03223f8bb92d",
+      "requested_seconds" : 17,
+      "source_pts" : 261120
+    },
+    {
+      "actual_seconds" : 18,
+      "filename" : "frame-00009-req-018.000000-pts-276480.png",
+      "index" : 9,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 18,
+      "source_pts" : 276480
+    },
+    {
+      "actual_seconds" : 19,
+      "filename" : "frame-00010-req-019.000000-pts-291840.png",
+      "index" : 10,
+      "png_sha256" : "c0cfe97460479018b2769483d189afb8cf12648f821e4e87de1dad49f2b4b5dd",
+      "requested_seconds" : 19,
+      "source_pts" : 291840
+    },
+    {
+      "actual_seconds" : 20,
+      "filename" : "frame-00011-req-020.000000-pts-307200.png",
+      "index" : 11,
+      "png_sha256" : "727008e58f10338a2ccb22ca339feaea09e4e8a4cc4f8140d0d68f5fd5b35245",
+      "requested_seconds" : 20,
+      "source_pts" : 307200
+    },
+    {
+      "actual_seconds" : 21,
+      "filename" : "frame-00012-req-021.000000-pts-322560.png",
+      "index" : 12,
+      "png_sha256" : "d9746b99c5de718738aa49e3d540cf5416c3b4b1964e9d3232f391d72b96630d",
+      "requested_seconds" : 21,
+      "source_pts" : 322560
+    },
+    {
+      "actual_seconds" : 22,
+      "filename" : "frame-00013-req-022.000000-pts-337920.png",
+      "index" : 13,
+      "png_sha256" : "b8551927d49536319331599fc7e1e65cbecc8a3c6cafc37c74ebdbaa6057d26a",
+      "requested_seconds" : 22,
+      "source_pts" : 337920
+    }
+  ],
+  "requested_window_seconds" : {
+    "end" : 22,
+    "start" : 9,
+    "step" : 1
+  },
+  "source_file_name" : "gLd0HXtDt5I.mp4",
+  "source_natural_size" : {
+    "height" : 1920,
+    "width" : 884
+  },
+  "source_sha256" : "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_scale" : 15360
+}

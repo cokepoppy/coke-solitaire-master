@@ -43,14 +43,14 @@ python3 tools/compare_screenshots.py \
 
 | Region | Mean absolute RGB error |
 | --- | ---: |
-| Full image | 5.421620 |
-| Full image with the iOS home indicator masked | 5.020332 |
-| Header | 7.221828 |
-| Foundations and stock | 4.633814 |
-| Tableau | 11.718549 |
-| Empty background | 2.340421 |
-| Bottom controls | 4.755362 |
+| Full image | 4.407988 |
+| Full image with the iOS home indicator masked | 4.006699 |
+| Header | 6.086404 |
+| Foundations and stock | 3.910043 |
+| Tableau | 11.099697 |
+| Empty background | 0.381497 |
+| Bottom controls | 4.502385 |
 
-The default felt action row uses state-matched 844×224 source crops positioned at native scale in this 2× browser viewport; the buttons remain clickable through the pointer-transparent sprites. Its bottom-controls error fell from 14.617496 to 4.755362. An earlier spatial scan found the foundation/stock row one output pixel too low, so `.top-row` was raised by 0.5 CSS px; the source replay checks that foundation coordinate. This reduced foundation/stock error from 6.466442 to 4.633814 and full masked-frame error from 5.319615 to 5.090536. The subsequent tableau-grid adjustment aligns all seven column origins to the source frame. At the 442 CSS-pixel replay width, the card width renders at about 118×177 device pixels, matching the source card crops' native size. The mask covers only the iPhone home indicator visible in the source recording; the Chrome page has no corresponding operating-system element. Source H.264 compression and browser text/image rasterization contribute to the remaining pixel error. This is a measured one-frame comparison, not evidence that every screen, animation, or audio cue is pixel-perfect.
+The default felt action row uses state-matched 844×224 source crops positioned at native scale in this 2× browser viewport; the buttons remain clickable through the pointer-transparent sprites. Its bottom-controls error fell from 14.617496 to 4.502385 after matching the field color. Fourteen exact-time source frames from 9–22 s place the unobstructed felt at RGB `(14,116,65)`; matching that center color reduces empty-background error from 2.340421 to 0.381497, with 92.54% exact RGB matches in that region. The masked full-frame error falls from 5.020332 to 4.006699 and the full-image error from 5.421620 to 4.407988. The 2× replay also asserts the source origins of all four foundation slots and seven tableau columns. At the 442 CSS-pixel replay width, the card width renders at about 118×177 device pixels, matching the source card crops' native size. The mask covers only the iPhone home indicator visible in the source recording; the Chrome page has no corresponding operating-system element. Source H.264 compression and browser text/image rasterization contribute to the remaining pixel error. This is a measured one-frame comparison, not evidence that every screen, animation, or audio cue is pixel-perfect.
 
-The source menu crop is 72×74 pixels and was previously squeezed into a 72×72 box. It now renders at 36×37 CSS pixels with a half-pixel offset in the 2× source replay. The menu crop remains aligned at its recorded origin; header-region error fell from 7.661925 to 7.221828. The source tableau card origins are `(8, 133, 258, 383, 508, 633, 758)` at 884×1920. The grid now rounds to those same device-pixel origins, reducing tableau error from 11.875565 to 11.718549 and full masked-frame error from 5.053861 to 5.020332. The E2E replay checks the menu origin, menu dimensions, and seven tableau positions. This remains a measured comparison of one static frame.
+The source menu crop is 72×74 pixels and was previously squeezed into a 72×72 box. It now renders at 36×37 CSS pixels with a half-pixel offset in the 2× source replay. The menu crop remains aligned at its recorded origin. The source tableau card origins are `(8, 133, 258, 383, 508, 633, 758)` at 884×1920, and the four empty foundations begin at `(8,429)`, `(133,429)`, `(258,429)`, and `(383,429)`. The E2E replay checks those origins, the menu position and size, and the exact felt gradient color. This remains a measured comparison of one static frame.
