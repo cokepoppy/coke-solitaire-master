@@ -9,36 +9,36 @@
   },
   "rendered": {
     "path": "source-win-result-884x1920.png",
-    "sha256": "6d2eae212b84ef8c60be453e55a4a9d626088c3a0fee40527636cd9bdf5918db"
+    "sha256": "47a130cceb49f301c971ee7669bfaabb415e667fd860eb8d315a4af3e2875213"
   },
   "comparison": {
     "rescaled": false,
     "ignored_rectangles": [],
     "all_pixels": {
-      "mean_absolute_rgb_error": 1.96496,
-      "exact_rgb_pixel_fraction": 0.82067661,
+      "mean_absolute_rgb_error": 1.31884,
+      "exact_rgb_pixel_fraction": 0.86023638,
       "pixel_count": 1697280
     },
     "after_ignored_rectangles": {
-      "mean_absolute_rgb_error": 1.96496,
-      "exact_rgb_pixel_fraction": 0.82067661,
+      "mean_absolute_rgb_error": 1.31884,
+      "exact_rgb_pixel_fraction": 0.86023638,
       "pixel_count": 1697280
     },
     "regions": {
-      "win-banner": {
-        "mean_absolute_rgb_error": 2.153377,
-        "exact_rgb_pixel_fraction": 0.9041257,
-        "pixel_count": 337640
-      },
       "score-best": {
-        "mean_absolute_rgb_error": 15.039702,
-        "exact_rgb_pixel_fraction": 0.2774718,
+        "mean_absolute_rgb_error": 5.793264,
+        "exact_rgb_pixel_fraction": 0.56267857,
         "pixel_count": 106400
       },
       "result-lines": {
-        "mean_absolute_rgb_error": 3.702033,
-        "exact_rgb_pixel_fraction": 0.69315342,
+        "mean_absolute_rgb_error": 3.662592,
+        "exact_rgb_pixel_fraction": 0.70008888,
         "pixel_count": 371280
+      },
+      "win-banner": {
+        "mean_absolute_rgb_error": 0.374213,
+        "exact_rgb_pixel_fraction": 0.95694527,
+        "pixel_count": 337640
       },
       "trophy": {
         "mean_absolute_rgb_error": 1.421022,

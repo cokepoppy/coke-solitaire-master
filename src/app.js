@@ -939,6 +939,7 @@ function showWinResult(newBest) {
   setModal('You win!', '', `
     <div class="win-result" aria-label="You win">
       <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
+      <img class="win-result-score-background" src="/assets/ui/win-result-background-reference.png" alt="">
       <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span><strong>${game.state.score}</strong></div>
       ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
       <p class="win-result-percent"><img src="/assets/ui/win-result-percent-reference.png" alt=""><span class="visually-hidden">You defeated 86% of players!</span></p>

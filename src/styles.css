@@ -550,6 +550,7 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .win-result-card #modal-content { display: grid; width: 100%; height: 100%; place-items: center; }
 .win-result { position: relative; width: min(100vw, 46.0417dvh); max-width: 442px; aspect-ratio: 442 / 960; overflow: hidden; container-type: inline-size; color: #fff; background: #010c19; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
 .win-result-banner { position: absolute; top: 13.5417%; left: 0; display: block; width: 100%; height: auto; pointer-events: none; }
+.win-result-score-background { position: absolute; top: 43.4375%; left: 0; display: block; width: 100%; height: auto; pointer-events: none; }
 .win-result-score { position: absolute; inset: 0; display: block; white-space: nowrap; }
 .win-result-score-label { position: absolute; top: 45.8333%; left: 21.4932%; display: block; width: 20.8145%; height: auto; }
 .win-result-score strong { position: absolute; top: 45.15%; left: 48.224%; color: #ff9b24; font-size: 9.25cqw; font-weight: 700; line-height: 1; text-shadow: 0 2px 0 #9f4811; transform: scale(1.05, 1.25); transform-origin: center center; }

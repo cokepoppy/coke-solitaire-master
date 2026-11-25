@@ -1275,9 +1275,12 @@ test.describe('source-sized win result', () => {
     await expect(page.locator('.win-result-stats')).toContainText('02:13');
     await expect(page.locator('.win-result-stats')).toContainText('121');
     await page.locator('.win-result img').evaluateAll((images) => Promise.all(images.map((image) => image.decode())));
+    await expect(page.locator('.win-result-score-background')).toBeVisible();
+    await expect(page.locator('.win-result-best')).toHaveCount(1);
 
     const sourceRects = {
       '.win-result-banner': [0, 260, 884, 574],
+      '.win-result-score-background': [0, 834, 884, 153],
       '.win-result-score-label': [190, 880, 184, 70],
       '.win-result-best': [678, 838, 117, 118],
       '.win-result-percent > img': [35, 987, 810, 81],
@@ -1424,6 +1427,8 @@ test('win clear sequence advances to the result without input', async ({ page })
     game.state.seconds = 0;
     game.state.challenge = null;
     game.state.won = false;
+    const profile = JSON.parse(localStorage.getItem('solitaire-master-profile-v1') || '{}');
+    localStorage.setItem('solitaire-master-profile-v1', JSON.stringify({ ...profile, bestScore: 999999 }));
     game.save();
   });
   await page.reload();
@@ -1433,6 +1438,8 @@ test('win clear sequence advances to the result without input', async ({ page })
   }
   await expect(page.locator('.win-streak-backdrop')).toBeVisible();
   await expect(page.locator('.win-result-backdrop')).toBeVisible({ timeout: 6000 });
+  await expect(page.locator('.win-result-score-background')).toBeVisible();
+  await expect(page.locator('.win-result-best')).toHaveCount(0);
 });
 
 test('auto collect sweeps visible cards into foundations after the final move', async ({ page }) => {
@@ -1669,7 +1676,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v61');
+  expect(cacheNames).toContain('solitaire-master-v62');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1704,6 +1711,12 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineWinImage).toEqual({ ok: true, type: 'image/png' });
+  const offlineWinBackground = await page.evaluate(async () => {
+    const response = await fetch('/assets/ui/win-result-background-reference.png');
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  });
+  expect(offlineWinBackground).toEqual({ ok: true, type: 'image/png', width: 884, height: 153 });
   const offlineWinSound = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/win-reference.wav');
     return { ok: response.ok, type: response.headers.get('content-type') };

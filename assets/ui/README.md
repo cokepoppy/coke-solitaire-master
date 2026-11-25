@@ -32,6 +32,8 @@ python3 tools/extract_win_result_assets.py /tmp/solitaire-win-source/frame-00000
 python3 tools/extract_win_result_text_assets.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui
 ```
 
+`win-result-background-reference.png` is the 884×153 continuation below the source banner (y=834–987). The score and optional Best badge vary by game, so `tools/extract_win_result_background.py` masks those two live areas and extends the surrounding low-frequency backdrop through them. The source-sized result screen positions this bridge behind the live score and exact label/badge sprites; the bridge is cached for offline play. Rebuild it from the same source frame with `python3 tools/extract_win_result_background.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui/win-result-background-reference.png`.
+
 The crops are included in the service-worker shell cache. Fixed labels are source pixels; score, elapsed time, move count, and local trophy count remain live text/data. Their native-size placement and full-screen comparison are recorded in [the win-result pixel audit](../../research/solitaire-master/win-result-source-pixel-audit-2026-11-26/README.md) and [the frame ledger](../../docs/video-frame-audit.md#observed-win-result). The source shows `86%` and a trophy count of `2` in this one result; the ranking rule is unknown, and the web version uses 86% as the captured label plus a local win count.
 
 `win-streak-trophy-reference.png` uses the same source trophy cropped from the result capture, with the sampled navy removed so it can sit over the animated card fan. Rebuild it with `python3 tools/extract_win_streak_trophy.py assets/ui/win-trophy-reference.png assets/ui/win-streak-trophy-reference.png`.
