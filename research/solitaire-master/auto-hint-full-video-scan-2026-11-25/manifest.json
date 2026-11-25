@@ -1,0 +1,50 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_file_name": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_dimensions": {
+    "width": 884,
+    "height": 1920
+  },
+  "source_nominal_fps": 60,
+  "source_time_scale": 15360,
+  "source_duration_seconds": 1044.06,
+  "scan_date": "2026-11-25",
+  "method": "AVAssetImageGenerator requested exact-time frames; Apple Vision VNRecognizeTextRequest at accurate level, language correction disabled",
+  "sample_window_seconds": {
+    "start": 10,
+    "end": 1042,
+    "step": 4
+  },
+  "ocr_crop_source_pixels": {
+    "x": 740,
+    "y": 296,
+    "width": 120,
+    "height": 90
+  },
+  "sample_count": 259,
+  "readable_count": 230,
+  "blank_count": 29,
+  "longest_readable_same_counter_runs": [
+    {
+      "start_seconds": 442,
+      "end_seconds": 450,
+      "counter": "71",
+      "sample_count": 3
+    },
+    {
+      "start_seconds": 478,
+      "end_seconds": 486,
+      "counter": "84",
+      "sample_count": 3
+    },
+    {
+      "start_seconds": 638,
+      "end_seconds": 646,
+      "counter": "87",
+      "sample_count": 3
+    }
+  ],
+  "source_auto_hint_trigger_observed": false,
+  "inference_limit": "Four-second move-counter OCR is a coarse filter; it cannot prove exact board stability or recover a hint timeout."
+}
