@@ -404,12 +404,12 @@ async function runSourceOpeningReplay(page) {
     return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
   })));
   expect(sourceOpeningArtHashes).toEqual([
-    'dcee976a4570c9a7d11a6e453d8459026f9ed8f8b92b65cae3ad5314f6bb3c7a',
-    '23f0adda1b258b7cbf2f7a50c97cf7d85e91f83e16182209f1886816916468cc',
-    'ec4998abc2b3cbcfd435e3b1b31d4e97520c9d3f71db968260953125f8783224',
-    '8a2782e4521c464c99bed25dba221c7417bd5bfef41052e883ba06a72f173716',
-    'f6fe7ebe952b93ad9354bbe780eddebda8a379cba30c155c3ad893031d7cb700',
-    'f1b22bc4bbf2ff02412e19b44a71a00df7899bb43a7d35a4e49a9518c27bd4a0',
+    '320165c9c9f2c125e8f57adc812a4625a12c0728070c56a0aacb3513131ec421',
+    '1ced65cb8d34fa2c09de38f05bd6a34a9ad7d73879a043cf5515d4e3912b53e5',
+    '197f38a607e628ae91a9695ef6c74801e2196179a61b361af5de7a0e14ff7132',
+    'a54a4aedea42aea3e038b65517b4e0dd2584ab1eb035945d49d44a1da5539c5e',
+    '5713c1e95398cfef3c997cc4aa6b59a8a2781ecbf96e65730f929a58745019f1',
+    'b4fd3c038e2079f1c870bf1f44149441a08586e2e1a3cc140e7aaccb53adf641',
   ]);
   await page.waitForTimeout(1000);
   await page.evaluate(() => {

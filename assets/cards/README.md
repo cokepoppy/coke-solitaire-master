@@ -64,7 +64,9 @@ All twelve Jack, Queen, and King cards use complete source-frame crops; the same
 
 The 8♥ crop uses source rectangle `(648, 428, 118, 177)` from the 95-second gameplay frame; the full card face is visible in that source frame.
 
-The 6♣, 2♣, 4♣, 3♣, Q♣, and 9♦ use complete crops from the 20-second opening frame at `(133,646)`, `(258,695)`, `(8,732)`, `(508,720)`, `(633,744)`, and `(758,794)`, respectively; each crop is 118×177 pixels. The 6♣ and 2♣ replace App Store crops whose blue-tinted clubs did not match the black artwork. These six visible faces now come from the exact frame used by the opening-board replay.
+The 6♣, 2♣, 4♣, 3♣, Q♣, and 9♦ use complete crops from the 20-second opening frame at `(133,646)`, `(258,695)`, `(8,732)`, `(508,720)`, `(633,744)`, and `(758,794)`, respectively; each crop is 118×177 pixels. The 6♣ and 2♣ replace App Store crops whose blue-tinted clubs did not match the black artwork. These six visible faces come from the exact frame used by the opening-board replay.
+
+For the 884×1920 replay comparison, these six PNGs are cropped from the AVFoundation frame at PTS 307200, then tagged with the sRGB ICC profile using `sips -e` without changing their RGB channel values. This avoids an extra color conversion in Chrome: the refreshed assets match the source-frame crop byte-for-byte at the pixel level, and the tableau MAE falls from 11.099697 to 10.737537. The source frame is `frame-00000-req-020.000000-pts-307200.png` in `/tmp/solitaire-source-20s`; its SHA-256 is recorded in the [visual comparison](../../research/solitaire-master/source-opening-visual-match-2026-11-25/README.md).
 
 On macOS, `sips -c 177 118 --cropOffset Y X source-frame.png --out card-reference.png` reproduces a 118×177 crop without resampling; replace `Y` and `X` with the documented source origin.
 

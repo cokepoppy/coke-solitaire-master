@@ -120,7 +120,7 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v59');
+    const shell = await caches.open('solitaire-master-solitaire-v60');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const protectedCache = await caches.open('another-game-cache');
     const protectedEntry = await protectedCache.match(`${location.origin}/another-game-shell`);
@@ -140,7 +140,7 @@ try {
   assert.equal(worker.shellPageCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v59'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v60'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);
