@@ -778,7 +778,7 @@ test('foundation placements show source feedback and sound only at observed comb
   const tiers = [
     { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good', width: 244, actionCues: [{ cue: 'good', delaySeconds: 0 }] },
     { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great', width: 244, actionCues: [{ cue: 'foundation', delaySeconds: 0 }, { cue: 'great', delaySeconds: 0.7 }] },
-    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520, actionCues: [{ cue: 'foundation', delaySeconds: 0 }, { cue: 'amazing', delaySeconds: 0 }] },
+    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520, actionCues: [{ cue: 'foundation', delaySeconds: 0 }, { cue: 'amazing', delaySeconds: 0.5 }] },
   ];
   for (const tier of tiers) {
     await page.evaluate((targetCombo) => {
@@ -1137,6 +1137,7 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
       if (buffer === audio.referenceAmazingBuffer) {
         window.referenceAmazingSamplePlayed = true;
         window.referenceAmazingSampleGain = args[1];
+        window.referenceAmazingSampleOffset = args[0] - audio.context.currentTime;
       }
       if (buffer === audio.referenceGreatBuffer) {
         window.referenceGreatSamplePlayed = true;
@@ -1178,10 +1179,12 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   const goodOutputGain = await page.evaluate(() => window.referenceGoodSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(goodOutputGain).toBeCloseTo(1, 5);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAmazingBuffer?.duration)).toBeGreaterThan(0.95);
-  await page.evaluate(() => window.solitaireAudio.play('amazing'));
+  await page.evaluate(() => window.solitaireAudio.play('amazing', 0.5));
   await expect.poll(() => page.evaluate(() => window.referenceAmazingSamplePlayed)).toBe(true);
   const amazingOutputGain = await page.evaluate(() => window.referenceAmazingSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(amazingOutputGain).toBeCloseTo(1, 5);
+  const amazingOffset = await page.evaluate(() => window.referenceAmazingSampleOffset);
+  expect(amazingOffset).toBeCloseTo(0.5, 1);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceGreatBuffer?.duration)).toBeCloseTo(0.5, 2);
   await page.evaluate(() => window.solitaireAudio.play('great', 0.7));
   await expect.poll(() => page.evaluate(() => window.referenceGreatSamplePlayed)).toBe(true);
