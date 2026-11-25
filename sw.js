@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v52';
+const CACHE = 'solitaire-master-v53';
 const CACHE_PREFIX = 'solitaire-master-v';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
@@ -65,7 +65,7 @@ const actionIcons = ['/assets/ui/action-play-plus.png', '/assets/ui/action-magic
 const actionRowReferences = ['/assets/ui/action-row-initial-reference.png', '/assets/ui/action-row-used-reference.png'];
 const settingsSourceAssets = ['/assets/ui/settings-switch-on-reference.png', '/assets/ui/settings-switch-off-reference.png', '/assets/ui/settings-draw-mode-1-reference.png'];
 const themeGalleryAssets = ['/assets/ui/theme-gallery-header-reference.png', '/assets/ui/theme-gallery-tabs-backgrounds-reference.png', '/assets/ui/theme-gallery-tabs-faces-reference.png', '/assets/ui/theme-gallery-tabs-backs-reference.png'];
-const themeBackgroundGalleryAssets = ['lagoon', 'emerald', 'mountain', 'felt', 'midnight', 'plum', 'forest', 'violet'].map((theme) => `/assets/themes/theme-background-${theme}-reference.png`);
+const themeBackgroundGalleryAssets = ['lagoon', 'emerald', 'mountain', 'felt', 'midnight', 'plum', 'forest', 'violet', 'green-9', 'green-10', 'green-11'].map((theme) => `/assets/themes/theme-background-${theme}-reference.png`);
 const themeFaceGalleryAssets = [1, 2, 3, 4, 5].map((style) => `/assets/ui/theme-face-style-${style}-reference.png`);
 const foundationSlots = ['/assets/ui/foundation-empty-1.png', '/assets/ui/foundation-empty-2.png', '/assets/ui/foundation-empty-3.png', '/assets/ui/foundation-empty-4.png'];
 const statusBarIcons = ['/assets/ui/menu-source.png', '/assets/ui/stat-crown.png', '/assets/ui/stat-moves.png'];

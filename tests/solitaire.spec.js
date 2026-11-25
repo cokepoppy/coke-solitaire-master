@@ -560,7 +560,7 @@ test.describe('source-sized background gallery', () => {
     await page.locator('.theme-gallery').evaluate(async (element) => {
       await Promise.all(element.getAnimations({ subtree: true }).map((animation) => animation.finished.catch(() => {})));
     });
-    await expect.poll(() => page.locator('.background-tile img').evaluateAll((images) => images.length === 8 && images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+    await expect.poll(() => page.locator('.background-tile img').evaluateAll((images) => images.length === 11 && images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
 
     const sourcePixelRects = await page.locator('.background-tile').evaluateAll((tiles) => tiles.slice(0, 8).map((tile) => {
       const rect = tile.getBoundingClientRect();
@@ -576,6 +576,31 @@ test.describe('source-sized background gallery', () => {
       expect(Math.abs(value - expected[index][axis])).toBeLessThanOrEqual(axis === 0 && index % 2 === 1 ? 2 : 2);
     }));
     await page.screenshot({ path: 'test-results/theme-background-gallery-source.png' });
+
+    const lowerGallery = await page.locator('#modal-content').evaluate((content) => {
+      content.scrollTop = content.scrollHeight;
+      const title = document.querySelector('.theme-gallery-title').getBoundingClientRect();
+      const tabs = document.querySelector('.gallery-tabs').getBoundingClientRect();
+      const lowerTiles = ['green-9', 'green-10', 'green-11'].map((theme) => {
+        const rect = document.querySelector(`[data-value="${theme}"]`).getBoundingClientRect();
+        return [Math.round(rect.x * devicePixelRatio), Math.round(rect.y * devicePixelRatio), Math.round(rect.width * devicePixelRatio), Math.round(rect.height * devicePixelRatio)];
+      });
+      return {
+        titleBottom: Math.round(title.bottom),
+        tabsTop: Math.round(tabs.top),
+        tiles: lowerTiles,
+        scrollTop: content.scrollTop,
+      };
+    });
+    expect(lowerGallery.tabsTop).toBe(lowerGallery.titleBottom);
+    expect(lowerGallery.scrollTop).toBeGreaterThan(0);
+    const expectedLowerRects = [[108, 1083, 306, 306], [469, 1083, 306, 306], [108, 1452, 306, 306]];
+    lowerGallery.tiles.forEach((actual, index) => actual.forEach((value, axis) => {
+      expect(Math.abs(value - expectedLowerRects[index][axis])).toBeLessThanOrEqual(2);
+    }));
+    await page.getByRole('button', { name: 'Green 11 background' }).click();
+    await expect(page.locator('body')).toHaveAttribute('data-theme', 'green-11');
+    await expect(page.locator('[data-value="green-11"]')).toHaveAttribute('aria-pressed', 'true');
   });
 });
 
@@ -812,8 +837,8 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await page.getByRole('button', { name: 'Settings and themes' }).click();
   await page.getByRole('button', { name: 'Themes' }).click();
   await expect(page.getByRole('dialog', { name: 'Themes' })).toBeVisible();
-  await expect(page.locator('.background-tile')).toHaveCount(9);
-  await expect(page.locator('.background-tile img')).toHaveCount(8);
+  await expect(page.locator('.background-tile')).toHaveCount(11);
+  await expect(page.locator('.background-tile img')).toHaveCount(11);
   await expect.poll(() => page.locator('.background-tile img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
   await expect(page.locator('.theme-gallery')).toHaveCSS('height', `${await page.evaluate(() => window.innerHeight)}px`);
   await expect(page.locator('.theme-gallery-title')).toHaveCSS('background-image', /theme-gallery-header-reference\.png/);
@@ -1408,7 +1433,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v52');
+  expect(cacheNames).toContain('solitaire-master-v53');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1432,6 +1457,12 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
+  const offlineLowerThemeImage = await page.evaluate(async () => {
+    const response = await fetch('/assets/themes/theme-background-green-11-reference.png');
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  });
+  expect(offlineLowerThemeImage).toEqual({ ok: true, type: 'image/png', width: 298, height: 298 });
   const offlineWinImage = await page.evaluate(async () => {
     const response = await fetch('/assets/ui/win-banner-reference.png');
     return { ok: response.ok, type: response.headers.get('content-type') };
@@ -1548,6 +1579,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   const offlineBackgroundGalleryArt = await page.evaluate(async () => Promise.all([
     ['lagoon', 298, 117], ['emerald', 304, 117], ['mountain', 298, 298], ['felt', 298, 293],
     ['midnight', 298, 298], ['plum', 304, 298], ['forest', 298, 298], ['violet', 304, 298],
+    ['green-9', 298, 298], ['green-10', 304, 298], ['green-11', 298, 298],
   ].map(async ([theme, width, height]) => {
     const response = await fetch(`/assets/themes/theme-background-${theme}-reference.png`);
     const image = await createImageBitmap(await response.blob());
@@ -1562,6 +1594,9 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     { ok: true, width: 304, height: 298, expectedWidth: 304, expectedHeight: 298 },
     { ok: true, width: 298, height: 298, expectedWidth: 298, expectedHeight: 298 },
     { ok: true, width: 304, height: 298, expectedWidth: 304, expectedHeight: 298 },
+    { ok: true, width: 298, height: 298, expectedWidth: 298, expectedHeight: 298 },
+    { ok: true, width: 304, height: 298, expectedWidth: 304, expectedHeight: 298 },
+    { ok: true, width: 298, height: 298, expectedWidth: 298, expectedHeight: 298 },
   ]);
   const offlineFaceGalleryArt = await page.evaluate(async () => Promise.all([1, 2, 3, 4, 5].map(async (style) => {
     const response = await fetch(`/assets/ui/theme-face-style-${style}-reference.png`);

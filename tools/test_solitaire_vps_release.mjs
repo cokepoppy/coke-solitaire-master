@@ -90,6 +90,14 @@ try {
   await page.getByRole('button', { name: 'Themes' }).click();
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await page.waitForFunction(() => document.body.dataset.theme === 'mountain');
+  await page.locator('#modal-content').evaluate((content) => { content.scrollTop = content.scrollHeight; });
+  await page.getByRole('button', { name: 'Green 11 background' }).click();
+  await page.waitForFunction(() => document.body.dataset.theme === 'green-11');
+  assert.equal(await page.locator('[data-value="green-11"] img').getAttribute('src'), '/solitaire/assets/themes/theme-background-green-11-reference.png');
+  await page.waitForFunction(() => {
+    const image = document.querySelector('[data-value="green-11"] img');
+    return image?.complete && image.naturalWidth === 298 && image.naturalHeight === 298;
+  });
   await page.getByRole('button', { name: 'Card faces' }).click();
   await page.evaluate(() => {
     window.solitaireGame.state.tableau = [[{ id: 'subpath-sample-10d', rank: 10, suit: '♦', faceUp: true }], [], [], [], [], [], []];
@@ -112,7 +120,7 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v52');
+    const shell = await caches.open('solitaire-master-solitaire-v53');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const protectedCache = await caches.open('another-game-cache');
     const protectedEntry = await protectedCache.match(`${location.origin}/another-game-shell`);
@@ -132,7 +140,7 @@ try {
   assert.equal(worker.shellPageCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v52'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v53'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);

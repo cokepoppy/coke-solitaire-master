@@ -689,7 +689,9 @@ const TABLE_THEMES = [
   ['plum', 'Plum', 'radial-gradient(ellipse at 50% 38%,#67465b,#302031)', 'theme-background-plum-reference.png'],
   ['forest', 'Forest', 'radial-gradient(ellipse at 50% 38%,#14572c,#062f19)', 'theme-background-forest-reference.png'],
   ['violet', 'Violet', 'radial-gradient(ellipse at 50% 38%,#514163,#251c36)', 'theme-background-violet-reference.png'],
-  ['dusk', 'Dusk', 'radial-gradient(ellipse at 50% 38%,#55517a,#162c3a 78%)'],
+  ['green-9', 'Green 9', 'radial-gradient(ellipse at 50% 38%,#2e6f37,#164c24)', 'theme-background-green-9-reference.png'],
+  ['green-10', 'Green 10', 'radial-gradient(ellipse at 50% 38%,#276933,#103e22)', 'theme-background-green-10-reference.png'],
+  ['green-11', 'Green 11', 'radial-gradient(ellipse at 50% 38%,#307036,#16421f)', 'theme-background-green-11-reference.png'],
 ];
 
 function showThemeGallery(tab = 'background') {

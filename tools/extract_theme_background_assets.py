@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract the fully visible background previews from the 323s source frame."""
+"""Extract source background previews from the 323s and scrolled 328.5s frames."""
 
 from __future__ import annotations
 
@@ -20,6 +20,14 @@ PREVIEW_CROPS = {
     "plum": (472, 1047, 776, 1345),
     "forest": (112, 1416, 410, 1714),
     "violet": (472, 1416, 776, 1714),
+}
+
+# The 323 s frame clips the final three tiles. At 328.5 s the list is scrolled
+# and all three lower tiles are visible at source PTS 5,045,760.
+LOWER_PREVIEW_CROPS = {
+    "green-9": (112, 1083, 410, 1381),
+    "green-10": (472, 1083, 776, 1381),
+    "green-11": (112, 1452, 410, 1750),
 }
 
 
@@ -47,6 +55,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source_frame", type=Path)
     parser.add_argument("output_dir", type=Path, nargs="?", default=Path("assets/themes"))
+    parser.add_argument(
+        "--lower-frame",
+        type=Path,
+        help="Optional exact 884x1920 frame at 328.5 s (PTS 5,045,760).",
+    )
     args = parser.parse_args()
 
     source = Image.open(args.source_frame).convert("RGB")
@@ -61,6 +74,16 @@ def main() -> None:
         output = args.output_dir / f"theme-background-{theme}-reference.png"
         tile.save(output, optimize=True)
         print(f"{output}: {tile.width}x{tile.height}")
+
+    if args.lower_frame:
+        lower_source = Image.open(args.lower_frame).convert("RGB")
+        if lower_source.size != (884, 1920):
+            raise SystemExit(f"expected an 884x1920 lower frame, got {lower_source.size}")
+        for theme, bounds in LOWER_PREVIEW_CROPS.items():
+            tile = lower_source.crop(bounds)
+            output = args.output_dir / f"theme-background-{theme}-reference.png"
+            tile.save(output, optimize=True)
+            print(f"{output}: {tile.width}x{tile.height}")
 
 
 if __name__ == "__main__":
