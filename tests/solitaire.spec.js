@@ -1163,7 +1163,34 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
   await expect(page.locator('.win-streak-reward img')).toHaveJSProperty('naturalWidth', 78);
   await expect(page.locator('.win-cascade-card')).toHaveCount(52);
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(3000);
+  const sourceOverlayBounds = await page.evaluate(() => {
+    const textBounds = (element) => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      const { left, top, width, height } = range.getBoundingClientRect();
+      return { left, top, width, height };
+    };
+    return {
+      title: textBounds(document.querySelector('.win-streak-title')),
+      rewardTop: document.querySelector('.win-streak-reward').getBoundingClientRect().top,
+      continue: textBounds(document.querySelector('.win-streak-continue')),
+    };
+  });
+  expect(sourceOverlayBounds.title.width).toBeGreaterThan(285);
+  expect(sourceOverlayBounds.title.width).toBeLessThan(305);
+  expect(sourceOverlayBounds.rewardTop).toBeGreaterThan(320);
+  expect(sourceOverlayBounds.rewardTop).toBeLessThan(331);
+  expect(sourceOverlayBounds.continue.top).toBeGreaterThan(680);
+  expect(sourceOverlayBounds.continue.top).toBeLessThan(701);
+  const fan = await page.locator('.win-cascade-card').evaluateAll((cards) => ({
+    unfinishedAnimations: cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length,
+    firstCard: cards[0].getBoundingClientRect().toJSON(),
+    lastCard: cards.at(-1).getBoundingClientRect().toJSON(),
+  }));
+  expect(fan.unfinishedAnimations).toBe(0);
+  expect(fan.firstCard.left).toBeLessThan(fan.lastCard.left);
+  expect(fan.firstCard.top).toBeGreaterThan(fan.lastCard.top);
   await page.screenshot({ path: 'test-results/mobile-win-streak.png' });
   await page.getByRole('button', { name: 'Tap to Continue' }).click();
   await expect(page.locator('.win-result-backdrop')).toBeVisible();
