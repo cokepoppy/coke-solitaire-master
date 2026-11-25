@@ -87,9 +87,21 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   const deckIntegrity = await page.evaluate(() => {
     const state = window.solitaireGame.state;
     const cards = [...state.stock, ...state.waste, ...state.foundations.flat(), ...state.tableau.flat()];
-    return { total: cards.length, unique: new Set(cards.map((card) => card.id)).size };
+    return {
+      total: cards.length,
+      unique: new Set(cards.map((card) => card.id)).size,
+      tableauLengths: state.tableau.map((pile) => pile.length),
+      topCards: state.tableau.map((pile) => `${pile.at(-1).rank}${pile.at(-1).suit}`),
+      firstStockDraw: state.stock.at(-1).id,
+    };
   });
-  expect(deckIntegrity).toEqual({ total: 52, unique: 52 });
+  expect(deckIntegrity).toEqual({
+    total: 52,
+    unique: 52,
+    tableauLengths: [1, 2, 3, 4, 5, 6, 7],
+    topCards: ['5♦', '12♠', '2♣', '13♦', '11♦', '4♣', '9♦'],
+    firstStockDraw: '♥-6',
+  });
   await page.waitForTimeout(1700);
   await page.screenshot({ path: 'test-results/mobile-home.png', fullPage: true });
 
@@ -104,6 +116,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(stockDrawMotion).toEqual({ active: true, animation: 'card-land', duration: '0.133333s', faceReveal: false });
   await expect(page.locator('.stock-count')).toHaveText('23');
   await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
+  await expect(page.locator('.waste-slot .card-face-art')).toHaveAttribute('src', /6-of-hearts-reference\.png$/);
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('.waste-slot .card-face')).toHaveCount(1);
   const firstDrawFlight = await page.locator('.waste-slot .card-face').first().evaluate((card) => ({
