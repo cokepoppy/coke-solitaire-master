@@ -466,7 +466,7 @@ function scheduleAutoCollect() {
 const FOUNDATION_COMBO_REWARDS = {
   1: { name: 'Good', cue: 'good', className: 'combo-good', eventIncludesFoundation: true },
   2: { name: 'Great', cue: 'great', className: 'combo-great', audioDelaySeconds: 0.7 },
-  4: { name: 'Amazing', cue: 'amazing', className: 'combo-amazing' },
+  4: { name: 'Amazing', cue: 'amazing', className: 'combo-amazing', audioDelaySeconds: 0.5 },
 };
 
 function playFoundationMoveCue() {
