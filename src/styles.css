@@ -501,7 +501,9 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .background-tile-wide { aspect-ratio: 304 / 125; }
 .background-tile > span, .background-tile > img { display: block; width: 100%; height: 100%; object-fit: fill; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .background-grid .background-tile { border-radius: 5px; }
-.background-grid .background-tile > i { width: 32px; height: 32px; }
+.background-grid .background-tile.chosen { overflow: visible; }
+.background-grid .background-tile.chosen > img { border-radius: 2px; }
+.background-grid .background-tile > i { right: -8px; bottom: -6.5px; width: 32px; height: 32px; color: #fff; background: linear-gradient(165deg, #3ad31f 0%, #31c91a 48%, #1da70b 100%); font-size: 24px; }
 .gallery-tile > i { position: absolute; right: -1px; bottom: -1px; display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; color: #fff; background: #10d323; font-size: 20px; font-style: normal; font-weight: 800; box-shadow: 0 1px 4px rgba(0,0,0,.22); }
 .face-tile { width: 68.66516vw; max-width: calc(100vw - 36px); aspect-ratio: 607 / 197; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
 .face-tile:nth-child(3), .face-tile:nth-child(4) { transform: translateY(-.5px); }

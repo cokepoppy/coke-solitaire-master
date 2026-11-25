@@ -651,6 +651,14 @@ test.describe('source-sized background gallery', () => {
     sourcePixelRects.forEach((actual, index) => actual.forEach((value, axis) => {
       expect(Math.abs(value - expected[index][axis])).toBeLessThanOrEqual(axis === 0 && index % 2 === 1 ? 2 : 2);
     }));
+    const selectedCheck = await page.locator('.background-tile.chosen > i').evaluate((icon) => {
+      const rect = icon.getBoundingClientRect();
+      return {
+        rect: [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio)),
+        overflow: getComputedStyle(icon.parentElement).overflow,
+      };
+    });
+    expect(selectedCheck).toEqual({ rect: [720, 924, 64, 64], overflow: 'visible' });
     await page.screenshot({ path: 'test-results/theme-background-gallery-source.png' });
 
     const lowerGallery = await page.locator('#modal-content').evaluate((content) => {
