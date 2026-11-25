@@ -90,6 +90,17 @@ try {
   await page.getByRole('button', { name: 'Themes' }).click();
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await page.waitForFunction(() => document.body.dataset.theme === 'mountain');
+  await page.getByRole('button', { name: 'Card faces' }).click();
+  await page.evaluate(() => {
+    window.solitaireGame.state.tableau = [[{ id: 'subpath-sample-10d', rank: 10, suit: '♦', faceUp: true }], [], [], [], [], [], []];
+  });
+  await page.locator('.face-tile[data-value="style-3"]').click();
+  assert.equal(await page.locator('body').getAttribute('data-card-face-style'), 'style-3');
+  assert.equal(await page.locator('#tableau .card-face-art').first().getAttribute('src'), '/solitaire/assets/cards/face-style-3-10-of-diamonds-reference.png');
+  await page.waitForFunction(() => {
+    const image = document.querySelector('#tableau .card-face-art');
+    return image?.complete && image.naturalWidth === 118 && image.naturalHeight === 177;
+  });
 
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
