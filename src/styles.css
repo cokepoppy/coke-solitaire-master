@@ -445,15 +445,22 @@ body.source-action-row .action-bar .action-button > span:last-child { opacity: 0
 .source-settings-row { display: flex; width: 100%; min-height: 53px; align-items: center; justify-content: space-between; gap: 12px; padding: 0; border: 0; border-bottom: 1px solid #eeeeef; color: #38393e; background: transparent; font: 400 16px/1.2 system-ui, -apple-system, BlinkMacSystemFont, sans-serif; text-align: left; }
 .source-settings-row:last-child { border-bottom: 0; }
 .source-settings-link { cursor: pointer; }
+.source-settings-link[href] { color: inherit; text-decoration: none; }
 .source-settings-link > b { color: #a7a7ad; font-size: 25px; font-weight: 300; line-height: 1; }
 .source-settings-heading { margin: 6px 15px 9px; color: #8c8c93; font: 500 20px/1.2 system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
-.source-switch { display: flex; width: 52px; height: 31px; flex: 0 0 auto; align-items: center; padding: 3px; border: 0; border-radius: 18px; background: #c9c9ce; cursor: pointer; transition: background .16s ease; }
-.source-switch span { display: block; width: 25px; height: 25px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .16s ease; }
-.source-switch.on { background: #28a565; }
-.source-switch.on span { transform: translateX(21px); }
+.source-settings-build { margin: 3px 0 12px; color: #9999a0; font: 400 13px/1.3 system-ui, -apple-system, BlinkMacSystemFont, sans-serif; text-align: center; }
+.source-settings-legal { display: flex; justify-content: center; gap: 24px; padding: 0 0 10px; }
+.source-settings-legal a { color: #29935d; font: 400 13px/1.35 system-ui, -apple-system, BlinkMacSystemFont, sans-serif; text-decoration: none; }
+.source-switch { display: block; width: 61.5px; height: 29px; flex: 0 0 auto; margin-right: 12.25px; padding: 0; border: 0; border-radius: 0; background: transparent; cursor: pointer; }
+.source-switch-reference { display: block; width: 100%; height: 100%; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.source-switch span { display: none; }
 .source-setting-value { margin-left: auto; color: #94949b; font-size: 15px; }
-.source-draw-row { min-height: 59px; }
+.source-draw-row { position: relative; min-height: 59px; }
 .source-draw-options { display: flex; align-items: center; gap: 8px; }
+.source-draw-mode-reference { display: none; }
+body.source-settings-draw-mode .source-draw-row > span:first-child,
+body.source-settings-draw-mode .source-draw-options { opacity: 0; }
+body.source-settings-draw-mode .source-draw-mode-reference { position: absolute; z-index: 2; top: 0; left: 6.5px; display: block; width: 393.5px; height: 52px; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 .source-draw-choice { position: relative; display: flex; width: 74px; height: 38px; align-items: center; justify-content: center; gap: 6px; border: 1px solid #dedee1; border-radius: 22px; color: #888990; background: #f7f7f8; font: 600 16px/1 system-ui, sans-serif; cursor: pointer; }
 .source-draw-choice.selected { border-color: #28a565; color: #fff; background: #28a565; }
 .draw-card-icon { display: inline-block; color: #e35460; font: normal 13px/1 Georgia, serif; transform: rotate(-10deg); }

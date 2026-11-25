@@ -34,3 +34,12 @@ python3 tools/extract_win_result_assets.py /tmp/solitaire-win-source/frame-00000
 The crops are included in the service-worker shell cache. The layout evidence and source-frame hash are recorded in [the win-result audit](../../docs/video-frame-audit.md#observed-win-result). The source shows `86%` and a trophy count of `2` in this one result; the ranking rule is unknown, and the web version uses 86% as the captured label plus a local win count.
 
 `win-streak-trophy-reference.png` uses the same source trophy cropped from the result capture, with the sampled navy removed so it can sit over the animated card fan. Rebuild it with `python3 tools/extract_win_streak_trophy.py assets/ui/win-trophy-reference.png assets/ui/win-streak-trophy-reference.png`.
+
+`settings-switch-on-reference.png` and `settings-switch-off-reference.png` are 123×58 px crops of the Settings switches at PTS 4,915,200 (320 s). `settings-draw-mode-1-reference.png` is a 787×104 px crop of the Draw Mode 1 row from that same frame. At the source-sized 442×960 CSS viewport / 2× density, these retain the original control artwork while accessible live buttons handle taps. The switch image changes with its checked state; the Draw Mode 1 row sprite is shown only while that option is selected. Regenerate them with:
+
+```sh
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 320 320 1 /tmp/solitaire-settings-source
+python3 tools/extract_settings_source_art.py /tmp/solitaire-settings-source/frame-00000-req-320.000000-pts-4915200.png
+```
+
+All three settings crops are included in the service-worker shell cache and are verified by the offline E2E test.
