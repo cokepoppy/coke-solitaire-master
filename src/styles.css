@@ -150,6 +150,8 @@ body[data-theme='felt'] .timer-frame-vector { display: none; }
   touch-action: manipulation;
 }
 
+.game-shell.auto-collecting .board-wrap { pointer-events: none; }
+
 .board-wrap::before {
   content: '';
   position: absolute;

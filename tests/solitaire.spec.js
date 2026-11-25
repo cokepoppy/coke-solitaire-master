@@ -918,6 +918,7 @@ test('winning shows a result card and records a completed daily challenge', asyn
     const suits = ['♠', '♥', '♦', '♣'];
     game.state.stock = [];
     game.state.waste = [];
+    game.state.autoCollect = false;
     game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 13).sort((a, b) => a.rank - b.rank));
     game.state.tableau = [...suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13)]), [], [], []];
     game.state.moves = 184;
@@ -988,6 +989,7 @@ test('win clear sequence advances to the result without input', async ({ page })
     const suits = ['♠', '♥', '♦', '♣'];
     game.state.stock = [];
     game.state.waste = [];
+    game.state.autoCollect = false;
     game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 13).sort((a, b) => a.rank - b.rank));
     game.state.tableau = [...suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13)]), [], [], []];
     game.state.moves = 0;
@@ -1004,6 +1006,59 @@ test('win clear sequence advances to the result without input', async ({ page })
   }
   await expect(page.locator('.win-streak-backdrop')).toBeVisible();
   await expect(page.locator('.win-result-backdrop')).toBeVisible({ timeout: 6000 });
+});
+
+test('auto collect sweeps visible cards into foundations after the final move', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
+    const suits = ['♠', '♥', '♦', '♣'];
+    game.state.stock = [];
+    game.state.waste = [];
+    game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 12).sort((a, b) => a.rank - b.rank));
+    game.state.tableau = suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13), cards.find((card) => card.suit === suit && card.rank === 12)]);
+    game.state.autoCollect = true;
+    game.state.autoHints = false;
+    game.state.won = false;
+    game.state.moves = 0;
+    game.state.score = 0;
+    game.state.seconds = 0;
+    game.save();
+  });
+  await page.reload();
+  const queen = page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]');
+  await queen.click();
+  await queen.click();
+  await expect(page.locator('.win-streak-backdrop')).toBeVisible({ timeout: 4000 });
+  await expect.poll(() => page.evaluate(() => window.solitaireGame.state.foundations.reduce((sum, pile) => sum + pile.length, 0))).toBe(52);
+  await expect(page.locator('#tableau .playing-card')).toHaveCount(0);
+});
+
+test('auto hints suggest a move after idle; manual hints remain available when auto hints are off', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const ace = { ...game.state.seedDeck.find((card) => card.id === '♠-1'), faceUp: true };
+    game.state.stock = [];
+    game.state.waste = [];
+    game.state.foundations = Array.from({ length: 4 }, () => []);
+    game.state.tableau = [[ace], [], [], [], [], [], []];
+    game.state.autoCollect = false;
+    game.state.autoHints = true;
+    game.state.won = false;
+    game.save();
+  });
+  await page.reload();
+  await expect(page.locator('.card-face.is-hint')).toHaveCount(1, { timeout: 7000 });
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('switch', { name: 'Auto Hints' }).click();
+  await expect(page.getByRole('switch', { name: 'Auto Hints' })).toHaveAttribute('aria-checked', 'false');
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await expect(page.locator('.card-face.is-hint')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Hint' }).click();
+  await expect(page.locator('.card-face.is-hint')).toHaveCount(1);
 });
 
 test('the Magic control plays one legal suggestion and undo reverses it', async ({ page }) => {
@@ -1128,7 +1183,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v41');
+  expect(cacheNames).toContain('solitaire-master-v42');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
