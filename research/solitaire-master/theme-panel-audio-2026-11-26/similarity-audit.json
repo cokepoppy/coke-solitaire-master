@@ -8,7 +8,7 @@
   "normalization": "Peak absolute Pearson-style normalized cross-correlation after mono downmix; positive and negative matches are ranked by absolute value.",
   "references": [
     {
-      "file": "theme-gallery-open-reference.wav",
+      "file": "ui-tap-reference.wav",
       "sha256": "e2cd21dd4c307dfcc760dded56f9695b7ebfb4fcd0d913829658b9deb26c003b",
       "channels": 2,
       "duration_seconds": 0.24,
@@ -192,6 +192,6 @@
       ]
     }
   ],
-  "audited_at_utc": "2026-11-25T22:45:05.839564+00:00",
+  "audited_at_utc": "2026-11-25T23:09:49.926032+00:00",
   "note": "Correlation peaks are waveform similarity candidates only; they do not identify an action or prove that a low score means the same sound is absent."
 }

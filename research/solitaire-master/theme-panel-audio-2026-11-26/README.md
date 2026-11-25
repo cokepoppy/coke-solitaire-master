@@ -8,14 +8,14 @@ The 100 ms frames show the theme gallery by 322.5 s, card backs by 323.5 s, card
 
 | Audio peak | Source RMS | Visual action | Reference clip |
 | ---: | ---: | --- | --- |
-| 322.66 s | 0.1564 | Open Themes from Settings | `theme-gallery-open-reference.wav` |
+| 322.66 s | 0.1564 | Open Themes from Settings | `ui-tap-reference.wav` |
 | 323.62 s | 0.1877 | Switch to card backs | `theme-gallery-select-reference.wav` |
 | 324.14 s | 0.2211 | Switch to card faces | `theme-gallery-select-reference.wav` |
 | 325.46 s | 0.1189 | Select a face preview | `theme-gallery-select-reference.wav` |
 | 326.06 s | 0.2164 | Switch to card backs | `theme-gallery-select-reference.wav` |
 | 327.76 s | 0.2127 | Switch to backgrounds | `theme-gallery-select-reference.wav` |
 
-The open candidate is a 0.24 s crop from 322.580–322.820 s with a 5 ms edge fade. It matches its source position at normalized correlation 0.999969 and has maximum absolute correlation 0.305 against the later candidate peaks. The separate 0.24 s selection crop from 323.580–323.820 s has a 5 ms edge fade; it matches later candidates at 324.092, 327.719, 326.012, and 325.415 s with correlations 0.9931, 0.9918, 0.9907, and 0.9853. This supports separate gallery-open and repeated gallery-selection cues.
+The 0.24 s UI-tap candidate is cropped from 322.580–322.820 s with a 5 ms edge fade. It matches its source position at normalized correlation 0.999969 and has maximum absolute correlation 0.305 against the later theme-selection peaks. A follow-up comparison finds the same tap waveform on the result and Settings screens; see [`ui-click-audio-2026-11-26`](../ui-click-audio-2026-11-26/README.md). The separate 0.24 s selection crop from 323.580–323.820 s has a 5 ms edge fade; it matches later theme candidates at 324.092, 327.719, 326.012, and 325.415 s with correlations 0.9931, 0.9918, 0.9907, and 0.9853.
 
 Both assets are short, event-aligned excerpts from mixed gameplay audio, not isolated original sound stems. The open cue is observed only once in this window, so its use is limited to entering the theme gallery. This pass does not identify a universal button sound, and the previously verified silent card-selection interval remains unchanged.
 
@@ -31,11 +31,11 @@ python3 tools/audio_event_audit.py /tmp/solitaire-ui-window-317.wav \
   --output /tmp/solitaire-ui-window-317-audit \
   --source-offset-seconds 317 --hop-ms 10 --max-events 100
 python3 tools/extract_audio_reference.py /tmp/solitaire-ui-window-317.wav \
-  assets/audio/theme-gallery-open-reference.wav --start 5.58 --end 5.82 --fade-ms 5
+  assets/audio/ui-tap-reference.wav --start 5.58 --end 5.82 --fade-ms 5
 python3 tools/extract_audio_reference.py /tmp/solitaire-ui-window-317.wav \
   assets/audio/theme-gallery-select-reference.wav --start 6.58 --end 6.82 --fade-ms 5
 python3 tools/audio_similarity_audit.py /tmp/solitaire-ui-window-317.wav \
-  assets/audio/theme-gallery-open-reference.wav assets/audio/theme-gallery-select-reference.wav \
+  assets/audio/ui-tap-reference.wav assets/audio/theme-gallery-select-reference.wav \
   --output research/solitaire-master/theme-panel-audio-2026-11-26/similarity-audit.json \
   --matches 12 --source-offset-seconds 317
 ```

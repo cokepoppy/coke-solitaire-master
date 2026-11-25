@@ -1283,19 +1283,22 @@ $('#undo-button').addEventListener('click', () => {
   announce('Last move undone');
 });
 $('#hint-button').addEventListener('click', handleHint);
-$('#new-game-button').addEventListener('click', showNewGame);
-$('#menu-button').addEventListener('click', showMoreOptions);
+$('#new-game-button').addEventListener('click', () => { audio.play('tap'); showNewGame(); });
+$('#menu-button').addEventListener('click', () => { audio.play('tap'); showMoreOptions(); });
 $('#magic-button').addEventListener('click', handleMagic);
-$('#modal-close').addEventListener('click', closeModal);
-modalBackdrop.addEventListener('click', (event) => { if (event.target === modalBackdrop) closeModal(); });
+$('#modal-close').addEventListener('click', () => { audio.play('tap'); closeModal(); });
+modalBackdrop.addEventListener('click', (event) => {
+  if (event.target === modalBackdrop) { audio.play('tap'); closeModal(); }
+});
 modalContent.addEventListener('click', (event) => {
   if (event.target.closest('[data-settings-action="help"]')) {
+    audio.play('tap');
     showHelp();
     return;
   }
   const settingsPage = event.target.closest('[data-settings-page]')?.dataset.settingsPage;
-  if (settingsPage === 'statistics') { showStats(); return; }
-  if (settingsPage === 'scoring') { showScoringModes(); return; }
+  if (settingsPage === 'statistics') { audio.play('tap'); showStats(); return; }
+  if (settingsPage === 'scoring') { audio.play('tap'); showScoringModes(); return; }
   const themeTab = event.target.closest('[data-theme-tab]')?.dataset.themeTab;
   if (themeTab) {
     audio.play('themeSelect');
@@ -1303,11 +1306,12 @@ modalContent.addEventListener('click', (event) => {
     return;
   }
   if (event.target.closest('[data-theme-gallery]')) {
-    audio.play('themeOpen');
+    audio.play('tap');
     showThemeGallery('background');
     return;
   }
   const action = event.target.closest('[data-modal-action]')?.dataset.modalAction;
+  if (action) audio.play('tap');
   if (action === 'close') closeModal();
   if (action === 'new') doNewGame(false);
   if (action === 'restart') doNewGame(true);
@@ -1319,11 +1323,13 @@ modalContent.addEventListener('click', (event) => {
   }
   const dailyDate = event.target.closest('[data-daily-date]')?.dataset.dailyDate;
   if (dailyDate) {
+    audio.play('tap');
     showDailyCalendar(dailyDate);
     return;
   }
   const monthOffset = Number(event.target.closest('[data-calendar-month]')?.dataset.calendarMonth);
   if (monthOffset) {
+    audio.play('tap');
     const currentMonth = modalContent.querySelector('.daily-calendar')?.dataset.month;
     if (!currentMonth) return;
     const [year, month] = currentMonth.split('-').map(Number);
@@ -1351,7 +1357,7 @@ modalContent.addEventListener('click', (event) => {
     game.state.selected = null;
   }
   if (setting === 'autoCollect' && !value) cancelAutoCollect();
-  if (galleryTab) audio.play('themeSelect');
+  audio.play(galleryTab ? 'themeSelect' : 'tap');
   game.setOption(setting, value);
   if (setting === 'sound') audio.setSound(value);
   if (setting === 'music') audio.setMusic(value);
@@ -1375,8 +1381,8 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-$('#help-button')?.addEventListener('click', showHelp);
-$('#stats-button')?.addEventListener('click', showStats);
+$('#help-button')?.addEventListener('click', () => { audio.play('tap'); showHelp(); });
+$('#stats-button')?.addEventListener('click', () => { audio.play('tap'); showStats(); });
 
 setInterval(() => {
   if (document.hidden) return;
@@ -1393,6 +1399,7 @@ if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').cat
 
 modalContent.addEventListener('click', (event) => {
   const more = event.target.closest('[data-more]')?.dataset.more;
+  if (more) audio.play('tap');
   if (more === 'settings') showSettings();
   if (more === 'help') showHelp();
   if (more === 'stats') showStats();

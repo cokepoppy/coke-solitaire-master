@@ -1,0 +1,46 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_wav_name": "solitaire-ui-window-313-317.5.wav",
+  "source_wav_sha256": "8fcc58e2b7aa752c78f9cefd5e2c5c838a13be3a9197602bd0ae9ecfe818596c",
+  "audit_timestamp_utc": "2026-11-25T23:06:29.317152+00:00",
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "source_duration_seconds": 4.5,
+  "source_offset_seconds": 313.0,
+  "analysis_hop_ms": 10,
+  "analysis_window_count": 450,
+  "global_rms_median": 0.0,
+  "global_rms_p95": 0.02211629,
+  "global_rms_max": 0.17483969,
+  "windows_above_rms_0_01": 35,
+  "fraction_windows_above_rms_0_01": 0.077778,
+  "windows_above_rms_0_05": 7,
+  "fraction_windows_above_rms_0_05": 0.015556,
+  "candidate_events": [
+    {
+      "source_time_seconds": 313.27,
+      "rms": 0.17186578,
+      "peak": 0.68832397,
+      "high_band_fraction": 0.871286,
+      "spectral_centroid_hz": 3736.48
+    },
+    {
+      "source_time_seconds": 314.51,
+      "rms": 0.17016846,
+      "peak": 0.59658813,
+      "high_band_fraction": 0.880485,
+      "spectral_centroid_hz": 3474.45
+    },
+    {
+      "source_time_seconds": 315.19,
+      "rms": 0.17483969,
+      "peak": 0.68746948,
+      "high_band_fraction": 0.870011,
+      "spectral_centroid_hz": 3794.27
+    }
+  ],
+  "features_csv": "audio-windows.csv",
+  "note": "Thresholded peaks are event candidates in a mixed track, not verified action-to-effect labels."
+}

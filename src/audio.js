@@ -32,8 +32,8 @@ export class GameAudio {
     this.referenceRecycleLoadPromise = null;
     this.referenceDrawAfterRecycleBuffer = null;
     this.referenceDrawAfterRecycleLoadPromise = null;
-    this.referenceThemeOpenBuffer = null;
-    this.referenceThemeOpenLoadPromise = null;
+    this.referenceTapBuffer = null;
+    this.referenceTapLoadPromise = null;
     this.referenceThemeSelectBuffer = null;
     this.referenceThemeSelectLoadPromise = null;
   }
@@ -62,7 +62,7 @@ export class GameAudio {
       this.loadReferenceAutoCollect();
       this.loadReferenceRecycle();
       this.loadReferenceDrawAfterRecycle();
-      this.loadReferenceThemeOpen();
+      this.loadReferenceTap();
       this.loadReferenceThemeSelect();
     }
     return this.context;
@@ -243,22 +243,22 @@ export class GameAudio {
     return this.referenceDrawAfterRecycleLoadPromise;
   }
 
-  loadReferenceThemeOpen() {
+  loadReferenceTap() {
     if (!this.context) return Promise.resolve(null);
-    if (!this.referenceThemeOpenLoadPromise) {
-      this.referenceThemeOpenLoadPromise = fetch('/assets/audio/theme-gallery-open-reference.wav')
+    if (!this.referenceTapLoadPromise) {
+      this.referenceTapLoadPromise = fetch('/assets/audio/ui-tap-reference.wav')
         .then((response) => {
-          if (!response.ok) throw new Error(`Theme gallery open sample request failed: ${response.status}`);
+          if (!response.ok) throw new Error(`UI tap sample request failed: ${response.status}`);
           return response.arrayBuffer();
         })
         .then((bytes) => this.context.decodeAudioData(bytes))
         .then((buffer) => {
-          this.referenceThemeOpenBuffer = buffer;
+          this.referenceTapBuffer = buffer;
           return buffer;
         })
         .catch(() => null);
     }
-    return this.referenceThemeOpenLoadPromise;
+    return this.referenceTapLoadPromise;
   }
 
   loadReferenceThemeSelect() {
@@ -321,7 +321,7 @@ export class GameAudio {
       await this.referenceDrawAfterRecycleLoadPromise;
       if (!this.referenceDrawAfterRecycleBuffer) await this.referenceMoveLoadPromise;
     }
-    if (cue === 'themeOpen') await this.referenceThemeOpenLoadPromise;
+    if (cue === 'tap') await this.referenceTapLoadPromise;
     if (cue === 'themeSelect') await this.referenceThemeSelectLoadPromise;
     if (cue === 'good') await this.referenceGoodLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
@@ -391,11 +391,13 @@ export class GameAudio {
     if (!this.soundOn || !this.context || this.context.state !== 'running') return;
     const now = this.context.currentTime + (Number.isFinite(delaySeconds) ? Math.max(0, delaySeconds) : 0);
     if (cue === 'tap') {
-      this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
-      this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
-    } else if (cue === 'themeOpen' || cue === 'themeSelect') {
-      const reference = cue === 'themeOpen' ? this.referenceThemeOpenBuffer : this.referenceThemeSelectBuffer;
-      if (reference) this.playCapturedSample(reference, now);
+      if (this.referenceTapBuffer) this.playCapturedSample(this.referenceTapBuffer, now);
+      else {
+        this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
+        this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
+      }
+    } else if (cue === 'themeSelect') {
+      if (this.referenceThemeSelectBuffer) this.playCapturedSample(this.referenceThemeSelectBuffer, now);
       else {
         this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
         this.playTone(390, 310, 0.045, 0.035, 'triangle', now);

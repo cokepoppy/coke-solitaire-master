@@ -120,11 +120,11 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v75');
+    const shell = await caches.open('solitaire-master-solitaire-v76');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const recycleSample = await shell.match(`${location.origin}/solitaire/assets/audio/stock-recycle-reference.wav`);
     const recycledDrawSample = await shell.match(`${location.origin}/solitaire/assets/audio/draw-after-recycle-reference.wav`);
-    const themeGalleryOpenSample = await shell.match(`${location.origin}/solitaire/assets/audio/theme-gallery-open-reference.wav`);
+    const uiTapSample = await shell.match(`${location.origin}/solitaire/assets/audio/ui-tap-reference.wav`);
     const themeGallerySelectSample = await shell.match(`${location.origin}/solitaire/assets/audio/theme-gallery-select-reference.wav`);
     const winBackground = await shell.match(`${location.origin}/solitaire/assets/ui/win-result-background-reference.png`);
     const winScoreDigit = await shell.match(`${location.origin}/solitaire/assets/ui/win-result-score-digit-2-a-reference.png`);
@@ -139,7 +139,7 @@ try {
       cachesAfterInstall,
       shellPageCached: Boolean(shellPage),
       recycleSamplesCached: Boolean(recycleSample) && Boolean(recycledDrawSample),
-      themeGallerySamplesCached: Boolean(themeGalleryOpenSample) && Boolean(themeGallerySelectSample),
+      themeGallerySamplesCached: Boolean(uiTapSample) && Boolean(themeGallerySelectSample),
       winBackgroundCached: Boolean(winBackground),
       winScoreDigitCached: Boolean(winScoreDigit),
       sourceStockBackCached: Boolean(sourceStockBack),
@@ -157,7 +157,7 @@ try {
   assert.equal(worker.sourceStockBackCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v75'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v76'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);
