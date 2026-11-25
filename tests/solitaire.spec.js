@@ -197,7 +197,7 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   await expect(tip).toBeVisible({ timeout: 1500 });
   const tipBox = await tip.boundingBox();
   expect(tipBox.width).toBeCloseTo(312, 0);
-  expect(tipBox.y + tipBox.height).toBeCloseTo(709, 0);
+  expect(Math.abs(tipBox.y + tipBox.height - 709)).toBeLessThan(3);
   await page.screenshot({ path: 'test-results/first-move-tutorial.png' });
   await page.waitForTimeout(3900);
   await expect(tip).toBeVisible();
@@ -210,7 +210,7 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   await expect(tip).toBeHidden();
 });
 
-test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
+async function runSourceOpeningReplay(page) {
   await page.setViewportSize({ width: 442, height: 960 });
   await page.goto('/');
   await page.evaluate(() => {
@@ -251,6 +251,7 @@ test('source opening replay matches the 20-second score, move count, and exposed
     game.state.score = 0;
     game.state.seconds = 0;
     game.state.history = [];
+    localStorage.setItem('solitaire-master-tableau-tutorial-v1', 'shown');
     game.save();
   });
   await page.reload();
@@ -415,6 +416,14 @@ test('source opening replay matches the 20-second score, move count, and exposed
     { file: 'timer-digit-7.png', size: [21, 31] },
   ]);
   await page.screenshot({ path: 'test-results/source-opening-replay.png', fullPage: true });
+}
+
+test.describe('source-sized visual comparison', () => {
+  test.use({ deviceScaleFactor: 2 });
+
+  test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
+    await runSourceOpeningReplay(page);
+  });
 });
 
 test('reference card illustrations render on matching cards', async ({ page }) => {

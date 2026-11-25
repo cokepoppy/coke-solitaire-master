@@ -1,0 +1,64 @@
+{
+  "dimensions": {
+    "width": 884,
+    "height": 1920
+  },
+  "reference": {
+    "path": "frame-00000-req-020.000000-pts-307200.png",
+    "sha256": "b5444a64ad16ed8465fcec42efa16d8afd236631d1cedbd5f4abd6364ef94e01"
+  },
+  "rendered": {
+    "path": "source-opening-replay.png",
+    "sha256": "381c55a12201741834ab09a04d72af90d15e95018c9f4bfebf033fe6c906accb"
+  },
+  "comparison": {
+    "rescaled": false,
+    "ignored_rectangles": [
+      {
+        "name": "ios-home-indicator",
+        "x": 280,
+        "y": 1885,
+        "width": 330,
+        "height": 25
+      }
+    ],
+    "all_pixels": {
+      "mean_absolute_rgb_error": 7.379634,
+      "exact_rgb_pixel_fraction": 0.0052319,
+      "pixel_count": 1697280
+    },
+    "after_ignored_rectangles": {
+      "mean_absolute_rgb_error": 6.978345,
+      "exact_rgb_pixel_fraction": 0.0103006,
+      "pixel_count": 1697280
+    },
+    "regions": {
+      "header": {
+        "mean_absolute_rgb_error": 7.661925,
+        "exact_rgb_pixel_fraction": 0.00052319,
+        "pixel_count": 141440
+      },
+      "foundation_stock": {
+        "mean_absolute_rgb_error": 6.419474,
+        "exact_rgb_pixel_fraction": 0.00098982,
+        "pixel_count": 212160
+      },
+      "tableau": {
+        "mean_absolute_rgb_error": 11.977231,
+        "exact_rgb_pixel_fraction": 0.01800298,
+        "pixel_count": 362440
+      },
+      "empty_bg": {
+        "mean_absolute_rgb_error": 2.337637,
+        "exact_rgb_pixel_fraction": 0.0,
+        "pixel_count": 486200
+      },
+      "bottom_controls": {
+        "mean_absolute_rgb_error": 14.617496,
+        "exact_rgb_pixel_fraction": 0.00732113,
+        "pixel_count": 282880
+      }
+    },
+    "note": "Encoded-source video compression and browser rasterization contribute to pixel error; compare spatial error maps and known OS-only regions as well as the aggregate value."
+  }
+}
