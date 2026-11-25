@@ -76,6 +76,8 @@ let cardFlight = null;
 let winShown = false;
 let comboFeedbackTimer = null;
 let dealSettlementTimer = null;
+let winStreakTimer = null;
+let winNewBest = false;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
@@ -477,6 +479,8 @@ function setModal(title, kicker, html, variant = '') {
   $('#modal-title').classList.remove('theme-gallery-title');
   $('#modal-backdrop').classList.toggle('win-result-backdrop', variant === 'win-result');
   $('#modal-card').classList.toggle('win-result-card', variant === 'win-result');
+  $('#modal-backdrop').classList.toggle('win-streak-backdrop', variant === 'win-streak');
+  $('#modal-card').classList.toggle('win-streak-card', variant === 'win-streak');
   const settingsVariant = variant === 'settings';
   $('#modal-backdrop').classList.toggle('source-settings-backdrop', settingsVariant);
   $('#modal-card').classList.toggle('source-settings-card-shell', settingsVariant);
@@ -486,10 +490,15 @@ function setModal(title, kicker, html, variant = '') {
   modalBackdrop.classList.remove('hidden');
   document.body.classList.add('modal-open');
   if (variant === 'win-result') modalContent.querySelector('[data-modal-action="new"]')?.focus();
+  else if (variant === 'win-streak') modalContent.querySelector('[data-modal-action="continue"]')?.focus();
   else $('#modal-close').focus();
 }
 
 function closeModal() {
+  if ($('#modal-card').classList.contains('win-streak-card')) {
+    showWinResult(winNewBest);
+    return;
+  }
   modalBackdrop.classList.add('hidden');
   document.body.classList.remove('modal-open');
 }
@@ -716,13 +725,44 @@ function startDailyGame(day = localDateKey(new Date())) {
 function completeWin() {
   if (winShown) return;
   winShown = true;
+  clearTableauTutorial();
   const profile = readProfile();
   const previousBest = profile.bestScore;
   profile.wins += 1;
   profile.bestScore = Math.max(profile.bestScore, game.state.score);
   if (game.state.challenge) profile.dailyCompleted = [...new Set([...profile.dailyCompleted, game.state.challenge])].sort();
   writeProfile(profile);
-  const newBest = game.state.score > previousBest;
+  winNewBest = game.state.score > previousBest;
+  const cascade = game.state.foundations.flatMap((pile, suitIndex) => pile.map((card, rankIndex) => {
+    const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
+    const asset = REFERENCE_CARD_ART.has(artName) && game.state.cardFaceStyle !== 'classic' ? `${artName}-reference.png` : `${artName}.svg`;
+    const rankProgress = rankIndex / 12;
+    const fromX = 8 + suitIndex * 20;
+    const toX = [-7, 5, 17, 29][suitIndex] + rankProgress * 65;
+    const toY = 38 + suitIndex * 5 + Math.sin(rankProgress * Math.PI) * 18 - rankProgress * 13;
+    const rotation = ((rankIndex % 5) - 2) * 2.2 + (suitIndex - 1.5) * 2;
+    const delay = rankIndex * 42 + suitIndex * 100;
+    const order = suitIndex * 13 + rankIndex;
+    return `<img class="win-cascade-card" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${fromX}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
+  })).join('');
+  setModal('Winning streak', '', `
+    <div class="win-streak-screen" aria-label="Winning streak">
+      <div class="win-streak-cascade" aria-hidden="true">${cascade}</div>
+      <div class="win-streak-message">
+        <h2 class="win-streak-title">winning streak</h2>
+        <div class="win-streak-reward"><img src="/assets/ui/win-streak-trophy-reference.png" alt=""><strong>${profile.wins}</strong><span aria-hidden="true">👍</span></div>
+      </div>
+      <button class="win-streak-continue" type="button" data-modal-action="continue">Tap to Continue</button>
+    </div>
+  `, 'win-streak');
+  $('.game-shell').classList.add('won');
+  clearTimeout(winStreakTimer);
+  winStreakTimer = setTimeout(() => showWinResult(winNewBest), 4700);
+}
+
+function showWinResult(newBest) {
+  clearTimeout(winStreakTimer);
+  winStreakTimer = null;
   setModal('You win!', '', `
     <div class="win-result" aria-label="You win">
       <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
@@ -730,7 +770,7 @@ function completeWin() {
       ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
       <p class="win-result-percent">You defeated <b>86%</b> of players!</p>
       <div class="win-result-stats"><p><span>Time</span><b>${formatTime(game.state.seconds)}</b></p><p><span>Moves</span><b>${game.state.moves}</b></p></div>
-      <div class="win-result-trophy"><img src="/assets/ui/win-trophy-reference.png" alt=""><span>${profile.wins}</span></div>
+      <div class="win-result-trophy"><img src="/assets/ui/win-trophy-reference.png" alt=""><span>${readProfile().wins}</span></div>
       <button class="win-result-new" type="button" data-modal-action="new" aria-label="New Deal"><img src="/assets/ui/win-new-deal-reference.png" alt=""></button>
       <span class="win-result-home-indicator" aria-hidden="true"></span>
     </div>
@@ -1032,6 +1072,7 @@ modalContent.addEventListener('click', (event) => {
   if (action === 'close') closeModal();
   if (action === 'new') doNewGame(false);
   if (action === 'restart') doNewGame(true);
+  if (action === 'continue') showWinResult(winNewBest);
   if (action === 'play-daily') {
     const selectedDate = modalContent.querySelector('.daily-calendar')?.dataset.selectedDate;
     if (selectedDate) startDailyGame(selectedDate);
