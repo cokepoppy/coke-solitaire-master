@@ -63,8 +63,15 @@ export class SolitaireGame {
       selected: null,
       hint: null,
       drawCount: 1,
+      scoringMode: 'standard',
       magicCharges: 1,
       leftHand: false,
+      vibration: true,
+      quickPlay: true,
+      autoCollect: true,
+      autoHints: true,
+      showThreeWasteCards: true,
+      movableHighlight: false,
       theme: 'felt',
       cardBack: 'ruby',
       cardFaceStyle: 'master',
@@ -98,6 +105,14 @@ export class SolitaireGame {
       }
       this.state.magicCharges ??= 1;
       this.state.challenge ??= null;
+      this.state.scoringMode ??= 'standard';
+      if (!['standard', 'vegas'].includes(this.state.scoringMode)) this.state.scoringMode = 'standard';
+      this.state.vibration ??= true;
+      this.state.quickPlay ??= true;
+      this.state.autoCollect ??= true;
+      this.state.autoHints ??= true;
+      this.state.showThreeWasteCards ??= true;
+      this.state.movableHighlight ??= false;
       this.state.comboCount = 0;
       this.state.comboLastMoveAt = 0;
       if (this.state.theme === 'woodland') this.state.theme = 'mountain';
@@ -121,7 +136,7 @@ export class SolitaireGame {
   }
 
   setOption(name, value) {
-    if (['drawCount', 'leftHand', 'theme', 'cardBack', 'cardFaceStyle', 'sound', 'music'].includes(name)) {
+    if (['drawCount', 'scoringMode', 'leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'theme', 'cardBack', 'cardFaceStyle', 'sound', 'music'].includes(name)) {
       this.state[name] = value;
       this.save();
     }
@@ -175,7 +190,7 @@ export class SolitaireGame {
       this.state.stock.forEach((card) => { card.faceUp = false; });
       this.state.waste = [];
       this.state.moves += 1;
-      this.state.score = Math.max(0, this.state.score - 100);
+      if (this.state.scoringMode === 'vegas') this.state.score -= 100;
       this.save();
       return 'recycle';
     }
@@ -238,7 +253,7 @@ export class SolitaireGame {
       const newlyExposed = pile.at(-1);
       if (newlyExposed && !newlyExposed.faceUp) {
         newlyExposed.faceUp = true;
-        this.state.score += 5;
+        if (this.state.scoringMode === 'standard') this.state.score += 5;
       }
     }
     return moving;
@@ -251,11 +266,13 @@ export class SolitaireGame {
     const moving = this.removeSequence(source);
     if (target.zone === 'foundation') {
       this.state.foundations[target.pile].push(moving[0]);
-      this.state.score += source.zone === 'foundation' ? 0 : 10;
+      if (source.zone !== 'foundation') this.state.score += this.state.scoringMode === 'vegas' ? 5 : 10;
     } else {
       this.state.tableau[target.pile].push(...moving);
-      if (source.zone === 'foundation') this.state.score = Math.max(0, this.state.score - 15);
-      else this.state.score += 5;
+      if (this.state.scoringMode === 'standard') {
+        if (source.zone === 'foundation') this.state.score = Math.max(0, this.state.score - 15);
+        else this.state.score += 5;
+      }
     }
     this.state.moves += 1;
     const now = Date.now();

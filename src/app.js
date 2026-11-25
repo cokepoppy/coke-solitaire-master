@@ -285,7 +285,8 @@ function renderTopRow() {
       </button>
       ${stock.length ? `<span class="stock-count${game.state.cardBack === 'ruby' ? ` source-stock-count${stock.length === 24 ? ' source-stock-count-baked' : ''}` : ''}">${stock.length}</span>` : ''}
     </div>`;
-  const wasteCards = game.state.waste.slice(-3);
+  const wasteVisibleLimit = game.state.showThreeWasteCards ? 3 : 1;
+  const wasteCards = game.state.waste.slice(-wasteVisibleLimit);
   const wasteStart = game.state.waste.length - wasteCards.length;
   const wasteHint = game.state.hint?.source?.zone === 'waste';
   const wasteMarkup = wasteCards.length
@@ -301,8 +302,9 @@ function renderTopRow() {
     const top = pile.at(-1);
     const source = { zone: 'foundation', pile: index, index: pile.length - 1 };
     const isTarget = game.state.hint?.target?.zone === 'foundation' && game.state.hint.target.pile === index;
+    const movableTarget = game.state.movableHighlight && game.state.selected && game.canMove(game.state.selected, { zone: 'foundation', pile: index });
     const card = top ? renderCard(top, source, { index }) : `<span class="foundation-mark" aria-hidden="true"><img class="foundation-source-art" src="/assets/ui/foundation-empty-${index + 1}.png" alt=""><span class="foundation-theme-mark">A</span></span>`;
-    return `<div class="slot foundation-slot drop-target${isTarget ? ' is-hint' : ''}" style="grid-column:${column};grid-row:1" data-drop-zone="foundation" data-pile="${index}" aria-label="Foundation ${index + 1}">${card}</div>`;
+    return `<div class="slot foundation-slot drop-target${isTarget ? ' is-hint' : ''}${movableTarget ? ' is-moveable' : ''}" style="grid-column:${column};grid-row:1" data-drop-zone="foundation" data-pile="${index}" aria-label="Foundation ${index + 1}">${card}</div>`;
   }).join('');
   topRow.innerHTML = `${stockButton}${wasteSlot}${foundations}`;
 }
@@ -314,6 +316,7 @@ function renderTableau() {
   const faceUpStep = cardHeight * 0.484;
   tableauRoot.innerHTML = game.state.tableau.map((pile, column) => {
     const hintTarget = game.state.hint?.target?.zone === 'tableau' && game.state.hint.target.pile === column;
+    const movableTarget = game.state.movableHighlight && game.state.selected && game.canMove(game.state.selected, { zone: 'tableau', pile: column });
     const cards = pile.map((card, index) => {
       const previousFaceDown = pile.slice(0, index).filter((item) => !item.faceUp).length;
       const previousFaceUp = pile.slice(0, index).filter((item) => item.faceUp).length;
@@ -322,7 +325,7 @@ function renderTableau() {
       return renderCard(card, { zone: 'tableau', pile: column, index }, { offset, index: column * 2 + index, deal: animateDeal, dealOrder });
     }).join('');
     const empty = pile.length ? '' : '<span class="empty-tableau-mark" aria-hidden="true">K</span>';
-    return `<div class="pile-column drop-target${hintTarget ? ' is-hint' : ''}" data-drop-zone="tableau" data-pile="${column}" aria-label="Tableau pile ${column + 1}">${empty}${cards}</div>`;
+    return `<div class="pile-column drop-target${hintTarget ? ' is-hint' : ''}${movableTarget ? ' is-moveable' : ''}" data-drop-zone="tableau" data-pile="${column}" aria-label="Tableau pile ${column + 1}">${empty}${cards}</div>`;
   }).join('');
   if (animateDeal) {
     const stock = document.querySelector('.stock-slot .playing-card')?.getBoundingClientRect();
@@ -474,6 +477,9 @@ function setModal(title, kicker, html, variant = '') {
   $('#modal-title').classList.remove('theme-gallery-title');
   $('#modal-backdrop').classList.toggle('win-result-backdrop', variant === 'win-result');
   $('#modal-card').classList.toggle('win-result-card', variant === 'win-result');
+  const settingsVariant = variant === 'settings';
+  $('#modal-backdrop').classList.toggle('source-settings-backdrop', settingsVariant);
+  $('#modal-card').classList.toggle('source-settings-card-shell', settingsVariant);
   modalTitle.textContent = title;
   modalKicker.textContent = kicker;
   modalContent.innerHTML = html;
@@ -488,31 +494,51 @@ function closeModal() {
   document.body.classList.remove('modal-open');
 }
 
+function settingsSwitch(name, label, value) {
+  return `<button class="source-switch${value ? ' on' : ''}" type="button" role="switch" aria-label="${label}" aria-checked="${value}" data-setting="${name}" data-value="${!value}"><span></span></button>`;
+}
+
 function showSettings() {
-  const { drawCount, leftHand, music, sound, theme, cardBack = 'ruby' } = game.state;
-  setModal('Settings', 'MAKE IT YOURS', `
-    <div class="settings-group">
-      <div class="settings-heading">Draw style</div>
-      <div class="segmented-control" role="group" aria-label="Draw style">
-        <button type="button" class="segment${drawCount === 1 ? ' active' : ''}" data-setting="drawCount" data-value="1" aria-pressed="${drawCount === 1}">Draw 1</button>
-        <button type="button" class="segment${drawCount === 3 ? ' active' : ''}" data-setting="drawCount" data-value="3" aria-pressed="${drawCount === 3}">Draw 3</button>
-      </div>
+  const { drawCount, scoringMode, leftHand, vibration, quickPlay, autoCollect, autoHints, showThreeWasteCards, movableHighlight, sound } = game.state;
+  setModal('Settings', '', `
+    <div class="source-settings-list">
+      <section class="source-settings-card source-settings-basic" aria-label="General settings">
+        <div class="source-settings-row"><span>Audio</span>${settingsSwitch('sound', 'Audio', sound)}</div>
+        <div class="source-settings-row"><span>Vibration</span>${settingsSwitch('vibration', 'Vibration', vibration)}</div>
+        <button class="source-settings-row source-settings-link" type="button" data-settings-page="statistics"><span>Statistics</span><b aria-hidden="true">›</b></button>
+        <button class="source-settings-row source-settings-link" type="button" data-theme-gallery><span>Themes</span><b aria-hidden="true">›</b></button>
+      </section>
+      <h2 class="source-settings-heading">Game Mode</h2>
+      <section class="source-settings-card" aria-label="Game mode">
+        <div class="source-settings-row source-draw-row"><span>Draw Mode</span><div class="source-draw-options" role="group" aria-label="Draw Mode">
+          <button class="source-draw-choice${drawCount === 1 ? ' selected' : ''}" type="button" data-setting="drawCount" data-value="1" aria-label="Draw 1 card" aria-pressed="${drawCount === 1}"><b>1</b><i class="draw-card-icon one" aria-hidden="true">♥</i></button>
+          <button class="source-draw-choice${drawCount === 3 ? ' selected' : ''}" type="button" data-setting="drawCount" data-value="3" aria-label="Draw 3 cards" aria-pressed="${drawCount === 3}"><b>3</b><i class="draw-card-icon three" aria-hidden="true">♠♥</i></button>
+        </div></div>
+        <button class="source-settings-row source-settings-link" type="button" data-settings-page="scoring"><span>Scoring Mode</span><span class="source-setting-value">${scoringMode === 'vegas' ? 'Vegas' : 'Standard'}</span><b aria-hidden="true">›</b></button>
+      </section>
+      <h2 class="source-settings-heading">Preferences</h2>
+      <section class="source-settings-card" aria-label="Preferences">
+        <div class="source-settings-row"><span>Left Hand</span>${settingsSwitch('leftHand', 'Left Hand', leftHand)}</div>
+        <div class="source-settings-row"><span>Quick Play</span>${settingsSwitch('quickPlay', 'Quick Play', quickPlay)}</div>
+        <div class="source-settings-row"><span>Auto Collect</span>${settingsSwitch('autoCollect', 'Auto Collect', autoCollect)}</div>
+        <div class="source-settings-row"><span>Auto Hints</span>${settingsSwitch('autoHints', 'Auto Hints', autoHints)}</div>
+        <div class="source-settings-row"><span>Show Three Waste Cards</span>${settingsSwitch('showThreeWasteCards', 'Show Three Waste Cards', showThreeWasteCards)}</div>
+        <div class="source-settings-row"><span>Movable highlight</span>${settingsSwitch('movableHighlight', 'Movable highlight', movableHighlight)}</div>
+      </section>
     </div>
-    <div class="settings-row"><div><b>Left-hand mode</b><small>Move the stock to the left</small></div><button class="switch${leftHand ? ' on' : ''}" type="button" role="switch" aria-label="Left-hand mode" aria-checked="${leftHand}" data-setting="leftHand" data-value="${!leftHand}"><span></span></button></div>
-    <div class="settings-row"><div><b>Sound effects</b><small>Card taps, flips, and moves</small></div><button class="switch${sound ? ' on' : ''}" type="button" role="switch" aria-label="Sound effects" aria-checked="${sound}" data-setting="sound" data-value="${!sound}"><span></span></button></div>
-    <div class="settings-row"><div><b>Background music</b><small>A soft original ambient loop</small></div><button class="switch${music ? ' on' : ''}" type="button" role="switch" aria-label="Background music" aria-checked="${music}" data-setting="music" data-value="${!music}"><span></span></button></div>
-    <div class="settings-group theme-group"><div class="settings-heading">Table background</div><div class="theme-options">
-      <button type="button" class="theme-choice mountain${theme === 'mountain' ? ' chosen' : ''}" data-setting="theme" data-value="mountain" aria-label="Mountain background" aria-pressed="${theme === 'mountain'}"><span>Mountain</span></button>
-      <button type="button" class="theme-choice felt${theme === 'felt' ? ' chosen' : ''}" data-setting="theme" data-value="felt" aria-label="Classic felt background" aria-pressed="${theme === 'felt'}"><span>Felt</span></button>
-      <button type="button" class="theme-choice dusk${theme === 'dusk' ? ' chosen' : ''}" data-setting="theme" data-value="dusk" aria-label="Dusk background" aria-pressed="${theme === 'dusk'}"><span>Dusk</span></button>
-    </div></div>
-    <div class="settings-group theme-group"><div class="settings-heading">Card back</div><div class="back-options" role="group" aria-label="Card back">
-      <button type="button" class="back-choice blue-diamond${cardBack === 'blue' ? ' chosen' : ''}" data-setting="cardBack" data-value="blue" aria-label="Blue diamond card back" aria-pressed="${cardBack === 'blue'}"><img src="/assets/cards/back-blue.svg" alt=""></button>
-      <button type="button" class="back-choice ruby${cardBack === 'ruby' ? ' chosen' : ''}" data-setting="cardBack" data-value="ruby" aria-label="Ruby card back" aria-pressed="${cardBack === 'ruby'}"><img src="/assets/cards/back-solitaire-master.svg" alt=""></button>
-    </div></div>
-    <button type="button" class="secondary-action theme-gallery-launch" data-theme-gallery>Open Themes</button>
-    <div class="modal-footnote">Your game and preferences stay on this device.</div>
-  `);
+  `, 'settings');
+}
+
+function showScoringModes() {
+  const selected = game.state.scoringMode;
+  setModal('Scoring Mode', '', `
+    <div class="source-settings-list scoring-mode-list">
+      <section class="source-settings-card" aria-label="Scoring mode">
+        <button class="source-settings-row source-settings-link${selected === 'standard' ? ' scoring-selected' : ''}" type="button" data-setting="scoringMode" data-value="standard" aria-pressed="${selected === 'standard'}"><span>Standard</span><b aria-hidden="true">${selected === 'standard' ? '✓' : ''}</b></button>
+        <button class="source-settings-row source-settings-link${selected === 'vegas' ? ' scoring-selected' : ''}" type="button" data-setting="scoringMode" data-value="vegas" aria-pressed="${selected === 'vegas'}"><span>Vegas</span><b aria-hidden="true">${selected === 'vegas' ? '✓' : ''}</b></button>
+      </section>
+    </div>
+  `, 'settings');
 }
 
 const THEME_BACKS = [
@@ -660,7 +686,14 @@ function startDailyGame(day = localDateKey(new Date())) {
   const profile = readProfile();
   const options = {
     drawCount: game.state.drawCount,
+    scoringMode: game.state.scoringMode,
     leftHand: game.state.leftHand,
+    vibration: game.state.vibration,
+    quickPlay: game.state.quickPlay,
+    autoCollect: game.state.autoCollect,
+    autoHints: game.state.autoHints,
+    showThreeWasteCards: game.state.showThreeWasteCards,
+    movableHighlight: game.state.movableHighlight,
     theme: game.state.theme,
     cardBack: game.state.cardBack ?? 'ruby',
     sound: game.state.sound,
@@ -721,7 +754,14 @@ function doNewGame(restart = false) {
   const previous = game.state;
   const options = {
     drawCount: previous.drawCount,
+    scoringMode: previous.scoringMode,
     leftHand: previous.leftHand,
+    vibration: previous.vibration,
+    quickPlay: previous.quickPlay,
+    autoCollect: previous.autoCollect,
+    autoHints: previous.autoHints,
+    showThreeWasteCards: previous.showThreeWasteCards,
+    movableHighlight: previous.movableHighlight,
     theme: previous.theme,
     cardBack: previous.cardBack ?? 'ruby',
     sound: previous.sound,
@@ -820,6 +860,7 @@ function commitMove(target) {
   const origins = drag?.moved ? new Map() : captureCardOrigins(movingIds);
   const moved = game.moveTo({ zone: target.dataset.dropZone, pile: Number(target.dataset.pile) });
   if (moved) {
+    vibrateGame(12);
     markCardMove(movingIds, origins, revealedCardId);
     const foundationMove = target.dataset.dropZone === 'foundation';
     audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : 'move');
@@ -829,12 +870,17 @@ function commitMove(target) {
     if (!foundationMove) showTableauTutorial();
     if (game.state.won) completeWin();
   } else {
+    vibrateGame(24);
     game.state.selected = null;
     game.state.hint = null;
     audio.play('invalid');
     render();
   }
   return moved;
+}
+
+function vibrateGame(duration = 12) {
+  if (game.state.vibration && 'vibrate' in navigator) navigator.vibrate(duration);
 }
 
 function createDragGhost(current, pointerX, pointerY) {
@@ -902,7 +948,7 @@ board.addEventListener('pointerup', (event) => {
     const exposed = moveSource?.zone === 'tableau' ? game.state.tableau[moveSource.pile]?.[moveSource.index - 1] : null;
     const revealedCardId = exposed && !exposed.faceUp ? exposed.id : null;
     const origins = captureCardOrigins(movingIds);
-    if (repeated && game.autoMove(current.source)) result = { action: 'foundation' };
+    if (game.state.quickPlay && repeated && game.autoMove(current.source)) result = { action: 'foundation' };
     else result = game.tapCard(current.source);
     if (result.action === 'move' || result.action === 'foundation') markCardMove(movingIds, origins, revealedCardId);
     previousTap = { id: current.card.dataset.cardId, time: now };
@@ -970,6 +1016,9 @@ $('#magic-button').addEventListener('click', handleMagic);
 $('#modal-close').addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', (event) => { if (event.target === modalBackdrop) closeModal(); });
 modalContent.addEventListener('click', (event) => {
+  const settingsPage = event.target.closest('[data-settings-page]')?.dataset.settingsPage;
+  if (settingsPage === 'statistics') { showStats(); return; }
+  if (settingsPage === 'scoring') { showScoringModes(); return; }
   const themeTab = event.target.closest('[data-theme-tab]')?.dataset.themeTab;
   if (themeTab) {
     showThemeGallery(themeTab);
@@ -1014,7 +1063,7 @@ modalContent.addEventListener('click', (event) => {
   const setting = control.dataset.setting;
   let value = control.dataset.value;
   if (setting === 'drawCount') value = Number(value);
-  if (setting === 'leftHand' || setting === 'sound' || setting === 'music') value = value === 'true';
+  if (['leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'sound', 'music'].includes(setting)) value = value === 'true';
   game.setOption(setting, value);
   if (setting === 'sound') audio.setSound(value);
   if (setting === 'music') audio.setMusic(value);
