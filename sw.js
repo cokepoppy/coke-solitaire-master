@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v60';
+const CACHE = 'solitaire-master-v61';
 const CACHE_PREFIX = 'solitaire-master-v';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];

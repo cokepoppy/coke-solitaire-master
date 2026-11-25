@@ -341,11 +341,14 @@ function renderTableau() {
   tableauRoot.innerHTML = game.state.tableau.map((pile, column) => {
     const hintTarget = game.state.hint?.target?.zone === 'tableau' && game.state.hint.target.pile === column;
     const movableTarget = game.state.movableHighlight && game.state.selected && game.canMove(game.state.selected, { zone: 'tableau', pile: column });
+    let previousOffset = 0;
+    let previousCard = null;
     const cards = pile.map((card, index) => {
-      const previousFaceDown = pile.slice(0, index).filter((item) => !item.faceUp).length;
-      const previousFaceUp = pile.slice(0, index).filter((item) => item.faceUp).length;
-      const offset = previousFaceDown * faceDownStep + previousFaceUp * faceUpStep;
+      const defaultOffset = index === 0 ? 0 : previousOffset + (previousCard.faceUp ? faceUpStep : faceDownStep);
+      const offset = Number.isFinite(card.tableauOffsetRatio) ? card.tableauOffsetRatio * cardHeight : defaultOffset;
       const dealOrder = index * 7 - (index * (index - 1)) / 2 + column - index;
+      previousOffset = offset;
+      previousCard = card;
       return renderCard(card, { zone: 'tableau', pile: column, index }, { offset, index: column * 2 + index, deal: animateDeal, dealOrder });
     }).join('');
     const empty = pile.length ? '' : '<span class="empty-tableau-mark" aria-hidden="true">K</span>';
@@ -1070,15 +1073,26 @@ function parseSource(element) {
   return { zone, pile: Number(element.dataset.pile), index: Number(element.dataset.index) };
 }
 
-function commitMove(target) {
+function commitMove(target, dropPosition = null) {
   if (!target) return false;
   const source = game.state.selected;
   const movingIds = game.sequenceAt(source).map((card) => card.id);
   const exposed = source?.zone === 'tableau' ? game.state.tableau[source.pile]?.[source.index - 1] : null;
   const revealedCardId = exposed && !exposed.faceUp ? exposed.id : null;
-  const origins = drag?.moved ? new Map() : captureCardOrigins(movingIds);
+  const origins = dropPosition?.origins ?? (drag?.moved ? new Map() : captureCardOrigins(movingIds));
   const moved = game.moveTo({ zone: target.dataset.dropZone, pile: Number(target.dataset.pile) });
   if (moved) {
+    if (target.dataset.dropZone === 'tableau' && dropPosition) {
+      const pileIndex = Number(target.dataset.pile);
+      const columnTop = target.getBoundingClientRect().top;
+      const cardHeight = Math.min(64, window.innerWidth * 0.1337) * 1.5;
+      const movedCards = game.state.tableau[pileIndex].slice(-movingIds.length);
+      movedCards.forEach((card, index) => {
+        const relativeOffset = dropPosition.relativeOffsets[index] ?? 0;
+        card.tableauOffsetRatio = Math.max(0, dropPosition.top + relativeOffset - columnTop) / cardHeight;
+      });
+      game.save();
+    }
     vibrateGame(12);
     markCardMove(movingIds, origins, revealedCardId);
     const foundationMove = target.dataset.dropZone === 'foundation';
@@ -1114,10 +1128,11 @@ function createDragGhost(current, pointerX, pointerY) {
   const nodes = current.source.zone === 'tableau'
     ? [...document.querySelectorAll(`#tableau .pile-column[data-pile="${current.source.pile}"] .playing-card[data-zone="tableau"]`)].filter((node) => Number(node.dataset.index) >= current.source.index)
     : [current.card];
+  const sourceTop = current.card.getBoundingClientRect().top;
   nodes.forEach((node, index) => {
     const copy = node.cloneNode(true);
     copy.classList.remove('is-selected', 'is-hint', 'dragging');
-    copy.style.top = `${index * 22}px`;
+    copy.style.top = `${node.getBoundingClientRect().top - sourceTop}px`;
     copy.style.left = '0';
     copy.style.zIndex = String(index + 1);
     ghost.append(copy);
@@ -1155,7 +1170,21 @@ board.addEventListener('pointerup', (event) => {
   if (current.moved) {
     game.select(current.source);
     const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-drop-zone]');
-    if (target) commitMove(target);
+    if (target) {
+      const movingIds = game.sequenceAt(current.source).map((card) => card.id);
+      const movingCards = current.source.zone === 'tableau'
+        ? [...board.querySelectorAll(`#tableau .pile-column[data-pile="${current.source.pile}"] .playing-card[data-zone="tableau"]`)].filter((card) => Number(card.dataset.index) >= current.source.index)
+        : [current.card];
+      const firstTop = current.card.getBoundingClientRect().top;
+      const relativeOffsets = movingCards.map((card) => card.getBoundingClientRect().top - firstTop);
+      const dropTop = event.clientY - current.offsetY;
+      const dropLeft = event.clientX - current.offsetX;
+      const origins = new Map(movingIds.map((cardId, index) => [cardId, {
+        left: dropLeft,
+        top: dropTop + (relativeOffsets[index] ?? 0),
+      }]));
+      commitMove(target, { top: dropTop, relativeOffsets, origins });
+    }
     else {
       game.state.selected = null;
       render();

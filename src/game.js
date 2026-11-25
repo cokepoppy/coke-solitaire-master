@@ -269,6 +269,7 @@ export class SolitaireGame {
     if (!this.canMove(source, target)) return false;
     this.snapshot();
     const moving = this.removeSequence(source);
+    moving.forEach((card) => { delete card.tableauOffsetRatio; });
     if (target.zone === 'foundation') {
       this.state.foundations[target.pile].push(moving[0]);
       if (source.zone !== 'foundation') this.state.score += this.state.scoringMode === 'vegas' ? 5 : 10;

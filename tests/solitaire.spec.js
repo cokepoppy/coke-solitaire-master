@@ -324,14 +324,14 @@ async function runSourceOpeningReplay(page) {
   expect(sourceTimerFrame.width).toBe(143);
   expect(sourceTimerFrame.height).toBe(50);
 
-  const dragMove = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
+  const dragMove = async (sourcePile, sourceIndex, targetPile, targetIndex, dropCardOffset = 4) => {
     const sourceBox = await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).boundingBox();
     const targetBox = await page.locator(`.pile-column[data-pile="${targetPile}"] .playing-card[data-index="${targetIndex}"]`).boundingBox();
     const touch = await page.context().newCDPSession(page);
     const startX = sourceBox.x + Math.min(11, sourceBox.width / 3);
     const startY = sourceBox.y + 8;
     const endX = targetBox.x + targetBox.width / 2;
-    const endY = targetBox.y + 12;
+    const endY = targetBox.y + dropCardOffset + 8;
     await touch.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: startX, y: startY, id: 1, radiusX: 2, radiusY: 2, force: 1 }] });
     for (let step = 1; step <= 12; step += 1) {
       const progress = step / 12;
@@ -345,15 +345,9 @@ async function runSourceOpeningReplay(page) {
     await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await touch.detach();
   };
-  const move = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
-    await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).click();
-    expect(await page.evaluate(() => window.audioCues)).not.toContain('tap');
-    await page.locator(`.pile-column[data-pile="${targetPile}"] .playing-card[data-index="${targetIndex}"]`).click();
-  };
-
   // In the reference opening, the 4♣, Q♠, and J♦ join the 5♦/K♦ sequence;
   // each move also uncovers one card, matching the observed +10 score steps.
-  await dragMove(5, 5, 0, 0);
+  await dragMove(5, 5, 0, 0, 43);
   await expect(page.locator('#score-value')).toHaveText('10');
   await expect(page.locator('#moves-value')).toHaveText('1');
   expect(await page.evaluate(() => window.audioCues)).toContain('move');
@@ -372,7 +366,7 @@ async function runSourceOpeningReplay(page) {
       }
     }, true);
   });
-  await move(1, 1, 3, 3);
+  await dragMove(1, 1, 3, 3, 47.5);
   await expect(page.locator('#score-value')).toHaveText('20');
   await expect(page.locator('#moves-value')).toHaveText('2');
   await expect(page.locator('.pile-column[data-pile="1"] .card-face-art')).toHaveAttribute('src', /6-of-clubs-reference\.png$/);
@@ -385,15 +379,18 @@ async function runSourceOpeningReplay(page) {
     x: Number.parseFloat(card.style.getPropertyValue('--draw-x')),
   }));
   expect(tableauFlight.hasFlightClass).toBe(true);
-  expect(Math.abs(tableauFlight.x)).toBeGreaterThan(40);
+  expect(tableauFlight.x).toBeCloseTo(18.5, 0);
 
-  await move(4, 4, 3, 4);
+  await dragMove(4, 4, 3, 4, 37);
   await expect(page.locator('#score-value')).toHaveText('30');
   await expect(page.locator('#moves-value')).toHaveText('3');
   await page.waitForTimeout(200);
   const faceUpStackSpacing = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.slice(1).map((card, index) => card.getBoundingClientRect().top - cards[index].getBoundingClientRect().top));
   expect(faceUpStackSpacing).toHaveLength(2);
-  for (const spacing of faceUpStackSpacing) expect(spacing).toBeCloseTo(42.94, 1);
+  expect(faceUpStackSpacing[0]).toBeCloseTo(47.5, 1);
+  expect(faceUpStackSpacing[1]).toBeCloseTo(37, 1);
+  const sourceCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
+  expect(sourceCardTops).toEqual([719, 814, 888]);
   const finalBoard = await page.evaluate(() => ({
     score: window.solitaireGame.state.score,
     moves: window.solitaireGame.state.moves,
@@ -476,6 +473,16 @@ async function runSourceOpeningReplay(page) {
   await expect(page.locator('#undo-button')).toBeEnabled();
   await expect(sourceActionRow).toHaveAttribute('src', '/assets/ui/action-row-used-reference.png');
   await page.screenshot({ path: 'test-results/source-opening-replay.png', fullPage: true });
+  await page.getByRole('button', { name: 'Undo move' }).click();
+  await expect(page.locator('#moves-value')).toHaveText('2');
+  const undoneCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
+  expect(undoneCardTops).toEqual([719, 814]);
+  await page.reload();
+  await page.setViewportSize({ width: 442, height: 960 });
+  await page.waitForTimeout(1450);
+  await expect(page.locator('.pile-column[data-pile="3"] .card-face')).toHaveCount(2);
+  const persistedCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
+  expect(persistedCardTops).toEqual([719, 814]);
 }
 
 test.describe('source-sized visual comparison', () => {
@@ -1662,7 +1669,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v60');
+  expect(cacheNames).toContain('solitaire-master-v61');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

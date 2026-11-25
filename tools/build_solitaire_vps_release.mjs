@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.resolve(process.argv[2] ?? 'dist/solitaire');
 const base = '/solitaire';
-const cacheName = 'solitaire-master-solitaire-v68';
+const cacheName = 'solitaire-master-solitaire-v69';
 const cachePrefix = 'solitaire-master-solitaire-v';
 
 if (output === root || output.startsWith(`${root}${path.sep}`)) {
@@ -37,7 +37,7 @@ function visit(directory) {
       .replaceAll("'/index.html'", `'/solitaire/index.html'`)
       .replaceAll("['/', '/solitaire/index.html'", "['/solitaire/', '/solitaire/index.html'")
       .replaceAll('"start_url": "/"', `"start_url": "${base}/"`)
-      .replaceAll('solitaire-master-v60', cacheName)
+      .replaceAll('solitaire-master-v61', cacheName)
       .replaceAll('solitaire-master-v', cachePrefix);
 
     if (/['"`]\/(?:assets|src)\//.test(source)) {
