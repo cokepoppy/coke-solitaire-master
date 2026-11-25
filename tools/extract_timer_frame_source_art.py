@@ -11,11 +11,11 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "research" / "solitaire-master" / "gameplay-opening-2025" / "keyframes" / "target-pts-153600.png"
 OUTPUT = ROOT / "assets" / "ui" / "timer-frame-source.png"
-SOURCE_RECT = (340, 290, 626, 390)
+SOURCE_RECT = (320, 290, 640, 390)
 FELT = (11, 115, 63)
-TEXT_RECT = (76, 29, 194, 71)
-PANEL_SAMPLE_LEFT = range(54, 83)
-PANEL_SAMPLE_RIGHT = range(203, 233)
+TEXT_RECT = (96, 29, 214, 71)
+PANEL_SAMPLE_LEFT = range(34, 63)
+PANEL_SAMPLE_RIGHT = range(183, 213)
 
 
 def main() -> None:

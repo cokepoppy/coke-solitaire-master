@@ -21,7 +21,7 @@ SAMPLES = {
     "9": (695, 4),
     ":": (20, 2),
 }
-SLOT_X = (90, 114, 139, 147, 172)
+SLOT_X = (110, 134, 159, 167, 192)
 SLOT_WIDTH = (21, 21, 4, 21, 21)
 TEXT_Y = 34
 TEXT_HEIGHT = 31
@@ -35,8 +35,8 @@ def timer_frame(directories: list[Path], timestamp: int) -> Image.Image:
     if any(frame.read_bytes() != matches[0].read_bytes() for frame in matches[1:]):
         raise ValueError(f"Duplicate source frames for {timestamp}s differ: {matches}")
     image = Image.open(matches[0]).convert("RGB")
-    if image.size != (286, 100):
-        raise ValueError(f"{matches[0]} has size {image.size}, expected 286×100")
+    if image.size != (320, 100):
+        raise ValueError(f"{matches[0]} has size {image.size}, expected 320×100")
     return image
 
 
@@ -58,8 +58,8 @@ def main() -> None:
     args = parser.parse_args()
 
     base = Image.open(args.base).convert("RGBA")
-    if base.size != (286, 100):
-        raise ValueError(f"{args.base} has size {base.size}, expected 286×100")
+    if base.size != (320, 100):
+        raise ValueError(f"{args.base} has size {base.size}, expected 320×100")
     args.output.mkdir(parents=True, exist_ok=True)
 
     for glyph, (timestamp, slot) in SAMPLES.items():

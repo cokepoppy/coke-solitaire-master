@@ -25,7 +25,7 @@ for requestedTime in stride(from: start, through: end, by: step) {
         at: CMTime(seconds: requestedTime, preferredTimescale: 60_000),
         actualTime: &actualTime
     )
-    guard let timer = frame.cropping(to: CGRect(x: 340, y: 290, width: 286, height: 100)) else {
+    guard let timer = frame.cropping(to: CGRect(x: 320, y: 290, width: 320, height: 100)) else {
         throw NSError(domain: "TimerFrame", code: 1, userInfo: [NSLocalizedDescriptionKey: "Timer crop is outside the source frame"])
     }
     let png = NSBitmapImageRep(cgImage: timer).representation(using: .png, properties: [:])!

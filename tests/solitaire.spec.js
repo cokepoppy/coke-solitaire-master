@@ -65,7 +65,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('.time-stat')).toHaveAttribute('aria-label', 'Time');
   await expect(page.locator('.timer-frame-source')).toBeVisible();
   await expect(page.locator('.timer-frame-vector')).toHaveCSS('display', 'none');
-  await expect.poll(() => page.locator('.timer-frame-source').evaluate((image) => [image.complete, image.naturalWidth, image.naturalHeight])).toEqual([true, 286, 100]);
+  await expect.poll(() => page.locator('.timer-frame-source').evaluate((image) => [image.complete, image.naturalWidth, image.naturalHeight])).toEqual([true, 320, 100]);
   await expect.poll(() => page.locator('.stat-digit').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth === 21 && image.naturalHeight === 31))).toBe(true);
   const timerDigitHashes = await page.evaluate(async () => Promise.all(Array.from({ length: 10 }, async (_, digit) => {
     const response = await fetch(`/assets/ui/timer-digit-${digit}.png`);
@@ -319,10 +319,12 @@ async function runSourceOpeningReplay(page) {
     audio.play = (cue) => { window.audioCues.push(cue); return play(cue); };
   });
   const sourceTimerFrame = await page.locator('.timer-frame-source').boundingBox();
-  expect(sourceTimerFrame.x).toBeCloseTo(169.5, 1);
+  expect(sourceTimerFrame.x).toBeCloseTo(160, 1);
   expect(sourceTimerFrame.y).toBeCloseTo(145.2, 1);
-  expect(sourceTimerFrame.width).toBe(143);
+  expect(sourceTimerFrame.width).toBe(160);
   expect(sourceTimerFrame.height).toBe(50);
+  const sourceScorePanelColors = await page.locator('.stat:not(.time-stat)').evaluateAll((panels) => panels.map((panel) => getComputedStyle(panel).backgroundColor));
+  expect(sourceScorePanelColors).toEqual(['rgb(15, 95, 49)', 'rgb(15, 95, 49)']);
 
   const dragMove = async (sourcePile, sourceIndex, targetPile, targetIndex, dropCardOffset = 4) => {
     const sourceBox = await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).boundingBox();
@@ -490,6 +492,9 @@ test.describe('source-sized visual comparison', () => {
 
   test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
     await runSourceOpeningReplay(page);
+    const timerTextBox = await page.locator('#time-value').boundingBox();
+    expect(timerTextBox.width).toBeCloseTo(51.5, 1);
+    expect(timerTextBox.height).toBeCloseTo(15.5, 1);
   });
 
   test('source Settings controls, support links, and scroll match the captured page', async ({ page }) => {
@@ -1695,7 +1700,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v63');
+  expect(cacheNames).toContain('solitaire-master-v64');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
