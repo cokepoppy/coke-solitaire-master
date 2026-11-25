@@ -24,6 +24,8 @@ export class GameAudio {
     this.referenceGreatLoadPromise = null;
     this.referenceFoundationBuffer = null;
     this.referenceFoundationLoadPromise = null;
+    this.referenceWinBuffer = null;
+    this.referenceWinLoadPromise = null;
   }
 
   getContext() {
@@ -46,6 +48,7 @@ export class GameAudio {
       this.loadReferenceAmazing();
       this.loadReferenceGreat();
       this.loadReferenceFoundation();
+      this.loadReferenceWin();
     }
     return this.context;
   }
@@ -153,6 +156,24 @@ export class GameAudio {
     return this.referenceFoundationLoadPromise;
   }
 
+  loadReferenceWin() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceWinLoadPromise) {
+      this.referenceWinLoadPromise = fetch('/assets/audio/win-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Win sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceWinBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceWinLoadPromise;
+  }
+
   unlock() {
     const context = this.getContext();
     if (!context) return Promise.resolve(false);
@@ -193,6 +214,7 @@ export class GameAudio {
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
     if (cue === 'great') await this.referenceGreatLoadPromise;
     if (cue === 'foundation') await this.referenceFoundationLoadPromise;
+    if (cue === 'win') await this.referenceWinLoadPromise;
     this.playCue(cue);
   }
 
@@ -302,10 +324,13 @@ export class GameAudio {
       this.playNoise(1450, 280, 0.075, 0.075, now, 0.75);
       this.playTone(205, 132, 0.09, 0.045, 'triangle', now);
     } else if (cue === 'win') {
-      [587.33, 739.99, 880, 1174.66].forEach((frequency, index) => {
-        this.playTone(frequency, frequency * 1.012, 0.42 + index * 0.08, 0.072 - index * 0.006, 'sine', now + index * 0.115);
-      });
-      this.playNoise(4400, 2100, 0.22, 0.035, now + 0.2, 0.5);
+      if (this.referenceWinBuffer) this.playCapturedSample(this.referenceWinBuffer, now);
+      else {
+        [587.33, 739.99, 880, 1174.66].forEach((frequency, index) => {
+          this.playTone(frequency, frequency * 1.012, 0.42 + index * 0.08, 0.072 - index * 0.006, 'sine', now + index * 0.115);
+        });
+        this.playNoise(4400, 2100, 0.22, 0.035, now + 0.2, 0.5);
+      }
     }
   }
 

@@ -923,6 +923,12 @@ test('winning shows a result card and records a completed daily challenge', asyn
     game.save();
   }, challengeDate);
   await page.reload();
+  await page.evaluate(() => {
+    window.gameAudioCues = [];
+    const audio = window.solitaireAudio;
+    const play = audio.play.bind(audio);
+    audio.play = (cue) => { window.gameAudioCues.push(cue); return play(cue); };
+  });
 
   for (let pile = 0; pile < 4; pile += 1) {
     await page.locator(`#tableau .pile-column[data-pile="${pile}"] .playing-card`).click();
@@ -930,6 +936,7 @@ test('winning shows a result card and records a completed daily challenge', asyn
   }
 
   await expect(page.locator('.win-result-backdrop')).toBeVisible();
+  expect(await page.evaluate(() => window.gameAudioCues.at(-1))).toBe('win');
   await expect(page.locator('.win-result-banner')).toHaveAttribute('src', '/assets/ui/win-banner-reference.png');
   await expect(page.locator('.win-result-score')).toContainText('390');
   await expect(page.locator('.win-result-percent')).toHaveText('You defeated 86% of players!');
@@ -1001,6 +1008,10 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
       if (buffer === audio.referenceFoundationBuffer) {
         window.referenceFoundationSampleCall = { gain: args[1], offset: args[0] - audio.context.currentTime };
       }
+      if (buffer === audio.referenceWinBuffer) {
+        window.referenceWinSamplePlayed = true;
+        window.referenceWinSampleGain = args[1];
+      }
       return playSample(buffer, ...args);
     };
   });
@@ -1047,6 +1058,11 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   }));
   expect(foundationAudio.gain).toBeCloseTo(1, 5);
   expect(foundationAudio.offset).toBeCloseTo(0.29, 1);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceWinBuffer?.duration)).toBeCloseTo(2.14, 2);
+  await page.evaluate(() => window.solitaireAudio.play('win'));
+  await expect.poll(() => page.evaluate(() => window.referenceWinSamplePlayed)).toBe(true);
+  const winOutputGain = await page.evaluate(() => window.referenceWinSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(winOutputGain).toBeCloseTo(1, 5);
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
@@ -1073,7 +1089,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v38');
+  expect(cacheNames).toContain('solitaire-master-v39');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -1098,6 +1114,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineWinImage).toEqual({ ok: true, type: 'image/png' });
+  const offlineWinSound = await page.evaluate(async () => {
+    const response = await fetch('/assets/audio/win-reference.wav');
+    return { ok: response.ok, type: response.headers.get('content-type') };
+  });
+  expect(offlineWinSound).toEqual({ ok: true, type: 'audio/x-wav' });
   const offlineCardBack = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/back-solitaire-master-reference.png');
     return { ok: response.ok, type: response.headers.get('content-type'), bytes: (await response.arrayBuffer()).byteLength };
