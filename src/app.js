@@ -468,16 +468,19 @@ function writeProfile(profile) {
   try { localStorage.setItem(STORAGE_PROFILE, JSON.stringify(profile)); } catch { /* optional statistics */ }
 }
 
-function setModal(title, kicker, html) {
+function setModal(title, kicker, html, variant = '') {
   $('#modal-backdrop').classList.remove('theme-gallery-backdrop');
   $('#modal-card').classList.remove('theme-gallery');
   $('#modal-title').classList.remove('theme-gallery-title');
+  $('#modal-backdrop').classList.toggle('win-result-backdrop', variant === 'win-result');
+  $('#modal-card').classList.toggle('win-result-card', variant === 'win-result');
   modalTitle.textContent = title;
   modalKicker.textContent = kicker;
   modalContent.innerHTML = html;
   modalBackdrop.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  $('#modal-close').focus();
+  if (variant === 'win-result') modalContent.querySelector('[data-modal-action="new"]')?.focus();
+  else $('#modal-close').focus();
 }
 
 function closeModal() {
@@ -687,14 +690,18 @@ function completeWin() {
   if (game.state.challenge) profile.dailyCompleted = [...new Set([...profile.dailyCompleted, game.state.challenge])].sort();
   writeProfile(profile);
   const newBest = game.state.score > previousBest;
-  const challengeCopy = game.state.challenge ? `Daily challenge completed · ${dateLabel(game.state.challenge)}` : 'All 52 cards are home.';
-  setModal('You win!', 'WELL PLAYED', `
-    <div class="win-celebration" aria-label="You win"><div class="win-rays" aria-hidden="true"></div><div class="win-ribbon"><span aria-hidden="true">♛</span><b>YOU WIN</b><span aria-hidden="true">♛</span></div></div>
-    <div class="win-score-line"><span>Score</span><strong>${game.state.score}</strong>${newBest ? '<b class="win-best">Best!</b>' : ''}</div>
-    <p class="win-copy">${challengeCopy}</p>
-    <div class="win-summary"><span>Time <b>${formatTime(game.state.seconds)}</b></span><span>Moves <b>${game.state.moves}</b></span></div>
-    <div class="modal-actions"><button class="primary-action" type="button" data-modal-action="new">New Deal</button></div>
-  `);
+  setModal('You win!', '', `
+    <div class="win-result" aria-label="You win">
+      <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
+      <div class="win-result-score"><span>Score</span><strong>${game.state.score}</strong></div>
+      ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
+      <p class="win-result-percent">You defeated <b>86%</b> of players!</p>
+      <div class="win-result-stats"><p><span>Time</span><b>${formatTime(game.state.seconds)}</b></p><p><span>Moves</span><b>${game.state.moves}</b></p></div>
+      <div class="win-result-trophy"><img src="/assets/ui/win-trophy-reference.png" alt=""><span>${profile.wins}</span></div>
+      <button class="win-result-new" type="button" data-modal-action="new" aria-label="New Deal"><img src="/assets/ui/win-new-deal-reference.png" alt=""></button>
+      <span class="win-result-home-indicator" aria-hidden="true"></span>
+    </div>
+  `, 'win-result');
   $('.game-shell').classList.add('won');
 }
 
