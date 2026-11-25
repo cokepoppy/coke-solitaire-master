@@ -347,6 +347,7 @@ async function runSourceOpeningReplay(page) {
   };
   const move = async (sourcePile, sourceIndex, targetPile, targetIndex) => {
     await page.locator(`.pile-column[data-pile="${sourcePile}"] .playing-card[data-index="${sourceIndex}"]`).click();
+    expect(await page.evaluate(() => window.audioCues)).not.toContain('tap');
     await page.locator(`.pile-column[data-pile="${targetPile}"] .playing-card[data-index="${targetIndex}"]`).click();
   };
 
@@ -1638,7 +1639,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v57');
+  expect(cacheNames).toContain('solitaire-master-v58');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

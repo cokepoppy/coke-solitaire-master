@@ -1169,7 +1169,6 @@ board.addEventListener('pointerup', (event) => {
     previousTap = { id: current.card.dataset.cardId, time: now };
     if (result.action === 'move') audio.play('move');
     else if (result.action === 'foundation') playFoundationMoveCue();
-    else if (result.action === 'select') audio.play('tap');
     render();
     if (result.action === 'move' || result.action === 'foundation') startCardMoveFlight(origins);
     if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId, result.action === 'foundation');
