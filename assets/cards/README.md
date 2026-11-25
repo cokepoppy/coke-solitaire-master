@@ -104,3 +104,13 @@ The 10♣ crop comes from the default black-suit gameplay frame at 120 seconds. 
 The runtime selects these crops for their matching cards and includes them in the offline shell cache. All twelve court cards and all forty number-card faces use source-frame or official store crops.
 
 The complete 9♥ face is directly cropped from the gameplay frame at PTS 4623360 (301s), at `(133, 990)`. It is the unobscured bottom card in tableau column 2, with no card overlap or selection effect. The crop is 118×177 and its source-video hash, frame PTS, crop coordinates, and PNG hash are recorded in `9-of-hearts-reference.json`.
+
+## Alternate Face Style samples
+
+The Face Style gallery at 325 s shows the same five sample cards—10♦, J♣, Q♥, K♠, and A♦—in styles 1–5. For styles 3, 4, and 5, `face-style-<style>-<card>-reference.png` contains the matching sample crop from that style's 607×197 source preview strip, resized to 118×177. Rebuild all 15 assets from the committed preview strips with:
+
+```sh
+python3 tools/extract_theme_face_samples.py
+```
+
+The runtime switches these five cards to the selected style and caches the crops for offline play. The source does not show the remaining 47 faces for those styles, so they keep the Solitaire Master artwork; these assets do not imply that the alternate decks are complete.

@@ -109,8 +109,20 @@ const REFERENCE_CARD_ART = new Set([
   '3-of-clubs', '5-of-clubs', '8-of-diamonds', '10-of-spades',
   '5-of-spades', '7-of-spades', '4-of-diamonds', '9-of-clubs', '9-of-hearts',
 ]);
+const FACE_STYLE_SAMPLES = Object.fromEntries([3, 4, 5].map((style) => [
+  `style-${style}`,
+  new Set(['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds']),
+]));
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 const STORAGE_TABLEAU_TUTORIAL = 'solitaire-master-tableau-tutorial-v1';
+
+function cardFaceAssetName(card) {
+  const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
+  const style = game.state.cardFaceStyle ?? 'master';
+  if (style === 'classic') return `${artName}.svg`;
+  if (FACE_STYLE_SAMPLES[style]?.has(artName)) return `face-${style}-${artName}-reference.png`;
+  return REFERENCE_CARD_ART.has(artName) ? `${artName}-reference.png` : `${artName}.svg`;
+}
 
 function showTableauTutorial() {
   if (localStorage.getItem(STORAGE_TABLEAU_TUTORIAL) === 'shown') return;
@@ -272,9 +284,7 @@ function renderCard(card, source, options = {}) {
     return `<button class="${classes.join(' ')}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1">${cardBackImageMarkup({ deal })}</button>`;
   }
   const color = ['♥', '♦'].includes(card.suit) ? 'red' : 'black';
-  const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
-  const asset = REFERENCE_CARD_ART.has(artName) ? `${artName}-reference.png` : `${artName}.svg`;
-  const faceAsset = game.state.cardFaceStyle === 'classic' ? `${artName}.svg` : asset;
+  const faceAsset = cardFaceAssetName(card);
   return `<button class="${classes.join(' ')} ${color}" type="button" ${sourceAttrs} style="${style}" aria-label="${aria}" tabindex="-1"><img class="card-face-art" src="/assets/cards/${faceAsset}" alt="" draggable="false"></button>`;
 }
 
@@ -867,8 +877,7 @@ function completeWin() {
   writeProfile(profile);
   winNewBest = game.state.score > previousBest;
   const cascade = game.state.foundations.flatMap((pile, suitIndex) => pile.map((card, rankIndex) => {
-    const artName = `${CARD_RANK_FILES[card.rank]}-of-${CARD_SUIT_FILES[card.suit]}`;
-    const asset = REFERENCE_CARD_ART.has(artName) && game.state.cardFaceStyle !== 'classic' ? `${artName}-reference.png` : `${artName}.svg`;
+    const asset = cardFaceAssetName(card);
     const rankProgress = rankIndex / 12;
     const fromX = 8 + suitIndex * 20;
     const toX = [-7, 5, 17, 29][suitIndex] + rankProgress * 65;

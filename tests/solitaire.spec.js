@@ -495,6 +495,35 @@ test.describe('source-sized visual comparison', () => {
 test.describe('source-sized face gallery', () => {
   test.use({ viewport: { width: 442, height: 960 }, deviceScaleFactor: 2 });
 
+  test('source-observed samples use the selected face style on the table', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => {
+      const cards = [
+        { id: 'sample-10d', rank: 10, suit: '♦', faceUp: true },
+        { id: 'sample-jc', rank: 11, suit: '♣', faceUp: true },
+        { id: 'sample-qh', rank: 12, suit: '♥', faceUp: true },
+        { id: 'sample-ks', rank: 13, suit: '♠', faceUp: true },
+        { id: 'sample-ad', rank: 1, suit: '♦', faceUp: true },
+        { id: 'fallback-8c', rank: 8, suit: '♣', faceUp: true },
+      ];
+      window.solitaireGame.state.tableau = [...cards.map((card) => [card]), []];
+    });
+    await page.getByRole('button', { name: 'Game menu' }).click();
+    await page.getByRole('button', { name: 'Settings and themes' }).click();
+    await page.getByRole('button', { name: 'Themes' }).click();
+    await page.getByRole('button', { name: 'Card faces' }).click();
+
+    for (const style of [3, 4, 5]) {
+      await page.locator(`.face-tile[data-value="style-${style}"]`).click();
+      const cards = ['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds'];
+      for (const [index, name] of cards.entries()) {
+        await expect(page.locator('.card-face-art').nth(index)).toHaveAttribute('src', `/assets/cards/face-style-${style}-${name}-reference.png`);
+      }
+      await expect(page.locator('.card-face-art').nth(5)).toHaveAttribute('src', '/assets/cards/8-of-clubs-reference.png');
+      await expect.poll(() => page.locator('.card-face-art').evaluateAll((images) => images.length === 6 && images.every((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177))).toBe(true);
+    }
+  });
+
   test('five face-style preview strips align to the 325-second source frame', async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: 'Game menu' }).click();
@@ -1372,7 +1401,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v50');
+  expect(cacheNames).toContain('solitaire-master-v51');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1532,6 +1561,15 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, width: image.width, height: image.height };
   })));
   expect(offlineFaceGalleryArt).toEqual(Array(5).fill({ ok: true, width: 607, height: 197 }));
+  const offlineAlternateFaceSamples = await page.evaluate(async () => {
+    const names = [3, 4, 5].flatMap((style) => ['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds'].map((card) => `face-style-${style}-${card}-reference.png`));
+    return Promise.all(names.map(async (name) => {
+      const response = await fetch(`/assets/cards/${name}`);
+      const image = await createImageBitmap(await response.blob());
+      return { ok: response.ok, width: image.width, height: image.height };
+    }));
+  });
+  expect(offlineAlternateFaceSamples).toEqual(Array(15).fill({ ok: true, width: 118, height: 177 }));
   const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
     const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';
