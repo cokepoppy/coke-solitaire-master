@@ -277,6 +277,8 @@ async function runSourceOpeningReplay(page) {
   });
   await page.reload();
   await page.waitForTimeout(1450);
+  const sourceColumnOrigins = await page.locator('.pile-column').evaluateAll((columns) => columns.map((column) => Math.round(column.getBoundingClientRect().left * devicePixelRatio)));
+  expect(sourceColumnOrigins).toEqual([8, 133, 258, 383, 508, 633, 758]);
   const foundationTop = await page.locator('.foundation-slot').first().evaluate((slot) => slot.getBoundingClientRect().top);
   expect(foundationTop).toBeLessThan(214.75);
   const sourceActionRow = page.locator('.action-row-reference-art');
