@@ -40,7 +40,7 @@ export class GameAudio {
       this.musicBus = this.context.createGain();
       this.master.gain.value = this.masterLevel;
       this.soundBus.gain.value = this.soundOn ? this.soundLevel : 0;
-      this.musicBus.gain.value = this.musicOn ? 0.42 : 0;
+      this.musicBus.gain.value = this.soundOn && this.musicOn ? 0.42 : 0;
       this.soundBus.connect(this.master);
       this.musicBus.connect(this.master);
       this.master.connect(this.context.destination);
@@ -384,7 +384,7 @@ export class GameAudio {
   }
 
   scheduleMusic() {
-    if (!this.musicOn || !this.context || this.context.state !== 'running' || this.musicTimer) return;
+    if (!this.soundOn || !this.musicOn || !this.context || this.context.state !== 'running' || this.musicTimer) return;
     const chords = [
       [146.83, 196, 220, 293.66],
       [130.81, 174.61, 196, 261.63],
@@ -408,16 +408,23 @@ export class GameAudio {
     this.soundOn = Boolean(enabled);
     if (!this.soundOn) this.pending = [];
     if (this.soundBus && this.context) this.soundBus.gain.setTargetAtTime(this.soundOn ? this.soundLevel : 0, this.context.currentTime, 0.025);
+    if (this.musicBus && this.context) this.musicBus.gain.setTargetAtTime(this.soundOn && this.musicOn ? 0.42 : 0, this.context.currentTime, 0.025);
+    if (!this.soundOn) {
+      clearTimeout(this.musicTimer);
+      this.musicTimer = null;
+    } else if (this.musicOn) {
+      this.unlock().then((ok) => { if (ok && this.soundOn && this.musicOn) this.scheduleMusic(); });
+    }
   }
 
   setMusic(enabled) {
     this.musicOn = Boolean(enabled);
-    if (this.musicBus && this.context) this.musicBus.gain.setTargetAtTime(this.musicOn ? 0.42 : 0, this.context.currentTime, 0.08);
-    if (!this.musicOn) {
+    if (this.musicBus && this.context) this.musicBus.gain.setTargetAtTime(this.soundOn && this.musicOn ? 0.42 : 0, this.context.currentTime, 0.08);
+    if (!this.musicOn || !this.soundOn) {
       clearTimeout(this.musicTimer);
       this.musicTimer = null;
       return;
     }
-    this.unlock().then((ok) => { if (ok && this.musicOn) this.scheduleMusic(); });
+    this.unlock().then((ok) => { if (ok && this.soundOn && this.musicOn) this.scheduleMusic(); });
   }
 }

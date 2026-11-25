@@ -1168,16 +1168,22 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   const winOutputGain = await page.evaluate(() => window.referenceWinSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(winOutputGain).toBeCloseTo(1, 5);
 
+  await page.evaluate(() => window.solitaireAudio.setMusic(true));
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicStep)).toBeGreaterThan(0);
+  await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
   await page.getByRole('switch', { name: 'Audio' }).click();
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(false);
-  await page.evaluate(() => window.solitaireAudio.setMusic(true));
-  await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicStep)).toBeGreaterThan(0);
+  expect(await page.evaluate(() => window.solitaireAudio.musicTimer)).toBeNull();
+  await page.getByRole('switch', { name: 'Audio' }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(true);
   await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
   await page.evaluate(() => window.solitaireAudio.setMusic(false));
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicOn)).toBe(false);
   expect(await page.evaluate(() => window.solitaireAudio.musicTimer)).toBeNull();
+  await page.getByRole('switch', { name: 'Audio' }).click();
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(false);
   await page.getByRole('button', { name: 'Close dialog' }).click();
 
   const cuesBeforeMutedDraw = await page.evaluate(() => window.audioCues.length);
@@ -1193,7 +1199,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v44');
+  expect(cacheNames).toContain('solitaire-master-v45');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
