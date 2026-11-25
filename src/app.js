@@ -463,6 +463,18 @@ function scheduleAutoCollect() {
   }, 150);
 }
 
+const FOUNDATION_COMBO_REWARDS = {
+  1: { name: 'Good', cue: 'good', className: 'combo-good', eventIncludesFoundation: true },
+  2: { name: 'Great', cue: 'great', className: 'combo-great' },
+  4: { name: 'Amazing', cue: 'amazing', className: 'combo-amazing' },
+};
+
+function playFoundationMoveCue() {
+  // The captured Good event includes its foundation action and reward flourish.
+  if (FOUNDATION_COMBO_REWARDS[game.state.comboCount]?.eventIncludesFoundation) return;
+  audio.play('foundation');
+}
+
 function showComboFeedback(cardId, foundationMove = false) {
   board.querySelectorAll('.combo-feedback, .combo-good, .combo-great, .combo-amazing').forEach((effect) => effect.remove());
   clearTimeout(comboFeedbackTimer);
@@ -478,11 +490,7 @@ function showComboFeedback(cardId, foundationMove = false) {
   label.style.top = '-20px';
   label.style.left = '50%';
   board.append(label);
-  const reward = foundationMove ? {
-    1: { name: 'Good', cue: 'good', className: 'combo-good' },
-    2: { name: 'Great', cue: 'great', className: 'combo-great' },
-    4: { name: 'Amazing', cue: 'amazing', className: 'combo-amazing' },
-  }[combo] : null;
+  const reward = foundationMove ? FOUNDATION_COMBO_REWARDS[combo] : null;
   if (reward) {
     audio.play(reward.cue);
     const banner = document.createElement('div');
@@ -976,7 +984,8 @@ function handleMagic() {
   game.state.magicCharges -= 1;
   game.save();
   markCardMove(movingIds, origins, revealedCardId);
-  audio.play(hint.target.zone === 'foundation' ? 'foundation' : 'move');
+  if (hint.target.zone === 'foundation') playFoundationMoveCue();
+  else audio.play('move');
   render();
   startCardMoveFlight(origins);
   showComboFeedback(movingIds[0], hint.target.zone === 'foundation');
@@ -1003,7 +1012,8 @@ function commitMove(target) {
     vibrateGame(12);
     markCardMove(movingIds, origins, revealedCardId);
     const foundationMove = target.dataset.dropZone === 'foundation';
-    audio.play(foundationMove ? 'foundation' : 'move');
+    if (foundationMove) playFoundationMoveCue();
+    else audio.play('move');
     render();
     startCardMoveFlight(origins);
     showComboFeedback(movingIds[0], foundationMove);
@@ -1093,7 +1103,8 @@ board.addEventListener('pointerup', (event) => {
     else result = game.tapCard(current.source);
     if (result.action === 'move' || result.action === 'foundation') markCardMove(movingIds, origins, revealedCardId);
     previousTap = { id: current.card.dataset.cardId, time: now };
-    if (result.action === 'move' || result.action === 'foundation') audio.play(result.action === 'foundation' ? 'foundation' : 'move');
+    if (result.action === 'move') audio.play('move');
+    else if (result.action === 'foundation') playFoundationMoveCue();
     else if (result.action === 'select') audio.play('tap');
     render();
     if (result.action === 'move' || result.action === 'foundation') startCardMoveFlight(origins);
