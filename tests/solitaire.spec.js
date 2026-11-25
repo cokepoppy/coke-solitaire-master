@@ -1330,6 +1330,9 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
   await expect(page.locator('.win-streak-reward img')).toHaveJSProperty('naturalWidth', 78);
   await expect(page.locator('.win-cascade-card')).toHaveCount(52);
+  await expect(page.locator('.foundation-slot .foundation-source-art')).toHaveCount(4);
+  await expect(page.locator('.foundation-slot .playing-card')).toHaveCount(0);
+  expect(await page.evaluate(() => window.solitaireGame.state.foundations.every((pile) => pile.length === 13))).toBe(true);
   const suitOrder = await page.locator('.win-cascade-card').evaluateAll((cards) => [0, 13, 26, 39].map((index) => new URL(cards[index].src).pathname));
   expect(suitOrder.map((source) => source.match(/of-(hearts|diamonds|spades|clubs)/)?.[1])).toEqual(['hearts', 'diamonds', 'spades', 'clubs']);
   await page.waitForTimeout(3000);
@@ -1390,6 +1393,7 @@ test('winning shows a result card and records a completed daily challenge', asyn
   expect(winLayout.buttonBottom).toBeLessThanOrEqual(winLayout.viewportHeight);
   await page.getByRole('button', { name: 'New Deal' }).click();
   await expect(page.locator('.modal-backdrop')).toBeHidden();
+  await expect(page.locator('.foundation-slot .foundation-source-art')).toHaveCount(4);
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('solitaire-master-profile-v1')).dailyCompleted)).toContain(challengeDate);
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.locator('[data-more="daily"]').click();
@@ -1639,7 +1643,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v58');
+  expect(cacheNames).toContain('solitaire-master-v59');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

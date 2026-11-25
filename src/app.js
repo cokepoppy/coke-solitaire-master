@@ -74,6 +74,7 @@ let revealedCardIds = new Set();
 let cardMoveIds = new Set();
 let cardFlight = null;
 let winShown = false;
+let winCascadeClearsFoundations = Boolean(game.state.won);
 let comboFeedbackTimer = null;
 let dealSettlementTimer = null;
 let winStreakTimer = null;
@@ -326,7 +327,7 @@ function renderTopRow() {
     const source = { zone: 'foundation', pile: index, index: pile.length - 1 };
     const isTarget = game.state.hint?.target?.zone === 'foundation' && game.state.hint.target.pile === index;
     const movableTarget = game.state.movableHighlight && game.state.selected && game.canMove(game.state.selected, { zone: 'foundation', pile: index });
-    const card = top ? renderCard(top, source, { index }) : `<span class="foundation-mark" aria-hidden="true"><img class="foundation-source-art" src="/assets/ui/foundation-empty-${index + 1}.png" alt=""><span class="foundation-theme-mark">A</span></span>`;
+    const card = top && !winCascadeClearsFoundations ? renderCard(top, source, { index }) : `<span class="foundation-mark" aria-hidden="true"><img class="foundation-source-art" src="/assets/ui/foundation-empty-${index + 1}.png" alt=""><span class="foundation-theme-mark">A</span></span>`;
     return `<div class="slot foundation-slot drop-target${isTarget ? ' is-hint' : ''}${movableTarget ? ' is-moveable' : ''}" style="grid-column:${column};grid-row:1" data-drop-zone="foundation" data-pile="${index}" aria-label="Foundation ${index + 1}">${card}</div>`;
   }).join('');
   topRow.innerHTML = `${stockButton}${wasteSlot}${foundations}`;
@@ -873,6 +874,7 @@ function startDailyGame(day = localDateKey(new Date())) {
   writeProfile(profile);
   firstDeal = true;
   winShown = false;
+  winCascadeClearsFoundations = false;
   $('.game-shell').classList.remove('won');
   closeModal();
   render();
@@ -883,6 +885,8 @@ function startDailyGame(day = localDateKey(new Date())) {
 function completeWin() {
   if (winShown) return;
   winShown = true;
+  winCascadeClearsFoundations = true;
+  renderTopRow();
   winResultSoundPlayed = false;
   clearTableauTutorial();
   const profile = readProfile();
@@ -989,6 +993,7 @@ function doNewGame(restart = false) {
   audio.setMusic(options.music);
   $('.game-shell').classList.remove('won');
   winShown = false;
+  winCascadeClearsFoundations = false;
   firstDeal = true;
   closeModal();
   render();
@@ -1220,7 +1225,10 @@ board.addEventListener('click', (event) => {
 $('#undo-button').addEventListener('click', () => {
   cancelAutoCollect();
   if (!game.undo()) return;
-  if (!game.state.won) winShown = false;
+  if (!game.state.won) {
+    winShown = false;
+    winCascadeClearsFoundations = false;
+  }
   audio.play('tap');
   $('.game-shell').classList.remove('won');
   render();
