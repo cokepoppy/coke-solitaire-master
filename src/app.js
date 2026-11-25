@@ -936,11 +936,27 @@ function showWinResult(newBest) {
     winResultSoundPlayed = true;
     audio.play('win');
   }
+  const scoreText = String(game.state.score);
+  let scoreTwos = 0;
+  const scoreDisplay = /^[235]+$/.test(scoreText)
+    ? `<span class="win-result-score-sprites" aria-hidden="true">${[...scoreText].map((digit) => {
+      let file;
+      let glyph = digit;
+      if (digit === '2') {
+        glyph = `2-${scoreTwos % 2 === 0 ? 'a' : 'b'}`;
+        file = `win-result-score-digit-${glyph}-reference.png`;
+        scoreTwos += 1;
+      } else {
+        file = `win-result-score-digit-${digit}-reference.png`;
+      }
+      return `<img src="/assets/ui/${file}" alt="" data-source-digit="${digit}" data-source-glyph="${glyph}">`;
+    }).join('')}</span><strong class="visually-hidden">${scoreText}</strong>`
+    : `<strong class="win-result-score-value">${scoreText}</strong>`;
   setModal('You win!', '', `
     <div class="win-result" aria-label="You win">
       <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
       <img class="win-result-score-background" src="/assets/ui/win-result-background-reference.png" alt="">
-      <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span><strong>${game.state.score}</strong></div>
+      <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span>${scoreDisplay}</div>
       ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
       <p class="win-result-percent"><img src="/assets/ui/win-result-percent-reference.png" alt=""><span class="visually-hidden">You defeated 86% of players!</span></p>
       <div class="win-result-stats"><p><img class="win-result-time-label" src="/assets/ui/win-result-time-label-reference.png" alt=""><span class="visually-hidden">Time</span><b>${formatTime(game.state.seconds)}</b></p><p><img class="win-result-moves-label" src="/assets/ui/win-result-moves-label-reference.png" alt=""><span class="visually-hidden">Moves</span><b>${game.state.moves}</b></p></div>

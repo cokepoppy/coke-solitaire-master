@@ -553,7 +553,13 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .win-result-score-background { position: absolute; top: 43.4375%; left: 0; display: block; width: 100%; height: auto; pointer-events: none; }
 .win-result-score { position: absolute; inset: 0; display: block; white-space: nowrap; }
 .win-result-score-label { position: absolute; top: 45.8333%; left: 21.4932%; display: block; width: 20.8145%; height: auto; }
-.win-result-score strong { position: absolute; top: 45.15%; left: 48.224%; color: #ff9b24; font-size: 9.25cqw; font-weight: 700; line-height: 1; text-shadow: 0 2px 0 #9f4811; transform: scale(1.05, 1.25); transform-origin: center center; }
+.win-result-score-value { position: absolute; top: 45.15%; left: 48.224%; color: #ff9b24; font-size: 9.25cqw; font-weight: 700; line-height: 1; text-shadow: 0 2px 0 #9f4811; transform: scale(1.05, 1.25); transform-origin: center center; }
+.win-result-score-sprites { position: absolute; top: 44.8958333%; left: 48.4162896%; display: flex; height: 10.633484cqw; align-items: flex-start; line-height: 0; }
+.win-result-score-sprites img { display: block; flex: none; height: 100%; object-fit: fill; pointer-events: none; }
+.win-result-score-sprites img[data-source-glyph="5"] { width: 5.769231cqw; }
+.win-result-score-sprites img[data-source-glyph="2-a"] { width: 5.882353cqw; }
+.win-result-score-sprites img[data-source-glyph="2-b"] { width: 5.995475cqw; }
+.win-result-score-sprites img[data-source-glyph="3"] { width: 5.882353cqw; }
 .win-result-best { position: absolute; top: 43.6458%; left: 76.6968%; display: block; width: 13.2353%; height: auto; }
 .win-result-percent { position: absolute; inset: 0; margin: 0; }
 .win-result-percent > img { position: absolute; top: 51.40625%; left: 3.9593%; display: block; width: 91.6289%; height: auto; }

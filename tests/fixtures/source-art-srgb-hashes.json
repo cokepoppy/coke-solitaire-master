@@ -79,7 +79,11 @@
   "ui/win-new-deal-reference.png": "b1d2d094532212c9ae06e3e53ed75333d772606704da0730116591eaf821fcf8",
   "ui/win-result-moves-label-reference.png": "9a38c54e9eb545dd3ec01e805f95e59fd0a0c402875e637e417b9fb3ca8b03f4",
   "ui/win-result-percent-reference.png": "0a9c5d8f71aa8d475a826b621ed8856132f846dd9ccc39071f9f12fb59bda27f",
+  "ui/win-result-score-digit-2-a-reference.png": "8918fee9c7eaf7e9e89568aa06d0fea2041ffabe3bc461884eca645b36a72983",
+  "ui/win-result-score-digit-2-b-reference.png": "643bf37be3ec1b7383b001f575bb179eafcdb64e40fc3dee7453d28ffcad452a",
+  "ui/win-result-score-digit-3-reference.png": "067ea3043215bb6c337e2468f8ea99d7b6fd13763071db1c8ad5821f9bc1a575",
   "ui/win-result-score-label-reference.png": "fa502ea188ef3d347f0b6624f27ba2afee2df9af56a426a595918491b4ed3859",
+  "ui/win-result-score-digit-5-reference.png": "b8dfb1b80fc70f3708b0302078498cdbb5b00ce0be0ae316c0319f37f009d80f",
   "ui/win-result-time-label-reference.png": "2f9dc96db16c0682d440470852e42907436b2372a4e4bf02335a37a9f84c7c39",
   "ui/win-trophy-reference.png": "8335afb057ca0d1b6b5be1b9636cbbc6d10467745180a4de5276278a220f5cb9"
 }

@@ -1277,10 +1277,13 @@ test.describe('source-sized win result', () => {
     await page.locator('.win-result img').evaluateAll((images) => Promise.all(images.map((image) => image.decode())));
     await expect(page.locator('.win-result-score-background')).toBeVisible();
     await expect(page.locator('.win-result-best')).toHaveCount(1);
+    await expect(page.locator('.win-result-score-sprites img')).toHaveCount(4);
+    await expect(page.locator('.win-result-score-value')).toHaveCount(0);
 
     const sourceRects = {
       '.win-result-banner': [0, 260, 884, 574],
       '.win-result-score-background': [0, 834, 884, 153],
+      '.win-result-score-sprites': [428, 862, 208, 94],
       '.win-result-score-label': [190, 880, 184, 70],
       '.win-result-best': [678, 838, 117, 118],
       '.win-result-percent > img': [35, 987, 810, 81],
@@ -1296,6 +1299,20 @@ test.describe('source-sized win result', () => {
     for (const [selector, expected] of Object.entries(sourceRects)) {
       actual[selector].forEach((value, index) => expect(Math.abs(value - expected[index]), `${selector} axis ${index}`).toBeLessThanOrEqual(1));
     }
+    const sourceGlyphs = await page.locator('.win-result-score-sprites img').evaluateAll((images) => images.map((image) => {
+      const rect = image.getBoundingClientRect();
+      return {
+        file: image.getAttribute('src').split('/').at(-1),
+        size: [image.naturalWidth, image.naturalHeight],
+        rect: [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio)),
+      };
+    }));
+    expect(sourceGlyphs).toEqual([
+      { file: 'win-result-score-digit-5-reference.png', size: [51, 94], rect: [428, 862, 51, 94] },
+      { file: 'win-result-score-digit-2-a-reference.png', size: [52, 94], rect: [479, 862, 52, 94] },
+      { file: 'win-result-score-digit-2-b-reference.png', size: [53, 94], rect: [531, 862, 53, 94] },
+      { file: 'win-result-score-digit-3-reference.png', size: [52, 94], rect: [584, 862, 52, 94] },
+    ]);
     await page.screenshot({ path: 'test-results/source-win-result-884x1920.png', fullPage: true, animations: 'disabled' });
   });
 });
@@ -1382,6 +1399,8 @@ test('winning shows a result card and records a completed daily challenge', asyn
   expect(await page.evaluate(() => window.gameAudioCues.at(-1))).toBe('win');
   await expect(page.locator('.win-result-banner')).toHaveAttribute('src', '/assets/ui/win-banner-reference.png');
   await expect(page.locator('.win-result-score')).toContainText('390');
+  await expect(page.locator('.win-result-score-value')).toHaveText('390');
+  await expect(page.locator('.win-result-score-sprites')).toHaveCount(0);
   await expect(page.locator('.win-result-percent')).toHaveText('You defeated 86% of players!');
   const displayedWinTime = await page.evaluate(() => {
     const seconds = window.solitaireGame.state.seconds;
@@ -1676,7 +1695,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v62');
+  expect(cacheNames).toContain('solitaire-master-v63');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1717,6 +1736,19 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
   });
   expect(offlineWinBackground).toEqual({ ok: true, type: 'image/png', width: 884, height: 153 });
+  const offlineWinScoreGlyphs = await page.evaluate(async () => Promise.all([
+    '5', '2-a', '2-b', '3',
+  ].map(async (glyph) => {
+    const response = await fetch(`/assets/ui/win-result-score-digit-${glyph}-reference.png`);
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  })));
+  expect(offlineWinScoreGlyphs).toEqual([
+    { ok: true, type: 'image/png', width: 51, height: 94 },
+    { ok: true, type: 'image/png', width: 52, height: 94 },
+    { ok: true, type: 'image/png', width: 53, height: 94 },
+    { ok: true, type: 'image/png', width: 52, height: 94 },
+  ]);
   const offlineWinSound = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/win-reference.wav');
     return { ok: response.ok, type: response.headers.get('content-type') };
