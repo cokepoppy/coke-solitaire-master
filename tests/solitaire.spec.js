@@ -229,6 +229,11 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
 async function runSourceOpeningReplay(page) {
   await page.setViewportSize({ width: 442, height: 960 });
   await page.goto('/');
+  const sourceMenuArt = await page.locator('.menu-source-art').boundingBox();
+  expect(sourceMenuArt.x).toBeCloseTo(12.5, 0);
+  expect(sourceMenuArt.y).toBeCloseTo(151.5, 0);
+  expect(sourceMenuArt.width).toBe(36);
+  expect(sourceMenuArt.height).toBe(37);
   await page.evaluate(() => {
     const game = window.solitaireGame;
     const suits = ['♠', '♥', '♦', '♣'];

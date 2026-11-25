@@ -98,6 +98,9 @@ button:focus-visible { outline: 3px solid #f4d67a; outline-offset: 2px; }
 body[data-theme='felt'] .menu-button { border: 0; background: transparent; }
 body[data-theme='felt'] .menu-source-art { display: block; width: 100%; height: 100%; object-fit: fill; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 body[data-theme='felt'] .menu-theme-icon { display: none; }
+@media (min-resolution: 1.5dppx) {
+  body[data-theme='felt'] .menu-source-art { width: 36px; height: 37px; transform: translate(-.5px, -.5px); }
+}
 .menu-button:active { transform: scale(.95); }
 .icon-button { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; color: #fff; background: rgba(15,45,23,.45); cursor: pointer; }
 
