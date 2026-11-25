@@ -116,7 +116,8 @@ export class SolitaireGame {
       this.state.comboCount = 0;
       this.state.comboLastMoveAt = 0;
       if (this.state.theme === 'woodland') this.state.theme = 'mountain';
-      if (!['felt', 'mountain', 'dusk', 'lagoon', 'emerald', 'midnight', 'plum', 'forest', 'violet'].includes(this.state.theme)) this.state.theme = 'felt';
+      if (this.state.theme === 'dusk') this.state.theme = 'felt';
+      if (!['felt', 'mountain', 'lagoon', 'emerald', 'midnight', 'plum', 'forest', 'violet', 'green-9', 'green-10', 'green-11'].includes(this.state.theme)) this.state.theme = 'felt';
       return true;
     } catch {
       return false;
