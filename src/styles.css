@@ -146,8 +146,8 @@ body[data-theme='felt'] .timer-frame-vector { display: none; }
   --card-width: var(--card-w);
   --card-height: var(--card-h);
   position: relative;
-  width: calc(100% + 13px);
-  margin-left: -6.5px;
+  width: calc(100% + 12px);
+  margin-left: -6.25px;
   flex: 1 0 auto;
   touch-action: manipulation;
 }
