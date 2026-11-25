@@ -1,0 +1,38 @@
+{
+  "dimensions": {
+    "width": 884,
+    "height": 1920
+  },
+  "reference": {
+    "path": "frame-00005-req-325.000000-pts-4992000.png",
+    "sha256": "8e1d5a22f7a1c0e6594196ae5f5eb013dedb5b5bc6d3af6d7c9ff341c85b244e"
+  },
+  "rendered": {
+    "path": "theme-face-gallery-source.png",
+    "sha256": "39b34fe179c93c00dd096fa3a419930a513521e87061625ec7e5ce3006ffbf71"
+  },
+  "comparison": {
+    "rescaled": false,
+    "ignored_rectangles": [
+      {
+        "name": "ios-home-indicator",
+        "x": 280,
+        "y": 1885,
+        "width": 330,
+        "height": 25
+      }
+    ],
+    "all_pixels": {
+      "mean_absolute_rgb_error": 9.569307,
+      "exact_rgb_pixel_fraction": 0.29878983,
+      "pixel_count": 1697280
+    },
+    "after_ignored_rectangles": {
+      "mean_absolute_rgb_error": 8.62653,
+      "exact_rgb_pixel_fraction": 0.30386029,
+      "pixel_count": 1697280
+    },
+    "regions": {},
+    "note": "Encoded-source video compression and browser rasterization contribute to pixel error; compare spatial error maps and known OS-only regions as well as the aggregate value."
+  }
+}

@@ -56,6 +56,8 @@ python3 tools/extract_theme_gallery_assets.py \
 
 The header and tab sprites are included in the service-worker shell cache and checked by the offline E2E test. The captured tab art reproduces the navigation chrome; the five face-style preview rows are documented below.
 
+The four gallery chrome sprites and captured face-style preview strips have their source RGB values tagged as sRGB, avoiding a browser color-management conversion. Their PNG-byte hashes are covered by `tests/fixtures/source-art-srgb-hashes.json`, and their full-screen comparisons are in [`research/solitaire-master/theme-gallery-source-pixel-audit-2026-11-25/`](../../research/solitaire-master/theme-gallery-source-pixel-audit-2026-11-25/).
+
 `theme-face-style-1-reference.png` through `theme-face-style-5-reference.png` are 607×197 preview-strip crops from the source Face Style page at 325 s, source rectangle x=139 and y positions 554, 809, 1063, 1318, and 1574. The first strip was selected in the source frame; its green selection frame and check were removed, restoring the small overlap on the Ace of Diamonds from the identical card in the second strip. Rebuild them with:
 
 ```sh

@@ -479,16 +479,20 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .gallery-tabs button > span { display: grid; place-items: center; width: 35px; height: 35px; font-family: system-ui, sans-serif; font-size: 33px; line-height: 1; }
 .gallery-tabs .tab-card-back { width: 29px; height: 37px; border: 2px solid currentColor; border-radius: 3px; font-size: 22px; }
 .gallery-grid { display: grid; grid-auto-rows: max-content; justify-content: center; align-content: start; gap: 22px 18px; padding: 12px min(10vw, 46px) 24px; }
-.back-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.back-grid { width: 77.4vw; align-self: center; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 27.75px 21px; margin-top: -2px; padding: 11.5px 0 24px; }
 .background-grid { width: 75.6vw; align-self: center; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 31px 6.3vw; padding: 13.5px 0 24px; }
 .background-tabs { margin-bottom: 0; }
 .face-grid { grid-template-columns: 1fr; justify-items: center; gap: 29px; padding: 30px 0 24px; }
 .gallery-tile { position: relative; min-width: 0; padding: 0; overflow: hidden; border: 2px solid #c9c7cd; border-radius: 9px; background: #faf9fc; box-shadow: 0 2px 3px rgba(28,27,33,.2); cursor: pointer; }
 .gallery-tile.chosen { border: 4px solid #14d526; box-shadow: 0 0 0 1px rgba(20,213,38,.3), 0 2px 4px rgba(28,27,33,.25); }
-.back-tile { aspect-ratio: 2 / 3; }
+.back-tile { aspect-ratio: 2 / 3; overflow: visible; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.back-tile.chosen { border: 0; box-shadow: none; }
+.back-tile.chosen:not(.source-selected)::before { position: absolute; z-index: 2; inset: -1.5px; border: 2px solid #14d526; border-radius: 7px; content: ''; pointer-events: none; }
 .back-tile > img, .back-preview-source img { display: block; width: 100%; height: 100%; object-fit: fill; }
+.back-tile > .back-selected-source-art { position: absolute; z-index: 1; top: -1.5%; left: -1.5%; width: 108%; height: 104.6667%; max-width: none; pointer-events: none; }
 .back-preview-source { position: absolute; inset: 0; display: block; }
 .back-preview-source img { position: absolute; inset: 0; }
+.back-tile.chosen > i { right: -4px; bottom: -6px; width: 32px; height: 32px; }
 .background-tile { aspect-ratio: 1; }
 .background-tile-wide { aspect-ratio: 304 / 125; }
 .background-tile > span, .background-tile > img { display: block; width: 100%; height: 100%; object-fit: fill; pointer-events: none; user-select: none; -webkit-user-drag: none; }

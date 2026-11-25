@@ -1,4 +1,18 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+
+const sourceArtSrgbHashes = JSON.parse(readFileSync(new URL('./fixtures/source-art-srgb-hashes.json', import.meta.url), 'utf8'));
+
+test('color-profiled source artwork keeps its recorded PNG files', async ({ page }) => {
+  await page.goto('/');
+  const actual = await page.evaluate(async (artwork) => Promise.all(Object.keys(artwork).map(async (name) => {
+    const response = await fetch(`/assets/${name}`);
+    if (!response.ok) throw new Error(`Source artwork request failed: ${name} (${response.status})`);
+    const digest = await crypto.subtle.digest('SHA-256', await response.arrayBuffer());
+    return [name, [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('')];
+  })), sourceArtSrgbHashes);
+  expect(actual).toEqual(Object.entries(sourceArtSrgbHashes));
+});
 
 test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) => {
   const pageErrors = [];
@@ -567,6 +581,37 @@ test.describe('source-sized face gallery', () => {
   });
 });
 
+test.describe('source-sized card-back gallery', () => {
+  test.use({ viewport: { width: 442, height: 960 }, deviceScaleFactor: 2 });
+
+  test('eight card-back previews align to the 327-second source frame', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Game menu' }).click();
+    await page.getByRole('button', { name: 'Settings and themes' }).click();
+    await page.getByRole('button', { name: 'Themes' }).click();
+    await page.getByRole('button', { name: 'Card backs' }).click();
+    await page.locator('.theme-gallery').evaluate(async (element) => {
+      await Promise.all(element.getAnimations({ subtree: true }).map((animation) => animation.finished.catch(() => {})));
+    });
+    await expect(page.locator('.back-tile')).toHaveCount(8);
+    await expect.poll(() => page.locator('.back-tile img').evaluateAll((images) => images.length === 8 && images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+    const sourcePixelRects = await page.locator('.back-tile').evaluateAll((tiles) => tiles.map((tile) => {
+      const rect = tile.getBoundingClientRect();
+      return [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio));
+    }));
+    const expectedRects = [
+      [100, 513, 200, 300], [342, 513, 200, 300], [583, 513, 200, 300],
+      [100, 869, 200, 300], [342, 869, 200, 300], [583, 869, 200, 300],
+      [100, 1224, 200, 300], [342, 1224, 200, 300],
+    ];
+    sourcePixelRects.forEach((actual, index) => actual.forEach((value, axis) => {
+      expect(Math.abs(value - expectedRects[index][axis])).toBeLessThanOrEqual(1);
+    }));
+    await expect(page.locator('.back-tile[data-value="ruby"]')).toHaveAttribute('aria-pressed', 'true');
+    await page.screenshot({ path: 'test-results/theme-back-gallery-source.png' });
+  });
+});
+
 test.describe('source-sized background gallery', () => {
   test.use({ viewport: { width: 442, height: 960 }, deviceScaleFactor: 2 });
 
@@ -743,14 +788,14 @@ test('reference card illustrations render on matching cards', async ({ page }) =
     const digest = await crypto.subtle.digest('SHA-256', bytes);
     return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
   });
-  expect(tenClubsAssetHash).toBe('c8e2b1f9e474c2e47ff9de7cb2cc84b01f963b829e83b769a69d2dd0f0a6e99c');
+  expect(tenClubsAssetHash).toBe(sourceArtSrgbHashes['cards/10-of-clubs-reference.png']);
   const nineHeartsAssetHash = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/9-of-hearts-reference.png');
     const bytes = await response.arrayBuffer();
     const digest = await crypto.subtle.digest('SHA-256', bytes);
     return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
   });
-  expect(nineHeartsAssetHash).toBe('07232b5f3ad93fd8240e9e17beffa56be5168aa787a71be7811d03c52b2dba1f');
+  expect(nineHeartsAssetHash).toBe(sourceArtSrgbHashes['cards/9-of-hearts-reference.png']);
   const bluePixelsInEightHeartsCorner = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/8-of-hearts-reference.png');
     const image = new Image();
@@ -874,9 +919,10 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-backs-reference.png');
   await expect(page.locator('.back-tile')).toHaveCount(8);
   await expect.poll(() => page.locator('.back-tile img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
-  await expect(page.locator('.back-tile[data-value="blue"] img')).toHaveAttribute('src', '/assets/cards/back-blue-reference.png');
-  await expect.poll(() => page.locator('.back-tile[data-value="blue"] img').evaluate((image) => image.naturalWidth === 118 && image.naturalHeight === 177)).toBe(true);
-  await expect(page.locator('.back-tile[data-value="ruby"] .back-preview-source img')).toHaveCount(2);
+  await expect(page.locator('.back-tile[data-value="blue"] img')).toHaveAttribute('src', '/assets/cards/back-blue-gallery-reference.png');
+  await expect.poll(() => page.locator('.back-tile[data-value="blue"] img').evaluate((image) => image.naturalWidth === 200 && image.naturalHeight === 300)).toBe(true);
+  await expect(page.locator('.back-tile[data-value="ruby"] .back-selected-source-art')).toHaveAttribute('src', '/assets/cards/back-ruby-gallery-selected-reference.png');
+  await expect(page.locator('.back-tile[data-value="ruby"] .back-preview-source img')).toHaveCount(0);
   await page.screenshot({ path: 'test-results/theme-gallery-mobile.png' });
   for (const [name, value] of [
     ['Teal diamonds', 'teal'], ['Blue lattice', 'lattice'], ['Blue diamonds', 'blue'],

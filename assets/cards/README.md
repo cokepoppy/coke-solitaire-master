@@ -8,6 +8,10 @@ The source deck credits public-domain court-card art from vector-playing-cards, 
 
 At 327 s (PTS 5,022,720), the Back Style gallery shows all eight backs. The seven unselected previews are source crops resized from 200×300 to 118×177. Blue was previously extracted with `python3 tools/extract_source_blue_card_back.py`; extract the other six with `python3 tools/extract_source_card_backs.py`:
 
+The gallery now uses dedicated, unscaled 200×300 crops for the seven unselected previews (`back-*-gallery-reference.png`); the selected Ruby preview uses a 216×314 crop that retains its green outline and checkmark. `tools/extract_card_back_gallery_assets.py` rebuilds these from PTS 5,022,720. The older 118×177 crops remain the board-card art. The gallery E2E checks all eight 200×300 tile positions against the 884×1920 source frame. Across all eight source back PNGs, the crops are pixel-identical to their source rectangles.
+
+Seventy-two source-frame PNGs in this project were encoded with an HDTV ICC profile even though their recorded channel values are already the desired sRGB samples. Their embedded profile is now tagged as sRGB without changing the decoded RGB pixels, preventing Chrome from applying an unwanted color conversion. `tests/fixtures/source-art-srgb-hashes.json` and the `color-profiled source artwork keeps its recorded PNG files` E2E test preserve the exact delivered-file hashes.
+
 | Asset | Source crop `(x1,y1,x2,y2)` | Asset SHA-256 |
 | --- | --- | --- |
 | `back-teal-reference.png` | `(100,513,300,813)` | `b9b2fd9f143edca573c279133b21000131dbcb65c284007703886d9395cebd38` |

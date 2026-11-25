@@ -91,6 +91,12 @@ const CARD_BACK_FILES = {
   lattice: 'back-lattice-reference.png', spade: 'back-spade-reference.png', coral: 'back-coral-reference.png',
   floral: 'back-floral-reference.png', amber: 'back-amber-reference.png',
 };
+const CARD_BACK_GALLERY_FILES = {
+  blue: 'back-blue-gallery-reference.png', teal: 'back-teal-gallery-reference.png',
+  lattice: 'back-lattice-gallery-reference.png', spade: 'back-spade-gallery-reference.png',
+  coral: 'back-coral-gallery-reference.png', floral: 'back-floral-gallery-reference.png',
+  amber: 'back-amber-gallery-reference.png',
+};
 const REFERENCE_CARD_ART = new Set([
   'queen-of-spades', 'king-of-diamonds', 'jack-of-diamonds',
   'queen-of-clubs', 'queen-of-diamonds', 'queen-of-hearts',
@@ -705,10 +711,14 @@ function showThemeGallery(tab = 'background') {
     return `<button class="gallery-tile background-tile${shape === 'wide' ? ' background-tile-wide' : ''}${theme === value ? ' chosen' : ''}" type="button" data-setting="theme" data-value="${value}" aria-label="${label} background" aria-pressed="${theme === value}">${artwork}${theme === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`;
   }).join('');
   const backTiles = THEME_BACKS.map(([value, label]) => {
-    const artwork = value === 'ruby'
-      ? '<span class="back-preview-source" aria-hidden="true"><img src="/assets/cards/back-solitaire-master.svg" alt=""><img src="/assets/cards/back-solitaire-master-reference.png" alt=""></span>'
-      : `<img src="/assets/cards/${CARD_BACK_FILES[value]}" alt="">`;
-    return `<button class="gallery-tile back-tile${cardBack === value ? ' chosen' : ''}" type="button" data-setting="cardBack" data-value="${value}" aria-label="${label}" aria-pressed="${cardBack === value}">${artwork}${cardBack === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`;
+    const selected = cardBack === value;
+    const artwork = value === 'ruby' && selected
+      ? '<img class="back-selected-source-art" src="/assets/cards/back-ruby-gallery-selected-reference.png" alt="" draggable="false">'
+      : value === 'ruby'
+        ? '<span class="back-preview-source" aria-hidden="true"><img src="/assets/cards/back-solitaire-master.svg" alt=""><img src="/assets/cards/back-solitaire-master-reference.png" alt=""></span>'
+        : `<img src="/assets/cards/${CARD_BACK_GALLERY_FILES[value]}" alt="" draggable="false">`;
+    const sourceSelected = selected && value === 'ruby';
+    return `<button class="gallery-tile back-tile${selected ? ' chosen' : ''}${sourceSelected ? ' source-selected' : ''}" type="button" data-setting="cardBack" data-value="${value}" aria-label="${label}" aria-pressed="${selected}">${artwork}${selected && !sourceSelected ? '<i aria-hidden="true">✓</i>' : ''}</button>`;
   }).join('');
   const faceTiles = [
     ['master', 'Solitaire Master', 'theme-face-style-1-reference.png'],
