@@ -78,6 +78,9 @@ let comboFeedbackTimer = null;
 let dealSettlementTimer = null;
 let winStreakTimer = null;
 let winNewBest = false;
+let autoHintTimer = null;
+let autoCollectTimer = null;
+let autoCollectRunning = false;
 
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
@@ -374,6 +377,89 @@ function render() {
     dealSettlementTimer = null;
     render();
   }, 1320);
+  scheduleAutoHint();
+}
+
+function scheduleAutoHint() {
+  clearTimeout(autoHintTimer);
+  autoHintTimer = null;
+  if (!game.state?.autoHints || game.state.won || game.state.hint || game.state.selected || drag || autoCollectRunning || !modalBackdrop.classList.contains('hidden')) return;
+  autoHintTimer = setTimeout(() => {
+    autoHintTimer = null;
+    if (!game.state.autoHints || game.state.won || game.state.hint || game.state.selected || drag || autoCollectRunning || !modalBackdrop.classList.contains('hidden')) return;
+    if (game.hintMove()) render();
+  }, 5000);
+}
+
+function cancelAutoCollect() {
+  clearTimeout(autoCollectTimer);
+  autoCollectTimer = null;
+  autoCollectRunning = false;
+  $('.game-shell').classList.remove('auto-collecting');
+  if (!game.state?.won) scheduleAutoHint();
+}
+
+function autoCollectReady() {
+  return game.state.autoCollect && !game.state.won && game.state.stock.length === 0 && game.state.tableau.every((pile) => pile.every((card) => card.faceUp));
+}
+
+function findAutoCollectMove() {
+  const sources = [];
+  if (game.state.waste.length) sources.push({ zone: 'waste', pile: 0, index: game.state.waste.length - 1 });
+  game.state.tableau.forEach((pile, index) => {
+    if (pile.length) sources.push({ zone: 'tableau', pile: index, index: pile.length - 1 });
+  });
+  for (const source of sources) {
+    for (let pile = 0; pile < 4; pile += 1) {
+      const target = { zone: 'foundation', pile };
+      if (game.canMove(source, target)) return { source, target, card: game.cardAt(source) };
+    }
+  }
+  return null;
+}
+
+function runAutoCollectStep() {
+  autoCollectTimer = null;
+  if (!autoCollectRunning || !autoCollectReady()) {
+    cancelAutoCollect();
+    return;
+  }
+  const move = findAutoCollectMove();
+  if (!move) {
+    cancelAutoCollect();
+    return;
+  }
+  const origins = captureCardOrigins([move.card.id]);
+  game.select(move.source);
+  if (!game.moveTo(move.target)) {
+    cancelAutoCollect();
+    return;
+  }
+  markCardMove([move.card.id], origins);
+  audio.play(game.state.won ? 'win' : 'foundation');
+  render();
+  startCardMoveFlight(origins);
+  if (game.state.won) {
+    cancelAutoCollect();
+    completeWin();
+    return;
+  }
+  autoCollectTimer = setTimeout(runAutoCollectStep, 100);
+}
+
+function scheduleAutoCollect() {
+  clearTimeout(autoCollectTimer);
+  autoCollectTimer = null;
+  if (autoCollectRunning || !autoCollectReady()) return;
+  autoCollectTimer = setTimeout(() => {
+    autoCollectTimer = null;
+    if (!autoCollectReady()) return;
+    clearTimeout(autoHintTimer);
+    autoHintTimer = null;
+    autoCollectRunning = true;
+    $('.game-shell').classList.add('auto-collecting');
+    runAutoCollectStep();
+  }, 150);
 }
 
 function showComboFeedback(cardId, foundationMove = false) {
@@ -501,6 +587,8 @@ function closeModal() {
   }
   modalBackdrop.classList.add('hidden');
   document.body.classList.remove('modal-open');
+  scheduleAutoHint();
+  scheduleAutoCollect();
 }
 
 function settingsSwitch(name, label, value) {
@@ -786,9 +874,13 @@ function handleStock() {
   audio.play(action === 'recycle' ? 'flip' : 'draw');
   render();
   showComboFeedback();
+  scheduleAutoCollect();
 }
 
 function doNewGame(restart = false) {
+  cancelAutoCollect();
+  clearTimeout(autoHintTimer);
+  autoHintTimer = null;
   clearTableauTutorial();
   const profile = readProfile();
   const previous = game.state;
@@ -861,6 +953,7 @@ function handleMagic() {
     audio.play(action === 'recycle' ? 'flip' : 'draw');
     render();
     announce('Magic revealed a new card');
+    scheduleAutoCollect();
     return;
   }
   const movingIds = game.sequenceAt(hint.source).map((card) => card.id);
@@ -882,6 +975,7 @@ function handleMagic() {
   startCardMoveFlight(origins);
   showComboFeedback(movingIds[0], hint.target.zone === 'foundation');
   if (game.state.won) completeWin();
+  else scheduleAutoCollect();
   announce('Magic move played');
 }
 
@@ -909,6 +1003,7 @@ function commitMove(target) {
     showComboFeedback(movingIds[0], foundationMove);
     if (!foundationMove) showTableauTutorial();
     if (game.state.won) completeWin();
+    else scheduleAutoCollect();
   } else {
     vibrateGame(24);
     game.state.selected = null;
@@ -999,6 +1094,7 @@ board.addEventListener('pointerup', (event) => {
     if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId, result.action === 'foundation');
     if (result.action === 'move') showTableauTutorial();
     if (game.state.won) completeWin();
+    else if (result.action === 'move' || result.action === 'foundation') scheduleAutoCollect();
   }
   drag = null;
 });
@@ -1031,6 +1127,7 @@ board.addEventListener('click', (event) => {
       startCardMoveFlight(origins);
       showComboFeedback(movingIds[0]);
       showTableauTutorial();
+      scheduleAutoCollect();
     } else audio.play('invalid');
   } else if (target.dataset.dropZone === 'foundation' && game.state.selected) {
     commitMove(target);
@@ -1041,6 +1138,7 @@ board.addEventListener('click', (event) => {
 });
 
 $('#undo-button').addEventListener('click', () => {
+  cancelAutoCollect();
   if (!game.undo()) return;
   if (!game.state.won) winShown = false;
   audio.play('tap');
@@ -1105,6 +1203,13 @@ modalContent.addEventListener('click', (event) => {
   let value = control.dataset.value;
   if (setting === 'drawCount') value = Number(value);
   if (['leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'sound', 'music'].includes(setting)) value = value === 'true';
+  if (setting === 'autoHints' && !value) {
+    clearTimeout(autoHintTimer);
+    autoHintTimer = null;
+    game.state.hint = null;
+    game.state.selected = null;
+  }
+  if (setting === 'autoCollect' && !value) cancelAutoCollect();
   game.setOption(setting, value);
   if (setting === 'sound') audio.setSound(value);
   if (setting === 'music') audio.setMusic(value);
@@ -1119,6 +1224,7 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape' && !modalBackdrop.classList.contains('hidden')) closeModal();
   if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
     event.preventDefault();
+    cancelAutoCollect();
     if (game.undo()) {
       if (!game.state.won) winShown = false;
       render();
