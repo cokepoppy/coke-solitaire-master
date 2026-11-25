@@ -1553,6 +1553,14 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
         window.referenceWinSamplePlayed = true;
         window.referenceWinSampleGain = args[1];
       }
+      if (buffer === audio.referenceRecycleBuffer) {
+        window.referenceRecycleSamplePlayed = true;
+        window.referenceRecycleSampleGain = args[1];
+      }
+      if (buffer === audio.referenceDrawAfterRecycleBuffer) {
+        window.referenceDrawAfterRecycleSamplePlayed = true;
+        window.referenceDrawAfterRecycleSampleGain = args[1];
+      }
       return playSample(buffer, ...args);
     };
   });
@@ -1612,6 +1620,17 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   const winOutputGain = await page.evaluate(() => window.referenceWinSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(winOutputGain).toBeCloseTo(1, 5);
 
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceRecycleBuffer?.duration)).toBeCloseTo(0.14, 2);
+  await page.evaluate(() => window.solitaireAudio.play('recycle'));
+  await expect.poll(() => page.evaluate(() => window.referenceRecycleSamplePlayed)).toBe(true);
+  const recycleOutputGain = await page.evaluate(() => window.referenceRecycleSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(recycleOutputGain).toBeCloseTo(1, 5);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceDrawAfterRecycleBuffer?.duration)).toBeCloseTo(0.14, 2);
+  await page.evaluate(() => window.solitaireAudio.play('drawAfterRecycle'));
+  await expect.poll(() => page.evaluate(() => window.referenceDrawAfterRecycleSamplePlayed)).toBe(true);
+  const recycledDrawOutputGain = await page.evaluate(() => window.referenceDrawAfterRecycleSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
+  expect(recycledDrawOutputGain).toBeCloseTo(1, 5);
+
   await page.evaluate(() => window.solitaireAudio.setMusic(true));
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicStep)).toBeGreaterThan(0);
   await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
@@ -1643,7 +1662,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v59');
+  expect(cacheNames).toContain('solitaire-master-v60');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1982,20 +2001,42 @@ test('mobile stock recycle restores draw order and undo', async ({ page }) => {
     allFaceDown: window.solitaireGame.state.stock.every((card) => !card.faceUp),
     score: window.solitaireGame.state.score,
     moves: window.solitaireGame.state.moves,
+    recycledStockPendingDraw: window.solitaireGame.state.recycledStockPendingDraw,
   }));
-  expect(recycled).toEqual({ stock: 24, waste: 0, allFaceDown: true, score: 200, moves: 25 });
+  expect(recycled).toEqual({ stock: 24, waste: 0, allFaceDown: true, score: 200, moves: 25, recycledStockPendingDraw: true });
 
   await page.locator('[data-action="stock"]').click();
   await expect(page.locator('.stock-count')).toHaveText('23');
+  expect(await page.evaluate(() => window.stockAudioCues.at(-1))).toBe('drawAfterRecycle');
   expect(await page.evaluate(() => window.solitaireGame.state.waste.at(-1).id)).toBe(firstDrawnCardId);
+  expect(await page.evaluate(() => window.solitaireGame.state.recycledStockPendingDraw)).toBe(false);
   await page.getByRole('button', { name: 'Undo move' }).click();
   await expect(page.locator('.stock-count')).toHaveText('24');
+  expect(await page.evaluate(() => window.solitaireGame.state.recycledStockPendingDraw)).toBe(true);
+  await page.locator('[data-action="stock"]').click();
+  expect(await page.evaluate(() => window.stockAudioCues.at(-1))).toBe('drawAfterRecycle');
+  await page.getByRole('button', { name: 'Undo move' }).click();
   await page.getByRole('button', { name: 'Undo move' }).click();
   const restored = await page.evaluate(() => ({
     stock: window.solitaireGame.state.stock.length,
     waste: window.solitaireGame.state.waste.length,
     score: window.solitaireGame.state.score,
     moves: window.solitaireGame.state.moves,
+    recycledStockPendingDraw: window.solitaireGame.state.recycledStockPendingDraw,
   }));
-  expect(restored).toEqual({ stock: 0, waste: 24, score: 200, moves: 24 });
+  expect(restored).toEqual({ stock: 0, waste: 24, score: 200, moves: 24, recycledStockPendingDraw: false });
+
+  await page.locator('[data-action="stock"]').click();
+  expect(await page.evaluate(() => window.stockAudioCues.at(-1))).toBe('recycle');
+  await page.reload();
+  await expect(page.locator('.stock-count')).toHaveText('24');
+  expect(await page.evaluate(() => window.solitaireGame.state.recycledStockPendingDraw)).toBe(true);
+  await page.evaluate(() => {
+    window.stockAudioCues = [];
+    const audio = window.solitaireAudio;
+    const play = audio.play.bind(audio);
+    audio.play = (cue) => { window.stockAudioCues.push(cue); return play(cue); };
+  });
+  await page.locator('[data-action="stock"]').click();
+  expect(await page.evaluate(() => window.stockAudioCues.at(-1))).toBe('drawAfterRecycle');
 });

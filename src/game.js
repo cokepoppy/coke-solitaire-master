@@ -79,6 +79,7 @@ export class SolitaireGame {
       sound: true,
       music: false,
       won: false,
+      recycledStockPendingDraw: false,
     };
     this.state.seedDeck = clone(deck);
     this.save();
@@ -104,6 +105,7 @@ export class SolitaireGame {
         this.save();
       }
       this.state.magicCharges ??= 1;
+      this.state.recycledStockPendingDraw ??= false;
       this.state.challenge ??= null;
       this.state.scoringMode ??= 'standard';
       if (!['standard', 'vegas'].includes(this.state.scoringMode)) this.state.scoringMode = 'standard';
@@ -178,6 +180,7 @@ export class SolitaireGame {
         this.state.waste.push(card);
       }
       this.state.moves += 1;
+      this.state.recycledStockPendingDraw = false;
       this.save();
       return 'draw';
     }
@@ -191,6 +194,7 @@ export class SolitaireGame {
       this.state.stock.forEach((card) => { card.faceUp = false; });
       this.state.waste = [];
       this.state.moves += 1;
+      this.state.recycledStockPendingDraw = true;
       if (this.state.scoringMode === 'vegas') this.state.score -= 100;
       this.save();
       return 'recycle';

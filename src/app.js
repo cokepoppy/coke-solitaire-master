@@ -950,10 +950,11 @@ function showWinResult(newBest) {
 
 function handleStock() {
   const origin = captureStockFlight();
+  const drawAfterRecycle = game.state.recycledStockPendingDraw;
   const action = game.drawFromStock();
   if (action === 'empty') return;
   if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
-  audio.play(action === 'recycle' ? 'recycle' : 'draw');
+  audio.play(action === 'recycle' ? 'recycle' : drawAfterRecycle ? 'drawAfterRecycle' : 'draw');
   render();
   showComboFeedback();
   scheduleAutoCollect();

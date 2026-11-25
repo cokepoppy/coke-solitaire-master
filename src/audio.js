@@ -28,6 +28,10 @@ export class GameAudio {
     this.referenceWinLoadPromise = null;
     this.referenceAutoCollectBuffer = null;
     this.referenceAutoCollectLoadPromise = null;
+    this.referenceRecycleBuffer = null;
+    this.referenceRecycleLoadPromise = null;
+    this.referenceDrawAfterRecycleBuffer = null;
+    this.referenceDrawAfterRecycleLoadPromise = null;
   }
 
   getContext() {
@@ -52,6 +56,8 @@ export class GameAudio {
       this.loadReferenceFoundation();
       this.loadReferenceWin();
       this.loadReferenceAutoCollect();
+      this.loadReferenceRecycle();
+      this.loadReferenceDrawAfterRecycle();
     }
     return this.context;
   }
@@ -195,6 +201,42 @@ export class GameAudio {
     return this.referenceAutoCollectLoadPromise;
   }
 
+  loadReferenceRecycle() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceRecycleLoadPromise) {
+      this.referenceRecycleLoadPromise = fetch('/assets/audio/stock-recycle-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Recycle sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceRecycleBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceRecycleLoadPromise;
+  }
+
+  loadReferenceDrawAfterRecycle() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceDrawAfterRecycleLoadPromise) {
+      this.referenceDrawAfterRecycleLoadPromise = fetch('/assets/audio/draw-after-recycle-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Post-recycle draw sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceDrawAfterRecycleBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceDrawAfterRecycleLoadPromise;
+  }
+
   unlock() {
     const context = this.getContext();
     if (!context) return Promise.resolve(false);
@@ -232,6 +274,11 @@ export class GameAudio {
       return;
     }
     if (cue === 'move' || cue === 'draw') await this.referenceMoveLoadPromise;
+    if (cue === 'recycle') await this.referenceRecycleLoadPromise;
+    if (cue === 'drawAfterRecycle') {
+      await this.referenceDrawAfterRecycleLoadPromise;
+      if (!this.referenceDrawAfterRecycleBuffer) await this.referenceMoveLoadPromise;
+    }
     if (cue === 'good') await this.referenceGoodLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
     if (cue === 'great') await this.referenceGreatLoadPromise;
@@ -302,8 +349,11 @@ export class GameAudio {
     if (cue === 'tap') {
       this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
       this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
-    } else if (cue === 'draw') {
-      if (this.referenceMoveBuffer) this.playCapturedSample(this.referenceMoveBuffer, now);
+    } else if (cue === 'draw' || cue === 'drawAfterRecycle') {
+      const reference = cue === 'drawAfterRecycle'
+        ? (this.referenceDrawAfterRecycleBuffer ?? this.referenceMoveBuffer)
+        : this.referenceMoveBuffer;
+      if (reference) this.playCapturedSample(reference, now);
       else {
         this.playNoise(3600, 480, 0.15, 0.17, now, 0.62);
         this.playTone(250, 150, 0.13, 0.045, 'sine', now);
@@ -334,8 +384,11 @@ export class GameAudio {
         this.playNoise(4200, 2100, 0.14, 0.03, now + 0.07, 0.55);
       }
     } else if (cue === 'flip' || cue === 'recycle') {
-      // The mixed source video does not isolate a recycle-only effect. Keep a
-      // distinct game event while using the existing procedural flip fallback.
+      if (cue === 'recycle' && this.referenceRecycleBuffer) {
+        this.playCapturedSample(this.referenceRecycleBuffer, now);
+        return;
+      }
+      // Keep the procedural flip available if the mixed-track reference crop fails to load.
       this.playNoise(6200, 1250, 0.09, 0.14, now, 0.72);
       this.playTone(680, 420, 0.11, 0.027, 'sine', now);
     } else if (cue === 'foundation') {

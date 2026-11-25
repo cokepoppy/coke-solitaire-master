@@ -120,8 +120,10 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v67');
+    const shell = await caches.open('solitaire-master-solitaire-v68');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
+    const recycleSample = await shell.match(`${location.origin}/solitaire/assets/audio/stock-recycle-reference.wav`);
+    const recycledDrawSample = await shell.match(`${location.origin}/solitaire/assets/audio/draw-after-recycle-reference.wav`);
     const protectedCache = await caches.open('another-game-cache');
     const protectedEntry = await protectedCache.match(`${location.origin}/another-game-shell`);
     const existingRootCache = await caches.open('solitaire-master-v50');
@@ -131,6 +133,7 @@ try {
       script: registration.active?.scriptURL,
       cachesAfterInstall,
       shellPageCached: Boolean(shellPage),
+      recycleSamplesCached: Boolean(recycleSample) && Boolean(recycledDrawSample),
       otherGameCachePreserved: Boolean(protectedEntry),
       existingRootGameCachePreserved: Boolean(existingRootEntry),
     };
@@ -138,9 +141,10 @@ try {
   assert.equal(worker.scope, `http://127.0.0.1:${port}/solitaire/`);
   assert.equal(worker.script, `http://127.0.0.1:${port}/solitaire/sw.js`);
   assert.equal(worker.shellPageCached, true);
+  assert.equal(worker.recycleSamplesCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v67'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v68'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);
