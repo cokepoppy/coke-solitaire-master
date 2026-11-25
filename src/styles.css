@@ -4,7 +4,7 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --card-w: min(64px, 13.37vw);
+  --card-w: min(64px, 13.35vw);
   --card-h: calc(var(--card-w) * 1.5);
   --column-gap: clamp(2px, .8vw, 5px);
   --felt: #0b733f;

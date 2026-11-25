@@ -9,7 +9,7 @@
   },
   "rendered": {
     "path": "source-opening-replay.png",
-    "sha256": "87be74b6f1636e8cfee141c17530557f07804d9930c33d56e08d568eea7426f6"
+    "sha256": "e9326166c47de42bc94f0cc121d8cb11d25f3990e0190c017b8f3cf53c3dada2"
   },
   "comparison": {
     "rescaled": false,
@@ -23,13 +23,13 @@
       }
     ],
     "all_pixels": {
-      "mean_absolute_rgb_error": 5.73595,
-      "exact_rgb_pixel_fraction": 0.00432869,
+      "mean_absolute_rgb_error": 5.720903,
+      "exact_rgb_pixel_fraction": 0.0043446,
       "pixel_count": 1697280
     },
     "after_ignored_rectangles": {
-      "mean_absolute_rgb_error": 5.334661,
-      "exact_rgb_pixel_fraction": 0.00939739,
+      "mean_absolute_rgb_error": 5.319615,
+      "exact_rgb_pixel_fraction": 0.0094133,
       "pixel_count": 1697280
     },
     "regions": {
@@ -39,18 +39,18 @@
         "pixel_count": 141440
       },
       "foundation_stock": {
-        "mean_absolute_rgb_error": 6.419517,
+        "mean_absolute_rgb_error": 6.466442,
         "exact_rgb_pixel_fraction": 0.00098982,
         "pixel_count": 212160
       },
       "tableau": {
-        "mean_absolute_rgb_error": 11.977231,
-        "exact_rgb_pixel_fraction": 0.01800298,
+        "mean_absolute_rgb_error": 11.875565,
+        "exact_rgb_pixel_fraction": 0.01807196,
         "pixel_count": 362440
       },
       "empty_bg": {
-        "mean_absolute_rgb_error": 2.337637,
-        "exact_rgb_pixel_fraction": 0.0,
+        "mean_absolute_rgb_error": 2.340421,
+        "exact_rgb_pixel_fraction": 4.11e-06,
         "pixel_count": 486200
       },
       "bottom_controls": {
