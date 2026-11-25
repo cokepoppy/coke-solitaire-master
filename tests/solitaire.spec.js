@@ -720,7 +720,7 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.back-tile')).toHaveCount(8);
   await page.locator('.back-tile[data-value="blue"]').click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
-  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue-reference.png');
   await page.locator('.back-tile[data-value="ruby"]').click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
@@ -743,7 +743,7 @@ test('settings change draw count and hand layout; a new deal resets the board', 
     }, oldBack);
     await page.reload();
     await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
-    await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
+    await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue-reference.png');
     await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem('solitaire-master-game-v1')).state.cardBack)).toBe('blue');
   }
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'woodland'));
@@ -802,6 +802,8 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-backs-reference.png');
   await expect(page.locator('.back-tile')).toHaveCount(8);
   await expect.poll(() => page.locator('.back-tile img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+  await expect(page.locator('.back-tile[data-value="blue"] img')).toHaveAttribute('src', '/assets/cards/back-blue-reference.png');
+  await expect.poll(() => page.locator('.back-tile[data-value="blue"] img').evaluate((image) => image.naturalWidth === 118 && image.naturalHeight === 177)).toBe(true);
   await expect(page.locator('.back-tile[data-value="ruby"] .back-preview-source img')).toHaveCount(2);
   await page.screenshot({ path: 'test-results/theme-gallery-mobile.png' });
   await page.getByRole('button', { name: 'Teal diamonds' }).click();
