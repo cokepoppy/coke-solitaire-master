@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173",
-    "check": "node --check src/game.js && node --check src/audio.js && node --check src/app.js",
-    "test:e2e": "playwright test"
+    "check": "node --check src/game.js && node --check src/audio.js && node --check src/app.js && node --check sw.js && node --check tools/build_solitaire_vps_release.mjs && node --check tools/test_solitaire_vps_release.mjs",
+    "test:e2e": "playwright test",
+    "build:vps": "node tools/build_solitaire_vps_release.mjs /tmp/solitaire-master-vps-release",
+    "test:release-path": "node tools/test_solitaire_vps_release.mjs"
   },
   "devDependencies": {
     "@playwright/test": "1.65.1"

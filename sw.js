@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v49';
+const CACHE = 'solitaire-master-v50';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));
@@ -78,17 +78,17 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))));
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith('solitaire-master-') && key !== CACHE).map((key) => caches.delete(key)))));
   self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
-  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+  event.respondWith(caches.open(CACHE).then((cache) => cache.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
     if (response.ok && new URL(event.request.url).origin === self.location.origin) {
       const copy = response.clone();
-      caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+      cache.put(event.request, copy);
     }
     return response;
-  }).catch(() => caches.match('/index.html'))));
+  }).catch(() => cache.match('/index.html')))));
 });
