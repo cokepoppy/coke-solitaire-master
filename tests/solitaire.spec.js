@@ -143,6 +143,60 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(pageErrors).toEqual([]);
 });
 
+test('the first tableau move shows the one-time source rules tip', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const cards = [...game.state.stock, ...game.state.waste, ...game.state.foundations.flat(), ...game.state.tableau.flat()];
+    const used = new Set();
+    const take = (suit, rank) => {
+      const card = cards.find((candidate) => candidate.suit === suit && candidate.rank === rank);
+      if (!card) throw new Error(`Missing ${rank}${suit}`);
+      used.add(card.id);
+      return { ...card, faceUp: true };
+    };
+    const five = take('♦', 5);
+    const four = take('♣', 4);
+    const three = take('♦', 3);
+    game.state.stock = cards.filter((card) => !used.has(card.id)).map((card) => ({ ...card, faceUp: false }));
+    game.state.waste = [];
+    game.state.foundations = [[], [], [], []];
+    game.state.tableau = [[five], [four], [three], [], [], [], []];
+    game.state.moves = 0;
+    game.state.score = 0;
+    game.state.comboCount = 0;
+    game.state.comboLastMoveAt = 0;
+    game.state.history = [];
+    game.state.selected = null;
+    game.state.won = false;
+    localStorage.removeItem('solitaire-master-tableau-tutorial-v1');
+    game.save();
+  });
+  await page.reload();
+  const tip = page.locator('#tableau-tutorial');
+  await expect(tip).toBeHidden();
+  await page.waitForTimeout(1400);
+  await page.locator('.pile-column[data-pile="1"] .playing-card[data-index="0"]').click();
+  await page.locator('.pile-column[data-pile="0"] .playing-card[data-index="0"]').click();
+  await expect(page.locator('#moves-value')).toHaveText('1');
+  await expect(tip).toBeHidden();
+  await expect(tip).toHaveAttribute('aria-label', 'Build tableau piles in descending order, alternating between red and black cards');
+  await expect(tip).toBeVisible({ timeout: 1500 });
+  const tipBox = await tip.boundingBox();
+  expect(tipBox.width).toBeCloseTo(312, 0);
+  expect(tipBox.y + tipBox.height).toBeCloseTo(709, 0);
+  await page.screenshot({ path: 'test-results/first-move-tutorial.png' });
+  await page.waitForTimeout(3900);
+  await expect(tip).toBeVisible();
+  await page.waitForTimeout(800);
+  await expect(tip).toBeHidden();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('solitaire-master-tableau-tutorial-v1'))).toBe('shown');
+  await page.locator('.pile-column[data-pile="2"] .playing-card[data-index="0"]').click();
+  await page.locator('.pile-column[data-pile="0"] .playing-card[data-index="1"]').click();
+  await expect(page.locator('#moves-value')).toHaveText('2');
+  await expect(tip).toBeHidden();
+});
+
 test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
   await page.setViewportSize({ width: 442, height: 960 });
   await page.goto('/');
@@ -987,7 +1041,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v36');
+  expect(cacheNames).toContain('solitaire-master-v37');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
