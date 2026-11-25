@@ -1185,6 +1185,69 @@ test('daily calendar browses past months and starts the selected deterministic d
   expect(await page.evaluate(() => window.solitaireGame.state.tableau[0][0].id)).toBe(firstCard);
 });
 
+test.describe('source-sized win result', () => {
+  test.use({ viewport: { width: 442, height: 960 }, deviceScaleFactor: 2 });
+
+  test('result artwork aligns with the 310-second source frame', async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => {
+      const game = window.solitaireGame;
+      const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
+      const suits = ['♠', '♥', '♦', '♣'];
+      game.state.stock = [];
+      game.state.waste = [];
+      game.state.autoCollect = false;
+      game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 13).sort((first, last) => first.rank - last.rank));
+      game.state.tableau = [...suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13)]), [], [], []];
+      game.state.moves = 117;
+      game.state.score = 5183;
+      game.state.seconds = 132;
+      game.state.challenge = null;
+      game.state.won = false;
+      localStorage.setItem('solitaire-master-profile-v1', JSON.stringify({ games: 1, wins: 1, bestScore: 0, dailyCompleted: [] }));
+      game.save();
+    });
+    await page.reload();
+    for (let pile = 0; pile < 3; pile += 1) {
+      await page.locator(`#tableau .pile-column[data-pile="${pile}"] .playing-card`).click();
+      await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
+    }
+    await page.evaluate(() => {
+      window.solitaireGame.state.seconds = 133;
+      window.solitaireGame.save();
+    });
+    await page.locator('#tableau .pile-column[data-pile="3"] .playing-card').click();
+    await page.locator('.foundation-slot[data-pile="3"]').click();
+    await expect(page.locator('.win-streak-backdrop')).toBeVisible();
+    await page.getByRole('button', { name: 'Tap to Continue' }).click();
+    await expect(page.locator('.win-result-backdrop')).toBeVisible();
+    await expect(page.locator('.win-result-score')).toContainText('5223');
+    await expect(page.locator('.win-result-percent')).toHaveText('You defeated 86% of players!');
+    await expect(page.locator('.win-result-stats')).toContainText('02:13');
+    await expect(page.locator('.win-result-stats')).toContainText('121');
+    await page.locator('.win-result img').evaluateAll((images) => Promise.all(images.map((image) => image.decode())));
+
+    const sourceRects = {
+      '.win-result-banner': [0, 260, 884, 574],
+      '.win-result-score-label': [190, 880, 184, 70],
+      '.win-result-best': [678, 838, 117, 118],
+      '.win-result-percent > img': [35, 987, 810, 81],
+      '.win-result-time-label': [270, 1092, 148, 68],
+      '.win-result-moves-label': [242, 1172, 174, 61],
+      '.win-result-trophy img': [372, 1288, 78, 86],
+      '.win-result-new img': [154, 1408, 576, 130],
+    };
+    const actual = await page.evaluate((selectors) => Object.fromEntries(Object.keys(selectors).map((selector) => {
+      const rect = document.querySelector(selector).getBoundingClientRect();
+      return [selector, [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio))];
+    })), sourceRects);
+    for (const [selector, expected] of Object.entries(sourceRects)) {
+      actual[selector].forEach((value, index) => expect(Math.abs(value - expected[index]), `${selector} axis ${index}`).toBeLessThanOrEqual(1));
+    }
+    await page.screenshot({ path: 'test-results/source-win-result-884x1920.png', fullPage: true, animations: 'disabled' });
+  });
+});
+
 test('winning shows a result card and records a completed daily challenge', async ({ page }) => {
   await page.goto('/');
   const challengeDate = await page.evaluate(() => {
@@ -1529,7 +1592,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v54');
+  expect(cacheNames).toContain('solitaire-master-v55');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

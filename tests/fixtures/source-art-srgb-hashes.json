@@ -70,5 +70,9 @@
   "ui/win-banner-reference.png": "0b1dca5dbf276a68d8de05d36176a6cef8f8aaa81d39ad57574ea88430767ca2",
   "ui/win-best-reference.png": "4c9621239feca133a3930a0d8da4f9f138b7c3a291d752d6d4093ad49d84901e",
   "ui/win-new-deal-reference.png": "b1d2d094532212c9ae06e3e53ed75333d772606704da0730116591eaf821fcf8",
+  "ui/win-result-moves-label-reference.png": "9a38c54e9eb545dd3ec01e805f95e59fd0a0c402875e637e417b9fb3ca8b03f4",
+  "ui/win-result-percent-reference.png": "0a9c5d8f71aa8d475a826b621ed8856132f846dd9ccc39071f9f12fb59bda27f",
+  "ui/win-result-score-label-reference.png": "fa502ea188ef3d347f0b6624f27ba2afee2df9af56a426a595918491b4ed3859",
+  "ui/win-result-time-label-reference.png": "2f9dc96db16c0682d440470852e42907436b2372a4e4bf02335a37a9f84c7c39",
   "ui/win-trophy-reference.png": "8335afb057ca0d1b6b5be1b9636cbbc6d10467745180a4de5276278a220f5cb9"
 }

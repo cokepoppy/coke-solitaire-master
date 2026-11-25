@@ -24,14 +24,15 @@ python3 tools/extract_timer_glyphs.py /tmp/solitaire-timer-frames-5s /tmp/solita
 
 The source-frame PTS values, observed timer readings, and PNG SHA-256 hashes for every sampled glyph are recorded in [frames.csv](../../research/solitaire-master/timer-glyph-sources-2026-11-25/frames.csv) and [manifest.json](../../research/solitaire-master/timer-glyph-sources-2026-11-25/manifest.json).
 
-`win-banner-reference.png`, `win-best-reference.png`, `win-trophy-reference.png`, and `win-new-deal-reference.png` are crops from source time 310.000 seconds, PTS 4,761,600. They reproduce the crown ribbon, optional Best badge, trophy, and yellow New Deal button on the full-screen result. The banner and small overlays retain their sampled navy background so the edges blend into the result screen. Recreate them from the exact source frame with:
+`win-banner-reference.png`, `win-best-reference.png`, `win-trophy-reference.png`, `win-new-deal-reference.png`, and the four `win-result-*-reference.png` text sprites are crops from source time 310.000 seconds, PTS 4,761,600. Together they reproduce the crown ribbon, optional Best badge, fixed score/percent/time/moves lettering, trophy, and yellow New Deal button on the full-screen result. The banner, labels, and small overlays retain their sampled navy background so the edges blend into the result screen. Recreate them from the exact source frame with:
 
 ```sh
 swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 310 310 1 /tmp/solitaire-win-source
 python3 tools/extract_win_result_assets.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui
+python3 tools/extract_win_result_text_assets.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui
 ```
 
-The crops are included in the service-worker shell cache. The layout evidence and source-frame hash are recorded in [the win-result audit](../../docs/video-frame-audit.md#observed-win-result). The source shows `86%` and a trophy count of `2` in this one result; the ranking rule is unknown, and the web version uses 86% as the captured label plus a local win count.
+The crops are included in the service-worker shell cache. Fixed labels are source pixels; score, elapsed time, move count, and local trophy count remain live text/data. Their native-size placement and full-screen comparison are recorded in [the win-result pixel audit](../../research/solitaire-master/win-result-source-pixel-audit-2026-11-26/README.md) and [the frame ledger](../../docs/video-frame-audit.md#observed-win-result). The source shows `86%` and a trophy count of `2` in this one result; the ranking rule is unknown, and the web version uses 86% as the captured label plus a local win count.
 
 `win-streak-trophy-reference.png` uses the same source trophy cropped from the result capture, with the sampled navy removed so it can sit over the animated card fan. Rebuild it with `python3 tools/extract_win_streak_trophy.py assets/ui/win-trophy-reference.png assets/ui/win-streak-trophy-reference.png`.
 

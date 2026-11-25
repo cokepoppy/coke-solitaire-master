@@ -927,10 +927,10 @@ function showWinResult(newBest) {
   setModal('You win!', '', `
     <div class="win-result" aria-label="You win">
       <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
-      <div class="win-result-score"><span>Score</span><strong>${game.state.score}</strong></div>
+      <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span><strong>${game.state.score}</strong></div>
       ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
-      <p class="win-result-percent">You defeated <b>86%</b> of players!</p>
-      <div class="win-result-stats"><p><span>Time</span><b>${formatTime(game.state.seconds)}</b></p><p><span>Moves</span><b>${game.state.moves}</b></p></div>
+      <p class="win-result-percent"><img src="/assets/ui/win-result-percent-reference.png" alt=""><span class="visually-hidden">You defeated 86% of players!</span></p>
+      <div class="win-result-stats"><p><img class="win-result-time-label" src="/assets/ui/win-result-time-label-reference.png" alt=""><span class="visually-hidden">Time</span><b>${formatTime(game.state.seconds)}</b></p><p><img class="win-result-moves-label" src="/assets/ui/win-result-moves-label-reference.png" alt=""><span class="visually-hidden">Moves</span><b>${game.state.moves}</b></p></div>
       <div class="win-result-trophy"><img src="/assets/ui/win-trophy-reference.png" alt=""><span>${readProfile().wins}</span></div>
       <button class="win-result-new" type="button" data-modal-action="new" aria-label="New Deal"><img src="/assets/ui/win-new-deal-reference.png" alt=""></button>
       <span class="win-result-home-indicator" aria-hidden="true"></span>
