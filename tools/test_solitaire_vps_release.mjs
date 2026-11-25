@@ -101,11 +101,18 @@ try {
     const image = document.querySelector('#tableau .card-face-art');
     return image?.complete && image.naturalWidth === 118 && image.naturalHeight === 177;
   });
+  await page.getByRole('button', { name: 'Card backs' }).click();
+  await page.getByRole('button', { name: 'Teal diamonds' }).click();
+  assert.equal(await page.locator('.stock-slot .card-back-art').getAttribute('src'), '/solitaire/assets/cards/back-teal-reference.png');
+  await page.waitForFunction(() => {
+    const image = document.querySelector('.stock-slot .card-back-art');
+    return image?.complete && image.naturalWidth === 118 && image.naturalHeight === 177;
+  });
 
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v51');
+    const shell = await caches.open('solitaire-master-solitaire-v52');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const protectedCache = await caches.open('another-game-cache');
     const protectedEntry = await protectedCache.match(`${location.origin}/another-game-shell`);
@@ -125,7 +132,7 @@ try {
   assert.equal(worker.shellPageCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v51'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v52'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);

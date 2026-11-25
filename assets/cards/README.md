@@ -6,7 +6,19 @@ The source deck credits public-domain court-card art from vector-playing-cards, 
 
 `back-solitaire-master-source.png` is the unmodified 118×177 crop at `(758,429)` from PTS 153600 (10s) in the 884×1920 gameplay frame; it preserves the source stock's baked-in `24` counter and is used while all 24 cards remain. `back-solitaire-master-reference.png` is the same crop with the stock counter and its translucent badge cleared. A vector underlay restores the pattern in that small area on lower-count stock cards, tableau stacks, and gallery previews. `back-solitaire-master.svg` remains the transition art during deal and flip animations. Both PNGs and the SVG are cached for offline play. Regenerate them with `python3 tools/extract_source_card_back.py` after creating the keyframe described in [`docs/video-frame-audit.md`](../../docs/video-frame-audit.md).
 
-`back-blue-reference.png` replaces the generic blue SVG in the Blue diamonds style with the unselected card-back preview from the gameplay recording at 327 s / PTS 5,022,720. Crop `(583,513,783,813)` from the 884×1920 frame (the right-exclusive rectangle is 200×300), then downsample to 118×177 with `python3 tools/extract_source_blue_card_back.py`. The source MP4 SHA-256 is `56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928`, the source-frame PNG SHA-256 is `7bd63feaacc18412cf3ec5763f9cd40c382e23c552e94db795d8146b481c000f`, and the resulting asset SHA-256 is `ee0d6b294520ff658c0177d50d2c4595ed9d2f1d63a69129f47776cba549556d`.
+At 327 s (PTS 5,022,720), the Back Style gallery shows all eight backs. The seven unselected previews are source crops resized from 200×300 to 118×177. Blue was previously extracted with `python3 tools/extract_source_blue_card_back.py`; extract the other six with `python3 tools/extract_source_card_backs.py`:
+
+| Asset | Source crop `(x1,y1,x2,y2)` | Asset SHA-256 |
+| --- | --- | --- |
+| `back-teal-reference.png` | `(100,513,300,813)` | `b9b2fd9f143edca573c279133b21000131dbcb65c284007703886d9395cebd38` |
+| `back-lattice-reference.png` | `(342,513,542,813)` | `c9b59c7d173c8a5d6fe1b45450fede469fa409843c661ddc0ca53422dcac33ae` |
+| `back-blue-reference.png` | `(583,513,783,813)` | `ee0d6b294520ff658c0177d50d2c4595ed9d2f1d63a69129f47776cba549556d` |
+| `back-spade-reference.png` | `(100,869,300,1169)` | `c3bc1d1281509084647a2226f172b075a2fbb4b61bfa2ddaf013a22593175848` |
+| `back-coral-reference.png` | `(583,869,783,1169)` | `1860729f4b5ff52e8ba4501bcdc08d1ecbddd54f29f18e5c1c48f614338e2b58` |
+| `back-floral-reference.png` | `(100,1224,300,1524)` | `fb75df913b72d8c3b9d00764382b57095af564e566af612a71d4a62b59d5f997` |
+| `back-amber-reference.png` | `(342,1224,542,1524)` | `c93fc0b1f7db8b1b70d0e71ee4a458c99699433dc8218de69373fa06c82c3f37` |
+
+The source MP4 SHA-256 is `56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928`; the 327-second source-frame PNG SHA-256 is `7bd63feaacc18412cf3ec5763f9cd40c382e23c552e94db795d8146b481c000f`. The Ruby preview is selected and covered by a green check in this frame, so the game keeps the unobscured Solitaire Master back crop from the 10-second gameplay frame instead.
 
 The following 118×177 PNGs are crops of matching cards from the gameplay video [`gLd0HXtDt5I`](https://www.youtube.com/watch?v=gLd0HXtDt5I). Coordinates are source pixels in its 884×1920 frames; PTS uses its 1/15360 time base.
 

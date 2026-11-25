@@ -835,9 +835,16 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect.poll(() => page.locator('.back-tile[data-value="blue"] img').evaluate((image) => image.naturalWidth === 118 && image.naturalHeight === 177)).toBe(true);
   await expect(page.locator('.back-tile[data-value="ruby"] .back-preview-source img')).toHaveCount(2);
   await page.screenshot({ path: 'test-results/theme-gallery-mobile.png' });
-  await page.getByRole('button', { name: 'Teal diamonds' }).click();
-  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'teal');
-  await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', '/assets/cards/back-teal-reference.png');
+  for (const [name, value] of [
+    ['Teal diamonds', 'teal'], ['Blue lattice', 'lattice'], ['Blue diamonds', 'blue'],
+    ['Blue spade', 'spade'], ['Coral geometric', 'coral'], ['Red floral', 'floral'],
+    ['Amber diamonds', 'amber'],
+  ]) {
+    await page.getByRole('button', { name }).click();
+    await expect(page.locator('body')).toHaveAttribute('data-card-back', value);
+    await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', `/assets/cards/back-${value}-reference.png`);
+    await expect.poll(() => page.locator('.stock-slot .card-back-art').evaluate((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177)).toBe(true);
+  }
 
   await page.getByRole('button', { name: 'Card faces' }).click();
   await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-faces-reference.png');
@@ -856,7 +863,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'master');
   await page.getByRole('button', { name: 'Close dialog' }).click();
   await page.reload();
-  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'teal');
+  await expect(page.locator('body')).toHaveAttribute('data-card-back', 'amber');
   await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'master');
   await expect(page.locator('body')).not.toHaveClass(/source-action-row/);
 });
@@ -1401,7 +1408,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v51');
+  expect(cacheNames).toContain('solitaire-master-v52');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1454,11 +1461,12 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineCardBackTransition).toEqual({ ok: true, type: 'image/svg+xml' });
-  const offlineThemeBack = await page.evaluate(async () => {
-    const response = await fetch('/assets/cards/back-teal-reference.png');
-    return { ok: response.ok, type: response.headers.get('content-type') };
-  });
-  expect(offlineThemeBack).toEqual({ ok: true, type: 'image/png' });
+  const offlineThemeBacks = await page.evaluate(async () => Promise.all(['teal', 'lattice', 'blue', 'spade', 'coral', 'floral', 'amber'].map(async (name) => {
+    const response = await fetch(`/assets/cards/back-${name}-reference.png`);
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  })));
+  expect(offlineThemeBacks).toEqual(Array(7).fill({ ok: true, type: 'image/png', width: 118, height: 177 }));
   const offlineAmazingCue = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/combo-amazing-reference.wav');
     return { ok: response.ok, audioType: response.headers.get('content-type')?.startsWith('audio/'), bytes: (await response.arrayBuffer()).byteLength };

@@ -75,7 +75,7 @@ The recording opens Themes at 323.000 s (PTS 4,961,280), showing the `Background
 
 The 323 s Backgrounds screenshot shows two short landscape swatches beginning near `(108,489)` and `(469,489)`, then six square previews in two columns beginning at y=676, 1043, and 1412. Source crops now reproduce those eight visible preview artworks and use the measured first-row aspect ratio and grid spacing. Two more tiles are only partially visible from y=1779 to the bottom navigation; their full artwork and the gallery's total item count remain unknown. The default `Dusk` tile and full-screen alternate table textures are still approximations.
 
-At 327 s (PTS 5,022,720), the `Back Style` tab shows all eight card backs. The unselected Blue diamonds preview occupies `(583,513,783,813)` in the 884×1920 source frame; its crop is resized to the game's 118×177 card-back dimensions. Source video, frame, crop, and output hashes plus the extraction command are in [`assets/cards/README.md`](../assets/cards/README.md). This replaces the previously used generic blue vector with source-frame artwork.
+At 327 s (PTS 5,022,720), the `Back Style` tab shows all eight card backs. Seven unselected preview backs—Teal, Lattice, Blue, Spade, Coral, Floral, and Amber—are now captured at their source positions and resized to the game's 118×177 card-back dimensions. The selected Ruby preview has a green frame and check over it, so its unobscured artwork remains the 10-second gameplay crop. Source video/frame hashes, all crop rectangles and output hashes, and reproducible extraction commands are in [`assets/cards/README.md`](../assets/cards/README.md).
 
 ### Observed Auto Collect sequence
 
