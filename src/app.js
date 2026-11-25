@@ -17,6 +17,8 @@ const modalKicker = $('#modal-kicker');
 const modalContent = $('#modal-content');
 const toast = $('#toast');
 let firstDeal = true;
+let tableauTutorialShowTimer = null;
+let tableauTutorialHideTimer = null;
 board.addEventListener('animationend', (event) => {
   if (event.animationName === 'deal-face-reveal') {
     event.target.closest('.card-reveal')?.classList.remove('card-reveal');
@@ -65,6 +67,38 @@ const REFERENCE_CARD_ART = new Set([
   '5-of-spades', '7-of-spades', '4-of-diamonds', '9-of-clubs', '9-of-hearts',
 ]);
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
+const STORAGE_TABLEAU_TUTORIAL = 'solitaire-master-tableau-tutorial-v1';
+
+function showTableauTutorial() {
+  if (localStorage.getItem(STORAGE_TABLEAU_TUTORIAL) === 'shown') return;
+  const tip = $('#tableau-tutorial');
+  if (!tip || tableauTutorialShowTimer || !tip.hidden) return;
+  tableauTutorialShowTimer = setTimeout(() => {
+    tableauTutorialShowTimer = null;
+    tip.hidden = false;
+    requestAnimationFrame(() => tip.classList.add('visible'));
+    localStorage.setItem(STORAGE_TABLEAU_TUTORIAL, 'shown');
+    tableauTutorialHideTimer = setTimeout(() => {
+      tip.classList.remove('visible');
+      tableauTutorialHideTimer = setTimeout(() => {
+        tip.hidden = true;
+        tableauTutorialHideTimer = null;
+      }, 180);
+    }, 4350);
+  }, 350);
+}
+
+function clearTableauTutorial() {
+  clearTimeout(tableauTutorialShowTimer);
+  clearTimeout(tableauTutorialHideTimer);
+  tableauTutorialShowTimer = null;
+  tableauTutorialHideTimer = null;
+  const tip = $('#tableau-tutorial');
+  if (tip) {
+    tip.classList.remove('visible');
+    tip.hidden = true;
+  }
+}
 
 function cardBackFile() {
   return CARD_BACK_FILES[game.state.cardBack] ?? CARD_BACK_FILES.ruby;
@@ -582,6 +616,7 @@ function showMoreOptions() {
 }
 
 function startDailyGame(day = localDateKey(new Date())) {
+  clearTableauTutorial();
   const profile = readProfile();
   const options = {
     drawCount: game.state.drawCount,
@@ -637,6 +672,7 @@ function handleStock() {
 }
 
 function doNewGame(restart = false) {
+  clearTableauTutorial();
   const profile = readProfile();
   const previous = game.state;
   const options = {
@@ -746,6 +782,7 @@ function commitMove(target) {
     render();
     startCardMoveFlight(origins);
     showComboFeedback(movingIds[0], foundationMove);
+    if (!foundationMove) showTableauTutorial();
     if (game.state.won) completeWin();
   } else {
     game.state.selected = null;
@@ -830,6 +867,7 @@ board.addEventListener('pointerup', (event) => {
     render();
     if (result.action === 'move' || result.action === 'foundation') startCardMoveFlight(origins);
     if (result.action === 'move' || result.action === 'foundation') showComboFeedback(movingIds[0] ?? current.card.dataset.cardId, result.action === 'foundation');
+    if (result.action === 'move') showTableauTutorial();
     if (game.state.won) completeWin();
   }
   drag = null;
@@ -862,6 +900,7 @@ board.addEventListener('click', (event) => {
       render();
       startCardMoveFlight(origins);
       showComboFeedback(movingIds[0]);
+      showTableauTutorial();
     } else audio.play('invalid');
   } else if (target.dataset.dropZone === 'foundation' && game.state.selected) {
     commitMove(target);
