@@ -1,0 +1,115 @@
+{
+  "crop" : null,
+  "frame_count" : 12,
+  "frame_hash_type" : "SHA-256 of the saved PNG file bytes",
+  "frames" : [
+    {
+      "actual_seconds" : 65.200000000000003,
+      "filename" : "frame-00000-req-065.200000-pts-1001472.png",
+      "index" : 0,
+      "png_sha256" : "be80bb62f0a8b6e5be187a341186eb311b67bfef5018d827b730401b4856198e",
+      "requested_seconds" : 65.200000000000003,
+      "source_pts" : 1001472
+    },
+    {
+      "actual_seconds" : 65.299999999999997,
+      "filename" : "frame-00001-req-065.300000-pts-1003008.png",
+      "index" : 1,
+      "png_sha256" : "c3d9a92bfab73149a1b46342db66ebfceb43051c738de65f68c8ddf5d3cdbb3c",
+      "requested_seconds" : 65.299999999999997,
+      "source_pts" : 1003008
+    },
+    {
+      "actual_seconds" : 65.400000000000006,
+      "filename" : "frame-00002-req-065.400000-pts-1004544.png",
+      "index" : 2,
+      "png_sha256" : "73ffc69ca6059bd79909f49299cd7745b00789be967738bcb6ab9c987cc1abf7",
+      "requested_seconds" : 65.400000000000006,
+      "source_pts" : 1004544
+    },
+    {
+      "actual_seconds" : 65.5,
+      "filename" : "frame-00003-req-065.500000-pts-1006080.png",
+      "index" : 3,
+      "png_sha256" : "09ed90de3641c22e75be8aa500e2c0b6d605e71738e9dc75c104a0e83cb404cc",
+      "requested_seconds" : 65.5,
+      "source_pts" : 1006080
+    },
+    {
+      "actual_seconds" : 65.599999999999994,
+      "filename" : "frame-00004-req-065.600000-pts-1007616.png",
+      "index" : 4,
+      "png_sha256" : "f3832e1a021d025793038c91ccaf3601e218b0306b1fc8071c9ab39edb30e790",
+      "requested_seconds" : 65.600000000000009,
+      "source_pts" : 1007616
+    },
+    {
+      "actual_seconds" : 65.700000000000003,
+      "filename" : "frame-00005-req-065.700000-pts-1009152.png",
+      "index" : 5,
+      "png_sha256" : "df3c5d39ba3ace3cd9ee0eba179d3f3a9ce625e7f7c724b6de58ae9e5ec8042d",
+      "requested_seconds" : 65.700000000000003,
+      "source_pts" : 1009152
+    },
+    {
+      "actual_seconds" : 65.799999999999997,
+      "filename" : "frame-00006-req-065.800000-pts-1010688.png",
+      "index" : 6,
+      "png_sha256" : "2131c060f2f98bedc397c896fc6b3233986d59005ea98e61ac94e79107d41383",
+      "requested_seconds" : 65.799999999999997,
+      "source_pts" : 1010688
+    },
+    {
+      "actual_seconds" : 65.900000000000006,
+      "filename" : "frame-00007-req-065.900000-pts-1012224.png",
+      "index" : 7,
+      "png_sha256" : "8a1a8e4fc8981697f6cb89b45b136851953424cd9f610e59c7964b3ea98ea5cf",
+      "requested_seconds" : 65.900000000000006,
+      "source_pts" : 1012224
+    },
+    {
+      "actual_seconds" : 66,
+      "filename" : "frame-00008-req-066.000000-pts-1013760.png",
+      "index" : 8,
+      "png_sha256" : "43d61313b4a0f631ef33aa9ea1e7e376d19496c4af0cda2c38d87fc45b61d72f",
+      "requested_seconds" : 66,
+      "source_pts" : 1013760
+    },
+    {
+      "actual_seconds" : 66.099999999999994,
+      "filename" : "frame-00009-req-066.100000-pts-1015296.png",
+      "index" : 9,
+      "png_sha256" : "7a97b62c0b8f63774304b3831240dabddc0449bd1e25480f23c1d506623938f6",
+      "requested_seconds" : 66.100000000000009,
+      "source_pts" : 1015296
+    },
+    {
+      "actual_seconds" : 66.200000000000003,
+      "filename" : "frame-00010-req-066.200000-pts-1016832.png",
+      "index" : 10,
+      "png_sha256" : "42baf339a49ed66317bfd14680b41ae496eb7844b704ad87739130fc35c2d5f9",
+      "requested_seconds" : 66.200000000000003,
+      "source_pts" : 1016832
+    },
+    {
+      "actual_seconds" : 66.299999999999997,
+      "filename" : "frame-00011-req-066.300000-pts-1018368.png",
+      "index" : 11,
+      "png_sha256" : "418a5174a0a250099acf2979de360b6adcb579769c3981034e9da514aa808db0",
+      "requested_seconds" : 66.299999999999997,
+      "source_pts" : 1018368
+    }
+  ],
+  "requested_window_seconds" : {
+    "end" : 66.299999999999997,
+    "start" : 65.200000000000003,
+    "step" : 0.10000000000000001
+  },
+  "source_file_name" : "gLd0HXtDt5I.mp4",
+  "source_natural_size" : {
+    "height" : 1920,
+    "width" : 884
+  },
+  "source_sha256" : "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_scale" : 15360
+}

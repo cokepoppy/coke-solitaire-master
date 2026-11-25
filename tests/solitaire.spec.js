@@ -4,17 +4,33 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
+  await page.addInitScript(() => {
+    window.initialDealStarts = [];
+    window.initialDealFaceFlips = [];
+    document.addEventListener('animationstart', (event) => {
+      const card = event.target.closest?.('.playing-card');
+      if (card && event.animationName === 'card-deal') {
+        window.initialDealStarts.push({
+          delay: Number.parseFloat(card.style.getPropertyValue('--deal-delay')),
+          x: Number.parseFloat(card.style.getPropertyValue('--deal-x')),
+          y: Number.parseFloat(card.style.getPropertyValue('--deal-y')),
+        });
+      }
+      if (event.animationName === 'deal-face-reveal') window.initialDealFaceFlips.push(event.animationName);
+    }, true);
+  });
   await page.goto('/');
+  await expect.poll(() => page.evaluate(() => window.initialDealStarts.length)).toBe(28);
+  await expect.poll(() => page.evaluate(() => window.initialDealFaceFlips.length)).toBe(7);
   const dealMotion = await page.evaluate(() => {
-    const first = document.querySelector('#tableau .pile-column[data-pile="0"] .playing-card');
-    const last = document.querySelector('#tableau .pile-column[data-pile="6"] .playing-card[data-index="6"]');
+    const cards = [...window.initialDealStarts].sort((first, last) => first.delay - last.delay);
     return {
-      count: document.querySelectorAll('#tableau .playing-card.card-enter').length,
-      firstDelay: Number.parseFloat(first.style.getPropertyValue('--deal-delay')),
-      lastDelay: Number.parseFloat(last.style.getPropertyValue('--deal-delay')),
-      firstX: Number.parseFloat(first.style.getPropertyValue('--deal-x')),
-      lastY: Number.parseFloat(last.style.getPropertyValue('--deal-y')),
-      faceFlip: getComputedStyle(document.querySelector('#tableau .card-face.card-enter .card-face-art')).animationName,
+      count: cards.length,
+      firstDelay: cards[0].delay,
+      lastDelay: cards.at(-1).delay,
+      firstX: cards[0].x,
+      lastY: cards.at(-1).y,
+      faceFlip: window.initialDealFaceFlips[0],
     };
   });
   expect(dealMotion.count).toBe(28);
@@ -760,9 +776,9 @@ test('source-matched combo feedback appears on quick consecutive moves and reset
 test('foundation placements show source feedback and sound only at observed combo tiers', async ({ page }) => {
   await page.goto('/');
   const tiers = [
-    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good', width: 244 },
-    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great', width: 244 },
-    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520 },
+    { combo: 1, name: 'Good', selector: '.combo-good', cue: 'good', width: 244, actionCues: ['good'] },
+    { combo: 2, name: 'Great', selector: '.combo-great', cue: 'great', width: 244, actionCues: ['foundation', 'great'] },
+    { combo: 4, name: 'Amazing', selector: '.combo-amazing', cue: 'amazing', width: 520, actionCues: ['foundation', 'amazing'] },
   ];
   for (const tier of tiers) {
     await page.evaluate((targetCombo) => {
@@ -802,10 +818,12 @@ test('foundation placements show source feedback and sound only at observed comb
       window.solitaireAudio.play = async (cue) => { window.rewardCues.push(cue); };
     }, tier.combo);
     await page.locator('[data-card-id="test-ace-hearts"]').click();
+    await page.evaluate(() => { window.rewardCues = []; });
     await page.locator('.foundation-slot[data-pile="0"]').click();
     await expect(page.locator('.combo-feedback')).toHaveAttribute('aria-label', `Combo ${tier.combo}`);
     await expect(page.locator(tier.selector)).toContainText(tier.name);
     await expect.poll(() => page.evaluate((cue) => window.rewardCues.includes(cue), tier.cue)).toBe(true);
+    await expect.poll(() => page.evaluate(() => window.rewardCues)).toEqual(tier.actionCues);
     await expect(page.locator('.combo-good, .combo-great, .combo-amazing')).toHaveCount(1);
     const art = page.locator(`${tier.selector} .combo-reward-art`);
     await expect(art).toHaveAttribute('src', `/assets/feedback/combo-${tier.cue}.webp`);
@@ -896,6 +914,7 @@ test('daily calendar browses past months and starts the selected deterministic d
   await page.goto('/');
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: /Daily challenge/ }).click();
+  await expect.poll(() => page.locator('.modal-card').evaluate((modal) => modal.getAnimations().every((animation) => animation.playState === 'finished'))).toBe(true);
   const calendarBox = await page.locator('.modal-card').boundingBox();
   expect(calendarBox.x).toBeGreaterThanOrEqual(0);
   expect(calendarBox.x + calendarBox.width).toBeLessThanOrEqual(320);
