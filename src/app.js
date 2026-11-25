@@ -1298,10 +1298,12 @@ modalContent.addEventListener('click', (event) => {
   if (settingsPage === 'scoring') { showScoringModes(); return; }
   const themeTab = event.target.closest('[data-theme-tab]')?.dataset.themeTab;
   if (themeTab) {
+    audio.play('themeSelect');
     showThemeGallery(themeTab);
     return;
   }
   if (event.target.closest('[data-theme-gallery]')) {
+    audio.play('themeOpen');
     showThemeGallery('background');
     return;
   }
@@ -1349,6 +1351,7 @@ modalContent.addEventListener('click', (event) => {
     game.state.selected = null;
   }
   if (setting === 'autoCollect' && !value) cancelAutoCollect();
+  if (galleryTab) audio.play('themeSelect');
   game.setOption(setting, value);
   if (setting === 'sound') audio.setSound(value);
   if (setting === 'music') audio.setMusic(value);

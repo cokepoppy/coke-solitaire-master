@@ -1,0 +1,67 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_wav_name": "solitaire-ui-window-317.wav",
+  "source_wav_sha256": "7a09cfd41f8dd1b6133f2149d1e6c8e82f95943b8d4f2da42bc80493ee214f28",
+  "audit_timestamp_utc": "2026-11-25T22:38:49.631522+00:00",
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "source_duration_seconds": 11.5,
+  "source_offset_seconds": 317.0,
+  "analysis_hop_ms": 10,
+  "analysis_window_count": 1150,
+  "global_rms_median": 0.0,
+  "global_rms_p95": 0.00282218,
+  "global_rms_max": 0.22108325,
+  "windows_above_rms_0_01": 32,
+  "fraction_windows_above_rms_0_01": 0.027826,
+  "windows_above_rms_0_05": 14,
+  "fraction_windows_above_rms_0_05": 0.012174,
+  "candidate_events": [
+    {
+      "source_time_seconds": 322.66,
+      "rms": 0.15642425,
+      "peak": 0.5645752,
+      "high_band_fraction": 0.780705,
+      "spectral_centroid_hz": 3347.79
+    },
+    {
+      "source_time_seconds": 323.62,
+      "rms": 0.1876775,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.966191,
+      "spectral_centroid_hz": 3184.98
+    },
+    {
+      "source_time_seconds": 324.14,
+      "rms": 0.22108325,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.864865,
+      "spectral_centroid_hz": 3274.16
+    },
+    {
+      "source_time_seconds": 325.46,
+      "rms": 0.11893382,
+      "peak": 0.70559692,
+      "high_band_fraction": 0.826602,
+      "spectral_centroid_hz": 2925.24
+    },
+    {
+      "source_time_seconds": 326.06,
+      "rms": 0.21642761,
+      "peak": 0.9894104,
+      "high_band_fraction": 0.863968,
+      "spectral_centroid_hz": 3239.32
+    },
+    {
+      "source_time_seconds": 327.76,
+      "rms": 0.21273506,
+      "peak": 1.0,
+      "high_band_fraction": 0.891455,
+      "spectral_centroid_hz": 3385.7
+    }
+  ],
+  "features_csv": "audio-windows.csv",
+  "note": "Thresholded peaks are event candidates in a mixed track, not verified action-to-effect labels."
+}

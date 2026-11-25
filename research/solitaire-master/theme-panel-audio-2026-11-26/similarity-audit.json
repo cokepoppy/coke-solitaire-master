@@ -1,0 +1,197 @@
+{
+  "source_file": "solitaire-ui-window-317.wav",
+  "source_sha256": "7a09cfd41f8dd1b6133f2149d1e6c8e82f95943b8d4f2da42bc80493ee214f28",
+  "source_sample_rate_hz": 44100,
+  "source_channels": 2,
+  "source_duration_seconds": 11.5,
+  "source_offset_seconds": 317.0,
+  "normalization": "Peak absolute Pearson-style normalized cross-correlation after mono downmix; positive and negative matches are ranked by absolute value.",
+  "references": [
+    {
+      "file": "theme-gallery-open-reference.wav",
+      "sha256": "e2cd21dd4c307dfcc760dded56f9695b7ebfb4fcd0d913829658b9deb26c003b",
+      "channels": 2,
+      "duration_seconds": 0.24,
+      "top_matches": [
+        {
+          "start_seconds": 322.58,
+          "end_seconds": 322.82,
+          "window_relative_start_seconds": 5.58,
+          "signed_correlation": 0.99996933,
+          "absolute_correlation": 0.99996933
+        },
+        {
+          "start_seconds": 325.385624,
+          "end_seconds": 325.625624,
+          "window_relative_start_seconds": 8.385624,
+          "signed_correlation": -0.30507074,
+          "absolute_correlation": 0.30507074
+        },
+        {
+          "start_seconds": 327.689615,
+          "end_seconds": 327.929615,
+          "window_relative_start_seconds": 10.689615,
+          "signed_correlation": -0.28765655,
+          "absolute_correlation": 0.28765655
+        },
+        {
+          "start_seconds": 324.062948,
+          "end_seconds": 324.302948,
+          "window_relative_start_seconds": 7.062948,
+          "signed_correlation": -0.28554758,
+          "absolute_correlation": 0.28554758
+        },
+        {
+          "start_seconds": 323.550952,
+          "end_seconds": 323.790952,
+          "window_relative_start_seconds": 6.550952,
+          "signed_correlation": -0.28429802,
+          "absolute_correlation": 0.28429802
+        },
+        {
+          "start_seconds": 325.982948,
+          "end_seconds": 326.222948,
+          "window_relative_start_seconds": 8.982948,
+          "signed_correlation": -0.27385191,
+          "absolute_correlation": 0.27385191
+        },
+        {
+          "start_seconds": 322.716236,
+          "end_seconds": 322.956236,
+          "window_relative_start_seconds": 5.716236,
+          "signed_correlation": -0.11586361,
+          "absolute_correlation": 0.11586361
+        },
+        {
+          "start_seconds": 322.884331,
+          "end_seconds": 323.124331,
+          "window_relative_start_seconds": 5.884331,
+          "signed_correlation": 0.05914216,
+          "absolute_correlation": 0.05914216
+        },
+        {
+          "start_seconds": 323.064649,
+          "end_seconds": 323.304649,
+          "window_relative_start_seconds": 6.064649,
+          "signed_correlation": -0.05711503,
+          "absolute_correlation": 0.05711503
+        },
+        {
+          "start_seconds": 322.992744,
+          "end_seconds": 323.232744,
+          "window_relative_start_seconds": 5.992744,
+          "signed_correlation": -0.0467069,
+          "absolute_correlation": 0.0467069
+        },
+        {
+          "start_seconds": 322.780204,
+          "end_seconds": 323.020204,
+          "window_relative_start_seconds": 5.780204,
+          "signed_correlation": 0.03597014,
+          "absolute_correlation": 0.03597014
+        },
+        {
+          "start_seconds": 326.152336,
+          "end_seconds": 326.392336,
+          "window_relative_start_seconds": 9.152336,
+          "signed_correlation": -0.02802163,
+          "absolute_correlation": 0.02802163
+        }
+      ]
+    },
+    {
+      "file": "theme-gallery-select-reference.wav",
+      "sha256": "f00933fe0fee9a6e84239b8b021c56d51e3072a498c085a2efcc5061088c048d",
+      "channels": 2,
+      "duration_seconds": 0.24,
+      "top_matches": [
+        {
+          "start_seconds": 323.58,
+          "end_seconds": 323.82,
+          "window_relative_start_seconds": 6.58,
+          "signed_correlation": 0.99999999,
+          "absolute_correlation": 0.99999999
+        },
+        {
+          "start_seconds": 324.091995,
+          "end_seconds": 324.331995,
+          "window_relative_start_seconds": 7.091995,
+          "signed_correlation": 0.99308853,
+          "absolute_correlation": 0.99308853
+        },
+        {
+          "start_seconds": 327.718662,
+          "end_seconds": 327.958662,
+          "window_relative_start_seconds": 10.718662,
+          "signed_correlation": 0.99177131,
+          "absolute_correlation": 0.99177131
+        },
+        {
+          "start_seconds": 326.011995,
+          "end_seconds": 326.251995,
+          "window_relative_start_seconds": 9.011995,
+          "signed_correlation": 0.99068733,
+          "absolute_correlation": 0.99068733
+        },
+        {
+          "start_seconds": 325.414671,
+          "end_seconds": 325.654671,
+          "window_relative_start_seconds": 8.414671,
+          "signed_correlation": 0.98531088,
+          "absolute_correlation": 0.98531088
+        },
+        {
+          "start_seconds": 322.609048,
+          "end_seconds": 322.849048,
+          "window_relative_start_seconds": 5.609048,
+          "signed_correlation": -0.28547177,
+          "absolute_correlation": 0.28547177
+        },
+        {
+          "start_seconds": 323.641315,
+          "end_seconds": 323.881315,
+          "window_relative_start_seconds": 6.641315,
+          "signed_correlation": -0.09123014,
+          "absolute_correlation": 0.09123014
+        },
+        {
+          "start_seconds": 327.779977,
+          "end_seconds": 328.019977,
+          "window_relative_start_seconds": 10.779977,
+          "signed_correlation": -0.08976212,
+          "absolute_correlation": 0.08976212
+        },
+        {
+          "start_seconds": 325.475986,
+          "end_seconds": 325.715986,
+          "window_relative_start_seconds": 8.475986,
+          "signed_correlation": -0.08853647,
+          "absolute_correlation": 0.08853647
+        },
+        {
+          "start_seconds": 326.073311,
+          "end_seconds": 326.313311,
+          "window_relative_start_seconds": 9.073311,
+          "signed_correlation": -0.08723226,
+          "absolute_correlation": 0.08723226
+        },
+        {
+          "start_seconds": 324.153311,
+          "end_seconds": 324.393311,
+          "window_relative_start_seconds": 7.153311,
+          "signed_correlation": -0.08432118,
+          "absolute_correlation": 0.08432118
+        },
+        {
+          "start_seconds": 322.745057,
+          "end_seconds": 322.985057,
+          "window_relative_start_seconds": 5.745057,
+          "signed_correlation": -0.08099611,
+          "absolute_correlation": 0.08099611
+        }
+      ]
+    }
+  ],
+  "audited_at_utc": "2026-11-25T22:45:05.839564+00:00",
+  "note": "Correlation peaks are waveform similarity candidates only; they do not identify an action or prove that a low score means the same sound is absent."
+}

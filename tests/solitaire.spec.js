@@ -1703,16 +1703,63 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   expect(pageErrors).toEqual([]);
 });
 
+test('theme gallery entry and selection use source-matched click samples', async ({ page }) => {
+  const pageErrors = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  await page.goto('/');
+  await page.evaluate(() => {
+    window.themeSampleCalls = [];
+    const audio = window.solitaireAudio;
+    const playSample = audio.playSample.bind(audio);
+    audio.playSample = (buffer, ...args) => {
+      const cue = buffer === audio.referenceThemeOpenBuffer
+        ? 'themeOpen'
+        : buffer === audio.referenceThemeSelectBuffer
+          ? 'themeSelect'
+          : null;
+      if (cue) window.themeSampleCalls.push({ cue, duration: buffer.duration, gain: args[1], outputGain: args[1] * audio.masterLevel * audio.soundLevel });
+      return playSample(buffer, ...args);
+    };
+  });
+
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('button', { name: 'Themes' }).click();
+  await expect.poll(() => page.evaluate(() => window.themeSampleCalls.filter((call) => call.cue === 'themeOpen').length)).toBe(1);
+
+  await page.getByRole('button', { name: 'Card faces' }).click();
+  await expect.poll(() => page.evaluate(() => window.themeSampleCalls.filter((call) => call.cue === 'themeSelect').length)).toBe(1);
+  await page.getByRole('button', { name: 'Face style 3 card faces' }).click();
+  await expect(page.getByRole('button', { name: 'Face style 3 card faces' })).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(() => page.evaluate(() => window.themeSampleCalls.filter((call) => call.cue === 'themeSelect').length)).toBe(2);
+
+  await page.getByRole('button', { name: 'Card backs' }).click();
+  await expect.poll(() => page.evaluate(() => window.themeSampleCalls.filter((call) => call.cue === 'themeSelect').length)).toBe(3);
+  const samples = await page.evaluate(() => window.themeSampleCalls);
+  expect(samples.map((call) => call.cue)).toEqual(['themeOpen', 'themeSelect', 'themeSelect', 'themeSelect']);
+  expect(samples[0].duration).toBeCloseTo(0.24, 2);
+  expect(samples[1].duration).toBeCloseTo(0.24, 2);
+  for (const sample of samples) expect(sample.outputGain).toBeCloseTo(1, 5);
+  expect(pageErrors).toEqual([]);
+});
+
 test('the board fits a 320px phone and the installed shell loads offline', async ({ page, context }) => {
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v64');
+  expect(cacheNames).toContain('solitaire-master-v65');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
   })).toBe(true);
+  await expect.poll(() => page.evaluate(async () => {
+    const [open, select] = await Promise.all([
+      fetch('/assets/audio/theme-gallery-open-reference.wav'),
+      fetch('/assets/audio/theme-gallery-select-reference.wav'),
+    ]);
+    return [open.ok && open.headers.get('content-type') === 'audio/x-wav', select.ok && select.headers.get('content-type') === 'audio/x-wav'];
+  })).toEqual([true, true]);
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();

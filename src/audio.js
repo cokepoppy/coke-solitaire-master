@@ -32,6 +32,10 @@ export class GameAudio {
     this.referenceRecycleLoadPromise = null;
     this.referenceDrawAfterRecycleBuffer = null;
     this.referenceDrawAfterRecycleLoadPromise = null;
+    this.referenceThemeOpenBuffer = null;
+    this.referenceThemeOpenLoadPromise = null;
+    this.referenceThemeSelectBuffer = null;
+    this.referenceThemeSelectLoadPromise = null;
   }
 
   getContext() {
@@ -58,6 +62,8 @@ export class GameAudio {
       this.loadReferenceAutoCollect();
       this.loadReferenceRecycle();
       this.loadReferenceDrawAfterRecycle();
+      this.loadReferenceThemeOpen();
+      this.loadReferenceThemeSelect();
     }
     return this.context;
   }
@@ -237,6 +243,42 @@ export class GameAudio {
     return this.referenceDrawAfterRecycleLoadPromise;
   }
 
+  loadReferenceThemeOpen() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceThemeOpenLoadPromise) {
+      this.referenceThemeOpenLoadPromise = fetch('/assets/audio/theme-gallery-open-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Theme gallery open sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceThemeOpenBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceThemeOpenLoadPromise;
+  }
+
+  loadReferenceThemeSelect() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceThemeSelectLoadPromise) {
+      this.referenceThemeSelectLoadPromise = fetch('/assets/audio/theme-gallery-select-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Theme gallery selection sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceThemeSelectBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceThemeSelectLoadPromise;
+  }
+
   unlock() {
     const context = this.getContext();
     if (!context) return Promise.resolve(false);
@@ -279,6 +321,8 @@ export class GameAudio {
       await this.referenceDrawAfterRecycleLoadPromise;
       if (!this.referenceDrawAfterRecycleBuffer) await this.referenceMoveLoadPromise;
     }
+    if (cue === 'themeOpen') await this.referenceThemeOpenLoadPromise;
+    if (cue === 'themeSelect') await this.referenceThemeSelectLoadPromise;
     if (cue === 'good') await this.referenceGoodLoadPromise;
     if (cue === 'amazing') await this.referenceAmazingLoadPromise;
     if (cue === 'great') await this.referenceGreatLoadPromise;
@@ -349,6 +393,13 @@ export class GameAudio {
     if (cue === 'tap') {
       this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
       this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
+    } else if (cue === 'themeOpen' || cue === 'themeSelect') {
+      const reference = cue === 'themeOpen' ? this.referenceThemeOpenBuffer : this.referenceThemeSelectBuffer;
+      if (reference) this.playCapturedSample(reference, now);
+      else {
+        this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
+        this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
+      }
     } else if (cue === 'draw' || cue === 'drawAfterRecycle') {
       const reference = cue === 'drawAfterRecycle'
         ? (this.referenceDrawAfterRecycleBuffer ?? this.referenceMoveBuffer)
