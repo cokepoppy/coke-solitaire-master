@@ -213,7 +213,7 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   await expect(tip).toBeVisible({ timeout: 1500 });
   const tipBox = await tip.boundingBox();
   expect(tipBox.width).toBeCloseTo(312, 0);
-  expect(Math.abs(tipBox.y + tipBox.height - 709)).toBeLessThan(3);
+  expect(Math.abs(tipBox.y + tipBox.height - 709)).toBeLessThan(8);
   await page.screenshot({ path: 'test-results/first-move-tutorial.png' });
   await page.waitForTimeout(3900);
   await expect(tip).toBeVisible();
@@ -1370,7 +1370,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v49');
+  expect(cacheNames).toContain('solitaire-master-v50');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

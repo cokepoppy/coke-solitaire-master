@@ -1,0 +1,123 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { createReadStream, existsSync, mkdtempSync, rmSync, statSync } from 'node:fs';
+import { createServer } from 'node:http';
+import { once } from 'node:events';
+import os from 'node:os';
+import path from 'node:path';
+import { chromium } from '@playwright/test';
+import { fileURLToPath } from 'node:url';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const work = mkdtempSync(path.join(os.tmpdir(), 'solitaire-vps-release-'));
+const release = path.join(work, 'solitaire');
+const mime = {
+  '.css': 'text/css; charset=utf-8',
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.wav': 'audio/x-wav',
+};
+
+let server;
+let browser;
+try {
+  execFileSync(process.execPath, [path.join(root, 'tools/build_solitaire_vps_release.mjs'), release], { stdio: 'inherit' });
+  server = createServer((request, response) => {
+    const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+    if (pathname === '/solitaire') {
+      response.writeHead(301, { location: '/solitaire/' }).end();
+      return;
+    }
+    if (!pathname.startsWith('/solitaire/')) {
+      response.writeHead(404).end('Not found');
+      return;
+    }
+
+    const relative = pathname.slice('/solitaire/'.length) || 'index.html';
+    const file = path.resolve(release, relative);
+    if (!file.startsWith(`${release}${path.sep}`) || !existsSync(file) || !statSync(file).isFile()) {
+      response.writeHead(404).end('Not found');
+      return;
+    }
+
+    response.writeHead(200, {
+      'content-type': mime[path.extname(file)] ?? 'application/octet-stream',
+      'cache-control': 'no-store',
+    });
+    createReadStream(file).pipe(response);
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const { port } = server.address();
+
+  browser = await chromium.launch({ channel: 'chrome', headless: true });
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const badResponses = [];
+  const pageErrors = [];
+  const unscopedRequests = [];
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+  page.on('response', (response) => {
+    const pathname = new URL(response.url()).pathname;
+    if (pathname.startsWith('/solitaire/') && response.status() >= 400) badResponses.push(`${response.status()} ${pathname}`);
+  });
+  page.on('request', (request) => {
+    const url = new URL(request.url());
+    if (url.origin === `http://127.0.0.1:${port}` && /^\/(?:assets|src|sw\.js|manifest\.webmanifest)(?:\/|$)/.test(url.pathname)) {
+      unscopedRequests.push(url.pathname);
+    }
+  });
+  await page.addInitScript(async () => {
+    const otherGame = await caches.open('another-game-cache');
+    await otherGame.put(new Request(`${location.origin}/another-game-shell`), new Response('keep'));
+  });
+
+  await page.goto(`http://127.0.0.1:${port}/solitaire/`, { waitUntil: 'domcontentloaded' });
+  assert.equal(await page.title(), 'Solitaire Master');
+  await page.waitForFunction(() => document.querySelectorAll('#tableau .card-face').length === 7);
+  assert.match(await page.locator('.stock-slot .card-back-art').getAttribute('src'), /^\/solitaire\/assets\//);
+  await page.locator('[data-action="stock"]').click();
+  await page.waitForFunction(() => document.querySelector('.stock-count')?.textContent?.trim() === '23');
+
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('button', { name: 'Themes' }).click();
+  await page.getByRole('button', { name: 'Mountain background' }).click();
+  await page.waitForFunction(() => document.body.dataset.theme === 'mountain');
+
+  const worker = await page.evaluate(async () => {
+    const registration = await navigator.serviceWorker.ready;
+    const cachesAfterInstall = await caches.keys();
+    const shell = await caches.open('solitaire-master-v50-subpath');
+    const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
+    const protectedCache = await caches.open('another-game-cache');
+    const protectedEntry = await protectedCache.match(`${location.origin}/another-game-shell`);
+    return {
+      scope: registration.scope,
+      script: registration.active?.scriptURL,
+      cachesAfterInstall,
+      shellPageCached: Boolean(shellPage),
+      otherGameCachePreserved: Boolean(protectedEntry),
+    };
+  });
+  assert.equal(worker.scope, `http://127.0.0.1:${port}/solitaire/`);
+  assert.equal(worker.script, `http://127.0.0.1:${port}/solitaire/sw.js`);
+  assert.equal(worker.shellPageCached, true);
+  assert.equal(worker.otherGameCachePreserved, true);
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-v50-subpath'));
+  assert.deepEqual(unscopedRequests, []);
+  assert.deepEqual(badResponses, []);
+  assert.deepEqual(pageErrors, []);
+  console.log(`Subpath smoke test passed at http://127.0.0.1:${port}/solitaire/`);
+} finally {
+  await browser?.close();
+  if (server?.listening) {
+    server.close();
+    await once(server, 'close');
+  }
+  rmSync(work, { recursive: true, force: true });
+}
