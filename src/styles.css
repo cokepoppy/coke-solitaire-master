@@ -313,6 +313,10 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .new-action .action-source-icon { width: 58%; height: 58%; }
 .action-badge { position: absolute; top: -2px; right: 3px; display: grid; width: 18px; height: 18px; place-items: center; border: 1px solid rgba(255,255,255,.9); border-radius: 50%; color: #fff; font-size: 10px; font-style: normal; font-weight: 700; background: #e72832; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
 .action-badge[hidden] { display: none; }
+.action-row-reference-art { display: none; }
+body.source-action-row .action-row-reference-art { position: absolute; z-index: 30; left: 10px; bottom: 18px; display: block; width: calc(100% - 20px); height: auto; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+body.source-action-row .action-bar .action-icon,
+body.source-action-row .action-bar .action-button > span:last-child { opacity: 0; }
 
 .tutorial-tip { position: absolute; z-index: 88; left: 50%; bottom: max(16vh, calc(env(safe-area-inset-bottom) + 100px)); width: min(80vw, 352px); padding: 14px 8px 16px; border-radius: 7px; color: #f4f7f1; font-family: Roboto, Arial, sans-serif; font-size: clamp(15px, 4.1vw, 18px); line-height: 1.41; text-align: center; background: #094021; opacity: 0; pointer-events: none; transform: translate(-50%, 8px); transition: opacity .18s ease, transform .18s ease; }
 .tutorial-tip[hidden] { display: none; }

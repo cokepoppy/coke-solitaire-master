@@ -358,7 +358,10 @@ function updateChrome() {
   magicBadge.textContent = String(game.state.magicCharges);
   magicBadge.hidden = game.state.magicCharges < 1;
   magicBadge.setAttribute('aria-label', `${game.state.magicCharges} magic moves available`);
+  const actionRowArt = $('.action-row-reference-art');
+  actionRowArt.src = game.state.history.length ? actionRowArt.dataset.usedSrc : actionRowArt.dataset.initialSrc;
   document.body.dataset.theme = game.state.theme;
+  document.body.classList.toggle('source-action-row', game.state.theme === 'felt' && game.state.magicCharges === 1);
   document.body.dataset.cardBack = game.state.cardBack ?? 'ruby';
   document.body.dataset.cardFaceStyle = game.state.cardFaceStyle ?? 'master';
   document.body.classList.toggle('left-hand', game.state.leftHand);
