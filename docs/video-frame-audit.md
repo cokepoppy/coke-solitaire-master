@@ -71,7 +71,7 @@ At 319.000–321.000 s (PTS 4,899,840–4,930,560; source time scale 15,360), th
 
 ## Observed Themes gallery
 
-The recording opens Themes at 323.000 s (PTS 4,961,280), showing the `Backgrounds` tab; the `Face Style` tab is selected at 325.000 s (PTS 4,992,000), and `Back Style` at 326.000 s (PTS 5,007,360). The header occupies source rectangle `(0,0,884,306)` and the tab strip `(0,306,884,462)` in the 884×1920 recording. These source-scale crops now supply the gallery header and each selected-tab state, with live accessible buttons layered over the captured tab art. The extraction command and committed asset dimensions are in [`assets/ui/README.md`](../assets/ui/README.md). The source Face Style view shows five horizontal sample strips; the current replica still presents only two vertical choices, so face-gallery layout and the additional styles remain unfinished.
+The recording opens Themes at 323.000 s (PTS 4,961,280), showing the `Backgrounds` tab; the `Face Style` tab is selected at 325.000 s (PTS 4,992,000), and `Back Style` at 326.000 s (PTS 5,007,360). The header occupies source rectangle `(0,0,884,306)` and the tab strip `(0,306,884,462)` in the 884×1920 recording. These source-scale crops supply the gallery header and each selected-tab state, with live accessible buttons layered over the captured tab art. The source Face Style view has five horizontal sample strips, each using 10♦, J♣, Q♥, K♠, and A♦; the five 607×197 px strip crops are recorded in [`assets/ui/README.md`](../assets/ui/README.md). The source sequence does not show the complete card deck after selecting styles 3–5, so the full-deck artwork for those presets remains unverified and unfinished.
 
 ### Observed Auto Collect sequence
 

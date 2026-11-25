@@ -98,7 +98,7 @@ export class SolitaireGame {
       this.state = { ...saved.state, history: [], selected: null, hint: null };
       this.state.cardBack ??= 'ruby';
       this.state.cardFaceStyle ??= 'master';
-      if (!['master', 'classic'].includes(this.state.cardFaceStyle)) this.state.cardFaceStyle = 'master';
+      if (!['master', 'classic', 'style-3', 'style-4', 'style-5'].includes(this.state.cardFaceStyle)) this.state.cardFaceStyle = 'master';
       if (this.state.cardBack === 'emerald' || this.state.cardBack === 'midnight') {
         this.state.cardBack = 'blue';
         this.save();

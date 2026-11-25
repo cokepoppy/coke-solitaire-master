@@ -54,4 +54,13 @@ python3 tools/extract_theme_gallery_assets.py \
   /tmp/solitaire-theme-gallery-source/frame-00003-req-326.000000-pts-5007360.png
 ```
 
-The header and tab sprites are included in the service-worker shell cache and checked by the offline E2E test. The captured tab art only reproduces the navigation chrome; the current face gallery still has two choices, while the source shows five horizontal face-style previews.
+The header and tab sprites are included in the service-worker shell cache and checked by the offline E2E test. The captured tab art reproduces the navigation chrome; the five face-style preview rows are documented below.
+
+`theme-face-style-1-reference.png` through `theme-face-style-5-reference.png` are 607×197 preview-strip crops from the source Face Style page at 325 s, source rectangle x=139 and y positions 554, 809, 1063, 1318, and 1574. The first strip was selected in the source frame; its green selection frame and check were removed, restoring the small overlap on the Ace of Diamonds from the identical card in the second strip. Rebuild them with:
+
+```sh
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 325 325 1 /tmp/solitaire-face-gallery-source
+python3 tools/extract_face_gallery_assets.py /tmp/solitaire-face-gallery-source/frame-00000-req-325.000000-pts-4992000.png
+```
+
+The five previews are displayed at about half their source dimensions in a scrollable single-column list and remain tappable. The available source frame shows the five samples but not a complete deck in styles 3–5. Selecting styles 3–5 updates the saved selection, while gameplay still uses Solitaire Master artwork for those styles; only Solitaire Master and Classic currently have complete card artwork.

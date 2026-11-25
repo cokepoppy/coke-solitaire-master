@@ -691,7 +691,13 @@ function showThemeGallery(tab = 'background') {
       : `<img src="/assets/cards/${CARD_BACK_FILES[value]}" alt="">`;
     return `<button class="gallery-tile back-tile${cardBack === value ? ' chosen' : ''}" type="button" data-setting="cardBack" data-value="${value}" aria-label="${label}" aria-pressed="${cardBack === value}">${artwork}${cardBack === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`;
   }).join('');
-  const faceTiles = [['master', 'Solitaire Master', '5-of-hearts-reference.png'], ['classic', 'Classic', '5-of-hearts.svg']].map(([value, label, preview]) => `<button class="gallery-tile face-tile${cardFaceStyle === value ? ' chosen' : ''}" type="button" data-setting="cardFaceStyle" data-value="${value}" aria-label="${label} card faces" aria-pressed="${cardFaceStyle === value}"><img src="/assets/cards/${preview}" alt=""><span>${label}</span>${cardFaceStyle === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
+  const faceTiles = [
+    ['master', 'Solitaire Master', 'theme-face-style-1-reference.png'],
+    ['classic', 'Classic', 'theme-face-style-2-reference.png'],
+    ['style-3', 'Face style 3', 'theme-face-style-3-reference.png'],
+    ['style-4', 'Face style 4', 'theme-face-style-4-reference.png'],
+    ['style-5', 'Face style 5', 'theme-face-style-5-reference.png'],
+  ].map(([value, label, preview]) => `<button class="gallery-tile face-tile${cardFaceStyle === value ? ' chosen' : ''}" type="button" data-setting="cardFaceStyle" data-value="${value}" aria-label="${label} card faces" aria-pressed="${cardFaceStyle === value}"><img src="/assets/ui/${preview}" alt="">${cardFaceStyle === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
   const tiles = activeTab === 'background' ? backgroundTiles : activeTab === 'back' ? backTiles : faceTiles;
   const tabReference = {
     background: 'backgrounds',
