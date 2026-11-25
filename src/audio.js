@@ -219,15 +219,16 @@ export class GameAudio {
 
   flushPending() {
     const queued = this.pending.splice(0, 8);
-    for (const cue of queued) this.playCue(cue);
+    for (const { cue, delaySeconds = 0 } of queued) this.playCue(cue, delaySeconds);
   }
 
-  async play(cue = 'tap') {
+  async play(cue = 'tap', delaySeconds = 0) {
     if (!this.soundOn) return;
     if (!this.getContext()) return;
+    const scheduledDelay = Number.isFinite(delaySeconds) ? Math.max(0, delaySeconds) : 0;
     const unlocked = await this.unlock();
     if (!unlocked) {
-      if (this.pending.length < 8) this.pending.push(cue);
+      if (this.pending.length < 8) this.pending.push({ cue, delaySeconds: scheduledDelay });
       return;
     }
     if (cue === 'move' || cue === 'draw') await this.referenceMoveLoadPromise;
@@ -237,7 +238,7 @@ export class GameAudio {
     if (cue === 'foundation') await this.referenceFoundationLoadPromise;
     if (cue === 'win') await this.referenceWinLoadPromise;
     if (cue === 'autoCollect') await this.referenceAutoCollectLoadPromise;
-    this.playCue(cue);
+    this.playCue(cue, scheduledDelay);
   }
 
   playSample(buffer, at = this.context.currentTime, amplitude = 1) {
@@ -295,9 +296,9 @@ export class GameAudio {
     oscillator.stop(at + duration + 0.02);
   }
 
-  playCue(cue) {
+  playCue(cue, delaySeconds = 0) {
     if (!this.soundOn || !this.context || this.context.state !== 'running') return;
-    const now = this.context.currentTime;
+    const now = this.context.currentTime + (Number.isFinite(delaySeconds) ? Math.max(0, delaySeconds) : 0);
     if (cue === 'tap') {
       this.playNoise(3000, 1000, 0.038, 0.09, now, 1.1);
       this.playTone(390, 310, 0.045, 0.035, 'triangle', now);
