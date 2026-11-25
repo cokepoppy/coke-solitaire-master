@@ -272,6 +272,15 @@ async function runSourceOpeningReplay(page) {
   });
   await page.reload();
   await page.waitForTimeout(1450);
+  const sourceActionRow = page.locator('.action-row-reference-art');
+  await expect(sourceActionRow).toHaveCSS('display', 'block');
+  await expect(sourceActionRow).toHaveAttribute('src', '/assets/ui/action-row-initial-reference.png');
+  await expect.poll(() => sourceActionRow.evaluate((image) => image.complete && image.naturalWidth)).toBe(844);
+  const sourceActionRowBounds = await sourceActionRow.boundingBox();
+  expect(sourceActionRowBounds.x).toBeCloseTo(10, 0);
+  expect(sourceActionRowBounds.y).toBeCloseTo(830, 0);
+  expect(sourceActionRowBounds.width).toBeCloseTo(422, 0);
+  expect(sourceActionRowBounds.height).toBeCloseTo(112, 0);
   await expect(page.locator('#tableau .card-back-art').first()).toHaveAttribute('src', /back-solitaire-master-reference\.png$/);
   await expect(page.locator('.waste-slot .empty-slot-mark')).toHaveCSS('display', 'none');
   const initialStackSpacing = await page.locator('.pile-column[data-pile="6"] .card-back').evaluateAll((cards) => cards.slice(1).map((card, index) => card.getBoundingClientRect().top - cards[index].getBoundingClientRect().top));
@@ -431,6 +440,8 @@ async function runSourceOpeningReplay(page) {
     { file: 'timer-digit-0.png', size: [21, 31] },
     { file: 'timer-digit-7.png', size: [21, 31] },
   ]);
+  await expect(page.locator('#undo-button')).toBeEnabled();
+  await expect(sourceActionRow).toHaveAttribute('src', '/assets/ui/action-row-used-reference.png');
   await page.screenshot({ path: 'test-results/source-opening-replay.png', fullPage: true });
 }
 
@@ -670,6 +681,7 @@ test('settings change draw count and hand layout; a new deal resets the board', 
 
 test('theme gallery switches backgrounds, card backs, and face styles on mobile', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('body')).toHaveClass(/source-action-row/);
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
   await page.getByRole('button', { name: 'Themes' }).click();
@@ -678,6 +690,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('.theme-gallery')).toHaveCSS('height', `${await page.evaluate(() => window.innerHeight)}px`);
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
+  await expect(page.locator('body')).not.toHaveClass(/source-action-row/);
   await expect(page.locator('.background-tile.chosen')).toHaveCount(1);
   await expect(page.locator('.menu-source-art')).toHaveCSS('display', 'none');
   await expect(page.locator('.menu-theme-icon')).toBeVisible();
@@ -704,6 +717,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'teal');
   await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'master');
+  await expect(page.locator('body')).not.toHaveClass(/source-action-row/);
 });
 
 test('source-matched combo feedback appears on quick consecutive moves and resets after a pause', async ({ page }) => {
@@ -1101,13 +1115,18 @@ test('auto hints suggest a move after idle; manual hints remain available when a
 
 test('the Magic control plays one legal suggestion and undo reverses it', async ({ page }) => {
   await page.goto('/');
+  await expect(page.locator('body')).toHaveClass(/source-action-row/);
+  await expect(page.locator('.action-row-reference-art')).toHaveAttribute('src', '/assets/ui/action-row-initial-reference.png');
   await expect(page.locator('#magic-badge')).toHaveText('1');
   await page.getByRole('button', { name: 'Use magic move' }).click();
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('#magic-badge')).toBeHidden();
+  await expect(page.locator('body')).not.toHaveClass(/source-action-row/);
   await page.getByRole('button', { name: 'Undo move' }).click();
   await expect(page.locator('#moves-value')).toHaveText('0');
   await expect(page.locator('#magic-badge')).toHaveText('1');
+  await expect(page.locator('body')).toHaveClass(/source-action-row/);
+  await expect(page.locator('.action-row-reference-art')).toHaveAttribute('src', '/assets/ui/action-row-initial-reference.png');
 });
 
 test('mobile sound unlocks, captured cues retain source level, and ambient music follows its switch', async ({ page }) => {
@@ -1342,6 +1361,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return response.ok && response.headers.get('content-type') === 'image/png';
   })));
   expect(offlineActionIcons).toEqual(Array(4).fill(true));
+  const offlineActionRows = await page.evaluate(async () => Promise.all(['initial', 'used'].map(async (state) => {
+    const response = await fetch(`/assets/ui/action-row-${state}-reference.png`);
+    return { ok: response.ok, width: (await createImageBitmap(await response.blob())).width };
+  })));
+  expect(offlineActionRows).toEqual([{ ok: true, width: 844 }, { ok: true, width: 844 }]);
   const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
     const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';

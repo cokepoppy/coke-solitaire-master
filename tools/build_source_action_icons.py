@@ -41,6 +41,8 @@ def main() -> None:
     DESTINATION.mkdir(parents=True, exist_ok=True)
     frame10 = Image.open(REVIEW / "target-pts-153600.png").convert("RGB")
     frame20 = Image.open(REVIEW / "target-pts-307200.png").convert("RGB")
+    frame10.crop((20, 1660, 864, 1884)).save(DESTINATION / "action-row-initial-reference.png")
+    frame20.crop((20, 1660, 864, 1884)).save(DESTINATION / "action-row-used-reference.png")
     play_glyph(frame10)
     white_glyph(frame10, (441, 1720, 530, 1792), (44, 25), "action-magic.png")
     white_glyph(frame10, (596, 1705, 685, 1795), (42, 40), "action-hint.png")

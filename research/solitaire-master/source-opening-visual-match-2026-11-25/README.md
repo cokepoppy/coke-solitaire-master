@@ -43,12 +43,12 @@ python3 tools/compare_screenshots.py \
 
 | Region | Mean absolute RGB error |
 | --- | ---: |
-| Full image | 7.379634 |
-| Full image with the iOS home indicator masked | 6.978345 |
+| Full image | 5.735950 |
+| Full image with the iOS home indicator masked | 5.334661 |
 | Header | 7.661925 |
-| Foundations and stock | 6.419474 |
+| Foundations and stock | 6.419517 |
 | Tableau | 11.977231 |
 | Empty background | 2.337637 |
-| Bottom controls | 14.617496 |
+| Bottom controls | 4.755362 |
 
-The mask covers only the iPhone home indicator visible in the source recording; the Chrome page has no corresponding operating-system element. Source H.264 compression and browser text/image rasterization contribute to the remaining pixel error. The low error on the empty felt and card layout supports a close match of this static frame; the higher tableau and control errors remain useful targets for local alignment and artwork review. This is a measured one-frame comparison, not evidence that every screen, animation, or audio cue is pixel-perfect.
+The default felt action row now uses state-matched 844×224 source crops positioned at native scale in this 2× browser viewport; the buttons remain clickable through the pointer-transparent sprites. Its bottom-controls error fell from 14.617496 to 4.755362, and the full masked-frame error fell from 6.978345 to 5.334661. The mask covers only the iPhone home indicator visible in the source recording; the Chrome page has no corresponding operating-system element. Source H.264 compression and browser text/image rasterization contribute to the remaining pixel error. This is a measured one-frame comparison, not evidence that every screen, animation, or audio cue is pixel-perfect.
