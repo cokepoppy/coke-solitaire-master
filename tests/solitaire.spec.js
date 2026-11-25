@@ -571,8 +571,10 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await page.goto('/');
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
-  await page.getByRole('button', { name: 'Draw 3' }).click();
-  await page.getByRole('switch', { name: /Left-hand mode/ }).click();
+  await expect(page.locator('.source-settings-card-shell')).toBeVisible();
+  await expect(page.locator('.source-settings-card-shell')).toHaveCSS('background-color', 'rgb(238, 237, 241)');
+  await page.getByRole('button', { name: 'Draw 3 cards' }).click();
+  await page.getByRole('switch', { name: 'Left Hand' }).click();
   await expect(page.locator('body')).toHaveClass(/left-hand/);
   const stockBox = await page.locator('.stock-slot').boundingBox();
   const wasteBox = await page.locator('.waste-slot').boundingBox();
@@ -580,13 +582,16 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   expect(stockBox.x).toBeLessThan(foundationBox.x);
   expect(stockBox.x).toBeLessThan(wasteBox.x);
   expect(wasteBox.x).toBeLessThan(foundationBox.x);
-  await expect(page.locator('.back-choice')).toHaveCount(2);
-  await page.getByRole('button', { name: 'Blue diamond card back' }).click();
+  await page.getByRole('button', { name: 'Themes' }).click();
+  await page.getByRole('button', { name: 'Card backs' }).click();
+  await expect(page.locator('.back-tile')).toHaveCount(8);
+  await page.locator('.back-tile[data-value="blue"]').click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'blue');
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue.svg');
-  await page.getByRole('button', { name: 'Ruby card back' }).click();
+  await page.locator('.back-tile[data-value="ruby"]').click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
+  await page.getByRole('button', { name: 'Backgrounds' }).click();
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('.waste-slot .empty-slot-mark')).toHaveCSS('display', 'block');
@@ -642,7 +647,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await page.goto('/');
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
-  await page.getByRole('button', { name: 'Open Themes' }).click();
+  await page.getByRole('button', { name: 'Themes' }).click();
   await expect(page.getByRole('dialog', { name: 'Themes' })).toBeVisible();
   await expect(page.locator('.background-tile')).toHaveCount(9);
   await expect(page.locator('.theme-gallery')).toHaveCSS('height', `${await page.evaluate(() => window.innerHeight)}px`);
@@ -1066,12 +1071,12 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
 
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
-  await page.getByRole('switch', { name: 'Sound effects' }).click();
+  await page.getByRole('switch', { name: 'Audio' }).click();
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(false);
-  await page.getByRole('switch', { name: 'Background music' }).click();
+  await page.evaluate(() => window.solitaireAudio.setMusic(true));
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicStep)).toBeGreaterThan(0);
   await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
-  await page.getByRole('switch', { name: 'Background music' }).click();
+  await page.evaluate(() => window.solitaireAudio.setMusic(false));
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicOn)).toBe(false);
   expect(await page.evaluate(() => window.solitaireAudio.musicTimer)).toBeNull();
   await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -1089,7 +1094,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v39');
+  expect(cacheNames).toContain('solitaire-master-v40');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -1263,6 +1268,40 @@ test('an illegal tableau tap does not alter the deal', async ({ page }) => {
   await expect(page.locator('#tableau .playing-card')).toHaveCount(28);
 });
 
+test('source settings switch between Standard and Vegas scoring', async ({ page }) => {
+  await page.goto('/');
+  await page.waitForFunction(() => document.querySelectorAll('#tableau .card-enter').length === 0);
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Scoring Mode Standard/ })).toBeVisible();
+  await page.getByRole('button', { name: /Scoring Mode Standard/ }).click();
+  await page.getByRole('button', { name: 'Vegas' }).click();
+  await expect(page.getByRole('button', { name: /Scoring Mode Vegas/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+
+  const recycle = async (score) => {
+    await page.evaluate((startingScore) => {
+      const game = window.solitaireGame;
+      game.state.stock = [];
+      game.state.waste = Array.from({ length: 24 }, (_, index) => ({ id: `fixture-${index}`, suit: index % 2 ? '♥' : '♠', rank: (index % 13) + 1, faceUp: true }));
+      game.state.score = startingScore;
+      game.save();
+    }, score);
+    await page.locator('[data-action="stock"]').click();
+    return Number(await page.locator('#score-value').textContent());
+  };
+
+  expect(await recycle(200)).toBe(100);
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('button', { name: /Scoring Mode Vegas/ }).click();
+  await page.getByRole('button', { name: 'Standard' }).click();
+  await expect(page.getByRole('button', { name: /Scoring Mode Standard/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  expect(await recycle(200)).toBe(200);
+});
+
 test('mobile stock recycle restores draw order and undo', async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() => document.querySelectorAll('#tableau .card-enter').length === 0);
@@ -1291,7 +1330,7 @@ test('mobile stock recycle restores draw order and undo', async ({ page }) => {
     score: window.solitaireGame.state.score,
     moves: window.solitaireGame.state.moves,
   }));
-  expect(recycled).toEqual({ stock: 24, waste: 0, allFaceDown: true, score: 100, moves: 25 });
+  expect(recycled).toEqual({ stock: 24, waste: 0, allFaceDown: true, score: 200, moves: 25 });
 
   await page.locator('[data-action="stock"]').click();
   await expect(page.locator('.stock-count')).toHaveText('23');

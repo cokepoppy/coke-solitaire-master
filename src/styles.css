@@ -226,6 +226,7 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .card-face.is-selected { transform: translateX(calc(var(--card-width) * var(--waste-offset, 0))) translateY(-5px); box-shadow: 0 0 0 2px #f2d16f, 0 7px 15px rgba(0,0,0,.34); z-index: 30 !important; }
 .card-face.dragging { opacity: .22; transform: none; z-index: 80 !important; cursor: grabbing; }
 .card-face.is-hint { box-shadow: 0 0 0 2px #f7d879, 0 0 17px rgba(255, 216, 98, .7); z-index: 32 !important; }
+.drop-target.is-moveable { outline: 2px solid rgba(73,239,155,.95); outline-offset: 2px; border-radius: 8px; filter: drop-shadow(0 0 7px rgba(58,245,151,.74)); }
 .card-back { position: absolute; left: 0; top: var(--card-offset, 0); border: 1px solid rgba(255,255,255,.86); background: #f5eee0; }
 .card-back.source-card-back { border: 0; background: transparent; box-shadow: none; }
 .source-card-back .card-back-underlay, .source-card-back .card-back-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; }
@@ -425,6 +426,39 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .gallery-tabs { display: grid; flex: 0 0 auto; grid-template-columns: repeat(3, 1fr); align-items: center; gap: 4px; height: 76px; margin: 0 0 15px; padding: 8px 14px; border-radius: 0 0 2px 2px; background: #fbfafc; box-shadow: 0 3px 5px rgba(37,34,44,.17); }
 .gallery-tabs button { display: grid; height: 52px; place-items: center; border: 0; border-radius: 28px; color: #229e66; background: transparent; cursor: pointer; }
 .gallery-tabs button.active { color: #fff; background: #2aa263; }
+.modal-backdrop.source-settings-backdrop { display: block; padding: 0; overflow: hidden; background: #eeedf1; backdrop-filter: none; -webkit-backdrop-filter: none; animation: none; }
+.modal-backdrop.source-settings-backdrop.hidden { display: none; }
+.modal-card.source-settings-card-shell { display: flex; width: 100%; height: 100dvh; max-width: none; max-height: none; flex-direction: column; overflow: hidden; padding: 0; border: 0; border-radius: 0; color: #35353b; background: #eeedf1; box-shadow: none; animation: none; }
+.source-settings-card-shell .modal-kicker { display: none; }
+.source-settings-card-shell #modal-title { display: flex; flex: 0 0 auto; align-items: end; justify-content: center; height: max(140px, calc(env(safe-area-inset-top) + 105px)); margin: 0; padding: 0 54px 24px; border-radius: 0 0 3px 3px; color: #33343a; background: #fff; box-shadow: 0 3px 7px rgba(37,34,44,.16); font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; font-size: 24px; font-weight: 650; letter-spacing: -.025em; }
+.source-settings-card-shell .modal-close { top: max(18px, env(safe-area-inset-top)); right: 15px; z-index: 2; width: 42px; height: 42px; border: 0; border-radius: 0; color: #26272c; background: transparent; font-family: system-ui, sans-serif; font-size: 34px; font-weight: 300; }
+.source-settings-card-shell #modal-content { display: flex; min-height: 0; flex: 1; flex-direction: column; overflow: auto; padding: 0 4px max(22px, env(safe-area-inset-bottom)); overscroll-behavior: contain; }
+.source-settings-list { padding: 0 0 8px; }
+.source-settings-card { margin: 0 0 14px; padding: 0 14px; overflow: hidden; border-radius: 15px; background: #fff; box-shadow: 0 2px 5px rgba(49,46,56,.12); }
+.source-settings-basic { margin-top: 0; }
+.source-settings-row { display: flex; width: 100%; min-height: 53px; align-items: center; justify-content: space-between; gap: 12px; padding: 0; border: 0; border-bottom: 1px solid #eeeeef; color: #38393e; background: transparent; font: 400 16px/1.2 system-ui, -apple-system, BlinkMacSystemFont, sans-serif; text-align: left; }
+.source-settings-row:last-child { border-bottom: 0; }
+.source-settings-link { cursor: pointer; }
+.source-settings-link > b { color: #a7a7ad; font-size: 25px; font-weight: 300; line-height: 1; }
+.source-settings-heading { margin: 6px 15px 9px; color: #8c8c93; font: 500 20px/1.2 system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+.source-switch { display: flex; width: 52px; height: 31px; flex: 0 0 auto; align-items: center; padding: 3px; border: 0; border-radius: 18px; background: #c9c9ce; cursor: pointer; transition: background .16s ease; }
+.source-switch span { display: block; width: 25px; height: 25px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .16s ease; }
+.source-switch.on { background: #28a565; }
+.source-switch.on span { transform: translateX(21px); }
+.source-setting-value { margin-left: auto; color: #94949b; font-size: 15px; }
+.source-draw-row { min-height: 59px; }
+.source-draw-options { display: flex; align-items: center; gap: 8px; }
+.source-draw-choice { position: relative; display: flex; width: 74px; height: 38px; align-items: center; justify-content: center; gap: 6px; border: 1px solid #dedee1; border-radius: 22px; color: #888990; background: #f7f7f8; font: 600 16px/1 system-ui, sans-serif; cursor: pointer; }
+.source-draw-choice.selected { border-color: #28a565; color: #fff; background: #28a565; }
+.draw-card-icon { display: inline-block; color: #e35460; font: normal 13px/1 Georgia, serif; transform: rotate(-10deg); }
+.draw-card-icon.three { color: #f9f6ee; text-shadow: -5px 2px #252630, 5px 1px #e35460; }
+.scoring-mode-list { padding-top: 12px; }
+.scoring-selected { color: #25985e; }
+@media (max-width: 360px) {
+  .source-settings-row { font-size: 14px; }
+  .source-settings-card { padding-right: 11px; padding-left: 11px; }
+  .source-draw-choice { width: 64px; }
+}
 .gallery-tabs button > span { display: grid; place-items: center; width: 35px; height: 35px; font-family: system-ui, sans-serif; font-size: 33px; line-height: 1; }
 .gallery-tabs .tab-card-back { width: 29px; height: 37px; border: 2px solid currentColor; border-radius: 3px; font-size: 22px; }
 .gallery-grid { display: grid; grid-auto-rows: max-content; justify-content: center; align-content: start; gap: 22px 18px; padding: 12px min(10vw, 46px) 24px; }
