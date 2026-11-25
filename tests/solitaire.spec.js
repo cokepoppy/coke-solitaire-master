@@ -929,14 +929,33 @@ test('winning shows a result card and records a completed daily challenge', asyn
     await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
   }
 
-  await expect(page.locator('.win-ribbon')).toContainText('YOU WIN');
-  await expect(page.locator('.win-score-line strong')).toHaveText('390');
-  await expect(page.locator('.win-copy')).toContainText('Daily challenge completed');
-  await expect(page.locator('.win-summary')).toContainText(/Time\s+\d+:\d{2}/);
-  await expect(page.locator('.win-summary')).toContainText('188');
-  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await expect(page.locator('.win-result-backdrop')).toBeVisible();
+  await expect(page.locator('.win-result-banner')).toHaveAttribute('src', '/assets/ui/win-banner-reference.png');
+  await expect(page.locator('.win-result-score')).toContainText('390');
+  await expect(page.locator('.win-result-percent')).toHaveText('You defeated 86% of players!');
+  const displayedWinTime = await page.evaluate(() => {
+    const seconds = window.solitaireGame.state.seconds;
+    return `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
+  });
+  await expect(page.locator('.win-result-stats')).toContainText(displayedWinTime);
+  await expect(page.locator('.win-result-stats')).toContainText('188');
+  await expect(page.locator('.win-result-trophy')).toContainText('1');
+  await expect(page.getByRole('button', { name: 'New Deal' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Close dialog' })).toBeHidden();
+  await expect.poll(() => page.locator('.win-result img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
+  await page.screenshot({ path: 'test-results/mobile-win-result.png', fullPage: true });
+  const winLayout = await page.locator('.win-result').evaluate((element) => {
+    const box = element.getBoundingClientRect();
+    const button = element.querySelector('.win-result-new').getBoundingClientRect();
+    return { width: box.width, height: box.height, buttonBottom: button.bottom, viewportHeight: innerHeight };
+  });
+  expect(winLayout.width / winLayout.height).toBeCloseTo(442 / 960, 2);
+  expect(winLayout.buttonBottom).toBeLessThanOrEqual(winLayout.viewportHeight);
+  await page.getByRole('button', { name: 'New Deal' }).click();
+  await expect(page.locator('.modal-backdrop')).toBeHidden();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('solitaire-master-profile-v1')).dailyCompleted)).toContain(challengeDate);
   await page.getByRole('button', { name: 'Game menu' }).click();
-  await page.getByRole('button', { name: new RegExp(challengeDate) }).click();
+  await page.locator('[data-more="daily"]').click();
   await expect(page.locator(`[data-daily-date="${challengeDate}"]`)).toHaveClass(/completed/);
   await expect(page.locator('.daily-progress')).toHaveAttribute('aria-label', /1 of .* challenges completed this month/);
 });
@@ -1054,7 +1073,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v37');
+  expect(cacheNames).toContain('solitaire-master-v38');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
@@ -1074,6 +1093,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
+  const offlineWinImage = await page.evaluate(async () => {
+    const response = await fetch('/assets/ui/win-banner-reference.png');
+    return { ok: response.ok, type: response.headers.get('content-type') };
+  });
+  expect(offlineWinImage).toEqual({ ok: true, type: 'image/png' });
   const offlineCardBack = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/back-solitaire-master-reference.png');
     return { ok: response.ok, type: response.headers.get('content-type'), bytes: (await response.arrayBuffer()).byteLength };
