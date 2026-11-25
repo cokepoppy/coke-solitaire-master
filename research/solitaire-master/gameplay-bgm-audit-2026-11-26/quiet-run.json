@@ -1,0 +1,30 @@
+{
+  "window_count": 2400,
+  "window_hop_seconds": 0.05,
+  "thresholds": [
+    {
+      "rms_lte": 0.0001,
+      "window_count": 1453,
+      "fraction": 0.6054166666666667,
+      "longest_run_seconds": 9.8,
+      "longest_run_start_seconds": 3.45,
+      "longest_run_end_exclusive_seconds": 13.25
+    },
+    {
+      "rms_lte": 0.001,
+      "window_count": 1709,
+      "fraction": 0.7120833333333333,
+      "longest_run_seconds": 9.850000000000001,
+      "longest_run_start_seconds": 3.4,
+      "longest_run_end_exclusive_seconds": 13.250000000000002
+    },
+    {
+      "rms_lte": 0.01,
+      "window_count": 1978,
+      "fraction": 0.8241666666666667,
+      "longest_run_seconds": 9.850000000000001,
+      "longest_run_start_seconds": 3.4,
+      "longest_run_end_exclusive_seconds": 13.250000000000002
+    }
+  ]
+}
