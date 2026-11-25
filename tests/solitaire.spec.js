@@ -1329,7 +1329,12 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
   await expect(page.locator('.win-streak-reward img')).toHaveJSProperty('naturalWidth', 78);
   await expect(page.locator('.win-cascade-card')).toHaveCount(52);
+  const suitOrder = await page.locator('.win-cascade-card').evaluateAll((cards) => [0, 13, 26, 39].map((index) => new URL(cards[index].src).pathname));
+  expect(suitOrder.map((source) => source.match(/of-(hearts|diamonds|spades|clubs)/)?.[1])).toEqual(['hearts', 'diamonds', 'spades', 'clubs']);
   await page.waitForTimeout(3000);
+  const sourceDurationStillRunning = await page.locator('.win-cascade-card').evaluateAll((cards) => cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length);
+  expect(sourceDurationStillRunning).toBeGreaterThan(0);
+  await expect.poll(() => page.locator('.win-cascade-card').evaluateAll((cards) => cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length)).toBe(0);
   const sourceOverlayBounds = await page.evaluate(() => {
     const textBounds = (element) => {
       const range = document.createRange();
@@ -1633,7 +1638,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v56');
+  expect(cacheNames).toContain('solitaire-master-v57');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

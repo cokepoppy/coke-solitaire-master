@@ -892,16 +892,18 @@ function completeWin() {
   if (game.state.challenge) profile.dailyCompleted = [...new Set([...profile.dailyCompleted, game.state.challenge])].sort();
   writeProfile(profile);
   winNewBest = game.state.score > previousBest;
-  const cascade = game.state.foundations.flatMap((pile, suitIndex) => pile.map((card, rankIndex) => {
+  // The source fan is grouped left-to-right by Hearts, Diamonds, Spades, then Clubs.
+  const fanSuitOrder = [1, 2, 0, 3];
+  const cascade = fanSuitOrder.flatMap((foundationIndex, suitIndex) => game.state.foundations[foundationIndex].map((card, rankIndex) => {
     const asset = cardFaceAssetName(card);
     const rankProgress = rankIndex / 12;
     const fromX = 8 + suitIndex * 20;
-    const toX = -14 + suitIndex * 11 + rankProgress * 80 - (1 - rankProgress) * 10;
+    const toX = -15 + suitIndex * 25 + rankProgress * 40;
     const lowRankYStack = suitIndex === 0 ? 0 : (1 - rankProgress) * 4;
     const lowerLeftFanCurve = suitIndex === 0 ? Math.sin(rankProgress * Math.PI) * 6 : 0;
-    const toY = 72.5 - suitIndex * 7.5 - rankProgress * 22 + lowRankYStack + lowerLeftFanCurve;
+    const toY = 72.5 - suitIndex * 9 - rankProgress * 24 + lowRankYStack + lowerLeftFanCurve;
     const rotation = ((rankIndex % 5) - 2) * 2.2 + (suitIndex - 1.5) * 2;
-    const delay = rankIndex * 28 + suitIndex * 70;
+    const delay = rankIndex * 33 + suitIndex * 70;
     const order = suitIndex * 13 + rankIndex;
     return `<img class="win-cascade-card" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${fromX}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
   })).join('');

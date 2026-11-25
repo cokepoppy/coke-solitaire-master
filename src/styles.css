@@ -223,7 +223,7 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
   background: transparent;
 }
 
-.card-face-art, .card-back-art { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: fill; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.card-face-art, .card-back-art, .card-back-underlay { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: fill; pointer-events: none; user-select: none; -webkit-user-drag: none; }
 
 .card-face.red { color: #ef2d31; }
 .card-face.black { color: #1d3048; }
@@ -531,7 +531,7 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .win-streak-card #modal-content { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; }
 .win-streak-screen { position: relative; width: 100%; height: 100%; overflow: hidden; container-type: inline-size; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
 .win-streak-cascade { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-.win-cascade-card { position: absolute; top: 21%; left: var(--cascade-from-x); display: block; width: 13.35%; height: auto; border-radius: 2px; opacity: 0; filter: brightness(.25); box-shadow: 0 2px 5px rgba(0,0,0,.45); animation: win-cascade-card 2.4s cubic-bezier(.18,.68,.22,1) var(--cascade-delay) both; }
+.win-cascade-card { position: absolute; top: 21%; left: var(--cascade-from-x); display: block; width: 13.35%; height: auto; border-radius: 2px; opacity: 0; filter: brightness(.25); box-shadow: 0 2px 5px rgba(0,0,0,.45); animation: win-cascade-card 2.9s cubic-bezier(.18,.68,.22,1) var(--cascade-delay) both; }
 .win-streak-message { position: absolute; z-index: 60; inset: 0; pointer-events: none; }
 .win-streak-title { position: absolute; top: 31.4%; left: 0; width: 100%; margin: 0; color: #fff; font-size: 12cqw; font-weight: 750; line-height: 1; letter-spacing: -.035em; text-align: center; text-transform: lowercase; -webkit-text-stroke: 1.2px #ff9b1c; paint-order: stroke fill; text-shadow: 0 0 8px #ffb623, 0 2px 0 #c87217, 0 5px 8px rgba(0,0,0,.6); animation: win-streak-title-pop .42s .55s cubic-bezier(.2,.9,.3,1) both; }
 .win-streak-reward { position: absolute; top: 38.5%; left: calc(50% - 4cqw); display: flex; align-items: center; justify-content: center; gap: 8cqw; transform: translateX(-50%); }
