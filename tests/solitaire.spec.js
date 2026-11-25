@@ -58,7 +58,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
   await expect(page.locator('#tableau .card-face')).toHaveCount(7);
   await expect(page.locator('#tableau .card-back')).toHaveCount(21);
-  await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-source\.png$/);
+  await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', /back-solitaire-master-source-20s\.png$/);
   await expect.poll(() => page.locator('.stock-slot .card-back-underlay').evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   await expect(page.locator('.stock-count')).toHaveText('24');
   await expect(page.locator('#time-value')).toHaveText(/^00:\d{2}$/);
@@ -93,7 +93,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   await expect.poll(() => page.locator('.foundation-source-art').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177))).toBe(true);
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'felt');
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
-  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source-20s.png');
   const stockCountPosition = await page.evaluate(() => {
     const card = document.querySelector('.stock-slot .card-back').getBoundingClientRect();
     const count = document.querySelector('.stock-count').getBoundingClientRect();
@@ -853,7 +853,7 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-blue-reference.png');
   await page.locator('.back-tile[data-value="ruby"]').click();
   await expect(page.locator('body')).toHaveAttribute('data-card-back', 'ruby');
-  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source.png');
+  await expect(page.locator('.card-back-art').first()).toHaveAttribute('src', '/assets/cards/back-solitaire-master-source-20s.png');
   await page.getByRole('button', { name: 'Backgrounds' }).click();
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
@@ -1773,6 +1773,16 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   expect(offlineCardBackSource.ok).toBe(true);
   expect(offlineCardBackSource.type).toBe('image/png');
   expect(offlineCardBackSource.bytes).toBeGreaterThan(5_000);
+  const offlineCardBackSource20s = await page.evaluate(async () => {
+    const response = await fetch('/assets/cards/back-solitaire-master-source-20s.png');
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), bytes: Number(response.headers.get('content-length')), width: image.width, height: image.height };
+  });
+  expect(offlineCardBackSource20s.ok).toBe(true);
+  expect(offlineCardBackSource20s.type).toBe('image/png');
+  expect(offlineCardBackSource20s.width).toBe(118);
+  expect(offlineCardBackSource20s.height).toBe(177);
+  expect(offlineCardBackSource20s.bytes).toBeGreaterThan(5_000);
   const offlineCardBackTransition = await page.evaluate(async () => {
     const response = await fetch('/assets/cards/back-solitaire-master.svg');
     return { ok: response.ok, type: response.headers.get('content-type') };

@@ -169,7 +169,7 @@ function cardBackFile() {
 
 function stockCardBackFile() {
   return game.state.cardBack === 'ruby' && game.state.stock.length === 24
-    ? 'back-solitaire-master-source.png'
+    ? 'back-solitaire-master-source-20s.png'
     : cardBackFile();
 }
 

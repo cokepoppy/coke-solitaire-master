@@ -21,6 +21,7 @@
   "cards/back-lattice-gallery-reference.png": "609d1d151dc35f5c338a58ed317094f242c48e41dac11274184a619974c9267f",
   "cards/back-lattice-reference.png": "ef67f9813a0e524f3d8360c14c13179e76b78539ac2c2b854523a5b883d01db5",
   "cards/back-ruby-gallery-selected-reference.png": "648bf5fc8e1ba9a5d2201fd199793b60b5676d96b4cce990eee446b31dee3292",
+  "cards/back-solitaire-master-source-20s.png": "ea9d6f6a86b77a13db3266601d96a2c8237ffa4711063f28f5d3b92609465533",
   "cards/back-spade-gallery-reference.png": "27592f1c4d9df09329ccd22dfeff4ec873c1c6b38c8df5de20ba029a5acc7576",
   "cards/back-spade-reference.png": "48020a211c48a37d8d86973207e682a04f13422367e9451ac11f79518e380db0",
   "cards/back-teal-gallery-reference.png": "09ce1ebd842330012c605476ee1f9a2cff483a2f1adc871c4811d2d15234164e",
@@ -82,8 +83,8 @@
   "ui/win-result-score-digit-2-a-reference.png": "8918fee9c7eaf7e9e89568aa06d0fea2041ffabe3bc461884eca645b36a72983",
   "ui/win-result-score-digit-2-b-reference.png": "643bf37be3ec1b7383b001f575bb179eafcdb64e40fc3dee7453d28ffcad452a",
   "ui/win-result-score-digit-3-reference.png": "067ea3043215bb6c337e2468f8ea99d7b6fd13763071db1c8ad5821f9bc1a575",
-  "ui/win-result-score-label-reference.png": "fa502ea188ef3d347f0b6624f27ba2afee2df9af56a426a595918491b4ed3859",
   "ui/win-result-score-digit-5-reference.png": "b8dfb1b80fc70f3708b0302078498cdbb5b00ce0be0ae316c0319f37f009d80f",
+  "ui/win-result-score-label-reference.png": "fa502ea188ef3d347f0b6624f27ba2afee2df9af56a426a595918491b4ed3859",
   "ui/win-result-time-label-reference.png": "2f9dc96db16c0682d440470852e42907436b2372a4e4bf02335a37a9f84c7c39",
   "ui/win-trophy-reference.png": "8335afb057ca0d1b6b5be1b9636cbbc6d10467745180a4de5276278a220f5cb9"
 }
