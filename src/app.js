@@ -883,10 +883,12 @@ function completeWin() {
     const asset = cardFaceAssetName(card);
     const rankProgress = rankIndex / 12;
     const fromX = 8 + suitIndex * 20;
-    const toX = [-7, 5, 17, 29][suitIndex] + rankProgress * 65;
-    const toY = 38 + suitIndex * 5 + Math.sin(rankProgress * Math.PI) * 18 - rankProgress * 13;
+    const toX = -14 + suitIndex * 11 + rankProgress * 80 - (1 - rankProgress) * 10;
+    const lowRankYStack = suitIndex === 0 ? 0 : (1 - rankProgress) * 4;
+    const lowerLeftFanCurve = suitIndex === 0 ? Math.sin(rankProgress * Math.PI) * 6 : 0;
+    const toY = 72.5 - suitIndex * 7.5 - rankProgress * 22 + lowRankYStack + lowerLeftFanCurve;
     const rotation = ((rankIndex % 5) - 2) * 2.2 + (suitIndex - 1.5) * 2;
-    const delay = rankIndex * 42 + suitIndex * 100;
+    const delay = rankIndex * 28 + suitIndex * 70;
     const order = suitIndex * 13 + rankIndex;
     return `<img class="win-cascade-card" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${fromX}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
   })).join('');
