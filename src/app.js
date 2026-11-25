@@ -491,7 +491,7 @@ function showComboFeedback(cardId, foundationMove = false) {
   label.setAttribute('role', 'status');
   label.setAttribute('aria-label', `Combo ${combo}`);
   label.innerHTML = `<span>COMBO</span><b>${combo}</b>`;
-  label.style.top = '-20px';
+  label.style.top = '-10px';
   label.style.left = '50%';
   board.append(label);
   const reward = foundationMove ? FOUNDATION_COMBO_REWARDS[combo] : null;
@@ -575,6 +575,7 @@ function writeProfile(profile) {
 function setModal(title, kicker, html, variant = '') {
   $('#modal-backdrop').classList.remove('theme-gallery-backdrop');
   $('#modal-card').classList.remove('theme-gallery');
+  $('#modal-card').classList.remove('theme-gallery-background');
   $('#modal-title').classList.remove('theme-gallery-title');
   $('#modal-backdrop').classList.toggle('win-result-backdrop', variant === 'win-result');
   $('#modal-card').classList.toggle('win-result-card', variant === 'win-result');
@@ -670,21 +671,26 @@ const THEME_BACKS = [
   ['floral', 'Red floral'], ['amber', 'Amber diamonds'],
 ];
 const TABLE_THEMES = [
-  ['lagoon', 'Lagoon', 'linear-gradient(145deg,#07827e,#075d60)'],
-  ['emerald', 'Emerald', 'radial-gradient(ellipse at 50% 30%,#119458,#07552f)'],
-  ['mountain', 'Mountain', 'url(/assets/themes/mountain-valley.jpg) center / cover'],
-  ['felt', 'Classic green', 'radial-gradient(ellipse at 50% 36%,#15824b,#066032 76%)'],
+  ['lagoon', 'Lagoon', 'linear-gradient(145deg,#07827e,#075d60)', 'theme-background-lagoon-reference.png', 'wide'],
+  ['emerald', 'Emerald', 'radial-gradient(ellipse at 50% 30%,#119458,#07552f)', 'theme-background-emerald-reference.png', 'wide'],
+  ['mountain', 'Mountain', 'url(/assets/themes/mountain-valley.jpg) center / cover', 'theme-background-mountain-reference.png'],
+  ['felt', 'Classic green', 'radial-gradient(ellipse at 50% 36%,#15824b,#066032 76%)', 'theme-background-felt-reference.png'],
+  ['midnight', 'Midnight teal', 'radial-gradient(ellipse at 50% 38%,#205562,#102f3c)', 'theme-background-midnight-reference.png'],
+  ['plum', 'Plum', 'radial-gradient(ellipse at 50% 38%,#67465b,#302031)', 'theme-background-plum-reference.png'],
+  ['forest', 'Forest', 'radial-gradient(ellipse at 50% 38%,#14572c,#062f19)', 'theme-background-forest-reference.png'],
+  ['violet', 'Violet', 'radial-gradient(ellipse at 50% 38%,#514163,#251c36)', 'theme-background-violet-reference.png'],
   ['dusk', 'Dusk', 'radial-gradient(ellipse at 50% 38%,#55517a,#162c3a 78%)'],
-  ['midnight', 'Midnight teal', 'radial-gradient(ellipse at 50% 38%,#205562,#102f3c)'],
-  ['plum', 'Plum', 'radial-gradient(ellipse at 50% 38%,#67465b,#302031)'],
-  ['forest', 'Forest', 'radial-gradient(ellipse at 50% 38%,#14572c,#062f19)'],
-  ['violet', 'Violet', 'radial-gradient(ellipse at 50% 38%,#514163,#251c36)'],
 ];
 
 function showThemeGallery(tab = 'background') {
   const activeTab = ['background', 'back', 'face'].includes(tab) ? tab : 'background';
   const { theme, cardBack = 'ruby', cardFaceStyle = 'master' } = game.state;
-  const backgroundTiles = TABLE_THEMES.map(([value, label, preview]) => `<button class="gallery-tile background-tile${theme === value ? ' chosen' : ''}" type="button" data-setting="theme" data-value="${value}" aria-label="${label} background" aria-pressed="${theme === value}"><span style="background:${preview}"></span>${theme === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
+  const backgroundTiles = TABLE_THEMES.map(([value, label, preview, sourceArt, shape]) => {
+    const artwork = sourceArt
+      ? `<img src="/assets/themes/${sourceArt}" alt="" draggable="false" aria-hidden="true">`
+      : `<span style="background:${preview}"></span>`;
+    return `<button class="gallery-tile background-tile${shape === 'wide' ? ' background-tile-wide' : ''}${theme === value ? ' chosen' : ''}" type="button" data-setting="theme" data-value="${value}" aria-label="${label} background" aria-pressed="${theme === value}">${artwork}${theme === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`;
+  }).join('');
   const backTiles = THEME_BACKS.map(([value, label]) => {
     const artwork = value === 'ruby'
       ? '<span class="back-preview-source" aria-hidden="true"><img src="/assets/cards/back-solitaire-master.svg" alt=""><img src="/assets/cards/back-solitaire-master-reference.png" alt=""></span>'
@@ -704,9 +710,10 @@ function showThemeGallery(tab = 'background') {
     face: 'faces',
     back: 'backs',
   }[activeTab];
-  setModal('Themes', '', `<nav class="gallery-tabs" aria-label="Theme categories"><img class="gallery-tabs-reference" src="/assets/ui/theme-gallery-tabs-${tabReference}-reference.png" alt="" aria-hidden="true"><button type="button" data-theme-tab="background" aria-label="Backgrounds" class="${activeTab === 'background' ? 'active' : ''}"></button><button type="button" data-theme-tab="face" aria-label="Card faces" class="${activeTab === 'face' ? 'active' : ''}"></button><button type="button" data-theme-tab="back" aria-label="Card backs" class="${activeTab === 'back' ? 'active' : ''}"></button></nav><div class="gallery-grid ${activeTab === 'background' ? 'background-grid' : activeTab === 'face' ? 'face-grid' : 'back-grid'}">${tiles}</div>`);
+  setModal('Themes', '', `<nav class="gallery-tabs${activeTab === 'background' ? ' background-tabs' : ''}" aria-label="Theme categories"><img class="gallery-tabs-reference" src="/assets/ui/theme-gallery-tabs-${tabReference}-reference.png" alt="" aria-hidden="true"><button type="button" data-theme-tab="background" aria-label="Backgrounds" class="${activeTab === 'background' ? 'active' : ''}"></button><button type="button" data-theme-tab="face" aria-label="Card faces" class="${activeTab === 'face' ? 'active' : ''}"></button><button type="button" data-theme-tab="back" aria-label="Card backs" class="${activeTab === 'back' ? 'active' : ''}"></button></nav><div class="gallery-grid ${activeTab === 'background' ? 'background-grid' : activeTab === 'face' ? 'face-grid' : 'back-grid'}">${tiles}</div>`);
   $('#modal-backdrop').classList.add('theme-gallery-backdrop');
   $('#modal-card').classList.add('theme-gallery');
+  $('#modal-card').classList.toggle('theme-gallery-background', activeTab === 'background');
   $('#modal-title').classList.add('theme-gallery-title');
 }
 
