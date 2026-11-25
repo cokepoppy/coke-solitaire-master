@@ -277,8 +277,11 @@ async function runSourceOpeningReplay(page) {
   });
   await page.reload();
   await page.waitForTimeout(1450);
+  expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage.includes('rgb(14, 116, 65)'))).toBe(true);
   const sourceColumnOrigins = await page.locator('.pile-column').evaluateAll((columns) => columns.map((column) => Math.round(column.getBoundingClientRect().left * devicePixelRatio)));
   expect(sourceColumnOrigins).toEqual([8, 133, 258, 383, 508, 633, 758]);
+  const sourceFoundationOrigins = await page.locator('.foundation-slot').evaluateAll((slots) => slots.map((slot) => [Math.round(slot.getBoundingClientRect().left * devicePixelRatio), Math.round(slot.getBoundingClientRect().top * devicePixelRatio)]));
+  expect(sourceFoundationOrigins).toEqual([[8, 429], [133, 429], [258, 429], [383, 429]]);
   const foundationTop = await page.locator('.foundation-slot').first().evaluate((slot) => slot.getBoundingClientRect().top);
   expect(foundationTop).toBeLessThan(214.75);
   const sourceActionRow = page.locator('.action-row-reference-art');

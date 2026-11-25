@@ -1,0 +1,7 @@
+# Felt background color audit
+
+This pass checks that the 20-second source color is stable across the opening gameplay instead of tuning a single compressed frame. It samples 14 exact AVFoundation frames from 9–22 seconds of the 884×1920 portrait recording (`gLd0HXtDt5I`, SHA-256 `56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928`). The stored frame crops cover source rectangle `(0,1050,884,550)`; the color probe uses the unobstructed upper-left patch `(20,1100,80,450)`.
+
+Every probe frame has median RGB `(14,116,65)`, including the still frames at 9–13, 18–22 seconds. Several action-transition frames contain a small number of pixels altered by card shadows or motion, while their median remains unchanged. The default felt plateau is now `#0e7441`. The source PTS, PNG hashes, and exact/requested times are in `frames.csv` and `manifest.json`; probe statistics are in `color-samples.csv`. Extracted PNG crops remain local derivatives and are not committed.
+
+The source-opening replay at 442×960 CSS pixels and 2× density compares against the 20-second frame. The background change reduces its empty-background MAE from `2.340421` to `0.381497`, increases exact RGB matches in that region to `92.54%`, and reduces masked full-frame MAE from `5.020332` to `4.006699`. This metric covers one opening state; it does not imply that all themes or transitions are pixel-identical.

@@ -9,7 +9,7 @@
   },
   "rendered": {
     "path": "source-opening-replay.png",
-    "sha256": "31c65c2c3eab24a50160a376d2bad72575ca0303ace06d60d575b43b58c34f64"
+    "sha256": "6c6a5f1033a1738695f09fa57a7c8981785094552a8d4dfc4f94131ad3ee9a53"
   },
   "comparison": {
     "rescaled": false,
@@ -23,38 +23,38 @@
       }
     ],
     "all_pixels": {
-      "mean_absolute_rgb_error": 5.42162,
-      "exact_rgb_pixel_fraction": 0.00437641,
+      "mean_absolute_rgb_error": 4.407988,
+      "exact_rgb_pixel_fraction": 0.4477134,
       "pixel_count": 1697280
     },
     "after_ignored_rectangles": {
-      "mean_absolute_rgb_error": 5.020332,
-      "exact_rgb_pixel_fraction": 0.00944511,
+      "mean_absolute_rgb_error": 4.006699,
+      "exact_rgb_pixel_fraction": 0.4527821,
       "pixel_count": 1697280
     },
     "regions": {
       "header": {
-        "mean_absolute_rgb_error": 7.221828,
-        "exact_rgb_pixel_fraction": 0.0006858,
+        "mean_absolute_rgb_error": 6.086404,
+        "exact_rgb_pixel_fraction": 0.5595164,
         "pixel_count": 141440
       },
       "foundation_stock": {
-        "mean_absolute_rgb_error": 4.633814,
-        "exact_rgb_pixel_fraction": 0.00099453,
+        "mean_absolute_rgb_error": 3.910043,
+        "exact_rgb_pixel_fraction": 0.34393382,
         "pixel_count": 212160
       },
       "tableau": {
-        "mean_absolute_rgb_error": 11.718549,
-        "exact_rgb_pixel_fraction": 0.01815473,
+        "mean_absolute_rgb_error": 11.099697,
+        "exact_rgb_pixel_fraction": 0.31394714,
         "pixel_count": 362440
       },
       "empty_bg": {
-        "mean_absolute_rgb_error": 2.340421,
-        "exact_rgb_pixel_fraction": 4.11e-06,
+        "mean_absolute_rgb_error": 0.381497,
+        "exact_rgb_pixel_fraction": 0.92540107,
         "pixel_count": 486200
       },
       "bottom_controls": {
-        "mean_absolute_rgb_error": 4.755362,
+        "mean_absolute_rgb_error": 4.502385,
         "exact_rgb_pixel_fraction": 0.00190187,
         "pixel_count": 282880
       }
