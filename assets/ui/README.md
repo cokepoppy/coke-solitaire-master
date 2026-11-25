@@ -30,3 +30,5 @@ python3 tools/extract_win_result_assets.py /tmp/solitaire-win-source/frame-00000
 ```
 
 The crops are included in the service-worker shell cache. The layout evidence and source-frame hash are recorded in [the win-result audit](../../docs/video-frame-audit.md#observed-win-result). The source shows `86%` and a trophy count of `2` in this one result; the ranking rule is unknown, and the web version uses 86% as the captured label plus a local win count.
+
+`win-streak-trophy-reference.png` uses the same source trophy cropped from the result capture, with the sampled navy removed so it can sit over the animated card fan. Rebuild it with `python3 tools/extract_win_streak_trophy.py assets/ui/win-trophy-reference.png assets/ui/win-streak-trophy-reference.png`.

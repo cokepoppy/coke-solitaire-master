@@ -940,6 +940,14 @@ test('winning shows a result card and records a completed daily challenge', asyn
     await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
   }
 
+  await expect(page.locator('.win-streak-backdrop')).toBeVisible();
+  await expect(page.locator('.win-streak-title')).toHaveText('winning streak');
+  await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
+  await expect(page.locator('.win-streak-reward img')).toHaveJSProperty('naturalWidth', 78);
+  await expect(page.locator('.win-cascade-card')).toHaveCount(52);
+  await page.waitForTimeout(1000);
+  await page.screenshot({ path: 'test-results/mobile-win-streak.png' });
+  await page.getByRole('button', { name: 'Tap to Continue' }).click();
   await expect(page.locator('.win-result-backdrop')).toBeVisible();
   expect(await page.evaluate(() => window.gameAudioCues.at(-1))).toBe('win');
   await expect(page.locator('.win-result-banner')).toHaveAttribute('src', '/assets/ui/win-banner-reference.png');
@@ -970,6 +978,32 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await page.locator('[data-more="daily"]').click();
   await expect(page.locator(`[data-daily-date="${challengeDate}"]`)).toHaveClass(/completed/);
   await expect(page.locator('.daily-progress')).toHaveAttribute('aria-label', /1 of .* challenges completed this month/);
+});
+
+test('win clear sequence advances to the result without input', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
+    const suits = ['♠', '♥', '♦', '♣'];
+    game.state.stock = [];
+    game.state.waste = [];
+    game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 13).sort((a, b) => a.rank - b.rank));
+    game.state.tableau = [...suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13)]), [], [], []];
+    game.state.moves = 0;
+    game.state.score = 0;
+    game.state.seconds = 0;
+    game.state.challenge = null;
+    game.state.won = false;
+    game.save();
+  });
+  await page.reload();
+  for (let pile = 0; pile < 4; pile += 1) {
+    await page.locator(`#tableau .pile-column[data-pile="${pile}"] .playing-card`).click();
+    await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
+  }
+  await expect(page.locator('.win-streak-backdrop')).toBeVisible();
+  await expect(page.locator('.win-result-backdrop')).toBeVisible({ timeout: 6000 });
 });
 
 test('the Magic control plays one legal suggestion and undo reverses it', async ({ page }) => {
@@ -1094,7 +1128,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v40');
+  expect(cacheNames).toContain('solitaire-master-v41');
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();
