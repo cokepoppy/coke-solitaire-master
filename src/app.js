@@ -693,7 +693,12 @@ function showThemeGallery(tab = 'background') {
   }).join('');
   const faceTiles = [['master', 'Solitaire Master', '5-of-hearts-reference.png'], ['classic', 'Classic', '5-of-hearts.svg']].map(([value, label, preview]) => `<button class="gallery-tile face-tile${cardFaceStyle === value ? ' chosen' : ''}" type="button" data-setting="cardFaceStyle" data-value="${value}" aria-label="${label} card faces" aria-pressed="${cardFaceStyle === value}"><img src="/assets/cards/${preview}" alt=""><span>${label}</span>${cardFaceStyle === value ? '<i aria-hidden="true">✓</i>' : ''}</button>`).join('');
   const tiles = activeTab === 'background' ? backgroundTiles : activeTab === 'back' ? backTiles : faceTiles;
-  setModal('Themes', '', `<nav class="gallery-tabs" aria-label="Theme categories"><button type="button" data-theme-tab="background" aria-label="Backgrounds" class="${activeTab === 'background' ? 'active' : ''}"><span aria-hidden="true">▧</span></button><button type="button" data-theme-tab="back" aria-label="Card backs" class="${activeTab === 'back' ? 'active' : ''}"><span class="tab-card-back" aria-hidden="true">◆</span></button><button type="button" data-theme-tab="face" aria-label="Card faces" class="${activeTab === 'face' ? 'active' : ''}"><span aria-hidden="true">♥</span></button></nav><div class="gallery-grid ${activeTab === 'background' ? 'background-grid' : activeTab === 'face' ? 'face-grid' : 'back-grid'}">${tiles}</div>`);
+  const tabReference = {
+    background: 'backgrounds',
+    face: 'faces',
+    back: 'backs',
+  }[activeTab];
+  setModal('Themes', '', `<nav class="gallery-tabs" aria-label="Theme categories"><img class="gallery-tabs-reference" src="/assets/ui/theme-gallery-tabs-${tabReference}-reference.png" alt="" aria-hidden="true"><button type="button" data-theme-tab="background" aria-label="Backgrounds" class="${activeTab === 'background' ? 'active' : ''}"></button><button type="button" data-theme-tab="face" aria-label="Card faces" class="${activeTab === 'face' ? 'active' : ''}"></button><button type="button" data-theme-tab="back" aria-label="Card backs" class="${activeTab === 'back' ? 'active' : ''}"></button></nav><div class="gallery-grid ${activeTab === 'background' ? 'background-grid' : activeTab === 'face' ? 'face-grid' : 'back-grid'}">${tiles}</div>`);
   $('#modal-backdrop').classList.add('theme-gallery-backdrop');
   $('#modal-card').classList.add('theme-gallery');
   $('#modal-title').classList.add('theme-gallery-title');

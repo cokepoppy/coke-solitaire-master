@@ -43,3 +43,15 @@ python3 tools/extract_settings_source_art.py /tmp/solitaire-settings-source/fram
 ```
 
 All three settings crops are included in the service-worker shell cache and are verified by the offline E2E test.
+
+`theme-gallery-header-reference.png` is the native 884×306 source header crop from 323 s, including the Themes title and close mark. The three 884×156 tab strips come from source frames at 323 s (Backgrounds), 325 s (Face Style), and 326 s (Back Style). The web UI displays the matching tab strip as a sprite and places accessible, tappable buttons over the three source tab hit areas. Rebuild these four crops from the original video with:
+
+```sh
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 323 326 1 /tmp/solitaire-theme-gallery-source
+python3 tools/extract_theme_gallery_assets.py \
+  /tmp/solitaire-theme-gallery-source/frame-00000-req-323.000000-pts-4961280.png \
+  /tmp/solitaire-theme-gallery-source/frame-00002-req-325.000000-pts-4992000.png \
+  /tmp/solitaire-theme-gallery-source/frame-00003-req-326.000000-pts-5007360.png
+```
+
+The header and tab sprites are included in the service-worker shell cache and checked by the offline E2E test. The captured tab art only reproduces the navigation chrome; the current face gallery still has two choices, while the source shows five horizontal face-style previews.
