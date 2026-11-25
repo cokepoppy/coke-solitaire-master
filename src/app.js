@@ -362,6 +362,7 @@ function updateChrome() {
   actionRowArt.src = game.state.history.length ? actionRowArt.dataset.usedSrc : actionRowArt.dataset.initialSrc;
   document.body.dataset.theme = game.state.theme;
   document.body.classList.toggle('source-action-row', game.state.theme === 'felt' && game.state.magicCharges === 1);
+  document.body.classList.toggle('source-settings-draw-mode', game.state.theme === 'felt' && game.state.drawCount === 1);
   document.body.dataset.cardBack = game.state.cardBack ?? 'ruby';
   document.body.dataset.cardFaceStyle = game.state.cardFaceStyle ?? 'master';
   document.body.classList.toggle('left-hand', game.state.leftHand);
@@ -604,13 +605,15 @@ function closeModal() {
 }
 
 function settingsSwitch(name, label, value) {
-  return `<button class="source-switch${value ? ' on' : ''}" type="button" role="switch" aria-label="${label}" aria-checked="${value}" data-setting="${name}" data-value="${!value}"><span></span></button>`;
+  const sourceArt = value ? 'settings-switch-on-reference.png' : 'settings-switch-off-reference.png';
+  return `<button class="source-switch${value ? ' on' : ''}" type="button" role="switch" aria-label="${label}" aria-checked="${value}" data-setting="${name}" data-value="${!value}"><img class="source-switch-reference" src="/assets/ui/${sourceArt}" alt=""><span></span></button>`;
 }
 
 function showSettings() {
   const { drawCount, scoringMode, leftHand, vibration, quickPlay, autoCollect, autoHints, showThreeWasteCards, movableHighlight, sound } = game.state;
   setModal('Settings', '', `
     <div class="source-settings-list">
+      <h2 class="source-settings-heading">Convention</h2>
       <section class="source-settings-card source-settings-basic" aria-label="General settings">
         <div class="source-settings-row"><span>Audio</span>${settingsSwitch('sound', 'Audio', sound)}</div>
         <div class="source-settings-row"><span>Vibration</span>${settingsSwitch('vibration', 'Vibration', vibration)}</div>
@@ -622,7 +625,7 @@ function showSettings() {
         <div class="source-settings-row source-draw-row"><span>Draw Mode</span><div class="source-draw-options" role="group" aria-label="Draw Mode">
           <button class="source-draw-choice${drawCount === 1 ? ' selected' : ''}" type="button" data-setting="drawCount" data-value="1" aria-label="Draw 1 card" aria-pressed="${drawCount === 1}"><b>1</b><i class="draw-card-icon one" aria-hidden="true">♥</i></button>
           <button class="source-draw-choice${drawCount === 3 ? ' selected' : ''}" type="button" data-setting="drawCount" data-value="3" aria-label="Draw 3 cards" aria-pressed="${drawCount === 3}"><b>3</b><i class="draw-card-icon three" aria-hidden="true">♠♥</i></button>
-        </div></div>
+        </div><img class="source-draw-mode-reference" src="/assets/ui/settings-draw-mode-1-reference.png" alt="" aria-hidden="true"></div>
         <button class="source-settings-row source-settings-link" type="button" data-settings-page="scoring"><span>Scoring Mode</span><span class="source-setting-value">${scoringMode === 'vegas' ? 'Vegas' : 'Standard'}</span><b aria-hidden="true">›</b></button>
       </section>
       <h2 class="source-settings-heading">Preferences</h2>
@@ -634,6 +637,17 @@ function showSettings() {
         <div class="source-settings-row"><span>Show Three Waste Cards</span>${settingsSwitch('showThreeWasteCards', 'Show Three Waste Cards', showThreeWasteCards)}</div>
         <div class="source-settings-row"><span>Movable highlight</span>${settingsSwitch('movableHighlight', 'Movable highlight', movableHighlight)}</div>
       </section>
+      <h2 class="source-settings-heading">Support</h2>
+      <section class="source-settings-card source-settings-support" aria-label="Support">
+        <button class="source-settings-row source-settings-link" type="button" data-settings-action="help"><span>How to play</span><b aria-hidden="true">›</b></button>
+        <a class="source-settings-row source-settings-link" href="https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad" target="_blank" rel="noopener noreferrer"><span>Rate Us</span><b aria-hidden="true">›</b></a>
+        <a class="source-settings-row source-settings-link" href="mailto:solitaire-support@hungrystudio.com"><span>Contact Us</span><b aria-hidden="true">›</b></a>
+      </section>
+      <p class="source-settings-build">44-250625f152</p>
+      <nav class="source-settings-legal" aria-label="Legal information">
+        <a href="https://www.hungrystudio.com/serviceus.html" target="_blank" rel="noopener noreferrer">Terms of services</a>
+        <a href="https://www.hungrystudio.com/privacyus.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      </nav>
     </div>
   `, 'settings');
 }
@@ -1174,6 +1188,10 @@ $('#magic-button').addEventListener('click', handleMagic);
 $('#modal-close').addEventListener('click', closeModal);
 modalBackdrop.addEventListener('click', (event) => { if (event.target === modalBackdrop) closeModal(); });
 modalContent.addEventListener('click', (event) => {
+  if (event.target.closest('[data-settings-action="help"]')) {
+    showHelp();
+    return;
+  }
   const settingsPage = event.target.closest('[data-settings-page]')?.dataset.settingsPage;
   if (settingsPage === 'statistics') { showStats(); return; }
   if (settingsPage === 'scoring') { showScoringModes(); return; }

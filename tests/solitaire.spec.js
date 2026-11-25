@@ -451,6 +451,44 @@ test.describe('source-sized visual comparison', () => {
   test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
     await runSourceOpeningReplay(page);
   });
+
+  test('source Settings controls, support links, and scroll match the captured page', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Game menu' }).click();
+    await page.getByRole('button', { name: 'Settings and themes' }).click();
+    await expect(page.getByRole('heading', { name: 'Convention' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Game Mode' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Preferences' })).toBeVisible();
+
+    const audioSwitch = page.getByRole('switch', { name: 'Audio' });
+    const initialChecked = await audioSwitch.getAttribute('aria-checked');
+    const initialSprite = await audioSwitch.locator('img').getAttribute('src');
+    await expect(audioSwitch.locator('img')).toHaveJSProperty('naturalWidth', 123);
+    await audioSwitch.click();
+    await expect(audioSwitch).toHaveAttribute('aria-checked', initialChecked === 'true' ? 'false' : 'true');
+    await expect(audioSwitch.locator('img')).not.toHaveAttribute('src', initialSprite);
+
+    const drawOne = page.getByRole('button', { name: 'Draw 1 card' });
+    await drawOne.click();
+    await expect(page.locator('body')).toHaveClass(/source-settings-draw-mode/);
+    await expect(page.locator('.source-draw-mode-reference')).toBeVisible();
+    await expect(page.locator('.source-draw-mode-reference')).toHaveJSProperty('naturalWidth', 787);
+    await page.getByRole('button', { name: 'Draw 3 cards' }).click();
+    await expect(page.locator('.source-draw-mode-reference')).toBeHidden();
+
+    const content = page.locator('#modal-content');
+    expect(await content.evaluate((element) => element.scrollHeight)).toBeGreaterThan(await content.evaluate((element) => element.clientHeight));
+    await page.getByRole('heading', { name: 'Support' }).scrollIntoViewIfNeeded();
+    await expect(page.getByRole('button', { name: 'How to play' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Rate Us' })).toHaveAttribute('href', 'https://apps.apple.com/us/app/solitaire-master/id6464113198?platform=ipad');
+    await expect(page.getByRole('link', { name: 'Contact Us' })).toHaveAttribute('href', 'mailto:solitaire-support@hungrystudio.com');
+    await expect(page.getByRole('link', { name: 'Terms of services' })).toHaveAttribute('href', 'https://www.hungrystudio.com/serviceus.html');
+    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', 'https://www.hungrystudio.com/privacyus.html');
+    await expect(page.getByText('44-250625f152')).toBeVisible();
+    await page.getByRole('button', { name: 'How to play' }).click();
+    await expect(page.locator('#modal-title')).toHaveText('How to play');
+    await expect(page.getByText('Build the foundations')).toBeVisible();
+  });
 });
 
 test('reference card illustrations render on matching cards', async ({ page }) => {
@@ -1260,7 +1298,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v45');
+  expect(cacheNames).toContain('solitaire-master-v46');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1366,6 +1404,20 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, width: (await createImageBitmap(await response.blob())).width };
   })));
   expect(offlineActionRows).toEqual([{ ok: true, width: 844 }, { ok: true, width: 844 }]);
+  const offlineSettingsArt = await page.evaluate(async () => Promise.all([
+    'settings-switch-on-reference.png',
+    'settings-switch-off-reference.png',
+    'settings-draw-mode-1-reference.png',
+  ].map(async (name) => {
+    const response = await fetch(`/assets/ui/${name}`);
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, width: image.width, height: image.height };
+  })));
+  expect(offlineSettingsArt).toEqual([
+    { ok: true, width: 123, height: 58 },
+    { ok: true, width: 123, height: 58 },
+    { ok: true, width: 787, height: 104 },
+  ]);
   const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
     const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';
