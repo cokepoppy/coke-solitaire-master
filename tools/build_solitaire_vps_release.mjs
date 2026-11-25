@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.resolve(process.argv[2] ?? 'dist/solitaire');
 const base = '/solitaire';
-const cacheName = 'solitaire-master-v50-subpath';
+const cacheName = 'solitaire-master-solitaire-v51';
+const cachePrefix = 'solitaire-master-solitaire-v';
 
 if (output === root || output.startsWith(`${root}${path.sep}`)) {
   throw new Error('Choose an output directory outside the source checkout.');
@@ -36,7 +37,8 @@ function visit(directory) {
       .replaceAll("'/index.html'", `'/solitaire/index.html'`)
       .replaceAll("['/', '/solitaire/index.html'", "['/solitaire/', '/solitaire/index.html'")
       .replaceAll('"start_url": "/"', `"start_url": "${base}/"`)
-      .replaceAll('solitaire-master-v50', cacheName);
+      .replaceAll('solitaire-master-v51', cacheName)
+      .replaceAll('solitaire-master-v', cachePrefix);
 
     if (/['"`]\/(?:assets|src)\//.test(source)) {
       throw new Error(`Unscoped asset path remains in ${path.relative(output, file)}`);

@@ -9,7 +9,7 @@ npm run build:vps
 npm run test:release-path
 ```
 
-The build writes to `/tmp/solitaire-master-vps-release`. It rewrites the root asset URLs for `/solitaire/`, gives the subpath its own service-worker cache, and the release-path test opens the built copy in mobile Chrome, draws a card, changes the background, verifies the worker scope, and confirms a second game's origin cache remains intact.
+The build writes to `/tmp/solitaire-master-vps-release`. It rewrites the root asset URLs for `/solitaire/`, gives the subpath a separate cache namespace whose cleanup cannot delete the root app's cache, and the release-path test opens the built copy in mobile Chrome, draws a card, changes the background, verifies the worker scope, and confirms both an existing root-game cache and an unrelated game's cache remain intact.
 
 On the VPS, keep releases under `/var/www/coke-game-solitaire/releases/<timestamp>` and atomically point `/var/www/coke-game-solitaire/current` at the new release. Keep at least one previous release for rollback and maintain the established disk-use ceiling below 79%.
 

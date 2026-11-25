@@ -1,4 +1,5 @@
-const CACHE = 'solitaire-master-v50';
+const CACHE = 'solitaire-master-v51';
+const CACHE_PREFIX = 'solitaire-master-v';
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));
@@ -58,6 +59,7 @@ const referencePipCards = [
   '/assets/cards/4-of-diamonds-reference.png',
   '/assets/cards/9-of-clubs-reference.png',
 ];
+const alternateFaceSamples = [3, 4, 5].flatMap((style) => ['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds'].map((card) => `/assets/cards/face-style-${style}-${card}-reference.png`));
 const referenceCardBacks = ['/assets/cards/back-blue-reference.png', '/assets/cards/back-teal-reference.png', '/assets/cards/back-lattice-reference.png', '/assets/cards/back-spade-reference.png', '/assets/cards/back-coral-reference.png', '/assets/cards/back-floral-reference.png', '/assets/cards/back-amber-reference.png'];
 const actionIcons = ['/assets/ui/action-play-plus.png', '/assets/ui/action-magic.png', '/assets/ui/action-hint.png', '/assets/ui/action-undo.png'];
 const actionRowReferences = ['/assets/ui/action-row-initial-reference.png', '/assets/ui/action-row-used-reference.png'];
@@ -70,7 +72,7 @@ const statusBarIcons = ['/assets/ui/menu-source.png', '/assets/ui/stat-crown.png
 const sourceTimerFrame = ['/assets/ui/timer-frame-source.png'];
 const winResultAssets = ['/assets/ui/win-banner-reference.png', '/assets/ui/win-best-reference.png', '/assets/ui/win-trophy-reference.png', '/assets/ui/win-streak-trophy-reference.png', '/assets/ui/win-new-deal-reference.png'];
 const timerGlyphs = [...Array.from({ length: 10 }, (_, index) => `/assets/ui/timer-digit-${index}.png`), '/assets/ui/timer-colon.png'];
-const SHELL = ['/', '/index.html', '/src/styles.css', '/src/game.js', '/src/audio.js', '/src/app.js', '/manifest.webmanifest', '/assets/icon.svg', '/assets/themes/mountain-valley.jpg', '/assets/audio/card-move-reference.wav', '/assets/audio/combo-good-reference.wav', '/assets/audio/combo-amazing-reference.wav', '/assets/audio/combo-great-reference.wav', '/assets/audio/foundation-reference.wav', '/assets/audio/win-reference.wav', '/assets/audio/auto-collect-reference.wav', '/assets/feedback/combo-good.webp', '/assets/feedback/combo-great.webp', '/assets/feedback/combo-amazing.webp', '/assets/cards/back-red.svg', '/assets/cards/back-solitaire-master.svg', '/assets/cards/back-solitaire-master-reference.png', '/assets/cards/back-solitaire-master-source.png', ...referenceCardBacks, ...referenceCourtCards, ...referencePipCards, ...cardFaces, ...actionIcons, ...actionRowReferences, ...settingsSourceAssets, ...themeGalleryAssets, ...themeBackgroundGalleryAssets, ...themeFaceGalleryAssets, ...foundationSlots, ...statusBarIcons, ...sourceTimerFrame, ...winResultAssets, ...timerGlyphs];
+const SHELL = ['/', '/index.html', '/src/styles.css', '/src/game.js', '/src/audio.js', '/src/app.js', '/manifest.webmanifest', '/assets/icon.svg', '/assets/themes/mountain-valley.jpg', '/assets/audio/card-move-reference.wav', '/assets/audio/combo-good-reference.wav', '/assets/audio/combo-amazing-reference.wav', '/assets/audio/combo-great-reference.wav', '/assets/audio/foundation-reference.wav', '/assets/audio/win-reference.wav', '/assets/audio/auto-collect-reference.wav', '/assets/feedback/combo-good.webp', '/assets/feedback/combo-great.webp', '/assets/feedback/combo-amazing.webp', '/assets/cards/back-red.svg', '/assets/cards/back-solitaire-master.svg', '/assets/cards/back-solitaire-master-reference.png', '/assets/cards/back-solitaire-master-source.png', ...referenceCardBacks, ...referenceCourtCards, ...referencePipCards, ...alternateFaceSamples, ...cardFaces, ...actionIcons, ...actionRowReferences, ...settingsSourceAssets, ...themeGalleryAssets, ...themeBackgroundGalleryAssets, ...themeFaceGalleryAssets, ...foundationSlots, ...statusBarIcons, ...sourceTimerFrame, ...winResultAssets, ...timerGlyphs];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));
@@ -78,7 +80,7 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith('solitaire-master-') && key !== CACHE).map((key) => caches.delete(key)))));
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE).map((key) => caches.delete(key)))));
   self.clients.claim();
 });
 
