@@ -1,0 +1,23 @@
+{
+  "source_file": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "decoder": "macOS afconvert",
+  "decoded_pcm_format": "44.1 kHz stereo signed PCM16 little-endian",
+  "decoded_full_pcm_sha256": "69db2a5a1dd0b006f9f9df082578fed68f5f1550c1c4eb87e7198584e3f3fa64",
+  "requested_source_start_seconds": 635.0,
+  "requested_source_end_seconds": 648.0,
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "start_sample_frame": 28003500,
+  "end_sample_frame_exclusive": 28576800,
+  "frame_count": 573300,
+  "actual_start_seconds": 635.0,
+  "actual_end_seconds": 648.0,
+  "duration_seconds": 13.0,
+  "output_file": "audio-635-648.wav",
+  "output_sha256": "e49457732ac19adc6b982609fbc09cb782d3cdf4a426029f7aeb415f4321ac1d",
+  "extracted_at_utc": "2026-11-25T10:24:04.768396+00:00",
+  "note": "The WAV is cropped at the recorded source-time sample indices with no fade or timeline offset; keep this manifest beside it."
+}

@@ -1,0 +1,131 @@
+{
+  "crop" : null,
+  "frame_count" : 14,
+  "frame_hash_type" : "SHA-256 of the saved PNG file bytes",
+  "frames" : [
+    {
+      "actual_seconds" : 635,
+      "filename" : "frame-00000-req-635.000000-pts-9753600.png",
+      "index" : 0,
+      "png_sha256" : "4fb7d2165194edba9466933e338664873caaf11d181d097f043b3fe4a581e14d",
+      "requested_seconds" : 635,
+      "source_pts" : 9753600
+    },
+    {
+      "actual_seconds" : 636,
+      "filename" : "frame-00001-req-636.000000-pts-9768960.png",
+      "index" : 1,
+      "png_sha256" : "1a6eb8088d79874db6aa9a3a8cd5a2f9315e068be3facd96b1cd0ca728aa7dcf",
+      "requested_seconds" : 636,
+      "source_pts" : 9768960
+    },
+    {
+      "actual_seconds" : 637,
+      "filename" : "frame-00002-req-637.000000-pts-9784320.png",
+      "index" : 2,
+      "png_sha256" : "9d5f86f751420f0d69b789ca614e4a3fda151e77439b4439fd65e840480bbc5f",
+      "requested_seconds" : 637,
+      "source_pts" : 9784320
+    },
+    {
+      "actual_seconds" : 638,
+      "filename" : "frame-00003-req-638.000000-pts-9799680.png",
+      "index" : 3,
+      "png_sha256" : "7e967c40c7dd4c489d9aefdf85ccfe21a533052b0516b510f3950643ae8a58b7",
+      "requested_seconds" : 638,
+      "source_pts" : 9799680
+    },
+    {
+      "actual_seconds" : 639,
+      "filename" : "frame-00004-req-639.000000-pts-9815040.png",
+      "index" : 4,
+      "png_sha256" : "551ba6a7a9229f66a51909d1e1fadcc16e9e89cc5f2409798d19868d33e6d7f9",
+      "requested_seconds" : 639,
+      "source_pts" : 9815040
+    },
+    {
+      "actual_seconds" : 640,
+      "filename" : "frame-00005-req-640.000000-pts-9830400.png",
+      "index" : 5,
+      "png_sha256" : "51b9131e7b8e13b109b74156543ce0b3a458c88f0e76632de69867dd82f76afc",
+      "requested_seconds" : 640,
+      "source_pts" : 9830400
+    },
+    {
+      "actual_seconds" : 641,
+      "filename" : "frame-00006-req-641.000000-pts-9845760.png",
+      "index" : 6,
+      "png_sha256" : "2623cbcd54743b449fabb0388c6eb64379fdc8a64f94800c6093e2f19a970856",
+      "requested_seconds" : 641,
+      "source_pts" : 9845760
+    },
+    {
+      "actual_seconds" : 642,
+      "filename" : "frame-00007-req-642.000000-pts-9861120.png",
+      "index" : 7,
+      "png_sha256" : "47806812a92d128d817c14ecc209326c605577f304df27b7c804c183faf68a44",
+      "requested_seconds" : 642,
+      "source_pts" : 9861120
+    },
+    {
+      "actual_seconds" : 643,
+      "filename" : "frame-00008-req-643.000000-pts-9876480.png",
+      "index" : 8,
+      "png_sha256" : "000643785c3a867e31122eaf84666e9073bf5214eddbe400d25e01f93859d34c",
+      "requested_seconds" : 643,
+      "source_pts" : 9876480
+    },
+    {
+      "actual_seconds" : 644,
+      "filename" : "frame-00009-req-644.000000-pts-9891840.png",
+      "index" : 9,
+      "png_sha256" : "7e9890a5ad240b93759ff66058208327bfc1d3dfb4d1efcbc18c13f2ec71a6ab",
+      "requested_seconds" : 644,
+      "source_pts" : 9891840
+    },
+    {
+      "actual_seconds" : 645,
+      "filename" : "frame-00010-req-645.000000-pts-9907200.png",
+      "index" : 10,
+      "png_sha256" : "f1e75d4e72b346cf5a614879f505453f62d32fe7fdce93d1f3d2bad375cc1092",
+      "requested_seconds" : 645,
+      "source_pts" : 9907200
+    },
+    {
+      "actual_seconds" : 646,
+      "filename" : "frame-00011-req-646.000000-pts-9922560.png",
+      "index" : 11,
+      "png_sha256" : "0fd86749e0ae661e7d5c19f1d6a0f7fe1aad649e221a26dd40f3caac55d87ab9",
+      "requested_seconds" : 646,
+      "source_pts" : 9922560
+    },
+    {
+      "actual_seconds" : 647,
+      "filename" : "frame-00012-req-647.000000-pts-9937920.png",
+      "index" : 12,
+      "png_sha256" : "c1d4460554997efb28308298ed7f40395318f07025456eb937180f5fbe5fb872",
+      "requested_seconds" : 647,
+      "source_pts" : 9937920
+    },
+    {
+      "actual_seconds" : 648,
+      "filename" : "frame-00013-req-648.000000-pts-9953280.png",
+      "index" : 13,
+      "png_sha256" : "f1830cbd9becc3a3d96cf7070c7803d27a0d93c735f4016366fdf9f470d22a66",
+      "requested_seconds" : 648,
+      "source_pts" : 9953280
+    }
+  ],
+  "requested_window_seconds" : {
+    "end" : 648,
+    "start" : 635,
+    "step" : 1
+  },
+  "source_file_name" : "gLd0HXtDt5I.mp4",
+  "source_natural_size" : {
+    "height" : 1920,
+    "width" : 884
+  },
+  "source_sha256" : "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_scale" : 15360
+}
