@@ -2,7 +2,44 @@ import { SolitaireGame } from './game.js';
 import { GameAudio } from './audio.js';
 
 const game = new SolitaireGame({ autoStart: false });
-if (!game.restore()) game.newGame();
+function createFirstDealDeck() {
+  const suits = ['♠', '♥', '♦', '♣'];
+  const deck = suits.flatMap((suit) => Array.from({ length: 13 }, (_, index) => ({
+    id: `${suit}-${index + 1}`,
+    suit,
+    rank: index + 1,
+    faceUp: false,
+  })));
+  const remaining = new Map(deck.map((card) => [card.id, card]));
+  const take = (suit, rank, faceUp) => {
+    const card = remaining.get(`${suit}-${rank}`);
+    if (!card) throw new Error(`Missing card ${rank}${suit} in the first deal.`);
+    remaining.delete(card.id);
+    return { ...card, faceUp };
+  };
+  const hidden = () => {
+    const card = [...remaining.values()].find((candidate) => candidate.id !== '♥-6');
+    if (!card) throw new Error('The first deal ran out of hidden cards.');
+    remaining.delete(card.id);
+    return { ...card, faceUp: false };
+  };
+  const tableau = [
+    [take('♦', 5, true)],
+    [take('♣', 6, false), take('♠', 12, true)],
+    [hidden(), hidden(), take('♣', 2, true)],
+    [hidden(), hidden(), hidden(), take('♦', 13, true)],
+    [hidden(), hidden(), hidden(), take('♣', 3, false), take('♦', 11, true)],
+    [hidden(), hidden(), hidden(), hidden(), take('♣', 12, false), take('♣', 4, true)],
+    [hidden(), hidden(), hidden(), hidden(), hidden(), hidden(), take('♦', 9, true)],
+  ];
+  const stock = [...remaining.values()];
+  const firstDrawIndex = stock.findIndex((card) => card.id === '♥-6');
+  if (firstDrawIndex < 0) throw new Error('The source first draw is missing from the stock.');
+  stock.push(stock.splice(firstDrawIndex, 1)[0]);
+  return [...stock, ...tableau.flat().reverse()];
+}
+
+if (!game.restore()) game.newGame(createFirstDealDeck());
 const audio = new GameAudio();
 audio.setSound(game.state.sound);
 audio.setMusic(game.state.music);
