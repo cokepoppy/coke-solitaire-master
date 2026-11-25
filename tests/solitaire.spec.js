@@ -1366,7 +1366,8 @@ test('winning shows a result card and records a completed daily challenge', asyn
   }
 
   await expect(page.locator('.win-streak-backdrop')).toBeVisible();
-  await expect(page.locator('.win-streak-title')).toHaveText('winning streak');
+  await expect(page.locator('.win-streak-title')).toHaveAttribute('alt', 'winning streak');
+  await expect.poll(() => page.locator('.win-streak-title').evaluate((image) => image.complete && image.naturalWidth === 680 && image.naturalHeight === 126)).toBe(true);
   await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
   await expect(page.locator('.win-streak-reward img')).toHaveJSProperty('naturalWidth', 78);
   await expect(page.locator('.win-cascade-card')).toHaveCount(52);
@@ -1380,6 +1381,10 @@ test('winning shows a result card and records a completed daily challenge', asyn
   expect(sourceDurationStillRunning).toBeGreaterThan(0);
   await expect.poll(() => page.locator('.win-cascade-card').evaluateAll((cards) => cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length)).toBe(0);
   const sourceOverlayBounds = await page.evaluate(() => {
+    const elementBounds = (element) => {
+      const { left, top, width, height } = element.getBoundingClientRect();
+      return { left, top, width, height };
+    };
     const textBounds = (element) => {
       const range = document.createRange();
       range.selectNodeContents(element);
@@ -1387,13 +1392,14 @@ test('winning shows a result card and records a completed daily challenge', asyn
       return { left, top, width, height };
     };
     return {
-      title: textBounds(document.querySelector('.win-streak-title')),
+      title: elementBounds(document.querySelector('.win-streak-title')),
       rewardTop: document.querySelector('.win-streak-reward').getBoundingClientRect().top,
       continue: textBounds(document.querySelector('.win-streak-continue')),
     };
   });
-  expect(sourceOverlayBounds.title.width).toBeGreaterThan(285);
-  expect(sourceOverlayBounds.title.width).toBeLessThan(305);
+  expect(sourceOverlayBounds.title.width).toBeCloseTo(300, 0);
+  expect(sourceOverlayBounds.title.left).toBeCloseTo(45, 0);
+  expect(sourceOverlayBounds.title.top).toBeCloseTo(270, 0);
   expect(sourceOverlayBounds.rewardTop).toBeGreaterThan(320);
   expect(sourceOverlayBounds.rewardTop).toBeLessThan(331);
   expect(sourceOverlayBounds.continue.top).toBeGreaterThan(680);
@@ -1748,7 +1754,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v66');
+  expect(cacheNames).toContain('solitaire-master-v67');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

@@ -120,13 +120,14 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v76');
+    const shell = await caches.open('solitaire-master-solitaire-v77');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const recycleSample = await shell.match(`${location.origin}/solitaire/assets/audio/stock-recycle-reference.wav`);
     const recycledDrawSample = await shell.match(`${location.origin}/solitaire/assets/audio/draw-after-recycle-reference.wav`);
     const uiTapSample = await shell.match(`${location.origin}/solitaire/assets/audio/ui-tap-reference.wav`);
     const themeGallerySelectSample = await shell.match(`${location.origin}/solitaire/assets/audio/theme-gallery-select-reference.wav`);
     const winBackground = await shell.match(`${location.origin}/solitaire/assets/ui/win-result-background-reference.png`);
+    const winStreakTitle = await shell.match(`${location.origin}/solitaire/assets/ui/win-streak-title-reference.png`);
     const winScoreDigit = await shell.match(`${location.origin}/solitaire/assets/ui/win-result-score-digit-2-a-reference.png`);
     const sourceStockBack = await shell.match(`${location.origin}/solitaire/assets/cards/back-solitaire-master-source-20s.png`);
     const protectedCache = await caches.open('another-game-cache');
@@ -141,6 +142,7 @@ try {
       recycleSamplesCached: Boolean(recycleSample) && Boolean(recycledDrawSample),
       themeGallerySamplesCached: Boolean(uiTapSample) && Boolean(themeGallerySelectSample),
       winBackgroundCached: Boolean(winBackground),
+      winStreakTitleCached: Boolean(winStreakTitle),
       winScoreDigitCached: Boolean(winScoreDigit),
       sourceStockBackCached: Boolean(sourceStockBack),
       otherGameCachePreserved: Boolean(protectedEntry),
@@ -153,11 +155,12 @@ try {
   assert.equal(worker.recycleSamplesCached, true);
   assert.equal(worker.themeGallerySamplesCached, true);
   assert.equal(worker.winBackgroundCached, true);
+  assert.equal(worker.winStreakTitleCached, true);
   assert.equal(worker.winScoreDigitCached, true);
   assert.equal(worker.sourceStockBackCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v76'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v77'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);

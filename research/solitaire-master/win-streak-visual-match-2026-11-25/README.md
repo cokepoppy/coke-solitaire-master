@@ -25,14 +25,16 @@ The source is 884×1920. For a visual comparison at the test's 390×844 CSS view
 
 | Measurement | Source | Web |
 | --- | ---: | ---: |
-| Bright title-pixel bounding box | `(47, 272)–(342, 323)` | `(47, 270)–(344, 312)` |
+| Title crop display bounds | `(45, 270)–(345, 326)` | `(45, 270)–(345, 326)` |
 | Neutral card-pixel bounding box | `(0, 320)–(381, 671)` | `(1, 320)–(385, 679)` |
-| Neutral card-pixel count | 37,322 | 38,069 |
-| Source/web card-mask intersection over union | — | `0.3936` (`0.3235` before this pass) |
-| RGB MAE on source card-mask pixels | — | `0.0729` (`0.0854` before this pass) |
+| Neutral card-pixel count | 37,322 | 38,124 |
+| Source/web card-mask intersection over union | — | `0.3942` (`0.3235` before this pass) |
+| RGB MAE on source card-mask pixels | — | `0.0720` (`0.0854` before this pass) |
+
+The title now uses a transparent 680×126 source crop from PTS 4,715,520 instead of browser-rendered text. At the 390×844 viewport it displays at 300×55.6 CSS pixels from `(45, 270)`, matching the source crop's scaled coordinates; the win-flow E2E checks its loaded dimensions and measured bounds. Card endpoint coordinates remain unchanged. The neutral-card mask spans rows 320–679 and includes the title's small overlap at its top edge.
 
 The mask uses pixels in rows 320–679 with mean RGB intensity above 0.18 and channel spread below 0.20. The web uses the source-visible Hearts, Diamonds, Spades, Clubs fan order. A parameter sweep of the card endpoints reduced the masked source-pixel MAE by 14.6% and improved mask IoU by 21.7% over the prior `main` rendering. The normalized endpoint map is `x = -15% + 25% × suitIndex + 40% × rankProgress` and `y = 72.5% - 9% × suitIndex - 24% × rankProgress`, with the existing low-rank stack and small lower-left curve. The 41-frame mask counts, source PTS values, and PNG hashes are in [`frames-100ms.csv`](frames-100ms.csv). The individual card scatter remains an approximation; the recording captures only one completed deal.
 
 The settled 307-second source frame also shows all four foundation slots empty behind the fan. The replica now hides those four displayed top cards for the win sequence while retaining the complete 13-card piles in game state; the win-flow browser test checks both the empty display and preserved piles, then checks that a new deal restores normal empty-slot art.
 
-The Playwright test checks that all 52 cards appear in the observed suit groups, animation is still active after three seconds, the cascade then finishes, and the title/reward/continue elements stay within the measured mobile bounds. Source video compression, font rasterization, and deal-specific card positions remain visible sources of difference.
+The Playwright test checks that all 52 cards appear in the observed suit groups, animation is still active after three seconds, the cascade then finishes, and the title/reward/continue elements stay within the measured mobile bounds. Source video compression, browser rasterization, and deal-specific card positions remain visible sources of difference.

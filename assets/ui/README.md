@@ -40,6 +40,17 @@ The crops are included in the service-worker shell cache. Fixed labels are sourc
 
 `win-streak-trophy-reference.png` uses the same source trophy cropped from the result capture, with the sampled navy removed so it can sit over the animated card fan. Rebuild it with `python3 tools/extract_win_streak_trophy.py assets/ui/win-trophy-reference.png assets/ui/win-streak-trophy-reference.png`.
 
+`win-streak-title-reference.png` is a transparent 680×126 crop from the settled 307-second win-streak frame (PTS 4,715,520). Its white lettering and orange outline are retained while the dim board and card faces beneath it are keyed out. It replaces the approximate browser font and renders at the source title's measured mobile bounds. PNG SHA-256: `3d6e83dbbe869958517231ae840deef44a4d83432977b9fbde079b9017501dfe`. Rebuild it with:
+
+```sh
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 307 307 1 /tmp/solitaire-win-streak-source-307
+python3 tools/extract_win_streak_title.py \
+  /tmp/solitaire-win-streak-source-307/frame-00000-req-307.000000-pts-4715520.png \
+  assets/ui/win-streak-title-reference.png
+```
+
+The title sprite is part of the offline shell and is checked by the win-flow and VPS-subpath tests.
+
 `settings-switch-on-reference.png` and `settings-switch-off-reference.png` are 123×58 px crops of the Settings switches at PTS 4,915,200 (320 s). `settings-draw-mode-1-reference.png` is a 787×104 px crop of the Draw Mode 1 row from that same frame. At the source-sized 442×960 CSS viewport / 2× density, these retain the original control artwork while accessible live buttons handle taps. The switch image changes with its checked state; the Draw Mode 1 row sprite is shown only while that option is selected. Regenerate them with:
 
 ```sh
