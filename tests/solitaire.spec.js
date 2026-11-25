@@ -726,6 +726,8 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.getByRole('dialog', { name: 'Themes' })).toBeVisible();
   await expect(page.locator('.background-tile')).toHaveCount(9);
   await expect(page.locator('.theme-gallery')).toHaveCSS('height', `${await page.evaluate(() => window.innerHeight)}px`);
+  await expect(page.locator('.theme-gallery-title')).toHaveCSS('background-image', /theme-gallery-header-reference\.png/);
+  await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-backgrounds-reference.png');
   await page.getByRole('button', { name: 'Mountain background' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
   await expect(page.locator('body')).not.toHaveClass(/source-action-row/);
@@ -736,6 +738,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('.foundation-theme-mark').first()).toBeVisible();
 
   await page.getByRole('button', { name: 'Card backs' }).click();
+  await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-backs-reference.png');
   await expect(page.locator('.back-tile')).toHaveCount(8);
   await expect.poll(() => page.locator('.back-tile img').evaluateAll((images) => images.every((image) => image.complete && image.naturalWidth > 0))).toBe(true);
   await expect(page.locator('.back-tile[data-value="ruby"] .back-preview-source img')).toHaveCount(2);
@@ -745,6 +748,7 @@ test('theme gallery switches backgrounds, card backs, and face styles on mobile'
   await expect(page.locator('.stock-slot .card-back-art')).toHaveAttribute('src', '/assets/cards/back-teal-reference.png');
 
   await page.getByRole('button', { name: 'Card faces' }).click();
+  await expect(page.locator('.gallery-tabs-reference')).toHaveAttribute('src', '/assets/ui/theme-gallery-tabs-faces-reference.png');
   await expect(page.locator('.face-tile')).toHaveCount(2);
   await page.getByRole('button', { name: 'Classic card faces' }).click();
   await expect(page.locator('body')).toHaveAttribute('data-card-face-style', 'classic');
@@ -1298,7 +1302,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v46');
+  expect(cacheNames).toContain('solitaire-master-v47');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1417,6 +1421,22 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     { ok: true, width: 123, height: 58 },
     { ok: true, width: 123, height: 58 },
     { ok: true, width: 787, height: 104 },
+  ]);
+  const offlineThemeGalleryArt = await page.evaluate(async () => Promise.all([
+    ['theme-gallery-header-reference.png', 884, 306],
+    ['theme-gallery-tabs-backgrounds-reference.png', 884, 156],
+    ['theme-gallery-tabs-faces-reference.png', 884, 156],
+    ['theme-gallery-tabs-backs-reference.png', 884, 156],
+  ].map(async ([name, width, height]) => {
+    const response = await fetch(`/assets/ui/${name}`);
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, width: image.width, height: image.height, expectedWidth: width, expectedHeight: height };
+  })));
+  expect(offlineThemeGalleryArt).toEqual([
+    { ok: true, width: 884, height: 306, expectedWidth: 884, expectedHeight: 306 },
+    { ok: true, width: 884, height: 156, expectedWidth: 884, expectedHeight: 156 },
+    { ok: true, width: 884, height: 156, expectedWidth: 884, expectedHeight: 156 },
+    { ok: true, width: 884, height: 156, expectedWidth: 884, expectedHeight: 156 },
   ]);
   const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
     const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);

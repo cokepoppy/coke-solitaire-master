@@ -425,13 +425,15 @@ body.source-action-row .action-bar .action-button > span:last-child { opacity: 0
 .back-choice img { display: block; width: 100%; height: 100%; border-radius: 7px; }
 .theme-gallery-backdrop { display: block; padding: 0; background: #ebe9ed; backdrop-filter: none; -webkit-backdrop-filter: none; }
 .modal-card.theme-gallery { display: flex; flex-direction: column; width: 100%; height: 100dvh; max-height: none; overflow: hidden; padding: 0; border: 0; border-radius: 0; color: #34353b; background: #ebe9ed; box-shadow: none; }
-#modal-title.theme-gallery-title { display: flex; flex: 0 0 auto; align-items: end; justify-content: center; height: max(154px, calc(env(safe-area-inset-top) + 112px)); margin: 0; padding: 0 48px 26px; color: #fff; background: linear-gradient(90deg, #08602f, #087039 50%, #08602f); font-family: system-ui, -apple-system, sans-serif; font-size: 27px; font-weight: 650; letter-spacing: -.025em; }
+#modal-title.theme-gallery-title { display: flex; flex: 0 0 auto; align-items: end; justify-content: center; height: max(154px, calc(env(safe-area-inset-top) + 112px)); margin: 0; padding: 0 48px 26px; color: transparent; -webkit-text-fill-color: transparent; background: #087039 url('/assets/ui/theme-gallery-header-reference.png') center / 100% 100% no-repeat; font-family: system-ui, -apple-system, sans-serif; font-size: 27px; font-weight: 650; letter-spacing: -.025em; }
 .theme-gallery .modal-kicker { display: none; }
-.theme-gallery .modal-close { top: max(22px, env(safe-area-inset-top)); right: 17px; z-index: 2; width: 40px; height: 40px; border: 0; border-radius: 0; color: white; background: transparent; font-family: system-ui, sans-serif; font-size: 36px; font-weight: 400; }
+.theme-gallery .modal-close { top: max(80px, calc(env(safe-area-inset-top) + 64px)); right: 0; z-index: 2; width: 40px; height: 48px; border: 0; border-radius: 0; color: transparent; background: transparent; font-family: system-ui, sans-serif; font-size: 36px; font-weight: 400; }
 .theme-gallery #modal-content { display: flex; min-height: 0; flex: 1; flex-direction: column; overflow: auto; padding-bottom: max(18px, env(safe-area-inset-bottom)); }
-.gallery-tabs { display: grid; flex: 0 0 auto; grid-template-columns: repeat(3, 1fr); align-items: center; gap: 4px; height: 76px; margin: 0 0 15px; padding: 8px 14px; border-radius: 0 0 2px 2px; background: #fbfafc; box-shadow: 0 3px 5px rgba(37,34,44,.17); }
-.gallery-tabs button { display: grid; height: 52px; place-items: center; border: 0; border-radius: 28px; color: #229e66; background: transparent; cursor: pointer; }
-.gallery-tabs button.active { color: #fff; background: #2aa263; }
+.gallery-tabs { position: relative; display: grid; flex: 0 0 auto; grid-template-columns: repeat(3, 1fr); align-items: stretch; gap: 0; height: 78px; margin: 0 0 15px; padding: 0; overflow: hidden; background: transparent; }
+.gallery-tabs-reference { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.gallery-tabs button { position: relative; z-index: 1; display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 0; color: transparent; background: transparent; cursor: pointer; }
+.gallery-tabs button.active { color: transparent; background: transparent; }
+.gallery-tabs button:focus-visible { outline: 2px solid #167443; outline-offset: -5px; }
 .modal-backdrop.source-settings-backdrop { display: block; padding: 0; overflow: hidden; background: #eeedf1; backdrop-filter: none; -webkit-backdrop-filter: none; animation: none; }
 .modal-backdrop.source-settings-backdrop.hidden { display: none; }
 .modal-card.source-settings-card-shell { display: flex; width: 100%; height: 100dvh; max-width: none; max-height: none; flex-direction: column; overflow: hidden; padding: 0; border: 0; border-radius: 0; color: #35353b; background: #eeedf1; box-shadow: none; animation: none; }
