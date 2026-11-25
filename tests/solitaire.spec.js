@@ -272,6 +272,8 @@ async function runSourceOpeningReplay(page) {
   });
   await page.reload();
   await page.waitForTimeout(1450);
+  const foundationTop = await page.locator('.foundation-slot').first().evaluate((slot) => slot.getBoundingClientRect().top);
+  expect(foundationTop).toBeLessThan(214.75);
   const sourceActionRow = page.locator('.action-row-reference-art');
   await expect(sourceActionRow).toHaveCSS('display', 'block');
   await expect(sourceActionRow).toHaveAttribute('src', '/assets/ui/action-row-initial-reference.png');
