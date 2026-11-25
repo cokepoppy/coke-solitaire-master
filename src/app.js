@@ -86,7 +86,7 @@ let autoCollectRunning = false;
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const CARD_BACK_FILES = {
-  ruby: 'back-solitaire-master-reference.png', blue: 'back-blue.svg', teal: 'back-teal-reference.png',
+  ruby: 'back-solitaire-master-reference.png', blue: 'back-blue-reference.png', teal: 'back-teal-reference.png',
   lattice: 'back-lattice-reference.png', spade: 'back-spade-reference.png', coral: 'back-coral-reference.png',
   floral: 'back-floral-reference.png', amber: 'back-amber-reference.png',
 };
@@ -666,7 +666,7 @@ function showScoringModes() {
 }
 
 const THEME_BACKS = [
-  ['teal', 'Teal diamonds'], ['lattice', 'Blue lattice'], ['blue', 'Blue spade'],
+  ['teal', 'Teal diamonds'], ['lattice', 'Blue lattice'], ['blue', 'Blue diamonds'],
   ['spade', 'Blue spade'], ['ruby', 'Ruby ornament'], ['coral', 'Coral geometric'],
   ['floral', 'Red floral'], ['amber', 'Amber diamonds'],
 ];
