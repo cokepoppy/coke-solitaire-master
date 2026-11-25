@@ -78,6 +78,7 @@ let comboFeedbackTimer = null;
 let dealSettlementTimer = null;
 let winStreakTimer = null;
 let winNewBest = false;
+let winResultSoundPlayed = false;
 let autoHintTimer = null;
 let autoCollectTimer = null;
 let autoCollectRunning = false;
@@ -436,7 +437,6 @@ function runAutoCollectStep() {
     return;
   }
   markCardMove([move.card.id], origins);
-  audio.play(game.state.won ? 'win' : 'foundation');
   render();
   startCardMoveFlight(origins);
   if (game.state.won) {
@@ -458,6 +458,7 @@ function scheduleAutoCollect() {
     autoHintTimer = null;
     autoCollectRunning = true;
     $('.game-shell').classList.add('auto-collecting');
+    audio.play('autoCollect');
     runAutoCollectStep();
   }, 150);
 }
@@ -813,6 +814,7 @@ function startDailyGame(day = localDateKey(new Date())) {
 function completeWin() {
   if (winShown) return;
   winShown = true;
+  winResultSoundPlayed = false;
   clearTableauTutorial();
   const profile = readProfile();
   const previousBest = profile.bestScore;
@@ -851,6 +853,10 @@ function completeWin() {
 function showWinResult(newBest) {
   clearTimeout(winStreakTimer);
   winStreakTimer = null;
+  if (!winResultSoundPlayed) {
+    winResultSoundPlayed = true;
+    audio.play('win');
+  }
   setModal('You win!', '', `
     <div class="win-result" aria-label="You win">
       <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
@@ -970,7 +976,7 @@ function handleMagic() {
   game.state.magicCharges -= 1;
   game.save();
   markCardMove(movingIds, origins, revealedCardId);
-  audio.play(game.state.won ? 'win' : hint.target.zone === 'foundation' ? 'foundation' : 'move');
+  audio.play(hint.target.zone === 'foundation' ? 'foundation' : 'move');
   render();
   startCardMoveFlight(origins);
   showComboFeedback(movingIds[0], hint.target.zone === 'foundation');
@@ -997,7 +1003,7 @@ function commitMove(target) {
     vibrateGame(12);
     markCardMove(movingIds, origins, revealedCardId);
     const foundationMove = target.dataset.dropZone === 'foundation';
-    audio.play(game.state.won ? 'win' : foundationMove ? 'foundation' : 'move');
+    audio.play(foundationMove ? 'foundation' : 'move');
     render();
     startCardMoveFlight(origins);
     showComboFeedback(movingIds[0], foundationMove);
@@ -1087,7 +1093,7 @@ board.addEventListener('pointerup', (event) => {
     else result = game.tapCard(current.source);
     if (result.action === 'move' || result.action === 'foundation') markCardMove(movingIds, origins, revealedCardId);
     previousTap = { id: current.card.dataset.cardId, time: now };
-    if (result.action === 'move' || result.action === 'foundation') audio.play(game.state.won ? 'win' : result.action === 'foundation' ? 'foundation' : 'move');
+    if (result.action === 'move' || result.action === 'foundation') audio.play(result.action === 'foundation' ? 'foundation' : 'move');
     else if (result.action === 'select') audio.play('tap');
     render();
     if (result.action === 'move' || result.action === 'foundation') startCardMoveFlight(origins);

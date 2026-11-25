@@ -1027,12 +1027,22 @@ test('auto collect sweeps visible cards into foundations after the final move', 
     game.save();
   });
   await page.reload();
+  await page.evaluate(() => {
+    window.autoActionCues = [];
+    const audio = window.solitaireAudio;
+    const play = audio.play.bind(audio);
+    audio.play = (cue) => { window.autoActionCues.push(cue); return play(cue); };
+  });
   const queen = page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]');
   await queen.click();
   await queen.click();
   await expect(page.locator('.win-streak-backdrop')).toBeVisible({ timeout: 4000 });
   await expect.poll(() => page.evaluate(() => window.solitaireGame.state.foundations.reduce((sum, pile) => sum + pile.length, 0))).toBe(52);
   await expect(page.locator('#tableau .playing-card')).toHaveCount(0);
+  expect(await page.evaluate(() => window.autoActionCues.filter((cue) => cue === 'autoCollect'))).toHaveLength(1);
+  await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAutoCollectBuffer?.duration)).toBeGreaterThan(2.19);
+  await page.getByRole('button', { name: 'Tap to Continue' }).click();
+  expect(await page.evaluate(() => window.autoActionCues.at(-1))).toBe('win');
 });
 
 test('auto hints suggest a move after idle; manual hints remain available when auto hints are off', async ({ page }) => {
@@ -1183,7 +1193,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v42');
+  expect(cacheNames).toContain('solitaire-master-v43');
+  await expect.poll(() => page.evaluate(async () => {
+    const response = await fetch('/assets/audio/auto-collect-reference.wav');
+    return response.ok && response.headers.get('content-type') === 'audio/x-wav';
+  })).toBe(true);
   expect(cacheNames).not.toContain('solitaire-master-v19');
   await page.evaluate(() => window.solitaireGame.setOption('theme', 'mountain'));
   await page.reload();

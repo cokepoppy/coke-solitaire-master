@@ -26,6 +26,8 @@ export class GameAudio {
     this.referenceFoundationLoadPromise = null;
     this.referenceWinBuffer = null;
     this.referenceWinLoadPromise = null;
+    this.referenceAutoCollectBuffer = null;
+    this.referenceAutoCollectLoadPromise = null;
   }
 
   getContext() {
@@ -49,6 +51,7 @@ export class GameAudio {
       this.loadReferenceGreat();
       this.loadReferenceFoundation();
       this.loadReferenceWin();
+      this.loadReferenceAutoCollect();
     }
     return this.context;
   }
@@ -174,6 +177,24 @@ export class GameAudio {
     return this.referenceWinLoadPromise;
   }
 
+  loadReferenceAutoCollect() {
+    if (!this.context) return Promise.resolve(null);
+    if (!this.referenceAutoCollectLoadPromise) {
+      this.referenceAutoCollectLoadPromise = fetch('/assets/audio/auto-collect-reference.wav')
+        .then((response) => {
+          if (!response.ok) throw new Error(`Auto collect sample request failed: ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((bytes) => this.context.decodeAudioData(bytes))
+        .then((buffer) => {
+          this.referenceAutoCollectBuffer = buffer;
+          return buffer;
+        })
+        .catch(() => null);
+    }
+    return this.referenceAutoCollectLoadPromise;
+  }
+
   unlock() {
     const context = this.getContext();
     if (!context) return Promise.resolve(false);
@@ -215,6 +236,7 @@ export class GameAudio {
     if (cue === 'great') await this.referenceGreatLoadPromise;
     if (cue === 'foundation') await this.referenceFoundationLoadPromise;
     if (cue === 'win') await this.referenceWinLoadPromise;
+    if (cue === 'autoCollect') await this.referenceAutoCollectLoadPromise;
     this.playCue(cue);
   }
 
@@ -330,6 +352,11 @@ export class GameAudio {
           this.playTone(frequency, frequency * 1.012, 0.42 + index * 0.08, 0.072 - index * 0.006, 'sine', now + index * 0.115);
         });
         this.playNoise(4400, 2100, 0.22, 0.035, now + 0.2, 0.5);
+      }
+    } else if (cue === 'autoCollect') {
+      if (this.referenceAutoCollectBuffer) this.playCapturedSample(this.referenceAutoCollectBuffer, now);
+      else {
+        for (let index = 0; index < 8; index += 1) this.playNoise(3900, 650, 0.13, 0.075, now + index * 0.1, 0.72);
       }
     }
   }
