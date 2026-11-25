@@ -25,3 +25,5 @@ python3 tools/extract_audio_window.py research/solitaire-master/source-videos/gL
 python3 tools/extract_audio_reference.py /tmp/solitaire-audio-autocollect.wav \
   assets/audio/auto-collect-reference.wav --start 0.300 --end 2.500 --fade-ms 8
 ```
+
+The stock-recycle event was checked against 100 ms video frames and a 94–99 s audio crop. The source restores an 11-card stock by 98.2 s, then shows the first post-recycle 9♠ in the waste around 98.8 s. A transient at 98.61 s is too close to that following draw to attribute confidently to the recycle action. There is no recycle WAV in this folder; the app uses a procedural flip effect under the distinct `recycle` cue until a cleaner source is available. See the PTS/hash and waveform evidence in [`research/solitaire-master/stock-recycle-transition-2026-11-25`](../../research/solitaire-master/stock-recycle-transition-2026-11-25/README.md).

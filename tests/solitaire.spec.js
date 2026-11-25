@@ -1193,7 +1193,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v43');
+  expect(cacheNames).toContain('solitaire-master-v44');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1408,6 +1408,12 @@ test('source settings switch between Standard and Vegas scoring', async ({ page 
 test('mobile stock recycle restores draw order and undo', async ({ page }) => {
   await page.goto('/');
   await page.waitForFunction(() => document.querySelectorAll('#tableau .card-enter').length === 0);
+  await page.evaluate(() => {
+    window.stockAudioCues = [];
+    const audio = window.solitaireAudio;
+    const play = audio.play.bind(audio);
+    audio.play = (cue) => { window.stockAudioCues.push(cue); return play(cue); };
+  });
   const firstDrawnCardId = await page.evaluate(() => {
     const game = window.solitaireGame;
     game.state.score = 200;
@@ -1425,6 +1431,7 @@ test('mobile stock recycle restores draw order and undo', async ({ page }) => {
 
   const stockBox = await page.locator('[data-action="stock"]').boundingBox();
   await page.touchscreen.tap(stockBox.x + stockBox.width / 2, stockBox.y + stockBox.height / 2);
+  expect(await page.evaluate(() => window.stockAudioCues.at(-1))).toBe('recycle');
   await expect(page.locator('.stock-count')).toHaveText('24');
   const recycled = await page.evaluate(() => ({
     stock: window.solitaireGame.state.stock.length,
