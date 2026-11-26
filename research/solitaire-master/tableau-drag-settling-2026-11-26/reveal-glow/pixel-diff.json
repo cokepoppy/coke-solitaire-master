@@ -9,28 +9,28 @@
   },
   "rendered": {
     "path": "web-card-13.133333.png",
-    "sha256": "f07715c08669bee816821a46cf4509acd3bb2ddf5ffe7a3ecd0b6811e282d515"
+    "sha256": "72c0c3d35450181097e9f9635d19669813ed4142c0e76119d8051e4c07c4d06b"
   },
   "comparison": {
     "rescaled": false,
     "ignored_rectangles": [],
     "all_pixels": {
-      "mean_absolute_rgb_error": 28.847123,
-      "exact_rgb_pixel_fraction": 0.00133333,
+      "mean_absolute_rgb_error": 27.179626,
+      "exact_rgb_pixel_fraction": 0.00463158,
       "pixel_count": 28500
     },
     "after_ignored_rectangles": {
-      "mean_absolute_rgb_error": 28.847123,
-      "exact_rgb_pixel_fraction": 0.00133333,
+      "mean_absolute_rgb_error": 27.179626,
+      "exact_rgb_pixel_fraction": 0.00463158,
       "pixel_count": 28500
     },
     "regions": {
       "card": {
-        "mean_absolute_rgb_error": 28.847123,
-        "exact_rgb_pixel_fraction": 0.00133333,
+        "mean_absolute_rgb_error": 27.179626,
+        "exact_rgb_pixel_fraction": 0.00463158,
         "pixel_count": 28500
       }
     },
-    "note": "Encoded-source video compression and browser rasterization contribute to pixel error; compare spatial error maps and known OS-only regions as well as the aggregate value."
+    "note": "This is a 150×190 local card crop with no resizing or ignored pixels. The current glow lowers mean absolute RGB error by 21.4% against the no-glow capture (34.568281 to 27.179626). Encoded-source video compression and browser rasterization remain visible."
   }
 }

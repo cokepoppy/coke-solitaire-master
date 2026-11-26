@@ -2229,7 +2229,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v90');
+  expect(cacheNames).toContain('solitaire-master-v91');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
