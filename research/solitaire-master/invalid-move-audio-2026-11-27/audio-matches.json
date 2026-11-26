@@ -1,0 +1,263 @@
+{
+  "source_file": "solitaire-audio-invalid-search-0-120.wav",
+  "source_sha256": "15d1195302e18ee3f26e189fc050e1e8b1c90b8bf369865c4c93b3d3a0c8cd2d",
+  "source_sample_rate_hz": 44100,
+  "source_channels": 2,
+  "source_duration_seconds": 120.0,
+  "source_offset_seconds": 0.0,
+  "normalization": "Peak absolute Pearson-style normalized cross-correlation after mono downmix; positive and negative matches are ranked by absolute value.",
+  "references": [
+    {
+      "file": "card-move-reference.wav",
+      "sha256": "a158ffdfcc30fe2aa3ee140eff2ff5e6a5700fca649204de16fb12f9a483a819",
+      "channels": 2,
+      "duration_seconds": 0.38,
+      "top_matches": [
+        {
+          "start_seconds": 18.04,
+          "end_seconds": 18.42,
+          "window_relative_start_seconds": 18.04,
+          "signed_correlation": 1.0,
+          "absolute_correlation": 1.0
+        },
+        {
+          "start_seconds": 69.24,
+          "end_seconds": 69.62,
+          "window_relative_start_seconds": 69.24,
+          "signed_correlation": 0.99788418,
+          "absolute_correlation": 0.99788418
+        },
+        {
+          "start_seconds": 64.546667,
+          "end_seconds": 64.926667,
+          "window_relative_start_seconds": 64.546667,
+          "signed_correlation": 0.9941726,
+          "absolute_correlation": 0.9941726
+        },
+        {
+          "start_seconds": 55.16,
+          "end_seconds": 55.54,
+          "window_relative_start_seconds": 55.16,
+          "signed_correlation": 0.99312854,
+          "absolute_correlation": 0.99312854
+        },
+        {
+          "start_seconds": 106.36,
+          "end_seconds": 106.74,
+          "window_relative_start_seconds": 106.36,
+          "signed_correlation": 0.99303488,
+          "absolute_correlation": 0.99303488
+        },
+        {
+          "start_seconds": 107.64,
+          "end_seconds": 108.02,
+          "window_relative_start_seconds": 107.64,
+          "signed_correlation": 0.99209906,
+          "absolute_correlation": 0.99209906
+        }
+      ]
+    },
+    {
+      "file": "ui-tap-reference.wav",
+      "sha256": "e2cd21dd4c307dfcc760dded56f9695b7ebfb4fcd0d913829658b9deb26c003b",
+      "channels": 2,
+      "duration_seconds": 0.24,
+      "top_matches": [
+        {
+          "start_seconds": 98.53932,
+          "end_seconds": 98.77932,
+          "window_relative_start_seconds": 98.53932,
+          "signed_correlation": 0.21783661,
+          "absolute_correlation": 0.21783661
+        },
+        {
+          "start_seconds": 73.451814,
+          "end_seconds": 73.691814,
+          "window_relative_start_seconds": 73.451814,
+          "signed_correlation": 0.1822593,
+          "absolute_correlation": 0.1822593
+        },
+        {
+          "start_seconds": 2.931383,
+          "end_seconds": 3.171383,
+          "window_relative_start_seconds": 2.931383,
+          "signed_correlation": 0.17591998,
+          "absolute_correlation": 0.17591998
+        },
+        {
+          "start_seconds": 91.879342,
+          "end_seconds": 92.119342,
+          "window_relative_start_seconds": 91.879342,
+          "signed_correlation": 0.17297244,
+          "absolute_correlation": 0.17297244
+        },
+        {
+          "start_seconds": 95.207347,
+          "end_seconds": 95.447347,
+          "window_relative_start_seconds": 95.207347,
+          "signed_correlation": 0.17139443,
+          "absolute_correlation": 0.17139443
+        },
+        {
+          "start_seconds": 23.527347,
+          "end_seconds": 23.767347,
+          "window_relative_start_seconds": 23.527347,
+          "signed_correlation": 0.17138538,
+          "absolute_correlation": 0.17138538
+        }
+      ]
+    },
+    {
+      "file": "stock-recycle-reference.wav",
+      "sha256": "78b3e26f2ac234199ec02035824298844c565f1203dcb7a0c084cf164be97438",
+      "channels": 2,
+      "duration_seconds": 0.14,
+      "top_matches": [
+        {
+          "start_seconds": 98.4,
+          "end_seconds": 98.54,
+          "window_relative_start_seconds": 98.4,
+          "signed_correlation": 0.99980567,
+          "absolute_correlation": 0.99980567
+        },
+        {
+          "start_seconds": 81.643537,
+          "end_seconds": 81.783537,
+          "window_relative_start_seconds": 81.643537,
+          "signed_correlation": 0.20910434,
+          "absolute_correlation": 0.20910434
+        },
+        {
+          "start_seconds": 65.216871,
+          "end_seconds": 65.356871,
+          "window_relative_start_seconds": 65.216871,
+          "signed_correlation": 0.20703853,
+          "absolute_correlation": 0.20703853
+        },
+        {
+          "start_seconds": 104.732177,
+          "end_seconds": 104.872177,
+          "window_relative_start_seconds": 104.732177,
+          "signed_correlation": 0.20680089,
+          "absolute_correlation": 0.20680089
+        },
+        {
+          "start_seconds": 63.772177,
+          "end_seconds": 63.912177,
+          "window_relative_start_seconds": 63.772177,
+          "signed_correlation": 0.20680089,
+          "absolute_correlation": 0.20680089
+        },
+        {
+          "start_seconds": 58.609524,
+          "end_seconds": 58.749524,
+          "window_relative_start_seconds": 58.609524,
+          "signed_correlation": 0.206223,
+          "absolute_correlation": 0.206223
+        }
+      ]
+    },
+    {
+      "file": "draw-after-recycle-reference.wav",
+      "sha256": "0947c2bb3cebea4d641172ef2e27fc06c9a9b591907f26564430febeb24c82e5",
+      "channels": 2,
+      "duration_seconds": 0.14,
+      "top_matches": [
+        {
+          "start_seconds": 98.58,
+          "end_seconds": 98.72,
+          "window_relative_start_seconds": 98.58,
+          "signed_correlation": 0.99995988,
+          "absolute_correlation": 0.99995988
+        },
+        {
+          "start_seconds": 93.215283,
+          "end_seconds": 93.355283,
+          "window_relative_start_seconds": 93.215283,
+          "signed_correlation": -0.20795908,
+          "absolute_correlation": 0.20795908
+        },
+        {
+          "start_seconds": 79.56195,
+          "end_seconds": 79.70195,
+          "window_relative_start_seconds": 79.56195,
+          "signed_correlation": -0.20786503,
+          "absolute_correlation": 0.20786503
+        },
+        {
+          "start_seconds": 75.039274,
+          "end_seconds": 75.179274,
+          "window_relative_start_seconds": 75.039274,
+          "signed_correlation": -0.20772267,
+          "absolute_correlation": 0.20772267
+        },
+        {
+          "start_seconds": 27.252608,
+          "end_seconds": 27.392608,
+          "window_relative_start_seconds": 27.252608,
+          "signed_correlation": -0.20630416,
+          "absolute_correlation": 0.20630416
+        },
+        {
+          "start_seconds": 71.07127,
+          "end_seconds": 71.21127,
+          "window_relative_start_seconds": 71.07127,
+          "signed_correlation": -0.20552898,
+          "absolute_correlation": 0.20552898
+        }
+      ]
+    },
+    {
+      "file": "foundation-reference.wav",
+      "sha256": "9867cc3463d2d5fca5df6791225d2516e641965d9e033ebf093edbdffb22223d",
+      "channels": 2,
+      "duration_seconds": 0.82,
+      "top_matches": [
+        {
+          "start_seconds": 60.98,
+          "end_seconds": 61.8,
+          "window_relative_start_seconds": 60.98,
+          "signed_correlation": 0.99992738,
+          "absolute_correlation": 0.99992738
+        },
+        {
+          "start_seconds": 85.3,
+          "end_seconds": 86.12,
+          "window_relative_start_seconds": 85.3,
+          "signed_correlation": 0.99980772,
+          "absolute_correlation": 0.99980772
+        },
+        {
+          "start_seconds": 85.506712,
+          "end_seconds": 86.326712,
+          "window_relative_start_seconds": 85.506712,
+          "signed_correlation": 0.82533262,
+          "absolute_correlation": 0.82533262
+        },
+        {
+          "start_seconds": 61.186712,
+          "end_seconds": 62.006712,
+          "window_relative_start_seconds": 61.186712,
+          "signed_correlation": 0.79355036,
+          "absolute_correlation": 0.79355036
+        },
+        {
+          "start_seconds": 85.713424,
+          "end_seconds": 86.533424,
+          "window_relative_start_seconds": 85.713424,
+          "signed_correlation": 0.6565911,
+          "absolute_correlation": 0.6565911
+        },
+        {
+          "start_seconds": 61.393447,
+          "end_seconds": 62.213447,
+          "window_relative_start_seconds": 61.393447,
+          "signed_correlation": 0.64549916,
+          "absolute_correlation": 0.64549916
+        }
+      ]
+    }
+  ],
+  "audited_at_utc": "2026-11-26T19:04:58.412068+00:00",
+  "note": "Correlation peaks are waveform similarity candidates only; they do not identify an action or prove that a low score means the same sound is absent."
+}

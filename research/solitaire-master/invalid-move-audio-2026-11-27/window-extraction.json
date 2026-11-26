@@ -1,0 +1,23 @@
+{
+  "source_file": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "decoder": "macOS afconvert",
+  "decoded_pcm_format": "44.1 kHz stereo signed PCM16 little-endian",
+  "decoded_full_pcm_sha256": "69db2a5a1dd0b006f9f9df082578fed68f5f1550c1c4eb87e7198584e3f3fa64",
+  "requested_source_start_seconds": 0.0,
+  "requested_source_end_seconds": 120.0,
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "start_sample_frame": 0,
+  "end_sample_frame_exclusive": 5292000,
+  "frame_count": 5292000,
+  "actual_start_seconds": 0.0,
+  "actual_end_seconds": 120.0,
+  "duration_seconds": 120.0,
+  "output_file": "solitaire-audio-invalid-search-0-120.wav",
+  "output_sha256": "15d1195302e18ee3f26e189fc050e1e8b1c90b8bf369865c4c93b3d3a0c8cd2d",
+  "extracted_at_utc": "2026-11-26T19:01:46.352172+00:00",
+  "note": "The WAV is cropped at the recorded source-time sample indices with no fade or timeline offset; keep this manifest beside it."
+}
