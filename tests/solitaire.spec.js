@@ -1494,6 +1494,7 @@ test.describe('source-sized win result', () => {
       'win-result-score-digit-5-reference.png', 'win-result-score-digit-2-a-reference.png',
       'win-result-score-digit-2-b-reference.png', 'win-result-score-digit-3-reference.png',
       'win-result-score-digit-0-reference.png',
+      'win-result-time-02-13-reference.png', 'win-result-moves-121-reference.png',
       'win-best-reference.png', 'win-trophy-reference.png', 'win-streak-trophy-reference.png',
       'win-streak-title-reference.png', 'win-streak-thumb-reference.png', 'win-new-deal-reference.png',
       'win-result-score-label-reference.png', 'win-result-percent-reference.png',
@@ -1551,6 +1552,18 @@ test.describe('source-sized win result', () => {
     await expect(page.locator('.win-result-percent')).toHaveText('You defeated 86% of players!');
     await expect(page.locator('.win-result-stats')).toContainText('02:13');
     await expect(page.locator('.win-result-stats')).toContainText('121');
+    const sourceStatGlyphs = await page.locator('.win-result-stats b img').evaluateAll((images) => images.map((image) => {
+      const rect = image.getBoundingClientRect();
+      return {
+        file: image.getAttribute('src').split('/').at(-1),
+        size: [image.naturalWidth, image.naturalHeight],
+        rect: [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio)),
+      };
+    }));
+    expect(sourceStatGlyphs).toEqual([
+      { file: 'win-result-time-02-13-reference.png', size: [130, 45], rect: [471, 1107, 130, 45] },
+      { file: 'win-result-moves-121-reference.png', size: [79, 45], rect: [471, 1184, 79, 45] },
+    ]);
     await page.locator('.win-result img').evaluateAll((images) => Promise.all(images.map((image) => image.decode())));
     await expect(page.locator('.win-result-score-background')).toBeVisible();
     await expect(page.locator('.win-result-best')).toHaveCount(1);
@@ -2216,7 +2229,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v89');
+  expect(cacheNames).toContain('solitaire-master-v90');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2284,6 +2297,17 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     { ok: true, type: 'image/png', width: 53, height: 94 },
     { ok: true, type: 'image/png', width: 52, height: 94 },
     { ok: true, type: 'image/png', width: 53, height: 94 },
+  ]);
+  const offlineWinStatArt = await page.evaluate(async () => Promise.all([
+    'win-result-time-02-13-reference.png', 'win-result-moves-121-reference.png',
+  ].map(async (file) => {
+    const response = await fetch(`/assets/ui/${file}`);
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  })));
+  expect(offlineWinStatArt).toEqual([
+    { ok: true, type: 'image/png', width: 130, height: 45 },
+    { ok: true, type: 'image/png', width: 79, height: 45 },
   ]);
   const offlineWinSound = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/win-reference.wav');

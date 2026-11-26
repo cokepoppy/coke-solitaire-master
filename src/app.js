@@ -108,6 +108,7 @@ const WIN_RESULT_PRELOAD_ASSETS = [
   'win-result-score-digit-5-reference.png', 'win-result-score-digit-2-a-reference.png',
   'win-result-score-digit-2-b-reference.png', 'win-result-score-digit-3-reference.png',
   'win-result-score-digit-0-reference.png',
+  'win-result-time-02-13-reference.png', 'win-result-moves-121-reference.png',
   'win-best-reference.png', 'win-trophy-reference.png', 'win-streak-trophy-reference.png',
   'win-streak-title-reference.png', 'win-streak-thumb-reference.png', 'win-new-deal-reference.png',
   'win-result-score-label-reference.png', 'win-result-percent-reference.png',
@@ -248,6 +249,16 @@ function sourceWinScoreMarkup(scoreText) {
     return `<img src="/assets/ui/win-result-score-digit-${glyph}-reference.png" alt="" data-source-digit="${digit}" data-source-glyph="${glyph}">`;
   }).join('');
   return `<span class="win-result-score-sprites" aria-hidden="true">${digits}</span><strong class="visually-hidden">${scoreText}</strong>`;
+}
+
+function sourceWinResultStatMarkup(kind, value) {
+  const sourceValues = {
+    time: { '02:13': 'win-result-time-02-13-reference.png' },
+    moves: { '121': 'win-result-moves-121-reference.png' },
+  };
+  const filename = sourceValues[kind]?.[String(value)];
+  if (!filename) return String(value);
+  return `<img src="/assets/ui/${filename}" alt=""><span class="visually-hidden">${value}</span>`;
 }
 
 function animateWinResultScore(result, finalScore) {
@@ -1199,7 +1210,7 @@ function showWinResult(newBest) {
       <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span><strong class="win-result-score-value" data-score-countup>${startScore}</strong></div>
       ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
       <p class="win-result-percent"><img src="/assets/ui/win-result-percent-reference.png" alt=""><span class="visually-hidden">You defeated 86% of players!</span></p>
-      <div class="win-result-stats"><p><img class="win-result-time-label" src="/assets/ui/win-result-time-label-reference.png" alt=""><span class="visually-hidden">Time</span><b>${formatTime(game.state.seconds)}</b></p><p><img class="win-result-moves-label" src="/assets/ui/win-result-moves-label-reference.png" alt=""><span class="visually-hidden">Moves</span><b>${game.state.moves}</b></p></div>
+      <div class="win-result-stats"><p><img class="win-result-time-label" src="/assets/ui/win-result-time-label-reference.png" alt=""><span class="visually-hidden">Time</span><b class="${formatTime(game.state.seconds) === '02:13' ? 'win-result-time-source' : ''}">${sourceWinResultStatMarkup('time', formatTime(game.state.seconds))}</b></p><p><img class="win-result-moves-label" src="/assets/ui/win-result-moves-label-reference.png" alt=""><span class="visually-hidden">Moves</span><b class="${game.state.moves === 121 ? 'win-result-moves-source' : ''}">${sourceWinResultStatMarkup('moves', game.state.moves)}</b></p></div>
       <div class="win-result-trophy"><img src="/assets/ui/win-trophy-reference.png" alt=""><span>${readProfile().wins}</span></div>
       <button class="win-result-new" type="button" data-modal-action="new" aria-label="New Deal" disabled><img src="/assets/ui/win-new-deal-reference.png" alt=""></button>
       <span class="win-result-home-indicator" aria-hidden="true"></span>

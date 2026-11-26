@@ -606,6 +606,9 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .win-result-time-label { position: absolute; z-index: 4; top: 56.875%; left: 30.543%; display: block; width: 16.7421%; height: auto; opacity: 0; transition: opacity .16s ease; }
 .win-result-moves-label { position: absolute; z-index: 4; top: 61.0417%; left: 27.3756%; display: block; width: 19.6833%; height: auto; opacity: 0; transition: opacity .16s ease; }
 .win-result-stats b { position: absolute; z-index: 4; left: 53.3%; color: #f6f5f7; font-size: 5.8cqw; font-weight: 400; line-height: 1; text-align: left; opacity: 0; transition: opacity .32s ease; }
+.win-result-stats p:first-child b.win-result-time-source { top: 57.65625%; left: 53.28054%; width: 14.70588cqw; font-size: 0; line-height: 0; }
+.win-result-stats p:last-child b.win-result-moves-source { top: 61.66667%; left: 53.28054%; width: 8.93665cqw; font-size: 0; line-height: 0; }
+.win-result-stats b.win-result-time-source img, .win-result-stats b.win-result-moves-source img { display: block; width: 100%; height: auto; }
 .win-result.is-time-visible .win-result-time-label, .win-result.is-time-visible .win-result-stats p:first-child b { opacity: 1; }
 .win-result.is-moves-visible .win-result-moves-label, .win-result.is-moves-visible .win-result-stats p:last-child b { opacity: 1; }
 .win-result-stats p:first-child b { top: 57.34%; }

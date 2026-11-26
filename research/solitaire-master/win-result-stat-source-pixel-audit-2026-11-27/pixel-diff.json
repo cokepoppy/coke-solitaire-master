@@ -1,0 +1,46 @@
+{
+  "dimensions": {
+    "width": 884,
+    "height": 1920
+  },
+  "reference": {
+    "path": "frame-00000-req-310.000000-pts-4761600.png",
+    "sha256": "a09af0132a4bd4fcd594e7560e731104435aaae6e94c4400e2b67d26db510b9d"
+  },
+  "rendered": {
+    "path": "source-win-result-884x1920.png",
+    "sha256": "992e0a36d492c4e58b406a113b9f7f5b739bac9bfdfd6ee5b73d5fe3bf2570dd"
+  },
+  "comparison": {
+    "rescaled": false,
+    "ignored_rectangles": [],
+    "all_pixels": {
+      "mean_absolute_rgb_error": 0.792602,
+      "exact_rgb_pixel_fraction": 0.8635181,
+      "pixel_count": 1697280
+    },
+    "after_ignored_rectangles": {
+      "mean_absolute_rgb_error": 0.792602,
+      "exact_rgb_pixel_fraction": 0.8635181,
+      "pixel_count": 1697280
+    },
+    "regions": {
+      "time-value": {
+        "mean_absolute_rgb_error": 11.827738,
+        "exact_rgb_pixel_fraction": 0.0,
+        "pixel_count": 11200
+      },
+      "moves-value": {
+        "mean_absolute_rgb_error": 6.729231,
+        "exact_rgb_pixel_fraction": 0.29538462,
+        "pixel_count": 8450
+      },
+      "result-stats": {
+        "mean_absolute_rgb_error": 3.129463,
+        "exact_rgb_pixel_fraction": 0.48482105,
+        "pixel_count": 95000
+      }
+    },
+    "note": "Encoded-source video compression and browser rasterization contribute to pixel error; compare spatial error maps and known OS-only regions as well as the aggregate value."
+  }
+}
