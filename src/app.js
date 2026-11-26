@@ -153,10 +153,16 @@ const REFERENCE_CARD_ART = new Set([
   '3-of-clubs', '5-of-clubs', '8-of-diamonds', '10-of-spades',
   '5-of-spades', '7-of-spades', '4-of-diamonds', '9-of-clubs', '9-of-hearts',
 ]);
-const FACE_STYLE_SAMPLES = Object.fromEntries([3, 4, 5].map((style) => [
-  `style-${style}`,
-  new Set(['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds']),
-]));
+const GALLERY_FACE_SAMPLES = ['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds'];
+const FACE_STYLE_SAMPLES = {
+  'style-3': new Set(GALLERY_FACE_SAMPLES),
+  'style-4': new Set([
+    ...GALLERY_FACE_SAMPLES,
+    '2-of-clubs', 'ace-of-hearts', '10-of-clubs', 'king-of-clubs',
+    '3-of-hearts', 'king-of-hearts', 'jack-of-hearts', '6-of-clubs', '6-of-diamonds',
+  ]),
+  'style-5': new Set(GALLERY_FACE_SAMPLES),
+};
 const STORAGE_PROFILE = 'solitaire-master-profile-v1';
 const STORAGE_TABLEAU_TUTORIAL = 'solitaire-master-tableau-tutorial-v1';
 

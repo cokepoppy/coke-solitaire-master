@@ -133,4 +133,22 @@ The Face Style gallery at 325 s shows the same five sample cards—10♦, J♣, 
 python3 tools/extract_theme_face_samples.py
 ```
 
-The runtime switches these five cards to the selected style and caches the crops for offline play. The source does not show the remaining 47 faces for those styles, so they keep the Solitaire Master artwork; these assets do not imply that the alternate decks are complete.
+The runtime switches these five cards to the selected style and caches the crops for offline play. Official App Store screenshot 3 also exposes nine complete, unobstructed Style 4 faces. The 1242×2688 source image hash is `6c613726538104f30dd053e2d9cdb0499961a4fd87fff1b42e4f1aee4cbc7cd4`; each 116×174 crop is resized to 118×177. Rebuild the nine crops with:
+
+```sh
+python3 tools/extract_style4_appstore_samples.py /path/to/iphone-3.jpg
+```
+
+| Card image | Crop origin `(x,y)` |
+| --- | ---: |
+| `face-style-4-2-of-clubs-reference.png` | (201, 799) |
+| `face-style-4-ace-of-hearts-reference.png` | (321, 799) |
+| `face-style-4-10-of-clubs-reference.png` | (803, 799) |
+| `face-style-4-king-of-clubs-reference.png` | (321, 1015) |
+| `face-style-4-3-of-hearts-reference.png` | (563, 1084) |
+| `face-style-4-king-of-hearts-reference.png` | (683, 1108) |
+| `face-style-4-jack-of-hearts-reference.png` | (803, 1173) |
+| `face-style-4-6-of-clubs-reference.png` | (923, 1132) |
+| `face-style-4-6-of-diamonds-reference.png` | (201, 1500) |
+
+The overlapped Queen of Clubs in screenshot 3 is deliberately excluded because Jack of Hearts covers its lower half. These nine crops plus the five gallery samples give Style 4 fourteen directly observed faces; its other 38 faces remain unverified. Styles 3 and 5 still have only their five gallery samples, so their other 47 faces use Solitaire Master artwork. The alternate decks are not complete.
