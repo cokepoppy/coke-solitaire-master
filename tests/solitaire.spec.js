@@ -282,6 +282,17 @@ test('the menu stays near the top without a reserved green band at any viewport 
   }
 });
 
+test('a short mobile viewport does not expand the top green gap from a safe-area inset', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 600 });
+  await page.goto('/');
+  const layout = await page.evaluate(() => ({
+    topbarMarginTop: Number.parseFloat(getComputedStyle(document.querySelector('.game-topbar')).marginTop),
+    topbarTop: document.querySelector('.game-topbar').getBoundingClientRect().top,
+  }));
+  expect(layout.topbarMarginTop).toBe(15);
+  expect(layout.topbarTop).toBeLessThan(40);
+});
+
 test('a long king-to-two tableau stack keeps the bottom card clear of the action bar', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {

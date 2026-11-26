@@ -682,7 +682,7 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 }
 
 @media (max-height: 690px) {
-  .game-topbar { height: 38px; margin-top: max(15px, env(safe-area-inset-top)); margin-bottom: 10px; }
+  .game-topbar { height: 38px; margin-top: 15px; margin-bottom: 10px; }
   .scorebar { height: 32px; }
   .board-wrap { flex: 0 0 auto; }
   .tableau { margin-top: 12px; min-height: calc(var(--card-height) + 144px); }
