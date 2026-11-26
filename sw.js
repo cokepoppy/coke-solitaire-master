@@ -1,5 +1,6 @@
-const CACHE = 'solitaire-master-v81';
+const CACHE = 'solitaire-master-v82';
 const CACHE_PREFIX = 'solitaire-master-v';
+const PRECACHE_BATCH_SIZE = 8;
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const cardSuits = ['spades', 'hearts', 'diamonds', 'clubs'];
 const cardFaces = cardRanks.flatMap((rank) => cardSuits.map((suit) => `/assets/cards/${rank}-of-${suit}.svg`));
@@ -77,7 +78,11 @@ const dailyCalendarAssets = ['daily-reward-crown-reference.png', 'daily-reward-b
 const SHELL = ['/', '/index.html', '/src/styles.css', '/src/game.js', '/src/audio.js', '/src/app.js', '/manifest.webmanifest', '/assets/icon.svg', '/assets/themes/mountain-valley.jpg', '/assets/audio/card-move-reference.wav', '/assets/audio/combo-good-reference.wav', '/assets/audio/combo-amazing-reference.wav', '/assets/audio/combo-great-reference.wav', '/assets/audio/foundation-reference.wav', '/assets/audio/win-reference.wav', '/assets/audio/auto-collect-reference.wav', '/assets/audio/stock-recycle-reference.wav', '/assets/audio/draw-after-recycle-reference.wav', '/assets/audio/ui-tap-reference.wav', '/assets/audio/theme-gallery-select-reference.wav', '/assets/feedback/combo-good.webp', '/assets/feedback/combo-great.webp', '/assets/feedback/combo-amazing.webp', '/assets/cards/back-red.svg', '/assets/cards/back-solitaire-master.svg', '/assets/cards/back-solitaire-master-reference.png', '/assets/cards/back-solitaire-master-source.png', '/assets/cards/back-solitaire-master-source-20s.png', ...referenceCardBacks, ...referenceCourtCards, ...referencePipCards, ...alternateFaceSamples, ...cardFaces, ...actionIcons, ...actionRowReferences, ...settingsSourceAssets, ...themeGalleryAssets, ...themeBackgroundGalleryAssets, ...themeFaceGalleryAssets, ...foundationSlots, ...statusBarIcons, ...sourceTimerFrame, ...tutorialTipAssets, ...winResultAssets, ...timerGlyphs, ...dailyCalendarAssets];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)));
+  event.waitUntil(caches.open(CACHE).then(async (cache) => {
+    for (let offset = 0; offset < SHELL.length; offset += PRECACHE_BATCH_SIZE) {
+      await cache.addAll(SHELL.slice(offset, offset + PRECACHE_BATCH_SIZE));
+    }
+  }));
   self.skipWaiting();
 });
 
