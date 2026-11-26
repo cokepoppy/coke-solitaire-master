@@ -1392,8 +1392,10 @@ test('winning shows a result card and records a completed daily challenge', asyn
 
   await expect(page.locator('.win-streak-title')).toHaveAttribute('alt', 'winning streak');
   await expect.poll(() => page.locator('.win-streak-title').evaluate((image) => image.complete && image.naturalWidth === 680 && image.naturalHeight === 126)).toBe(true);
-  await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
-  await expect(page.locator('.win-streak-reward img')).toHaveJSProperty('naturalWidth', 78);
+  await expect(page.locator('.win-streak-reward img:first-child')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
+  await expect(page.locator('.win-streak-reward img:first-child')).toHaveJSProperty('naturalWidth', 78);
+  await expect(page.locator('.win-streak-thumb')).toHaveAttribute('src', '/assets/ui/win-streak-thumb-reference.png');
+  await expect.poll(() => page.locator('.win-streak-thumb').evaluate((image) => image.complete && image.naturalWidth === 87 && image.naturalHeight === 84)).toBe(true);
   await expect(page.locator('.win-cascade-card')).toHaveCount(52);
   await expect(page.locator('.foundation-slot .foundation-source-art')).toHaveCount(4);
   await expect(page.locator('.foundation-slot .playing-card')).toHaveCount(0);
@@ -1415,6 +1417,9 @@ test('winning shows a result card and records a completed daily challenge', asyn
     return {
       title: elementBounds(document.querySelector('.win-streak-title')),
       rewardTop: document.querySelector('.win-streak-reward').getBoundingClientRect().top,
+      trophy: elementBounds(document.querySelector('.win-streak-reward img:first-child')),
+      count: elementBounds(document.querySelector('.win-streak-reward strong')),
+      thumb: elementBounds(document.querySelector('.win-streak-thumb')),
       continue: textBounds(document.querySelector('.win-streak-continue')),
     };
   });
@@ -1423,6 +1428,10 @@ test('winning shows a result card and records a completed daily challenge', asyn
   expect(sourceOverlayBounds.title.top).toBeCloseTo(270, 0);
   expect(sourceOverlayBounds.rewardTop).toBeGreaterThan(320);
   expect(sourceOverlayBounds.rewardTop).toBeLessThan(331);
+  expect(sourceOverlayBounds.thumb.left).toBeCloseTo(236.9, 0);
+  expect(sourceOverlayBounds.thumb.top).toBeCloseTo(336.2, 0);
+  expect(sourceOverlayBounds.thumb.width).toBeCloseTo(38.4, 0);
+  expect(sourceOverlayBounds.thumb.height).toBeCloseTo(37.1, 0);
   expect(sourceOverlayBounds.continue.top).toBeGreaterThan(680);
   expect(sourceOverlayBounds.continue.top).toBeLessThan(701);
   const fan = await page.locator('.win-cascade-card').evaluateAll((cards) => ({

@@ -940,7 +940,7 @@ function completeWin() {
       <div class="win-streak-cascade" aria-hidden="true">${cascade}</div>
       <div class="win-streak-message">
         <img class="win-streak-title" src="/assets/ui/win-streak-title-reference.png" alt="winning streak">
-        <div class="win-streak-reward"><img src="/assets/ui/win-streak-trophy-reference.png" alt=""><strong>${profile.wins}</strong><span aria-hidden="true">👍</span></div>
+        <div class="win-streak-reward"><img src="/assets/ui/win-streak-trophy-reference.png" alt=""><strong>${profile.wins}</strong><img class="win-streak-thumb" src="/assets/ui/win-streak-thumb-reference.png" alt="" aria-hidden="true"></div>
       </div>
       <button class="win-streak-continue" type="button" data-modal-action="continue">Tap to Continue</button>
     </div>
