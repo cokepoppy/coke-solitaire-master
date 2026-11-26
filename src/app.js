@@ -927,7 +927,7 @@ const THEME_BACKS = [
 const TABLE_THEMES = [
   ['lagoon', 'Lagoon', 'linear-gradient(145deg,#07827e,#075d60)', 'theme-background-lagoon-reference.png', 'wide'],
   ['emerald', 'Emerald', 'radial-gradient(ellipse at 50% 30%,#119458,#07552f)', 'theme-background-emerald-reference.png', 'wide'],
-  ['mountain', 'Mountain', 'url(/assets/themes/mountain-valley.jpg) center / cover', 'theme-background-mountain-reference.png'],
+  ['mountain', 'Mountain', 'url(/assets/themes/mountain-valley-reference-guided.jpg) center / cover', 'theme-background-mountain-reference.png'],
   ['felt', 'Classic green', 'radial-gradient(ellipse at 50% 36%,#15824b,#066032 76%)', 'theme-background-felt-reference.png'],
   ['midnight', 'Midnight teal', 'radial-gradient(ellipse at 50% 38%,#205562,#102f3c)', 'theme-background-midnight-reference.png'],
   ['plum', 'Plum', 'radial-gradient(ellipse at 50% 38%,#67465b,#302031)', 'theme-background-plum-reference.png'],

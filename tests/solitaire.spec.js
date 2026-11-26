@@ -1029,8 +1029,8 @@ test('settings change draw count and hand layout; a new deal resets the board', 
   await expect(page.locator('.waste-slot .empty-slot-mark')).toHaveCSS('display', 'block');
   await expect(page.locator('.timer-frame-source')).toHaveCSS('display', 'none');
   await expect(page.locator('.timer-frame-vector')).toBeVisible();
-  expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage)).toContain('/assets/themes/mountain-valley.jpg');
-  expect((await page.request.get('/assets/themes/mountain-valley.jpg')).ok()).toBe(true);
+  expect(await page.locator('body').evaluate((body) => getComputedStyle(body).backgroundImage)).toContain('/assets/themes/mountain-valley-reference-guided.jpg');
+  expect((await page.request.get('/assets/themes/mountain-valley-reference-guided.jpg')).ok()).toBe(true);
   await page.getByRole('button', { name: 'Close dialog' }).click();
   await page.reload();
   await expect(page.locator('body')).toHaveAttribute('data-theme', 'mountain');
@@ -2157,7 +2157,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v85');
+  expect(cacheNames).toContain('solitaire-master-v86');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2184,10 +2184,11 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await expect.poll(() => page.locator('.card-face-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   await expect.poll(() => page.locator('.card-back-art').first().evaluate((image) => image.complete && image.naturalWidth > 0)).toBe(true);
   const offlineThemeImage = await page.evaluate(async () => {
-    const response = await fetch('/assets/themes/mountain-valley.jpg');
-    return { ok: response.ok, type: response.headers.get('content-type') };
+    const response = await fetch('/assets/themes/mountain-valley-reference-guided.jpg');
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
   });
-  expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
+  expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg', width: 853, height: 1844 });
   const offlineTutorialTip = await page.evaluate(async () => {
     const response = await fetch('/assets/ui/tutorial-tip-reference.png');
     const image = await createImageBitmap(await response.blob());

@@ -1,6 +1,6 @@
 # Theme artwork
 
-`mountain-valley.jpg` is an original generated landscape illustration used as an optional table background. It is a visual approximation inspired by the mountain theme shown in Solitaire Master promotional screenshots; it is not an extracted game asset.
+`mountain-valley.jpg` is the earlier original generated landscape, retained for comparison. The game now uses `mountain-valley-reference-guided.jpg`, a 853×1844 reference-guided reconstruction of the mountain/lake composition shown in Hungry Studio's [official App Store screenshot](https://apps.apple.com/us/app/solitaire-master/id6464113198). The screenshot's phone frame and board cover much of the image, so the replacement is a generated approximation guided by the unobstructed scenery and the exact in-game Mountain gallery preview; it is not an extracted original game asset.
 
 The source Backgrounds gallery contains eleven tiles. The first eight preview crops come from the 884×1920 gameplay frame at PTS 4,961,280 (323 s). Three more previews are fully visible after scrolling at PTS 5,045,760 (328.5 s). The later frame is `research/solitaire-master/source-videos/gLd0HXtDt5I.mp4` (SHA-256 `56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928`); the exact 328.5 s PNG has SHA-256 `3a31cd3881e58be2069ee849bee4c3bd20a2153bc1ce6236a20075da176064af`.
 
@@ -14,4 +14,4 @@ swift tools/extract_video_window.swift research/solitaire-master/source-videos/g
 python3 tools/extract_theme_background_assets.py /tmp/solitaire-theme-background-source/frame-00000-req-323.000000-pts-4961280.png assets/themes --lower-frame /tmp/solitaire-theme-background-lower/frame-00000-req-328.500000-pts-5045760.png
 ```
 
-The crop for `theme-background-felt-reference.png` excludes its green selected frame and restores the small bottom-right check area from the horizontally symmetric gradient. These are exact gallery previews. The source video does not show the full-screen gameplay boards for every theme, so the new themes’ in-game radial colors remain approximations pending those frames or original assets.
+The crop for `theme-background-felt-reference.png` excludes its green selected frame and restores the small bottom-right check area from the horizontally symmetric gradient. These are exact gallery previews. The source video does not show clean full-screen gameplay boards for every theme. The Mountain screenshot confirms its full-screen landscape, but the source artwork remains unavailable, so the generated replacement is still approximate. Other themes' in-game radial colors also remain approximations pending clean source frames or original assets.

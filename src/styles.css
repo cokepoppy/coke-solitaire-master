@@ -38,7 +38,7 @@ body[data-theme='felt'] {
 }
 
 body[data-theme='mountain'], body[data-theme='woodland'] {
-  background-image: linear-gradient(180deg, rgba(10, 25, 31, .09), rgba(9, 24, 24, .2) 58%, rgba(6, 18, 16, .58)), url('/assets/themes/mountain-valley.jpg');
+  background-image: linear-gradient(180deg, rgba(10, 25, 31, .04), rgba(9, 24, 24, .08) 58%, rgba(6, 18, 16, .2)), url('/assets/themes/mountain-valley-reference-guided.jpg');
 }
 
 body[data-theme='lagoon'] { background-image: linear-gradient(145deg, #07827e, #075d60); }
@@ -438,7 +438,7 @@ body[data-theme='felt'] .tutorial-tip-text { visibility: hidden; }
 .theme-choice { position: relative; display: flex; height: 65px; align-items: end; justify-content: center; padding: 5px 4px; overflow: hidden; border: 2px solid transparent; border-radius: 13px; color: #fff7e4; font-size: 9px; font-weight: 600; text-shadow: 0 1px 4px #102119; cursor: pointer; }
 .theme-choice::before { content: ''; position: absolute; inset: 0; z-index: 0; }
 .theme-choice span { position: relative; z-index: 1; }
-.theme-choice.mountain::before { background: linear-gradient(180deg, rgba(16,39,59,.06), rgba(7,26,24,.45)), url('/assets/themes/mountain-valley.jpg') center 60% / cover; }
+.theme-choice.mountain::before { background: linear-gradient(180deg, rgba(16,39,59,.06), rgba(7,26,24,.45)), url('/assets/themes/mountain-valley-reference-guided.jpg') center 60% / cover; }
 .theme-choice.felt::before { background: radial-gradient(ellipse, #348352, #0b4431); }
 .theme-choice.felt::after { content: '♠'; position: absolute; top: 4px; font-family: Georgia,serif; font-size: 25px; color: rgba(230,220,175,.8); }
 .theme-choice.chosen { border-color: #e5d184; box-shadow: 0 0 0 1px rgba(229,209,132,.3); }
