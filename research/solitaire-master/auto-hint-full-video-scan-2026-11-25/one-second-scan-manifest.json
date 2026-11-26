@@ -1,0 +1,147 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_file_name": "gLd0HXtDt5I.mp4",
+  "source_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_dimensions": {
+    "width": 884,
+    "height": 1920
+  },
+  "source_nominal_fps": 60,
+  "source_time_scale": 15360,
+  "source_duration_seconds": 1044.06,
+  "scan_date": "2026-11-26",
+  "method": "AVAssetImageGenerator exact-time frames and Apple Vision VNRecognizeTextRequest accurate-level OCR; counter crop (740,296,120,90)",
+  "sample_window_seconds": {
+    "start": 10,
+    "end": 1042,
+    "step": 1
+  },
+  "sample_count": 1033,
+  "readable_count": 912,
+  "blank_count": 121,
+  "longest_adjacent_equal_counter_runs": [
+    {
+      "start_seconds": 441.0,
+      "end_seconds": 452.0,
+      "counter": "71",
+      "sample_count": 12
+    },
+    {
+      "start_seconds": 636.0,
+      "end_seconds": 647.0,
+      "counter": "87",
+      "sample_count": 12
+    },
+    {
+      "start_seconds": 975.0,
+      "end_seconds": 985.0,
+      "counter": "87",
+      "sample_count": 11
+    },
+    {
+      "start_seconds": 991.0,
+      "end_seconds": 1001.0,
+      "counter": "91",
+      "sample_count": 11
+    },
+    {
+      "start_seconds": 478.0,
+      "end_seconds": 487.0,
+      "counter": "84",
+      "sample_count": 10
+    },
+    {
+      "start_seconds": 735.0,
+      "end_seconds": 742.0,
+      "counter": "33",
+      "sample_count": 8
+    },
+    {
+      "start_seconds": 1021.0,
+      "end_seconds": 1028.0,
+      "counter": "104",
+      "sample_count": 8
+    },
+    {
+      "start_seconds": 427.0,
+      "end_seconds": 433.0,
+      "counter": "66",
+      "sample_count": 7
+    },
+    {
+      "start_seconds": 778.0,
+      "end_seconds": 784.0,
+      "counter": "65",
+      "sample_count": 7
+    },
+    {
+      "start_seconds": 867.0,
+      "end_seconds": 873.0,
+      "counter": "13",
+      "sample_count": 7
+    },
+    {
+      "start_seconds": 920.0,
+      "end_seconds": 926.0,
+      "counter": "46",
+      "sample_count": 7
+    },
+    {
+      "start_seconds": 286.0,
+      "end_seconds": 291.0,
+      "counter": "76",
+      "sample_count": 6
+    },
+    {
+      "start_seconds": 859.0,
+      "end_seconds": 864.0,
+      "counter": "11",
+      "sample_count": 6
+    },
+    {
+      "start_seconds": 913.0,
+      "end_seconds": 918.0,
+      "counter": "44",
+      "sample_count": 6
+    },
+    {
+      "start_seconds": 19.0,
+      "end_seconds": 23.0,
+      "counter": "3",
+      "sample_count": 5
+    },
+    {
+      "start_seconds": 27.0,
+      "end_seconds": 31.0,
+      "counter": "9",
+      "sample_count": 5
+    },
+    {
+      "start_seconds": 303.0,
+      "end_seconds": 307.0,
+      "counter": "121",
+      "sample_count": 5
+    },
+    {
+      "start_seconds": 463.0,
+      "end_seconds": 467.0,
+      "counter": "76",
+      "sample_count": 5
+    },
+    {
+      "start_seconds": 473.0,
+      "end_seconds": 477.0,
+      "counter": "83",
+      "sample_count": 5
+    },
+    {
+      "start_seconds": 551.0,
+      "end_seconds": 555.0,
+      "counter": "23",
+      "sample_count": 5
+    }
+  ],
+  "trigger_observed": false,
+  "inference_limit": "One-second OCR is a coarse state filter. An unchanged move counter does not prove every board pixel stayed fixed or reveal the exact Auto Hint timeout; the source recording contains no confirmed visible Auto Hint event.",
+  "csv_sha256": "dc4279dd922045dec5fdf4dd04fceb839e25a2e043f84aa31eba859ffa134994"
+}
