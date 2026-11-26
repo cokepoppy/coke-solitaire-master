@@ -64,3 +64,10 @@ The opening stock at 24 cards now uses `back-solitaire-master-source-20s.png`, a
 The source menu crop is 72×74 pixels and was previously squeezed into a 72×72 box. It now renders at 36×37 CSS pixels with a half-pixel offset in the 2× source replay. The menu crop remains aligned at its recorded origin. The source tableau card origins are `(8, 133, 258, 383, 508, 633, 758)` at 884×1920, and the four empty foundations begin at `(8,429)`, `(133,429)`, `(258,429)`, and `(383,429)`. The E2E replay checks those origins, the menu position and size, and the exact felt gradient color. This remains a measured comparison of one static frame.
 
 The follow-up 2× audit also places the face-up cards in tableau columns 4 and 6 at the source's fractional-grid pixel centers with a `0.25px` CSS left offset. The pile-column grid stays fixed; only those visible face cards move. In the 20-second replay this lowers tableau MAE from `9.440155` to `9.374513` and masked full-frame MAE from `3.386667` to `3.380511`. E2E verifies the court-card left origins `(383,383,383)` and Q♣ origin `633` at device-pixel precision. This small fit is specific to the measured 2× reference state and does not establish a universal offset for every viewport or deal.
+
+
+## Compact mobile layout update
+
+The source frame reserves a large plain-felt band above the menu. The web version collapses it at the user's request, including when a phone browser reports a wide layout viewport, moving the topbar and board up 131 CSS pixels (262 device pixels in this 2× replay); the bottom controls remain anchored. The region MAE table above and the original `pixel-diff.json` describe the earlier source-aligned layout, not the current whole-screen position. For current component comparisons, align the web header and board 262 device pixels downward before measuring; compare the bottom row at its existing coordinates.
+
+The current 2× E2E pins the default-felt status icons to their source crop bounds after that shift: the crown is `[119,55,52,40]` and the move arrows are `[653,54,34,42]`. The source crops are from PTS 307200 at `(119,317,52,40)` and `(653,316,34,42)`, respectively.

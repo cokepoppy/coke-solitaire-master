@@ -74,13 +74,9 @@ button:focus-visible { outline: 3px solid #f4d67a; outline-offset: 2px; }
   gap: 8px;
   height: 42px;
   flex: 0 0 auto;
-  margin: clamp(32px, 14.5vh, 150px) 0 24px;
+  margin: 8px 0 24px;
   margin-right: 7px;
   margin-left: 3px;
-}
-
-@media (max-width: 599px) {
-  .game-topbar { margin-top: 8px; }
 }
 
 .menu-button {
@@ -106,6 +102,10 @@ body[data-theme='felt'] .stat:not(.time-stat) { background: rgb(15, 95, 49); }
 body[data-theme='felt'] .scorebar-flourish { visibility: hidden; }
 @media (min-resolution: 1.5dppx) {
   body[data-theme='felt'] .menu-source-art { width: 36px; height: 37px; transform: translate(-.5px, -.5px); }
+  body[data-theme='felt'] .stat[aria-label='Score'] { padding-left: 2.5px; }
+  body[data-theme='felt'] .stat[aria-label='Moves'] { padding-left: 5.5px; }
+  body[data-theme='felt'] .crown-icon { width: clamp(22px, 5.882vw, 26px); height: clamp(18px, 4.525vw, 20px); transform: translateY(-1.5px); }
+  body[data-theme='felt'] .moves-icon { width: clamp(14px, 3.846vw, 17px); height: clamp(17px, 4.751vw, 21px); transform: translateY(-1.5px); }
 }
 .menu-button:active { transform: scale(.95); }
 .icon-button { display: grid; width: 36px; height: 36px; place-items: center; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; color: #fff; background: rgba(15,45,23,.45); cursor: pointer; }

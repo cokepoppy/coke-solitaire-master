@@ -267,6 +267,19 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   await expect(tip).toBeHidden();
 });
 
+test('the menu stays near the top without a reserved green band at any viewport width', async ({ page }) => {
+  for (const width of [390, 980]) {
+    await page.setViewportSize({ width, height: 844 });
+    await page.goto('/');
+    const topbar = await page.locator('.game-topbar').evaluate((element) => ({
+      marginTop: Number.parseFloat(getComputedStyle(element).marginTop),
+      top: element.getBoundingClientRect().top,
+    }));
+    expect(topbar.marginTop).toBe(8);
+    expect(topbar.top).toBeLessThan(30);
+  }
+});
+
 test('a long king-to-two tableau stack keeps the bottom card clear of the action bar', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => {
@@ -551,6 +564,14 @@ async function runSourceOpeningReplay(page) {
     moves: [...document.querySelectorAll('#moves-value .stat-digit')].map((image) => image.getAttribute('src').split('/').at(-1)),
   }));
   expect(sourceStatGlyphs).toEqual({ score: ['timer-digit-3.png', 'timer-digit-0.png'], moves: ['timer-digit-3.png'] });
+  const sourceStatusIconBounds = await page.evaluate(() => Object.fromEntries(['.crown-icon', '.moves-icon'].map((selector) => {
+    const rect = document.querySelector(selector).getBoundingClientRect();
+    return [selector, [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio))];
+  })));
+  expect(sourceStatusIconBounds).toEqual({
+    '.crown-icon': [119, 55, 52, 40],
+    '.moves-icon': [653, 54, 34, 42],
+  });
   const sourceStatBounds = await page.evaluate(() => {
     const bounds = (selector) => {
       const { x, y, width, height } = document.querySelector(selector).getBoundingClientRect();
@@ -1963,7 +1984,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v76');
+  expect(cacheNames).toContain('solitaire-master-v77');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
