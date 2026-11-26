@@ -37,7 +37,7 @@ function visit(directory) {
       .replaceAll("'/index.html'", `'/solitaire/index.html'`)
       .replaceAll("['/', '/solitaire/index.html'", "['/solitaire/', '/solitaire/index.html'")
       .replaceAll('"start_url": "/"', `"start_url": "${base}/"`)
-      .replaceAll('solitaire-master-v68', cacheName)
+      .replace(/solitaire-master-v\d+/g, cacheName)
       .replaceAll('solitaire-master-v', cachePrefix);
 
     if (/['"`]\/(?:assets|src)\//.test(source)) {

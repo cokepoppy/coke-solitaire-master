@@ -154,7 +154,7 @@ function showTableauTutorial() {
         tip.hidden = true;
         tableauTutorialHideTimer = null;
       }, 180);
-    }, 4350);
+    }, 4333);
   }, 350);
 }
 
