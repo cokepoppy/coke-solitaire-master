@@ -1,0 +1,36 @@
+{
+  "dimensions": {
+    "width": 150,
+    "height": 190
+  },
+  "reference": {
+    "path": "card-13.133333.png",
+    "sha256": "0763f92be8c3428b46dd85f376bdda050b314e747d55b68cf74158e1ae7599e7"
+  },
+  "rendered": {
+    "path": "web-card-13.133333.png",
+    "sha256": "fc058dbfb02e17c830f45607e9cc35e6a9e735905e9bc4c9d060cfd5541bd3ce"
+  },
+  "comparison": {
+    "rescaled": false,
+    "ignored_rectangles": [],
+    "all_pixels": {
+      "mean_absolute_rgb_error": 33.402854,
+      "exact_rgb_pixel_fraction": 0.00122807,
+      "pixel_count": 28500
+    },
+    "after_ignored_rectangles": {
+      "mean_absolute_rgb_error": 33.402854,
+      "exact_rgb_pixel_fraction": 0.00122807,
+      "pixel_count": 28500
+    },
+    "regions": {
+      "card": {
+        "mean_absolute_rgb_error": 33.402854,
+        "exact_rgb_pixel_fraction": 0.00122807,
+        "pixel_count": 28500
+      }
+    },
+    "note": "Encoded-source video compression and browser rasterization contribute to pixel error; compare spatial error maps and known OS-only regions as well as the aggregate value."
+  }
+}

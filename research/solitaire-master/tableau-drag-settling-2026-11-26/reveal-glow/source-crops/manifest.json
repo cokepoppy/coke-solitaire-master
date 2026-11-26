@@ -1,0 +1,72 @@
+{
+  "crop" : {
+    "height" : 190,
+    "width" : 150,
+    "x" : 610,
+    "y" : 720
+  },
+  "frame_count" : 6,
+  "frame_hash_type" : "SHA-256 of the saved PNG file bytes",
+  "frames" : [
+    {
+      "actual_seconds" : 13.066666666666666,
+      "filename" : "frame-00000-req-013.083333-pts-200704.png",
+      "index" : 0,
+      "png_sha256" : "f9583bb613f34da77ace10f7b8d323ba3178afc34f541eb0cd9fd6215245e46e",
+      "requested_seconds" : 13.083333,
+      "source_pts" : 200704
+    },
+    {
+      "actual_seconds" : 13.15,
+      "filename" : "frame-00001-req-013.166666-pts-201984.png",
+      "index" : 1,
+      "png_sha256" : "0d8ee3595e6699c3ff47e66bbd17d77519f4af6908ca663acfcb356ef9cd73a7",
+      "requested_seconds" : 13.166665999999999,
+      "source_pts" : 201984
+    },
+    {
+      "actual_seconds" : 13.233333333333333,
+      "filename" : "frame-00002-req-013.249999-pts-203264.png",
+      "index" : 2,
+      "png_sha256" : "ec137fd9b26766f9c306b016773701ff4a9354dca27b4e1c82d12dfe4459e3ca",
+      "requested_seconds" : 13.249998999999999,
+      "source_pts" : 203264
+    },
+    {
+      "actual_seconds" : 13.316666666666666,
+      "filename" : "frame-00003-req-013.333332-pts-204544.png",
+      "index" : 3,
+      "png_sha256" : "2977b1d6bc7c42eafa953ec574765b73cae55d7fe179567b90c16b3866c498fb",
+      "requested_seconds" : 13.333332,
+      "source_pts" : 204544
+    },
+    {
+      "actual_seconds" : 13.4,
+      "filename" : "frame-00004-req-013.416665-pts-205824.png",
+      "index" : 4,
+      "png_sha256" : "483d455d546af166c9dddc3d637cb2b0b71aae0b16942fa2067da9a6505e5ac2",
+      "requested_seconds" : 13.416665,
+      "source_pts" : 205824
+    },
+    {
+      "actual_seconds" : 13.483333333333333,
+      "filename" : "frame-00005-req-013.499998-pts-207104.png",
+      "index" : 5,
+      "png_sha256" : "a6840d68b99cbd8744a8723213b7b6d32af6286aef0dfe6004863e6f24173f33",
+      "requested_seconds" : 13.499998,
+      "source_pts" : 207104
+    }
+  ],
+  "requested_window_seconds" : {
+    "end" : 13.499998,
+    "start" : 13.083333,
+    "step" : 0.083333000000000004
+  },
+  "source_file_name" : "gLd0HXtDt5I.mp4",
+  "source_natural_size" : {
+    "height" : 1920,
+    "width" : 884
+  },
+  "source_sha256" : "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_scale" : 15360
+}

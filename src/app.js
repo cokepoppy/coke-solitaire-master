@@ -60,7 +60,9 @@ let tableauTutorialShowTimer = null;
 let tableauTutorialHideTimer = null;
 board.addEventListener('animationend', (event) => {
   if (event.animationName === 'deal-face-reveal') {
-    event.target.closest('.card-reveal')?.classList.remove('card-reveal');
+    const revealedCard = event.target.closest('.card-reveal');
+    revealedCard?.classList.remove('card-reveal');
+    revealedCard?.classList.add('card-reveal-glow');
     event.target.closest('.card-enter')?.classList.remove('card-enter');
   } else if (event.animationName === 'card-deal' && !event.target.classList.contains('card-face')) {
     event.target.classList.remove('card-enter');

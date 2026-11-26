@@ -429,12 +429,42 @@ async function runSourceOpeningReplay(page) {
   };
   // In the reference opening, the 4♣, Q♠, and J♦ join the 5♦/K♦ sequence;
   // each move also uncovers one card, matching the observed +10 score steps.
-  await dragMove(5, 5, 0, 0, 43);
+  await dragMove(5, 5, 0, 0, 43.5);
   await expect(page.locator('#score-value')).toHaveText('10');
   await expect(page.locator('#moves-value')).toHaveText('1');
   expect(await page.evaluate(() => window.audioCues)).toContain('move');
   expect(await page.evaluate(() => window.audioCues)).not.toContain('flip');
-  await expect(page.locator('.pile-column[data-pile="5"] .card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
+  const revealedQueen = page.locator('.pile-column[data-pile="5"] .card-face[data-card-id="♣-12"]');
+  await expect(revealedQueen.locator('.card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
+  await expect(revealedQueen).toHaveClass(/card-reveal-glow/);
+  const revealGlowMotion = await revealedQueen.evaluate((card) => {
+    const animation = card.getAnimations({ subtree: true }).find((candidate) => candidate.animationName === 'card-reveal-glow');
+    if (!animation) throw new Error('The revealed-card glow animation did not start.');
+    animation.pause();
+    animation.currentTime = 50;
+    const style = getComputedStyle(card, '::after');
+    return { animationName: style.animationName, duration: style.animationDuration, opacity: Number.parseFloat(style.opacity), blendMode: style.mixBlendMode, currentTime: animation.currentTime };
+  });
+  expect(revealGlowMotion).toMatchObject({ animationName: 'card-reveal-glow', duration: '0.42s', blendMode: 'color', currentTime: 50 });
+  expect(revealGlowMotion.opacity).toBeGreaterThan(0.9);
+  const firstMovePositions = await page.evaluate(() => {
+    const moved = document.querySelector('.pile-column[data-pile="0"] .card-face[data-card-id="♣-4"]');
+    const revealed = document.querySelector('.pile-column[data-pile="5"] .card-face[data-card-id="♣-12"]');
+    return [moved, revealed].map((card) => {
+      const rect = card.getBoundingClientRect();
+      return [Math.round(rect.left * devicePixelRatio), Math.round(rect.top * devicePixelRatio)];
+    });
+  });
+  expect(firstMovePositions).toEqual([[8, 470], [633, 482]]);
+  await page.screenshot({ path: 'test-results/source-opening-first-move.png', fullPage: true });
+  const noGlowStyle = await page.addStyleTag({ content: '.card-face.card-reveal-glow::after { display: none !important; }' });
+  await page.screenshot({ path: 'test-results/source-opening-first-move-no-glow.png', fullPage: true });
+  await noGlowStyle.evaluate((style) => style.remove());
+  await revealedQueen.evaluate((card) => {
+    const animation = card.getAnimations({ subtree: true }).find((candidate) => candidate.animationName === 'card-reveal-glow');
+    animation.currentTime = 430;
+  });
+  await expect.poll(() => revealedQueen.evaluate((card) => Number.parseFloat(getComputedStyle(card, '::after').opacity))).toBe(0);
 
   await page.evaluate(() => {
     window.sourceMoveAnimations = [];
@@ -1935,7 +1965,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v73');
+  expect(cacheNames).toContain('solitaire-master-v74');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

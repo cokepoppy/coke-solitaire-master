@@ -17,6 +17,12 @@ At PTS 200448 (13.050 s), 4♣ is selected at its source pile. It leaves that po
 
 These frames bound the visible drag and settling sequence, but they do not expose the player's exact pointer-release time. They therefore do not justify changing the replica's 50 ms post-release card flight. The reproducible 20-second opening replay separately checks the final source position and its retained vertical offset.
 
+## Newly revealed-card highlight
+
+The same opening exposes Q♣ in tableau column 6. Native 60 fps crops in [`reveal-glow/source-crops`](reveal-glow/source-crops/) show its gold edge and green underglow shortly after the 13.083333 s reveal. The highlight is still bright at 13.166667 s, fades across the samples at 13.25–13.416667 s, and is effectively gone by 13.5 s. The crop-ledger records the exact PTS and frame hashes.
+
+The replica starts the highlight when the 50 ms face-reveal animation ends, then fades it over 420 ms. The source-sized Playwright replay pauses the glow at 50 ms, saves both glow and no-glow frames, and verifies it has faded by 430 ms. The user's top-gap reduction shifts the replica's Q♣ to `(633,482)` in the 884×1920 screenshot, while the source card is at `(633,744)`. To isolate the reveal effect, the [comparison image](reveal-glow/source-vs-web-card-crop.png) and [pixel-diff report](reveal-glow/pixel-diff.json) align the 150×190 card crop from source PTS 201728 (source crop origin `(610,720)`) with the replica crop at `(610,458)`. Mean absolute RGB error falls from 34.568023 without the glow to 33.402854 with it. The layout shift makes whole-screen vertical alignment unsuitable for this comparison; the local crop shows a small measured improvement, not proof that every reveal matches identically.
+
 ## Reproduce
 
 ```sh
