@@ -44,7 +44,6 @@ function createFirstDealDeck() {
 if (!game.restore()) game.newGame(createFirstDealDeck());
 const audio = new GameAudio();
 audio.setSound(game.state.sound);
-audio.setMusic(game.state.music);
 
 const $ = (selector) => document.querySelector(selector);
 const board = $('.board-wrap');
@@ -996,7 +995,6 @@ function startDailyGame(day = localDateKey(new Date())) {
     theme: game.state.theme,
     cardBack: game.state.cardBack ?? 'ruby',
     sound: game.state.sound,
-    music: game.state.music,
   };
   game.newDailyGame(day);
   Object.assign(game.state, options);
@@ -1134,7 +1132,6 @@ function doNewGame(restart = false) {
     theme: previous.theme,
     cardBack: previous.cardBack ?? 'ruby',
     sound: previous.sound,
-    music: previous.music,
   };
   const deck = restart ? previous.seedDeck : undefined;
   game.newGame(deck, restart ? previous.challenge : null);
@@ -1145,7 +1142,6 @@ function doNewGame(restart = false) {
     writeProfile(profile);
   }
   audio.setSound(options.sound);
-  audio.setMusic(options.music);
   $('.game-shell').classList.remove('won');
   winShown = false;
   winCascadeClearsFoundations = false;
@@ -1486,7 +1482,7 @@ modalContent.addEventListener('click', (event) => {
   const setting = control.dataset.setting;
   let value = control.dataset.value;
   if (setting === 'drawCount') value = Number(value);
-  if (['leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'sound', 'music'].includes(setting)) value = value === 'true';
+  if (['leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'sound'].includes(setting)) value = value === 'true';
   if (setting === 'autoHints' && !value) {
     clearTimeout(autoHintTimer);
     autoHintTimer = null;
@@ -1497,7 +1493,6 @@ modalContent.addEventListener('click', (event) => {
   audio.play(galleryTab ? 'themeSelect' : 'tap');
   game.setOption(setting, value);
   if (setting === 'sound') audio.setSound(value);
-  if (setting === 'music') audio.setMusic(value);
   render();
   if (!modalBackdrop.classList.contains('hidden')) {
     if (galleryTab) showThemeGallery(galleryTab);

@@ -3,14 +3,10 @@ export class GameAudio {
     this.context = null;
     this.unlocked = false;
     this.unlockPromise = null;
-    this.musicTimer = null;
-    this.musicOn = false;
     this.soundOn = true;
-    this.musicStep = 0;
     this.pending = [];
     this.master = null;
     this.soundBus = null;
-    this.musicBus = null;
     this.masterLevel = 0.82;
     this.soundLevel = 0.68;
     this.noiseBuffer = null;
@@ -45,12 +41,9 @@ export class GameAudio {
       this.context = new AudioContextClass();
       this.master = this.context.createGain();
       this.soundBus = this.context.createGain();
-      this.musicBus = this.context.createGain();
       this.master.gain.value = this.masterLevel;
       this.soundBus.gain.value = this.soundOn ? this.soundLevel : 0;
-      this.musicBus.gain.value = this.soundOn && this.musicOn ? 0.42 : 0;
       this.soundBus.connect(this.master);
-      this.musicBus.connect(this.master);
       this.master.connect(this.context.destination);
       this.noiseBuffer = this.createNoiseBuffer(this.context);
       this.loadReferenceMove();
@@ -285,7 +278,6 @@ export class GameAudio {
     if (context.state === 'running') {
       this.unlocked = true;
       this.flushPending();
-      this.scheduleMusic();
       return Promise.resolve(true);
     }
     if (!this.unlockPromise) {
@@ -293,7 +285,6 @@ export class GameAudio {
         this.unlocked = context.state === 'running';
         if (this.unlocked) {
           this.flushPending();
-          this.scheduleMusic();
         }
         return this.unlocked;
       }).catch(() => false).finally(() => { this.unlockPromise = null; });
@@ -470,68 +461,9 @@ export class GameAudio {
     }
   }
 
-  playMusicTone(frequency, at, duration, amplitude, wave = 'sine') {
-    const oscillator = this.context.createOscillator();
-    const filter = this.context.createBiquadFilter();
-    const envelope = this.context.createGain();
-    oscillator.type = wave;
-    oscillator.frequency.value = frequency;
-    oscillator.detune.value = wave === 'triangle' ? -3 : 0;
-    filter.type = 'lowpass';
-    filter.frequency.value = 1150;
-    filter.Q.value = 0.55;
-    envelope.gain.setValueAtTime(0.0001, at);
-    envelope.gain.linearRampToValueAtTime(amplitude, at + Math.min(1.5, duration * 0.25));
-    envelope.gain.setTargetAtTime(0.0001, at + duration * 0.72, Math.min(0.9, duration * 0.15));
-    oscillator.connect(filter);
-    filter.connect(envelope);
-    envelope.connect(this.musicBus);
-    oscillator.start(at);
-    oscillator.stop(at + duration);
-  }
-
-  scheduleMusic() {
-    if (!this.soundOn || !this.musicOn || !this.context || this.context.state !== 'running' || this.musicTimer) return;
-    const chords = [
-      [146.83, 196, 220, 293.66],
-      [130.81, 174.61, 196, 261.63],
-      [110, 146.83, 164.81, 220],
-      [123.47, 164.81, 184.997, 246.94],
-    ];
-    const melody = [293.66, 392, 440, 392, 329.63, 392, 493.88, 392];
-    const now = this.context.currentTime;
-    const chord = chords[this.musicStep % chords.length];
-    chord.forEach((frequency, index) => this.playMusicTone(frequency, now + index * 0.045, 7.7, index === 0 ? 0.026 : 0.014, index === 0 ? 'sine' : 'triangle'));
-    this.playMusicTone(melody[(this.musicStep * 2) % melody.length], now + 1.25, 0.9, 0.008, 'sine');
-    this.playMusicTone(melody[(this.musicStep * 2 + 2) % melody.length], now + 4.25, 0.9, 0.006, 'sine');
-    this.musicStep += 1;
-    this.musicTimer = setTimeout(() => {
-      this.musicTimer = null;
-      this.scheduleMusic();
-    }, 7800);
-  }
-
   setSound(enabled) {
     this.soundOn = Boolean(enabled);
     if (!this.soundOn) this.pending = [];
     if (this.soundBus && this.context) this.soundBus.gain.setTargetAtTime(this.soundOn ? this.soundLevel : 0, this.context.currentTime, 0.025);
-    if (this.musicBus && this.context) this.musicBus.gain.setTargetAtTime(this.soundOn && this.musicOn ? 0.42 : 0, this.context.currentTime, 0.025);
-    if (!this.soundOn) {
-      clearTimeout(this.musicTimer);
-      this.musicTimer = null;
-    } else if (this.musicOn) {
-      this.unlock().then((ok) => { if (ok && this.soundOn && this.musicOn) this.scheduleMusic(); });
-    }
-  }
-
-  setMusic(enabled) {
-    this.musicOn = Boolean(enabled);
-    if (this.musicBus && this.context) this.musicBus.gain.setTargetAtTime(this.soundOn && this.musicOn ? 0.42 : 0, this.context.currentTime, 0.08);
-    if (!this.musicOn || !this.soundOn) {
-      clearTimeout(this.musicTimer);
-      this.musicTimer = null;
-      return;
-    }
-    this.unlock().then((ok) => { if (ok && this.soundOn && this.musicOn) this.scheduleMusic(); });
   }
 }

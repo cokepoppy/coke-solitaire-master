@@ -77,7 +77,6 @@ export class SolitaireGame {
       cardFaceStyle: 'master',
       challenge,
       sound: true,
-      music: false,
       won: false,
       recycledStockPendingDraw: false,
     };
@@ -97,6 +96,7 @@ export class SolitaireGame {
       const saved = JSON.parse(stored);
       if (saved?.version !== 1 || !saved.state?.tableau?.length) return false;
       this.state = { ...saved.state, history: [], selected: null, hint: null };
+      delete this.state.music;
       this.state.cardBack ??= 'ruby';
       this.state.cardFaceStyle ??= 'master';
       if (!['master', 'classic', 'style-3', 'style-4', 'style-5'].includes(this.state.cardFaceStyle)) this.state.cardFaceStyle = 'master';
@@ -139,7 +139,7 @@ export class SolitaireGame {
   }
 
   setOption(name, value) {
-    if (['drawCount', 'scoringMode', 'leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'theme', 'cardBack', 'cardFaceStyle', 'sound', 'music'].includes(name)) {
+    if (['drawCount', 'scoringMode', 'leftHand', 'vibration', 'quickPlay', 'autoCollect', 'autoHints', 'showThreeWasteCards', 'movableHighlight', 'theme', 'cardBack', 'cardFaceStyle', 'sound'].includes(name)) {
       this.state[name] = value;
       this.save();
     }

@@ -1794,7 +1794,7 @@ test('the Magic control plays one legal suggestion and undo reverses it', async 
   await expect(page.locator('.action-row-reference-art')).toHaveAttribute('src', '/assets/ui/action-row-initial-reference.png');
 });
 
-test('mobile sound unlocks, captured cues retain source level, and ambient music follows its switch', async ({ page }) => {
+test('mobile Audio switch gates captured effects without an unsupported music bed', async ({ page }) => {
   const pageErrors = [];
   page.on('pageerror', (error) => pageErrors.push(error.message));
   await page.goto('/');
@@ -1913,20 +1913,20 @@ test('mobile sound unlocks, captured cues retain source level, and ambient music
   const recycledDrawOutputGain = await page.evaluate(() => window.referenceDrawAfterRecycleSampleGain * window.solitaireAudio.masterLevel * window.solitaireAudio.soundLevel);
   expect(recycledDrawOutputGain).toBeCloseTo(1, 5);
 
-  await page.evaluate(() => window.solitaireAudio.setMusic(true));
-  await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicStep)).toBeGreaterThan(0);
-  await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
+  const unsupportedMusic = await page.evaluate(() => ({
+    state: 'music' in window.solitaireGame.state,
+    bus: 'musicBus' in window.solitaireAudio,
+    control: 'setMusic' in window.solitaireAudio,
+    scheduler: 'scheduleMusic' in window.solitaireAudio,
+  }));
+  expect(unsupportedMusic).toEqual({ state: false, bus: false, control: false, scheduler: false });
   await page.getByRole('button', { name: 'Game menu' }).click();
   await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await expect(page.getByRole('switch', { name: 'Music' })).toHaveCount(0);
   await page.getByRole('switch', { name: 'Audio' }).click();
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(false);
-  expect(await page.evaluate(() => window.solitaireAudio.musicTimer)).toBeNull();
   await page.getByRole('switch', { name: 'Audio' }).click();
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(true);
-  await expect.poll(() => page.evaluate(() => Boolean(window.solitaireAudio.musicTimer))).toBe(true);
-  await page.evaluate(() => window.solitaireAudio.setMusic(false));
-  await expect.poll(() => page.evaluate(() => window.solitaireAudio.musicOn)).toBe(false);
-  expect(await page.evaluate(() => window.solitaireAudio.musicTimer)).toBeNull();
   await page.getByRole('switch', { name: 'Audio' }).click();
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.soundOn)).toBe(false);
   await page.getByRole('button', { name: 'Close dialog' }).click();
@@ -1984,7 +1984,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v77');
+  expect(cacheNames).toContain('solitaire-master-v78');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
