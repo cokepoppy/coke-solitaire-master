@@ -34,6 +34,16 @@ python3 tools/extract_win_result_assets.py /tmp/solitaire-win-source/frame-00000
 python3 tools/extract_win_result_text_assets.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui
 ```
 
+`win-result-crown-intro-reference.png` and `win-result-title-intro-reference.png` stage the entrance before that settled banner. The crown is cropped from PTS 4,727,808 (307.8 s), rectangle `(320,60,244,170)`; the title strip is cropped from PTS 4,730,880 (308.0 s), rectangle `(0,520,884,210)`. Their flat backdrops are alpha-keyed so the crown appears above the dimmed board first, then the source `YOU WIN` lettering appears over the navy result field. The two asset hashes are recorded in [`win-result-transition-2026-11-27`](../../research/solitaire-master/win-result-transition-2026-11-27/README.md). Regenerate the crops and sprites with:
+
+```sh
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 307.8 308.0 0.2 /tmp/solitaire-win-result-intro
+python3 tools/extract_win_result_intro_sprites.py \
+  /tmp/solitaire-win-result-intro/frame-00000-req-307.800000-pts-4727808.png \
+  /tmp/solitaire-win-result-intro/frame-00001-req-308.000000-pts-4730880.png \
+  assets/ui
+```
+
 `win-result-background-reference.png` is the 884×153 continuation below the source banner (y=834–987). The score and optional Best badge vary by game, so `tools/extract_win_result_background.py` masks those two live areas and extends the surrounding low-frequency backdrop through them. The source-sized result screen positions this bridge behind the live score and exact label/badge sprites; the bridge is cached for offline play. Rebuild it from the same source frame with `python3 tools/extract_win_result_background.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui/win-result-background-reference.png`.
 
 `win-streak-thumb-reference.png` replaces the browser emoji on the winning-streak reward row with the source's white glove and gold badge. Its matte comes from the clean green-field region in the 304.500 s frame (PTS 4,677,120); RGB comes from the settled 307.000 s frame (PTS 4,715,520), after the transient horizontal flare has passed. Both frames are 884×1920 crops from the recorded gameplay video. Recreate the frames and sprite with:

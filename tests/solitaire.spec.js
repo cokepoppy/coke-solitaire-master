@@ -1434,15 +1434,30 @@ test.describe('source-sized win result', () => {
       await page.locator(`#tableau .pile-column[data-pile="${pile}"] .playing-card`).click();
       await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
     }
+    await page.locator('#tableau .pile-column[data-pile="3"] .playing-card').click();
+    await page.locator('.foundation-slot[data-pile="3"]').click();
+    await expect(page.locator('.win-streak-backdrop')).toBeVisible();
     await page.evaluate(() => {
       window.solitaireGame.state.seconds = 133;
       window.solitaireGame.save();
     });
-    await page.locator('#tableau .pile-column[data-pile="3"] .playing-card').click();
-    await page.locator('.foundation-slot[data-pile="3"]').click();
-    await expect(page.locator('.win-streak-backdrop')).toBeVisible();
     await page.getByRole('button', { name: 'Tap to Continue' }).click();
     await expect(page.locator('.win-result-backdrop')).toBeVisible();
+    const result = page.locator('.win-result');
+    await expect(result).toHaveAttribute('data-result-stage', 'intro');
+    await expect(page.locator('[data-score-countup]')).toHaveText('3614');
+    await expect(page.getByRole('button', { name: 'New Deal' })).toBeDisabled();
+    await expect(result).toHaveClass(/is-title-visible/);
+    await expect(result).toHaveClass(/is-banner-visible/);
+    await expect(result).toHaveClass(/is-summary-visible/);
+    await expect(result).toHaveClass(/is-time-visible/);
+    await expect(result).toHaveClass(/is-moves-visible/);
+    await expect(result).toHaveClass(/is-trophy-visible/);
+    await page.waitForFunction(() => {
+      const score = document.querySelector('[data-score-countup]');
+      return Number(score?.textContent) > 3614;
+    });
+    await expect(result).toHaveAttribute('data-result-stage', 'settled', { timeout: 3000 });
     await expect(page.locator('.win-result-score')).toContainText('5223');
     await expect(page.locator('.win-result-percent')).toHaveText('You defeated 86% of players!');
     await expect(page.locator('.win-result-stats')).toContainText('02:13');
@@ -1529,7 +1544,10 @@ test('winning shows a result card and records a completed daily challenge', asyn
     }, true);
     const audio = window.solitaireAudio;
     const play = audio.play.bind(audio);
-    audio.play = (cue) => { window.gameAudioCues.push(cue); return play(cue); };
+    audio.play = (cue, delaySeconds = 0) => {
+      window.gameAudioCues.push({ cue, delaySeconds });
+      return play(cue, delaySeconds);
+    };
   });
 
   for (let pile = 0; pile < 4; pile += 1) {
@@ -1659,7 +1677,8 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await page.screenshot({ path: 'test-results/mobile-win-streak.png' });
   await page.getByRole('button', { name: 'Tap to Continue' }).click();
   await expect(page.locator('.win-result-backdrop')).toBeVisible();
-  expect(await page.evaluate(() => window.gameAudioCues.at(-1))).toBe('win');
+  expect(await page.evaluate(() => window.gameAudioCues.at(-1))).toEqual({ cue: 'win', delaySeconds: 0.38 });
+  await expect(page.locator('.win-result')).toHaveAttribute('data-result-stage', 'settled', { timeout: 3000 });
   await expect(page.locator('.win-result-banner')).toHaveAttribute('src', '/assets/ui/win-banner-reference.png');
   await expect(page.locator('.win-result-score')).toContainText('390');
   await expect(page.locator('.win-result-score-value')).toHaveText('390');
@@ -2060,7 +2079,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v83');
+  expect(cacheNames).toContain('solitaire-master-v84');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

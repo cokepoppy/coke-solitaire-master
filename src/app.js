@@ -84,11 +84,28 @@ let dealSettlementTimer = null;
 let winStreakTimer = null;
 let winNewBest = false;
 let winResultSoundPlayed = false;
+let winResultTimers = [];
+let winResultScoreFrame = 0;
 let autoHintTimer = null;
 let autoCollectTimer = null;
 let autoCollectRunning = false;
 
 const AUTO_HINT_DELAY_MS = 12_000;
+const WIN_RESULT_START_DELAY_MS = 4600;
+const WIN_RESULT_TITLE_DELAY_MS = 200;
+const WIN_RESULT_BANNER_DELAY_MS = 300;
+const WIN_RESULT_SUMMARY_DELAY_MS = 700;
+const WIN_RESULT_TIME_DELAY_MS = 800;
+const WIN_RESULT_MOVES_DELAY_MS = 1100;
+const WIN_RESULT_TROPHY_DELAY_MS = 1200;
+const WIN_RESULT_ACTION_DELAY_MS = 1400;
+const WIN_RESULT_SCORE_DURATION_MS = 1300;
+const WIN_RESULT_SOUND_DELAY_SECONDS = 0.38;
+const WIN_RESULT_SCORE_TICKS = [
+  3614, 3785, 3996, 4092, 4229, 4391, 4466, 4568, 4691, 4746, 4822, 4908, 4947, 4998,
+  5056, 5081, 5114, 5149, 5163, 5181, 5199, 5205, 5213, 5219, 5221, 5222, 5223,
+];
+const WIN_RESULT_SCORE_DELTA = WIN_RESULT_SCORE_TICKS.at(-1) - WIN_RESULT_SCORE_TICKS[0];
 // The source stock reaches zero around 300.90 s; OCR sees the first follow-up
 // move by 301.05 s and then roughly one foundation move per 100 ms.
 const AUTO_COLLECT_START_DELAY_MS = 150;
@@ -169,6 +186,67 @@ function clearTableauTutorial() {
     tip.classList.remove('visible');
     tip.hidden = true;
   }
+}
+
+function clearWinResultTransition() {
+  winResultTimers.forEach((timer) => clearTimeout(timer));
+  winResultTimers = [];
+  if (winResultScoreFrame) cancelAnimationFrame(winResultScoreFrame);
+  winResultScoreFrame = 0;
+}
+
+function scheduleWinResultStage(result, delay, stage, callback) {
+  const timer = setTimeout(() => {
+    winResultTimers = winResultTimers.filter((scheduled) => scheduled !== timer);
+    if (!result.isConnected) return;
+    result.dataset.resultStage = stage;
+    callback?.();
+  }, delay);
+  winResultTimers.push(timer);
+}
+
+function sourceWinScoreMarkup(scoreText) {
+  if (!/^[235]+$/.test(scoreText)) return `<strong class="win-result-score-value">${scoreText}</strong>`;
+  let scoreTwos = 0;
+  const digits = [...scoreText].map((digit) => {
+    let glyph = digit;
+    if (digit === '2') {
+      glyph = `2-${scoreTwos % 2 === 0 ? 'a' : 'b'}`;
+      scoreTwos += 1;
+    }
+    return `<img src="/assets/ui/win-result-score-digit-${glyph}-reference.png" alt="" data-source-digit="${digit}" data-source-glyph="${glyph}">`;
+  }).join('');
+  return `<span class="win-result-score-sprites" aria-hidden="true">${digits}</span><strong class="visually-hidden">${scoreText}</strong>`;
+}
+
+function animateWinResultScore(result, finalScore) {
+  const score = result.querySelector('[data-score-countup]');
+  if (!score) return;
+  const scoreText = String(finalScore);
+  const startScore = Math.max(0, finalScore - WIN_RESULT_SCORE_DELTA);
+  const startTime = performance.now();
+  const update = (now) => {
+    if (!result.isConnected) return;
+    const elapsed = Math.min(WIN_RESULT_SCORE_DURATION_MS, now - startTime);
+    const tickPosition = (elapsed / WIN_RESULT_SCORE_DURATION_MS) * (WIN_RESULT_SCORE_TICKS.length - 1);
+    const lowerIndex = Math.floor(tickPosition);
+    const upperIndex = Math.min(lowerIndex + 1, WIN_RESULT_SCORE_TICKS.length - 1);
+    const tickProgress = tickPosition - lowerIndex;
+    const sourceScore = WIN_RESULT_SCORE_TICKS[lowerIndex]
+      + (WIN_RESULT_SCORE_TICKS[upperIndex] - WIN_RESULT_SCORE_TICKS[lowerIndex]) * tickProgress;
+    const scoreProgress = (sourceScore - WIN_RESULT_SCORE_TICKS[0]) / WIN_RESULT_SCORE_DELTA;
+    score.textContent = String(Math.round(startScore + (finalScore - startScore) * scoreProgress));
+
+    if (elapsed < WIN_RESULT_SCORE_DURATION_MS) {
+      winResultScoreFrame = requestAnimationFrame(update);
+      return;
+    }
+
+    score.outerHTML = sourceWinScoreMarkup(scoreText);
+    winResultScoreFrame = 0;
+    result.dataset.resultStage = 'settled';
+  };
+  winResultScoreFrame = requestAnimationFrame(update);
 }
 
 function cardBackFile() {
@@ -722,8 +800,10 @@ function writeProfile(profile) {
 
 function setModal(title, kicker, html, variant = '') {
   $('#modal-backdrop').classList.remove('theme-gallery-backdrop');
+  $('#modal-backdrop').classList.remove('win-result-navy');
   $('#modal-card').classList.remove('theme-gallery');
   $('#modal-card').classList.remove('theme-gallery-background');
+  $('#modal-card').classList.remove('win-result-navy');
   $('#modal-title').classList.remove('theme-gallery-title');
   $('#modal-backdrop').classList.toggle('win-result-backdrop', variant === 'win-result');
   $('#modal-card').classList.toggle('win-result-card', variant === 'win-result');
@@ -740,7 +820,7 @@ function setModal(title, kicker, html, variant = '') {
   modalContent.innerHTML = html;
   modalBackdrop.classList.remove('hidden');
   document.body.classList.add('modal-open');
-  if (variant === 'win-result') modalContent.querySelector('[data-modal-action="new"]')?.focus();
+  if (variant === 'win-result') modalContent.querySelector('.win-result')?.focus();
   else if (variant === 'win-streak') modalContent.querySelector('[data-modal-action="continue"]')?.focus();
   else if (variant === 'daily-calendar') $('#modal-close').focus();
   else $('#modal-close').focus();
@@ -1025,6 +1105,7 @@ function completeWin() {
       y: (bounds.top / window.innerHeight) * 100,
     };
   });
+  clearWinResultTransition();
   winResultSoundPlayed = false;
   clearTableauTutorial();
   const profile = readProfile();
@@ -1065,46 +1146,65 @@ function completeWin() {
   `, 'win-streak');
   $('.game-shell').classList.add('won');
   clearTimeout(winStreakTimer);
-  winStreakTimer = setTimeout(() => showWinResult(winNewBest), 4800);
+  winStreakTimer = setTimeout(() => showWinResult(winNewBest), WIN_RESULT_START_DELAY_MS);
 }
 
 function showWinResult(newBest) {
   clearTimeout(winStreakTimer);
   winStreakTimer = null;
+  clearWinResultTransition();
   if (!winResultSoundPlayed) {
     winResultSoundPlayed = true;
-    audio.play('win');
+    audio.play('win', WIN_RESULT_SOUND_DELAY_SECONDS);
   }
-  const scoreText = String(game.state.score);
-  let scoreTwos = 0;
-  const scoreDisplay = /^[235]+$/.test(scoreText)
-    ? `<span class="win-result-score-sprites" aria-hidden="true">${[...scoreText].map((digit) => {
-      let file;
-      let glyph = digit;
-      if (digit === '2') {
-        glyph = `2-${scoreTwos % 2 === 0 ? 'a' : 'b'}`;
-        file = `win-result-score-digit-${glyph}-reference.png`;
-        scoreTwos += 1;
-      } else {
-        file = `win-result-score-digit-${digit}-reference.png`;
-      }
-      return `<img src="/assets/ui/${file}" alt="" data-source-digit="${digit}" data-source-glyph="${glyph}">`;
-    }).join('')}</span><strong class="visually-hidden">${scoreText}</strong>`
-    : `<strong class="win-result-score-value">${scoreText}</strong>`;
+  const finalScore = Math.max(0, Math.round(game.state.score));
+  const startScore = Math.max(0, finalScore - WIN_RESULT_SCORE_DELTA);
   setModal('You win!', '', `
-    <div class="win-result" aria-label="You win">
+    <div class="win-result" aria-label="You win" tabindex="-1" data-result-stage="intro">
+      <img class="win-result-crown-intro" src="/assets/ui/win-result-crown-intro-reference.png" alt="">
+      <img class="win-result-title-intro" src="/assets/ui/win-result-title-intro-reference.png" alt="">
       <img class="win-result-banner" src="/assets/ui/win-banner-reference.png" alt="">
       <img class="win-result-score-background" src="/assets/ui/win-result-background-reference.png" alt="">
-      <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span>${scoreDisplay}</div>
+      <div class="win-result-score"><img class="win-result-score-label" src="/assets/ui/win-result-score-label-reference.png" alt=""><span class="visually-hidden">Score</span><strong class="win-result-score-value" data-score-countup>${startScore}</strong></div>
       ${newBest ? '<img class="win-result-best" src="/assets/ui/win-best-reference.png" alt="Best">' : ''}
       <p class="win-result-percent"><img src="/assets/ui/win-result-percent-reference.png" alt=""><span class="visually-hidden">You defeated 86% of players!</span></p>
       <div class="win-result-stats"><p><img class="win-result-time-label" src="/assets/ui/win-result-time-label-reference.png" alt=""><span class="visually-hidden">Time</span><b>${formatTime(game.state.seconds)}</b></p><p><img class="win-result-moves-label" src="/assets/ui/win-result-moves-label-reference.png" alt=""><span class="visually-hidden">Moves</span><b>${game.state.moves}</b></p></div>
       <div class="win-result-trophy"><img src="/assets/ui/win-trophy-reference.png" alt=""><span>${readProfile().wins}</span></div>
-      <button class="win-result-new" type="button" data-modal-action="new" aria-label="New Deal"><img src="/assets/ui/win-new-deal-reference.png" alt=""></button>
+      <button class="win-result-new" type="button" data-modal-action="new" aria-label="New Deal" disabled><img src="/assets/ui/win-new-deal-reference.png" alt=""></button>
       <span class="win-result-home-indicator" aria-hidden="true"></span>
     </div>
   `, 'win-result');
   $('.game-shell').classList.add('won');
+  const result = $('.win-result');
+  scheduleWinResultStage(result, WIN_RESULT_TITLE_DELAY_MS, 'title', () => {
+    result.classList.add('is-title-visible');
+    $('#modal-backdrop').classList.add('win-result-navy');
+    $('#modal-card').classList.add('win-result-navy');
+  });
+  scheduleWinResultStage(result, WIN_RESULT_BANNER_DELAY_MS, 'banner', () => {
+    result.classList.add('is-banner-visible');
+    animateWinResultScore(result, finalScore);
+  });
+  scheduleWinResultStage(result, WIN_RESULT_SUMMARY_DELAY_MS, 'summary', () => {
+    result.classList.add('is-summary-visible');
+  });
+  scheduleWinResultStage(result, WIN_RESULT_TIME_DELAY_MS, 'time', () => {
+    result.classList.add('is-time-visible');
+  });
+  scheduleWinResultStage(result, WIN_RESULT_MOVES_DELAY_MS, 'moves', () => {
+    result.classList.add('is-moves-visible');
+  });
+  scheduleWinResultStage(result, WIN_RESULT_TROPHY_DELAY_MS, 'trophy', () => {
+    result.classList.add('is-trophy-visible');
+  });
+  scheduleWinResultStage(result, WIN_RESULT_ACTION_DELAY_MS, 'action', () => {
+    result.classList.add('is-action-visible');
+    const newDeal = result.querySelector('.win-result-new');
+    if (newDeal) {
+      newDeal.disabled = false;
+      newDeal.focus();
+    }
+  });
 }
 
 function handleStock() {
@@ -1124,6 +1224,10 @@ function handleStock() {
 
 function doNewGame(restart = false) {
   cancelAutoCollect();
+  clearTimeout(winStreakTimer);
+  winStreakTimer = null;
+  clearWinResultTransition();
+  winResultSoundPlayed = false;
   clearTimeout(autoHintTimer);
   autoHintTimer = null;
   clearTableauTutorial();
