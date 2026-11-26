@@ -1516,8 +1516,16 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await page.evaluate(() => {
     window.gameAudioCues = [];
     window.winCascadeStart = null;
+    window.winCascadeStartCard = null;
     document.addEventListener('animationstart', (event) => {
-      if (event.animationName === 'win-cascade-card' && window.winCascadeStart === null) window.winCascadeStart = performance.now();
+      if (event.animationName === 'win-cascade-card' && window.winCascadeStart === null) {
+        const animation = event.target.getAnimations()[0];
+        window.winCascadeStart = performance.now() - Number(animation.currentTime || 0);
+        window.winCascadeStartCard = {
+          foundationIndex: Number(event.target.dataset.foundationIndex),
+          rank: Number(event.target.dataset.rank),
+        };
+      }
     }, true);
     const audio = window.solitaireAudio;
     const play = audio.play.bind(audio);
@@ -1531,11 +1539,52 @@ test('winning shows a result card and records a completed daily challenge', asyn
 
   await expect(page.locator('.win-streak-backdrop')).toBeVisible();
   await page.waitForFunction(() => window.winCascadeStart !== null);
+  const cascadeStartState = await page.evaluate(() => {
+    const screen = document.querySelector('.win-streak-screen').getBoundingClientRect();
+    const foundations = [...document.querySelectorAll('.foundation-slot')].map((slot) => {
+      const bounds = slot.getBoundingClientRect();
+      return { left: bounds.left, top: bounds.top };
+    });
+    const cards = [...document.querySelectorAll('.win-cascade-card')].map((card) => ({
+      foundationIndex: Number(card.dataset.foundationIndex),
+      rank: Number(card.dataset.rank),
+      delay: Number.parseFloat(card.style.getPropertyValue('--cascade-delay')),
+      fromX: Number.parseFloat(card.style.getPropertyValue('--cascade-from-x')),
+      fromY: Number.parseFloat(card.style.getPropertyValue('--cascade-from-y')),
+      opacity: Number.parseFloat(getComputedStyle(card).opacity),
+    }));
+    return { screen: { left: screen.left, top: screen.top, width: screen.width, height: screen.height }, foundations, cards };
+  });
+  expect(await page.evaluate(() => window.winCascadeStartCard)).toEqual({ foundationIndex: 3, rank: 13 });
+  expect(cascadeStartState.cards).toHaveLength(52);
+  expect(cascadeStartState.cards.every(({ opacity }) => opacity === 1)).toBe(true);
+  for (const card of cascadeStartState.cards) {
+    const origin = cascadeStartState.foundations[card.foundationIndex];
+    expect(card.fromX).toBeCloseTo(((origin.left - cascadeStartState.screen.left) / cascadeStartState.screen.width) * 100, 2);
+    expect(card.fromY).toBeCloseTo(((origin.top - cascadeStartState.screen.top) / cascadeStartState.screen.height) * 100, 2);
+  }
+  const cascadeDelays = await page.locator('.win-cascade-card').evaluateAll((cards) => {
+    const delay = (foundationIndex, rank) => Number.parseFloat(cards.find((card) => Number(card.dataset.foundationIndex) === foundationIndex && Number(card.dataset.rank) === rank).style.getPropertyValue('--cascade-delay'));
+    return [[3, 13], [3, 12], [3, 1], [2, 13], [1, 13], [0, 13], [0, 1]].map(([foundationIndex, rank]) => delay(foundationIndex, rank));
+  });
+  expect(cascadeDelays).toEqual([0, 60, 720, 900, 1680, 2420, 3140]);
+  const foundationFlightSchedule = await page.locator('.win-cascade-card').evaluateAll((cards) => {
+    const suitStartDelays = [2420, 1680, 900, 0];
+    return cards.map((card) => {
+      const foundationIndex = Number(card.dataset.foundationIndex);
+      const rank = Number(card.dataset.rank);
+      const actualDelay = Number.parseFloat(card.style.getPropertyValue('--cascade-delay'));
+      const expectedDelay = suitStartDelays[foundationIndex] + (13 - rank) * 60;
+      return { foundationIndex, rank, actualDelay, expectedDelay };
+    });
+  });
+  expect(foundationFlightSchedule).toHaveLength(52);
+  expect(foundationFlightSchedule.every(({ actualDelay, expectedDelay }) => actualDelay === expectedDelay)).toBe(true);
   const timelineDirectory = 'test-results/win-streak-timeline';
   mkdirSync(timelineDirectory, { recursive: true });
   const timelineStart = await page.evaluate(() => window.winCascadeStart);
   const timelineSamples = [];
-  for (let index = 0; index <= 35; index += 1) {
+  for (let index = 0; index <= 38; index += 1) {
     const targetMs = index * 100;
     const elapsedMs = await page.evaluate((start) => performance.now() - start, timelineStart);
     if (elapsedMs < targetMs) await page.waitForTimeout(targetMs - elapsedMs);
@@ -1548,7 +1597,7 @@ test('winning shows a result card and records a completed daily challenge', asyn
       expect(stillRunning).toBeGreaterThan(0);
     }
   }
-  writeFileSync(`${timelineDirectory}/manifest.json`, JSON.stringify({ viewport: [390, 844], sourceStartSeconds: 303.5, samples: timelineSamples }, null, 2));
+  writeFileSync(`${timelineDirectory}/manifest.json`, JSON.stringify({ viewport: [390, 844], sourceStartSeconds: 303.2, samples: timelineSamples }, null, 2));
 
   await expect(page.locator('.win-streak-title')).toHaveAttribute('alt', 'winning streak');
   await expect.poll(() => page.locator('.win-streak-title').evaluate((image) => image.complete && image.naturalWidth === 680 && image.naturalHeight === 126)).toBe(true);
@@ -1997,7 +2046,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v79');
+  expect(cacheNames).toContain('solitaire-master-v81');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

@@ -1016,6 +1016,15 @@ function completeWin() {
   winShown = true;
   winCascadeClearsFoundations = true;
   renderTopRow();
+  const cascadeWidth = Math.min(window.innerWidth, window.innerHeight * 0.460417, 442);
+  const cascadeLeft = (window.innerWidth - cascadeWidth) / 2;
+  const foundationOrigins = [...document.querySelectorAll('.foundation-slot')].map((slot) => {
+    const bounds = slot.getBoundingClientRect();
+    return {
+      x: ((bounds.left - cascadeLeft) / cascadeWidth) * 100,
+      y: (bounds.top / window.innerHeight) * 100,
+    };
+  });
   winResultSoundPlayed = false;
   clearTableauTutorial();
   const profile = readProfile();
@@ -1027,21 +1036,22 @@ function completeWin() {
   winNewBest = game.state.score > previousBest;
   // The source fan is grouped left-to-right by Hearts, Diamonds, Spades, then Clubs.
   const fanSuitOrder = [1, 2, 0, 3];
+  // Source frames 303.2–307.0 show Clubs, Diamonds, Hearts, then Spades, about 60 ms per card.
+  const cascadeSuitStartDelay = [2420, 1680, 900, 0];
+  const cascadeRankStepMs = 60;
   const cascade = fanSuitOrder.flatMap((foundationIndex, suitIndex) => game.state.foundations[foundationIndex].map((card, rankIndex) => {
     const asset = cardFaceAssetName(card);
     const rankProgress = rankIndex / 12;
-    // The first measured neutral pixels in the 303.5 s source frame are centered at (241, 320)
-    // in the 390 px comparison viewport; use that point as the shared cascade origin.
-    const fromX = 55;
-    const fromY = 36.3;
+    const origin = foundationOrigins[foundationIndex];
+    const cascadeRankIndex = 12 - rankIndex;
     const toX = -17 + suitIndex * 25 + rankProgress * 35;
     const lowRankYStack = suitIndex === 0 ? 0 : (1 - rankProgress) * 7;
     const lowerLeftFanCurve = suitIndex === 0 ? Math.sin(rankProgress * Math.PI) * 4 : 0;
     const toY = 72.5 - suitIndex * 9 - rankProgress * 21 + lowRankYStack + lowerLeftFanCurve;
     const rotation = ((rankIndex % 5) - 2) * 2.2 + (suitIndex - 1.5) * 2;
-    const delay = rankIndex * 100 + suitIndex * 250;
+    const delay = cascadeSuitStartDelay[foundationIndex] + cascadeRankIndex * cascadeRankStepMs;
     const order = suitIndex * 13 + rankIndex;
-    return `<img class="win-cascade-card" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${fromX}%;--cascade-from-y:${fromY}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
+    return `<img class="win-cascade-card" data-foundation-index="${foundationIndex}" data-rank="${card.rank}" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${origin.x}%;--cascade-from-y:${origin.y}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
   })).join('');
   setModal('Winning streak', '', `
     <div class="win-streak-screen" aria-label="Winning streak">
@@ -1055,7 +1065,7 @@ function completeWin() {
   `, 'win-streak');
   $('.game-shell').classList.add('won');
   clearTimeout(winStreakTimer);
-  winStreakTimer = setTimeout(() => showWinResult(winNewBest), 4500);
+  winStreakTimer = setTimeout(() => showWinResult(winNewBest), 4800);
 }
 
 function showWinResult(newBest) {

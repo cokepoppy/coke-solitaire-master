@@ -1,6 +1,6 @@
 # Winning streak source-frame comparison
 
-This review compares the win-streak transition from 303.500–307.000 seconds in the gameplay recording with the mobile-web animation. The source's first fan pixels appear at 303.500 s, the title and reward arrive during the next half-second, and the cards settle by 307.000 s. The web transition now starts the fan at the measured source point, stages cards by suit and rank, and finishes at 3.5 seconds; the result transition begins 4.5 seconds after the fan starts. It uses one source win, so the observed scatter is a visual sample rather than a rule for every deal.
+This is the historical source-frame and fan-endpoint fit from 2026-11-26. The source-driven foundation origins and King-to-Ace suit timing calibrated on 2026-11-27 are documented in the [current flight timing audit](../win-streak-foundation-flight-2026-11-27/README.md). Measurements below describe the earlier shared-origin animation and its endpoint fit; the recorded scatter remains a visual sample from one completed deal, not a rule for every deal.
 
 ## Reproduce
 

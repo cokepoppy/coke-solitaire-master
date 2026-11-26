@@ -10,7 +10,16 @@ import numpy as np
 from PIL import Image
 
 
-def load_mask(path: Path, width: int, height: int, *, source: bool, top: int, bottom: int) -> np.ndarray:
+def load_mask(
+    path: Path,
+    width: int,
+    height: int,
+    *,
+    source: bool,
+    top: int,
+    bottom: int,
+    exclude_fixed_overlays: bool,
+) -> np.ndarray:
     with Image.open(path) as image:
         rgb = image.convert("RGB")
         if source:
@@ -24,19 +33,25 @@ def load_mask(path: Path, width: int, height: int, *, source: bool, top: int, bo
 
     pixels = np.asarray(rgb, dtype=np.float32) / 255
     region = pixels[top:bottom]
-    return (region.mean(axis=2) > 0.18) & ((region.max(axis=2) - region.min(axis=2)) < 0.20)
+    mask = (region.mean(axis=2) > 0.18) & ((region.max(axis=2) - region.min(axis=2)) < 0.20)
+    if exclude_fixed_overlays:
+        overlay = (42, 270, 350, 400)
+        x1, y1, x2, y2 = overlay
+        mask[max(y1 - top, 0):min(y2 - top, bottom - top), x1:x2] = False
+    return mask
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source_frames", type=Path, help="AVFoundation extraction directory")
     parser.add_argument("web_frames", type=Path, help="test-results/win-streak-timeline directory")
-    parser.add_argument("--start", type=float, default=303.5, help="source time aligned to web animation start")
+    parser.add_argument("--start", type=float, default=303.2, help="source time aligned to web animation start")
     parser.add_argument("--end", type=float, default=307.0, help="last source time to compare")
     parser.add_argument("--width", type=int, default=390)
     parser.add_argument("--height", type=int, default=844)
     parser.add_argument("--top", type=int, default=320)
     parser.add_argument("--bottom", type=int, default=680)
+    parser.add_argument("--exclude-fixed-overlays", action="store_true", help="exclude the title/reward overlay rectangle from both masks")
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args()
 
@@ -49,7 +64,11 @@ def main() -> None:
 
     web_frames = []
     for sample in samples:
-        web_frames.append((float(sample["actualMs"]), load_mask(args.web_frames / sample["filename"], args.width, args.height, source=False, top=args.top, bottom=args.bottom)))
+        web_frames.append((float(sample["actualMs"]), load_mask(
+            args.web_frames / sample["filename"], args.width, args.height,
+            source=False, top=args.top, bottom=args.bottom,
+            exclude_fixed_overlays=args.exclude_fixed_overlays,
+        )))
 
     rows = []
     for frame in sorted(args.source_frames.glob("frame-*-req-*-pts-*.png")):
@@ -59,7 +78,10 @@ def main() -> None:
         source_seconds = float(match.group(1))
         if source_seconds < args.start or source_seconds > args.end:
             continue
-        source_mask = load_mask(frame, args.width, args.height, source=True, top=args.top, bottom=args.bottom)
+        source_mask = load_mask(
+            frame, args.width, args.height, source=True, top=args.top, bottom=args.bottom,
+            exclude_fixed_overlays=args.exclude_fixed_overlays,
+        )
         target_ms = (source_seconds - args.start) * 1000
         web_ms, web_mask = min(web_frames, key=lambda sample: abs(sample[0] - target_ms))
         union = source_mask | web_mask
@@ -78,11 +100,13 @@ def main() -> None:
     report = {
         "viewport": [args.width, args.height],
         "roiY": [args.top, args.bottom],
+        "fixedOverlayExcluded": args.exclude_fixed_overlays,
         "sourceIntervalSeconds": [args.start, args.end],
         "sampleCount": len(rows),
         "meanMaskIoU": float(np.mean([row["maskIoU"] for row in rows])),
         "neutralPixelCountMAE": float(np.mean([abs(row["sourceNeutralPixels"] - row["webNeutralPixels"]) for row in rows])),
         "checkpoints": checkpoints,
+        "rows": rows,
     }
     output = json.dumps(report, indent=2)
     print(output)
