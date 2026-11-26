@@ -117,10 +117,25 @@ try {
     return image?.complete && image.naturalWidth === 118 && image.naturalHeight === 177;
   });
 
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await page.evaluate(async () => {
+    const channel = new MessageChannel();
+    const complete = new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Optional asset cache timed out')), 30000);
+      channel.port1.onmessage = (event) => {
+        clearTimeout(timeout);
+        if (event.data?.complete) resolve();
+        else reject(new Error('Optional asset cache did not complete'));
+      };
+    });
+    navigator.serviceWorker.controller.postMessage({ type: 'PRECACHE_OPTIONAL_SHELL' }, [channel.port2]);
+    await complete;
+  });
+
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v91');
+    const shell = await caches.open('solitaire-master-solitaire-v92');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const recycleSample = await shell.match(`${location.origin}/solitaire/assets/audio/stock-recycle-reference.wav`);
     const recycledDrawSample = await shell.match(`${location.origin}/solitaire/assets/audio/draw-after-recycle-reference.wav`);
@@ -160,7 +175,7 @@ try {
   assert.equal(worker.sourceStockBackCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v91'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v92'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);

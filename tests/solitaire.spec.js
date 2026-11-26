@@ -2045,8 +2045,22 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.setViewportSize({ width: 320, height: 640 });
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller));
+  await page.evaluate(async () => {
+    const channel = new MessageChannel();
+    const complete = new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => reject(new Error('Optional asset cache timed out')), 30000);
+      channel.port1.onmessage = (event) => {
+        clearTimeout(timeout);
+        if (event.data?.complete) resolve();
+        else reject(new Error('Optional asset cache did not complete'));
+      };
+    });
+    navigator.serviceWorker.controller.postMessage({ type: 'PRECACHE_OPTIONAL_SHELL' }, [channel.port2]);
+    await complete;
+  });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v82');
+  expect(cacheNames).toContain('solitaire-master-v83');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
