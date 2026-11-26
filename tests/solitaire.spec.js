@@ -325,7 +325,7 @@ async function runSourceOpeningReplay(page) {
   await page.goto('/');
   const sourceMenuArt = await page.locator('.menu-source-art').boundingBox();
   expect(sourceMenuArt.x).toBeCloseTo(12.5, 0);
-  expect(sourceMenuArt.y).toBeCloseTo(151.5, 0);
+  expect(sourceMenuArt.y).toBeCloseTo(20.5, 0);
   expect(sourceMenuArt.width).toBe(36);
   expect(sourceMenuArt.height).toBe(37);
   await page.evaluate(() => {
@@ -375,7 +375,7 @@ async function runSourceOpeningReplay(page) {
   const sourceColumnOrigins = await page.locator('.pile-column').evaluateAll((columns) => columns.map((column) => Math.round(column.getBoundingClientRect().left * devicePixelRatio)));
   expect(sourceColumnOrigins).toEqual([8, 133, 258, 383, 508, 633, 758]);
   const sourceFoundationOrigins = await page.locator('.foundation-slot').evaluateAll((slots) => slots.map((slot) => [Math.round(slot.getBoundingClientRect().left * devicePixelRatio), Math.round(slot.getBoundingClientRect().top * devicePixelRatio)]));
-  expect(sourceFoundationOrigins).toEqual([[8, 429], [133, 429], [258, 429], [383, 429]]);
+  expect(sourceFoundationOrigins).toEqual([[8, 167], [133, 167], [258, 167], [383, 167]]);
   const foundationTop = await page.locator('.foundation-slot').first().evaluate((slot) => slot.getBoundingClientRect().top);
   expect(foundationTop).toBeLessThan(214.75);
   const sourceActionRow = page.locator('.action-row-reference-art');
@@ -400,7 +400,7 @@ async function runSourceOpeningReplay(page) {
   });
   const sourceTimerFrame = await page.locator('.timer-frame-source').boundingBox();
   expect(sourceTimerFrame.x).toBeCloseTo(160, 1);
-  expect(sourceTimerFrame.y).toBeCloseTo(145.2, 1);
+  expect(sourceTimerFrame.y).toBeCloseTo(14, 1);
   expect(sourceTimerFrame.width).toBe(160);
   expect(sourceTimerFrame.height).toBe(50);
   const sourceScorePanelColors = await page.locator('.stat:not(.time-stat)').evaluateAll((panels) => panels.map((panel) => getComputedStyle(panel).backgroundColor));
@@ -472,7 +472,7 @@ async function runSourceOpeningReplay(page) {
   expect(faceUpStackSpacing[0]).toBeCloseTo(47.5, 1);
   expect(faceUpStackSpacing[1]).toBeCloseTo(37, 1);
   const sourceCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
-  expect(sourceCardTops).toEqual([719, 814, 888]);
+  expect(sourceCardTops).toEqual([457, 552, 626]);
   const sourceCourtCardLefts = await page.locator('.pile-column:nth-child(4) > .card-face, .pile-column:nth-child(6) > .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().left * devicePixelRatio * 10) / 10));
   expect(sourceCourtCardLefts).toEqual([383, 383, 383, 633]);
   const finalBoard = await page.evaluate(() => ({
@@ -531,10 +531,10 @@ async function runSourceOpeningReplay(page) {
     return { score: bounds('#score-value'), moves: bounds('#moves-value') };
   });
   expect(sourceStatBounds.score.x).toBeCloseTo(112.7, 0);
-  expect(sourceStatBounds.score.y).toBeCloseTo(162.5, 0);
+  expect(sourceStatBounds.score.y).toBeCloseTo(31.5, 0);
   expect(sourceStatBounds.score.width).toBeCloseTo(20.9, 1);
   expect(sourceStatBounds.moves.x).toBeCloseTo(387.1, 0);
-  expect(sourceStatBounds.moves.y).toBeCloseTo(162.5, 0);
+  expect(sourceStatBounds.moves.y).toBeCloseTo(31.5, 0);
   expect(sourceStatBounds.moves.width).toBeCloseTo(10.5, 1);
   await expect(page.locator('.combo-feedback, .combo-good, .combo-great, .combo-amazing')).toHaveCount(0);
   const timeDisplay = page.locator('#time-value');
@@ -560,13 +560,13 @@ async function runSourceOpeningReplay(page) {
   await page.getByRole('button', { name: 'Undo move' }).click();
   await expect(page.locator('#moves-value')).toHaveText('2');
   const undoneCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
-  expect(undoneCardTops).toEqual([719, 814]);
+  expect(undoneCardTops).toEqual([457, 552]);
   await page.reload();
   await page.setViewportSize({ width: 442, height: 960 });
   await page.waitForTimeout(1450);
   await expect(page.locator('.pile-column[data-pile="3"] .card-face')).toHaveCount(2);
   const persistedCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
-  expect(persistedCardTops).toEqual([719, 814]);
+  expect(persistedCardTops).toEqual([457, 552]);
 }
 
 test.describe('source-sized visual comparison', () => {
@@ -584,7 +584,7 @@ test.describe('source-sized visual comparison', () => {
         image: card.querySelector('.card-face-art').getAttribute('src'),
       };
     });
-    expect(sourceBounds).toEqual({ x: 133, y: 679, image: '/assets/cards/queen-of-spades-reference.png' });
+    expect(sourceBounds).toEqual({ x: 133, y: 417, image: '/assets/cards/queen-of-spades-reference.png' });
     await page.screenshot({ path: 'test-results/source-initial-deal.png', fullPage: true });
   });
 
@@ -1935,7 +1935,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v72');
+  expect(cacheNames).toContain('solitaire-master-v73');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
