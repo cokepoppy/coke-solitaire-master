@@ -34,6 +34,19 @@ python3 tools/extract_win_result_text_assets.py /tmp/solitaire-win-source/frame-
 
 `win-result-background-reference.png` is the 884×153 continuation below the source banner (y=834–987). The score and optional Best badge vary by game, so `tools/extract_win_result_background.py` masks those two live areas and extends the surrounding low-frequency backdrop through them. The source-sized result screen positions this bridge behind the live score and exact label/badge sprites; the bridge is cached for offline play. Rebuild it from the same source frame with `python3 tools/extract_win_result_background.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui/win-result-background-reference.png`.
 
+`win-streak-thumb-reference.png` replaces the browser emoji on the winning-streak reward row with the source's white glove and gold badge. Its matte comes from the clean green-field region in the 304.500 s frame (PTS 4,677,120); RGB comes from the settled 307.000 s frame (PTS 4,715,520), after the transient horizontal flare has passed. Both frames are 884×1920 crops from the recorded gameplay video. Recreate the frames and sprite with:
+
+```sh
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 304.5 304.5 1 /tmp/solitaire-win-streak-flare
+swift tools/extract_video_window.swift research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 307 307 1 /tmp/solitaire-win-streak-settled
+python3 tools/extract_win_streak_thumb.py \
+  /tmp/solitaire-win-streak-flare/frame-00000-req-304.500000-pts-4677120.png \
+  /tmp/solitaire-win-streak-settled/frame-00000-req-307.000000-pts-4715520.png \
+  assets/ui/win-streak-thumb-reference.png
+```
+
+The transparent PNG keeps the source badge edges and excludes the one-frame flare and cards behind the final badge. It is part of the service-worker shell cache and source-art hash fixture.
+
 The 310-second result shows score `5223`; its large `5`, two separately sampled `2` glyphs, and `3` are alpha-keyed against the backdrop bridge and rendered at source pixel bounds. Scores composed only of the observed digits `2`, `3`, and `5` use these source sprites; other scores keep live text because the recording does not show their large result glyphs. Rebuild the four 51–53×94 PNGs with `python3 tools/extract_win_result_score_glyphs.py /tmp/solitaire-win-source/frame-00000-req-310.000000-pts-4761600.png assets/ui/win-result-background-reference.png assets/ui`.
 
 The crops are included in the service-worker shell cache. Fixed labels are source pixels; score, elapsed time, move count, and local trophy count remain live text/data. Their native-size placement and full-screen comparison are recorded in [the win-result pixel audit](../../research/solitaire-master/win-result-source-pixel-audit-2026-11-26/README.md) and [the frame ledger](../../docs/video-frame-audit.md#observed-win-result). The source shows `86%` and a trophy count of `2` in this one result; the ranking rule is unknown, and the web version uses 86% as the captured label plus a local win count.
