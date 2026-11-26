@@ -19,6 +19,7 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   page.on('pageerror', (error) => pageErrors.push(error.message));
 
   await page.addInitScript(() => {
+    if (location.protocol !== 'about:') localStorage.removeItem('solitaire-master-game-v1');
     window.initialDealStarts = [];
     window.initialDealFaceFlips = [];
     document.addEventListener('animationstart', (event) => {
@@ -1316,6 +1317,67 @@ test('a legal hinted card can be dragged to its destination', async ({ page }) =
   await touch.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await touch.detach();
   await expect(page.locator('#moves-value')).toHaveText(String(movesBefore + 1));
+});
+
+test('tapping a face-up card moves its full valid tableau sequence', async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem('solitaire-master-tableau-tutorial-v1', 'shown'));
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const remaining = new Map(game.state.seedDeck.map((card) => [card.id, { ...card, faceUp: false }]));
+    const take = (suit, rank, faceUp) => {
+      const id = `${suit}-${rank}`;
+      const card = remaining.get(id);
+      if (!card) throw new Error(`Missing fixture card ${id}`);
+      remaining.delete(id);
+      return { ...card, faceUp };
+    };
+    game.state.waste = [];
+    game.state.foundations = [[], [], [], []];
+    game.state.tableau = [
+      [take('♠', 9, false), take('♣', 12, true), take('♥', 11, true), take('♣', 10, true)],
+      [take('♦', 13, true)],
+      [], [], [], [], [],
+    ];
+    game.state.stock = [...remaining.values()];
+    game.state.moves = 0;
+    game.state.score = 0;
+    game.state.history = [];
+    game.state.selected = null;
+    game.state.hint = null;
+    game.state.won = false;
+    game.state.autoCollect = false;
+    game.save();
+  });
+  await page.reload();
+
+  await page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]').click({ position: { x: 8, y: 8 } });
+  await expect(page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]')).toHaveClass(/is-selected/);
+  await page.locator('#tableau .pile-column[data-pile="1"] .playing-card[data-index="0"]').click();
+  await expect(page.locator('#moves-value')).toHaveText('1');
+  await expect(page.locator('#score-value')).toHaveText('10');
+
+  const movedState = await page.evaluate(() => ({
+    source: window.solitaireGame.state.tableau[0].map((card) => ({ id: card.id, faceUp: card.faceUp })),
+    destination: window.solitaireGame.state.tableau[1].map((card) => card.id),
+    cards: [...window.solitaireGame.state.stock, ...window.solitaireGame.state.waste,
+      ...window.solitaireGame.state.foundations.flat(), ...window.solitaireGame.state.tableau.flat()],
+  }));
+  expect(movedState.source).toEqual([{ id: '♠-9', faceUp: true }]);
+  expect(movedState.destination).toEqual(['♦-13', '♣-12', '♥-11', '♣-10']);
+  expect(movedState.cards).toHaveLength(52);
+  expect(new Set(movedState.cards.map((card) => card.id)).size).toBe(52);
+
+  await page.getByRole('button', { name: 'Undo move' }).click();
+  await expect(page.locator('#moves-value')).toHaveText('0');
+  const undoneState = await page.evaluate(() => window.solitaireGame.state.tableau.map((pile) => pile.map((card) => ({ id: card.id, faceUp: card.faceUp }))));
+  expect(undoneState[0]).toEqual([
+    { id: '♠-9', faceUp: false },
+    { id: '♣-12', faceUp: true },
+    { id: '♥-11', faceUp: true },
+    { id: '♣-10', faceUp: true },
+  ]);
+  expect(undoneState[1]).toEqual([{ id: '♦-13', faceUp: true }]);
 });
 
 test('the daily deal is repeatable and the game restores on reload', async ({ page }) => {
