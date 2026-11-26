@@ -438,14 +438,13 @@ async function runSourceOpeningReplay(page) {
   await expect(revealedQueen.locator('.card-face-art')).toHaveAttribute('src', /queen-of-clubs-reference\.png$/);
   await expect(revealedQueen).toHaveClass(/card-reveal-glow/);
   const revealGlowMotion = await revealedQueen.evaluate((card) => {
-    const animation = card.getAnimations({ subtree: true }).find((candidate) => candidate.animationName === 'card-reveal-glow');
-    if (!animation) throw new Error('The revealed-card glow animation did not start.');
-    animation.pause();
-    animation.currentTime = 50;
+    const animations = card.getAnimations({ subtree: true }).filter((candidate) => candidate.animationName === 'card-reveal-glow');
+    if (animations.length !== 2) throw new Error(`Expected two revealed-card glow layers, found ${animations.length}.`);
+    for (const animation of animations) { animation.pause(); animation.currentTime = 50; }
     const style = getComputedStyle(card, '::after');
-    return { animationName: style.animationName, duration: style.animationDuration, opacity: Number.parseFloat(style.opacity), blendMode: style.mixBlendMode, currentTime: animation.currentTime };
+    return { animationName: style.animationName, duration: style.animationDuration, opacity: Number.parseFloat(style.opacity), blendMode: style.mixBlendMode, filter: style.filter, animationCount: animations.length, currentTime: animations[0].currentTime };
   });
-  expect(revealGlowMotion).toMatchObject({ animationName: 'card-reveal-glow', duration: '0.42s', blendMode: 'color', currentTime: 50 });
+  expect(revealGlowMotion).toMatchObject({ animationName: 'card-reveal-glow', duration: '0.42s', blendMode: 'multiply', filter: 'opacity(0.55)', animationCount: 2, currentTime: 50 });
   expect(revealGlowMotion.opacity).toBeGreaterThan(0.9);
   const firstMovePositions = await page.evaluate(() => {
     const moved = document.querySelector('.pile-column[data-pile="0"] .card-face[data-card-id="♣-4"]');
@@ -457,14 +456,13 @@ async function runSourceOpeningReplay(page) {
   });
   expect(firstMovePositions).toEqual([[8, 470], [633, 482]]);
   await page.screenshot({ path: 'test-results/source-opening-first-move.png', fullPage: true });
-  const noGlowStyle = await page.addStyleTag({ content: '.card-face.card-reveal-glow::after { display: none !important; }' });
+  const noGlowStyle = await page.addStyleTag({ content: '.card-face.card-reveal-glow::before, .card-face.card-reveal-glow::after { opacity: 0 !important; }' });
   await page.screenshot({ path: 'test-results/source-opening-first-move-no-glow.png', fullPage: true });
   await noGlowStyle.evaluate((style) => style.remove());
   await revealedQueen.evaluate((card) => {
-    const animation = card.getAnimations({ subtree: true }).find((candidate) => candidate.animationName === 'card-reveal-glow');
-    animation.currentTime = 430;
+    for (const animation of card.getAnimations({ subtree: true }).filter((candidate) => candidate.animationName === 'card-reveal-glow')) animation.currentTime = 430;
   });
-  await expect.poll(() => revealedQueen.evaluate((card) => Number.parseFloat(getComputedStyle(card, '::after').opacity))).toBe(0);
+  await expect.poll(() => revealedQueen.evaluate((card) => [getComputedStyle(card, '::before').opacity, getComputedStyle(card, '::after').opacity])).toEqual(['0', '0']);
 
   await page.evaluate(() => {
     window.sourceMoveAnimations = [];
@@ -1965,7 +1963,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v74');
+  expect(cacheNames).toContain('solitaire-master-v75');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

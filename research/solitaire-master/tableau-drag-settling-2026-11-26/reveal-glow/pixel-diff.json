@@ -9,25 +9,25 @@
   },
   "rendered": {
     "path": "web-card-13.133333.png",
-    "sha256": "fc058dbfb02e17c830f45607e9cc35e6a9e735905e9bc4c9d060cfd5541bd3ce"
+    "sha256": "f07715c08669bee816821a46cf4509acd3bb2ddf5ffe7a3ecd0b6811e282d515"
   },
   "comparison": {
     "rescaled": false,
     "ignored_rectangles": [],
     "all_pixels": {
-      "mean_absolute_rgb_error": 33.402854,
-      "exact_rgb_pixel_fraction": 0.00122807,
+      "mean_absolute_rgb_error": 28.847123,
+      "exact_rgb_pixel_fraction": 0.00133333,
       "pixel_count": 28500
     },
     "after_ignored_rectangles": {
-      "mean_absolute_rgb_error": 33.402854,
-      "exact_rgb_pixel_fraction": 0.00122807,
+      "mean_absolute_rgb_error": 28.847123,
+      "exact_rgb_pixel_fraction": 0.00133333,
       "pixel_count": 28500
     },
     "regions": {
       "card": {
-        "mean_absolute_rgb_error": 33.402854,
-        "exact_rgb_pixel_fraction": 0.00122807,
+        "mean_absolute_rgb_error": 28.847123,
+        "exact_rgb_pixel_fraction": 0.00133333,
         "pixel_count": 28500
       }
     },

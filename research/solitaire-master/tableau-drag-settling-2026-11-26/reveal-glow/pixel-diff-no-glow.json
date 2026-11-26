@@ -9,24 +9,24 @@
   },
   "rendered": {
     "path": "web-card-no-glow-13.133333.png",
-    "sha256": "4d99867e8b10358f87ef28c3576b4da034d8d02772491665b6a6b7c87741c8bd"
+    "sha256": "ea14b5f49bba4641ab6d261871a6f0306f0bb84b603f825ae2c4a7d3f7f6812f"
   },
   "comparison": {
     "rescaled": false,
     "ignored_rectangles": [],
     "all_pixels": {
-      "mean_absolute_rgb_error": 34.568023,
+      "mean_absolute_rgb_error": 34.568281,
       "exact_rgb_pixel_fraction": 0.00491228,
       "pixel_count": 28500
     },
     "after_ignored_rectangles": {
-      "mean_absolute_rgb_error": 34.568023,
+      "mean_absolute_rgb_error": 34.568281,
       "exact_rgb_pixel_fraction": 0.00491228,
       "pixel_count": 28500
     },
     "regions": {
       "card": {
-        "mean_absolute_rgb_error": 34.568023,
+        "mean_absolute_rgb_error": 34.568281,
         "exact_rgb_pixel_fraction": 0.00491228,
         "pixel_count": 28500
       }
