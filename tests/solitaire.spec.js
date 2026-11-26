@@ -240,6 +240,59 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   await expect(tip).toBeHidden();
 });
 
+test('a long king-to-two tableau stack keeps the bottom card clear of the action bar', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    const cards = [...game.state.stock, ...game.state.waste, ...game.state.foundations.flat(), ...game.state.tableau.flat()];
+    const sequence = Array.from({ length: 12 }, (_, index) => {
+      const rank = 13 - index;
+      const suit = index % 2 === 0 ? (index % 4 === 0 ? '♠' : '♣') : (index % 4 === 1 ? '♥' : '♦');
+      const card = cards.find((candidate) => candidate.suit === suit && candidate.rank === rank);
+      if (!card) throw new Error(`Missing ${rank}${suit}`);
+      return { ...card, faceUp: true };
+    });
+    const used = new Set(sequence.map((card) => card.id));
+    game.state.stock = cards.filter((card) => !used.has(card.id)).map((card) => ({ ...card, faceUp: false }));
+    game.state.waste = [];
+    game.state.foundations = [[], [], [], []];
+    game.state.tableau = [sequence, [], [], [], [], [], []];
+    game.state.won = false;
+    game.state.history = [];
+    game.state.selected = null;
+    game.save();
+  });
+  await page.reload();
+  await page.waitForTimeout(1400);
+
+  const measureLongStack = () => page.evaluate(() => {
+    const bottomCard = document.querySelector('#tableau .pile-column[data-pile="0"] .playing-card:last-child');
+    const firstCard = document.querySelector('#tableau .pile-column[data-pile="0"] .playing-card:first-child');
+    const secondCard = document.querySelector('#tableau .pile-column[data-pile="0"] .playing-card:nth-child(2)');
+    const actionBar = document.querySelector('.action-bar');
+    const card = bottomCard.getBoundingClientRect();
+    const first = firstCard.getBoundingClientRect();
+    const second = secondCard.getBoundingClientRect();
+    const actions = actionBar.getBoundingClientRect();
+    return { cardBottom: card.bottom, actionTop: actions.top, cardHeight: card.height, stackStep: second.top - first.top };
+  });
+  const layout = await measureLongStack();
+  expect(layout.cardHeight).toBeGreaterThan(70);
+  expect(layout.cardBottom).toBeLessThanOrEqual(layout.actionTop - 2);
+  expect(layout.stackStep).toBeGreaterThanOrEqual(20);
+  await page.screenshot({ path: 'test-results/long-tableau-stack.png' });
+
+  await page.setViewportSize({ width: 390, height: 667 });
+  await expect.poll(async () => {
+    const resized = await measureLongStack();
+    return resized.cardBottom <= resized.actionTop - 2;
+  }).toBe(true);
+  expect((await measureLongStack()).stackStep).toBeGreaterThanOrEqual(20);
+  await expect(page.locator('#tableau .pile-column[data-pile="0"] .playing-card:last-child')).toHaveAttribute('data-card-id', '♦-2');
+  await page.locator('#tableau .pile-column[data-pile="0"] .playing-card:last-child').click({ position: { x: 8, y: 8 } });
+  await expect(page.locator('#tableau .pile-column[data-pile="0"] .playing-card:last-child')).toHaveClass(/is-selected/);
+});
+
 async function runSourceOpeningReplay(page) {
   await page.setViewportSize({ width: 442, height: 960 });
   await page.goto('/');

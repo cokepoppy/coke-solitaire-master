@@ -342,6 +342,25 @@ function renderTableau() {
   const cardHeight = Math.min(64, window.innerWidth * 0.1337) * 1.5;
   const faceDownStep = cardHeight * 0.139;
   const faceUpStep = cardHeight * 0.484;
+  const tableauTop = tableauRoot.getBoundingClientRect().top;
+  const actionBarTop = $('.action-bar').getBoundingClientRect().top;
+  const maxStackOffset = game.state.tableau.reduce((maxOffset, pile) => {
+    let offset = 0;
+    let pileMaxOffset = 0;
+    let previousCard = null;
+    pile.forEach((card, index) => {
+      offset = Number.isFinite(card.tableauOffsetRatio)
+        ? card.tableauOffsetRatio * cardHeight
+        : index === 0 ? 0 : offset + (previousCard.faceUp ? faceUpStep : faceDownStep);
+      pileMaxOffset = Math.max(pileMaxOffset, offset);
+      previousCard = card;
+    });
+    return Math.max(maxOffset, pileMaxOffset);
+  }, 0);
+  const availableStackOffset = Math.max(0, actionBarTop - tableauTop - cardHeight - 8);
+  const stackScale = maxStackOffset > availableStackOffset && maxStackOffset > 0
+    ? availableStackOffset / maxStackOffset
+    : 1;
   tableauRoot.innerHTML = game.state.tableau.map((pile, column) => {
     const hintTarget = game.state.hint?.target?.zone === 'tableau' && game.state.hint.target.pile === column;
     const movableTarget = game.state.movableHighlight && game.state.selected && game.canMove(game.state.selected, { zone: 'tableau', pile: column });
@@ -349,9 +368,10 @@ function renderTableau() {
     let previousCard = null;
     const cards = pile.map((card, index) => {
       const defaultOffset = index === 0 ? 0 : previousOffset + (previousCard.faceUp ? faceUpStep : faceDownStep);
-      const offset = Number.isFinite(card.tableauOffsetRatio) ? card.tableauOffsetRatio * cardHeight : defaultOffset;
+      const rawOffset = Number.isFinite(card.tableauOffsetRatio) ? card.tableauOffsetRatio * cardHeight : defaultOffset;
+      const offset = rawOffset * stackScale;
       const dealOrder = index * 7 - (index * (index - 1)) / 2 + column - index;
-      previousOffset = offset;
+      previousOffset = rawOffset;
       previousCard = card;
       return renderCard(card, { zone: 'tableau', pile: column, index }, { offset, index: column * 2 + index, deal: animateDeal, dealOrder });
     }).join('');
@@ -373,6 +393,15 @@ function renderTableau() {
   }
   firstDeal = false;
 }
+
+let tableauResizeFrame = 0;
+window.addEventListener('resize', () => {
+  if (tableauResizeFrame) cancelAnimationFrame(tableauResizeFrame);
+  tableauResizeFrame = requestAnimationFrame(() => {
+    tableauResizeFrame = 0;
+    renderTableau();
+  });
+}, { passive: true });
 
 function updateChrome() {
   renderStatNumber($('#score-value'), game.state.score);
