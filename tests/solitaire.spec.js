@@ -271,12 +271,14 @@ test('the menu stays near the top without a reserved green band at any viewport 
   for (const width of [390, 980]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/');
-    const topbar = await page.locator('.game-topbar').evaluate((element) => ({
-      marginTop: Number.parseFloat(getComputedStyle(element).marginTop),
-      top: element.getBoundingClientRect().top,
+    const layout = await page.evaluate(() => ({
+      shellPaddingTop: Number.parseFloat(getComputedStyle(document.querySelector('.game-shell')).paddingTop),
+      topbarMarginTop: Number.parseFloat(getComputedStyle(document.querySelector('.game-topbar')).marginTop),
+      topbarTop: document.querySelector('.game-topbar').getBoundingClientRect().top,
     }));
-    expect(topbar.marginTop).toBe(8);
-    expect(topbar.top).toBeLessThan(30);
+    expect(layout.shellPaddingTop).toBe(10);
+    expect(layout.topbarMarginTop).toBe(8);
+    expect(layout.topbarTop).toBeLessThan(30);
   }
 });
 
@@ -1984,7 +1986,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v78');
+  expect(cacheNames).toContain('solitaire-master-v79');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

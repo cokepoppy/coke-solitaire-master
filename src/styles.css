@@ -63,7 +63,7 @@ button:focus-visible { outline: 3px solid #f4d67a; outline-offset: 2px; }
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
-  padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  padding: 10px max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
   overflow: hidden;
   background: transparent;
 }
