@@ -1267,7 +1267,11 @@ test('foundation placements show source feedback and sound only at observed comb
 });
 
 test('a legal hinted card can be dragged to its destination', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => localStorage.removeItem('solitaire-master-game-v1'));
   await page.goto('/');
+  await expect(page.locator('#modal-backdrop')).toHaveClass(/hidden/);
+  await expect(page.locator('.playing-card.card-enter')).toHaveCount(0);
   let hint = null;
   for (let attempt = 0; attempt < 28; attempt += 1) {
     await page.getByRole('button', { name: 'Show a hint' }).click();
