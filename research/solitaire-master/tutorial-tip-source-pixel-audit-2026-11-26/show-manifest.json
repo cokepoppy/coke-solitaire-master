@@ -1,0 +1,120 @@
+{
+  "crop" : {
+    "height" : 390,
+    "width" : 760,
+    "x" : 60,
+    "y" : 1300
+  },
+  "frame_count" : 12,
+  "frame_hash_type" : "SHA-256 of the saved PNG file bytes",
+  "frames" : [
+    {
+      "actual_seconds" : 13.4,
+      "filename" : "frame-00000-req-013.400000-pts-205824.png",
+      "index" : 0,
+      "png_sha256" : "b1adf0f3268152dee08f066418347c0853d39cb936b617c82044a1432fef445b",
+      "requested_seconds" : 13.4,
+      "source_pts" : 205824
+    },
+    {
+      "actual_seconds" : 13.416666666666666,
+      "filename" : "frame-00001-req-013.416667-pts-206080.png",
+      "index" : 1,
+      "png_sha256" : "b1adf0f3268152dee08f066418347c0853d39cb936b617c82044a1432fef445b",
+      "requested_seconds" : 13.416667,
+      "source_pts" : 206080
+    },
+    {
+      "actual_seconds" : 13.433333333333334,
+      "filename" : "frame-00002-req-013.433334-pts-206336.png",
+      "index" : 2,
+      "png_sha256" : "b1adf0f3268152dee08f066418347c0853d39cb936b617c82044a1432fef445b",
+      "requested_seconds" : 13.433334,
+      "source_pts" : 206336
+    },
+    {
+      "actual_seconds" : 13.449999999999999,
+      "filename" : "frame-00003-req-013.450001-pts-206592.png",
+      "index" : 3,
+      "png_sha256" : "b1adf0f3268152dee08f066418347c0853d39cb936b617c82044a1432fef445b",
+      "requested_seconds" : 13.450001,
+      "source_pts" : 206592
+    },
+    {
+      "actual_seconds" : 13.466666666666667,
+      "filename" : "frame-00004-req-013.466668-pts-206848.png",
+      "index" : 4,
+      "png_sha256" : "fba08b63761c73961c51437df8b5fbb8450325221423ec4c7bd17d0f951cb925",
+      "requested_seconds" : 13.466668,
+      "source_pts" : 206848
+    },
+    {
+      "actual_seconds" : 13.483333333333333,
+      "filename" : "frame-00005-req-013.483335-pts-207104.png",
+      "index" : 5,
+      "png_sha256" : "7c0040eab1a5df2f63c8db7bcb463f4bb06dd0793de2f5d824f88381cefa3afd",
+      "requested_seconds" : 13.483335,
+      "source_pts" : 207104
+    },
+    {
+      "actual_seconds" : 13.5,
+      "filename" : "frame-00006-req-013.500002-pts-207360.png",
+      "index" : 6,
+      "png_sha256" : "7be79e58f1cfae42249c8a36fe52c8788438f051c0f730d5d25fb4e7491f4931",
+      "requested_seconds" : 13.500002,
+      "source_pts" : 207360
+    },
+    {
+      "actual_seconds" : 13.516666666666667,
+      "filename" : "frame-00007-req-013.516669-pts-207616.png",
+      "index" : 7,
+      "png_sha256" : "5ba5f83089863b0aee5a52e8ac88465c0bc343c49944215615aacd7022f34c00",
+      "requested_seconds" : 13.516669,
+      "source_pts" : 207616
+    },
+    {
+      "actual_seconds" : 13.533333333333333,
+      "filename" : "frame-00008-req-013.533336-pts-207872.png",
+      "index" : 8,
+      "png_sha256" : "1aef921e210309aa258c92e033160c9f9f821068c470ff0e267eea2f4838cf37",
+      "requested_seconds" : 13.533336,
+      "source_pts" : 207872
+    },
+    {
+      "actual_seconds" : 13.550000000000001,
+      "filename" : "frame-00009-req-013.550003-pts-208128.png",
+      "index" : 9,
+      "png_sha256" : "fa1da97d133aa1fbcb26b13c87496435479b6dd9e72b451f9b50cf5f64fcad63",
+      "requested_seconds" : 13.550003,
+      "source_pts" : 208128
+    },
+    {
+      "actual_seconds" : 13.566666666666666,
+      "filename" : "frame-00010-req-013.566670-pts-208384.png",
+      "index" : 10,
+      "png_sha256" : "7c0040eab1a5df2f63c8db7bcb463f4bb06dd0793de2f5d824f88381cefa3afd",
+      "requested_seconds" : 13.56667,
+      "source_pts" : 208384
+    },
+    {
+      "actual_seconds" : 13.583333333333334,
+      "filename" : "frame-00011-req-013.583337-pts-208640.png",
+      "index" : 11,
+      "png_sha256" : "b2c2ade15ee28cf4c9ae02329faa741c27d888ca8bd31e26ab9ae9a7789ece8c",
+      "requested_seconds" : 13.583337,
+      "source_pts" : 208640
+    }
+  ],
+  "requested_window_seconds" : {
+    "end" : 13.6,
+    "start" : 13.4,
+    "step" : 0.016667000000000001
+  },
+  "source_file_name" : "gLd0HXtDt5I.mp4",
+  "source_natural_size" : {
+    "height" : 1920,
+    "width" : 884
+  },
+  "source_sha256" : "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_scale" : 15360
+}

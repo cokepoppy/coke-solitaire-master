@@ -219,6 +219,14 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   const tip = page.locator('#tableau-tutorial');
   await expect(tip).toBeHidden();
   await page.waitForTimeout(1400);
+  await page.evaluate(() => {
+    const tip = document.querySelector('#tableau-tutorial');
+    window.tableauTipTiming = { shownAt: null, hiddenAt: null };
+    new MutationObserver(() => {
+      if (tip.classList.contains('visible') && window.tableauTipTiming.shownAt === null) window.tableauTipTiming.shownAt = performance.now();
+      if (!tip.classList.contains('visible') && window.tableauTipTiming.shownAt !== null && window.tableauTipTiming.hiddenAt === null) window.tableauTipTiming.hiddenAt = performance.now();
+    }).observe(tip, { attributes: true, attributeFilter: ['class', 'hidden'] });
+  });
   await page.locator('.pile-column[data-pile="1"] .playing-card[data-index="0"]').click();
   await page.locator('.pile-column[data-pile="0"] .playing-card[data-index="0"]').click();
   await expect(page.locator('#moves-value')).toHaveText('1');
@@ -229,10 +237,23 @@ test('the first tableau move shows the one-time source rules tip', async ({ page
   expect(tipBox.width).toBeCloseTo(312, 0);
   expect(Math.abs(tipBox.y + tipBox.height - 709)).toBeLessThan(8);
   await page.screenshot({ path: 'test-results/first-move-tutorial.png' });
+  await page.setViewportSize({ width: 442, height: 960 });
+  const sourceTipBox = await tip.boundingBox();
+  expect(sourceTipBox.x).toBeCloseTo(45.5, 0);
+  expect(sourceTipBox.y).toBeCloseTo(692.5, 0);
+  expect(sourceTipBox.width).toBe(351);
+  expect(sourceTipBox.height).toBeCloseTo(111.5, 0);
+  const sourceTipArt = page.locator('.tutorial-tip-source-art');
+  await expect(sourceTipArt).toBeVisible();
+  await expect.poll(() => sourceTipArt.evaluate((image) => image.complete && image.naturalWidth === 702 && image.naturalHeight === 223)).toBe(true);
+  await page.screenshot({ path: 'test-results/first-move-tutorial-source-442.png', fullPage: true });
   await page.waitForTimeout(3900);
   await expect(tip).toBeVisible();
   await page.waitForTimeout(800);
   await expect(tip).toBeHidden();
+  const visibleDuration = await page.evaluate(() => window.tableauTipTiming.hiddenAt - window.tableauTipTiming.shownAt);
+  expect(visibleDuration).toBeGreaterThanOrEqual(4250);
+  expect(visibleDuration).toBeLessThan(4400);
   await expect.poll(() => page.evaluate(() => localStorage.getItem('solitaire-master-tableau-tutorial-v1'))).toBe('shown');
   await page.locator('.pile-column[data-pile="2"] .playing-card[data-index="0"]').click();
   await page.locator('.pile-column[data-pile="0"] .playing-card[data-index="1"]').click();
@@ -1901,7 +1922,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v68');
+  expect(cacheNames).toContain('solitaire-master-v69');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -1932,6 +1953,12 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type') };
   });
   expect(offlineThemeImage).toEqual({ ok: true, type: 'image/jpeg' });
+  const offlineTutorialTip = await page.evaluate(async () => {
+    const response = await fetch('/assets/ui/tutorial-tip-reference.png');
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  });
+  expect(offlineTutorialTip).toEqual({ ok: true, type: 'image/png', width: 702, height: 223 });
   const offlineLowerThemeImage = await page.evaluate(async () => {
     const response = await fetch('/assets/themes/theme-background-green-11-reference.png');
     const image = await createImageBitmap(await response.blob());
