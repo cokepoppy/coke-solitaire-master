@@ -85,6 +85,10 @@ let autoCollectTimer = null;
 let autoCollectRunning = false;
 
 const AUTO_HINT_DELAY_MS = 12_000;
+// The source stock reaches zero around 300.90 s; OCR sees the first follow-up
+// move by 301.05 s and then roughly one foundation move per 100 ms.
+const AUTO_COLLECT_START_DELAY_MS = 150;
+const AUTO_COLLECT_STEP_INTERVAL_MS = 100;
 const CARD_RANK_FILES = ['', 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
 const CARD_SUIT_FILES = { '♠': 'spades', '♥': 'hearts', '♦': 'diamonds', '♣': 'clubs' };
 const CARD_BACK_FILES = {
@@ -406,6 +410,20 @@ function render() {
   scheduleAutoHint();
 }
 
+function renderStockAction() {
+  if (firstDeal) {
+    render();
+    return;
+  }
+  renderTopRow();
+  updateChrome();
+  animatedCardIds = new Set();
+  revealedCardIds = new Set();
+  cardMoveIds = new Set();
+  cardFlight = null;
+  scheduleAutoHint();
+}
+
 function scheduleAutoHint() {
   clearTimeout(autoHintTimer);
   autoHintTimer = null;
@@ -469,7 +487,7 @@ function runAutoCollectStep() {
     completeWin();
     return;
   }
-  autoCollectTimer = setTimeout(runAutoCollectStep, 100);
+  autoCollectTimer = setTimeout(runAutoCollectStep, AUTO_COLLECT_STEP_INTERVAL_MS);
 }
 
 function scheduleAutoCollect() {
@@ -485,7 +503,7 @@ function scheduleAutoCollect() {
     $('.game-shell').classList.add('auto-collecting');
     audio.play('autoCollect');
     runAutoCollectStep();
-  }, 150);
+  }, AUTO_COLLECT_START_DELAY_MS);
 }
 
 const FOUNDATION_COMBO_REWARDS = {
@@ -977,10 +995,10 @@ function handleStock() {
   const action = game.drawFromStock();
   if (action === 'empty') return;
   if (action === 'draw') animateStockCards(origin, game.state.waste.slice(-game.state.drawCount));
-  audio.play(action === 'recycle' ? 'recycle' : drawAfterRecycle ? 'drawAfterRecycle' : 'draw');
-  render();
-  showComboFeedback();
   scheduleAutoCollect();
+  audio.play(action === 'recycle' ? 'recycle' : drawAfterRecycle ? 'drawAfterRecycle' : 'draw');
+  renderStockAction();
+  showComboFeedback();
 }
 
 function doNewGame(restart = false) {

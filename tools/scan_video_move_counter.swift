@@ -5,11 +5,11 @@ import Foundation
 import Vision
 
 func usage() -> Never {
-    fputs("usage: swift tools/scan_video_move_counter.swift VIDEO OUTPUT.csv\n", stderr)
+    fputs("usage: swift tools/scan_video_move_counter.swift VIDEO OUTPUT.csv [START_SECONDS [STEP_SECONDS [END_SECONDS]]]\n", stderr)
     exit(2)
 }
 
-guard CommandLine.arguments.count == 3 else { usage() }
+guard (3...6).contains(CommandLine.arguments.count) else { usage() }
 let videoURL = URL(fileURLWithPath: CommandLine.arguments[1])
 let outputURL = URL(fileURLWithPath: CommandLine.arguments[2])
 let asset = AVURLAsset(url: videoURL)
@@ -20,9 +20,11 @@ let generator = AVAssetImageGenerator(asset: asset)
 generator.appliesPreferredTrackTransform = true
 generator.requestedTimeToleranceBefore = .zero
 generator.requestedTimeToleranceAfter = .zero
-let sampleStart = 10.0
-let sampleStep = 4.0
-let count = Int((duration - sampleStart).rounded(.down) / sampleStep) + 1
+let sampleStart = CommandLine.arguments.count > 3 ? Double(CommandLine.arguments[3])! : 10.0
+let sampleStep = CommandLine.arguments.count > 4 ? Double(CommandLine.arguments[4])! : 4.0
+let sampleEnd = min(CommandLine.arguments.count > 5 ? Double(CommandLine.arguments[5])! : duration, duration)
+guard sampleStart >= 0, sampleStep > 0, sampleEnd >= sampleStart else { usage() }
+let count = Int((sampleEnd - sampleStart).rounded(.down) / sampleStep) + 1
 var rows = ["index,requested_seconds,actual_seconds,source_pts,ocr_text,move_digits"]
 
 for index in 0..<count {

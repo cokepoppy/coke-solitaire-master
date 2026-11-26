@@ -1503,14 +1503,21 @@ test('win clear sequence advances to the result without input', async ({ page })
 
 test('auto collect sweeps visible cards into foundations after the final move', async ({ page }) => {
   await page.goto('/');
+  await page.waitForTimeout(2500);
+  await page.locator('[data-action="stock"]').tap();
+  await expect(page.locator('.stock-count')).toHaveText('23');
   await page.evaluate(() => {
     const game = window.solitaireGame;
     const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
     const suits = ['♠', '♥', '♦', '♣'];
-    game.state.stock = [];
+    game.state.stock = [cards.find((card) => card.suit === '♠' && card.rank === 11)];
     game.state.waste = [];
-    game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 12).sort((a, b) => a.rank - b.rank));
-    game.state.tableau = suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13), cards.find((card) => card.suit === suit && card.rank === 12)]);
+    game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 11).sort((a, b) => a.rank - b.rank));
+    game.state.tableau = suits.map((suit, index) => [
+      cards.find((card) => card.suit === suit && card.rank === 13),
+      cards.find((card) => card.suit === suit && card.rank === 12),
+      ...(index === 0 ? [] : [cards.find((card) => card.suit === suit && card.rank === 11)]),
+    ]);
     game.state.autoCollect = true;
     game.state.autoHints = false;
     game.state.won = false;
@@ -1519,20 +1526,61 @@ test('auto collect sweeps visible cards into foundations after the final move', 
     game.state.seconds = 0;
     game.save();
   });
-  await page.reload();
   await page.evaluate(() => {
     window.autoActionCues = [];
+    window.autoFoundationMoves = [];
+    window.autoCollectStartedAt = null;
+    window.autoCollectScheduledAt = null;
+    window.stockEmptiedAt = null;
+    const nativeTimeout = window.setTimeout.bind(window);
+    window.setTimeout = (callback, delay, ...args) => {
+      if (delay === 150 && new Error().stack?.includes('scheduleAutoCollect')) window.autoCollectScheduledAt = performance.now();
+      return nativeTimeout(callback, delay, ...args);
+    };
+    const game = window.solitaireGame;
+    const moveTo = game.moveTo.bind(game);
+    game.moveTo = function (target) {
+      const automatic = document.querySelector('.game-shell').classList.contains('auto-collecting');
+      const moved = moveTo(target);
+      if (moved && target?.zone === 'foundation') window.autoFoundationMoves.push({ at: performance.now(), automatic });
+      return moved;
+    };
+    const drawFromStock = game.drawFromStock.bind(game);
+    game.drawFromStock = (...args) => {
+      const result = drawFromStock(...args);
+      if (game.state.stock.length === 0) window.stockEmptiedAt = performance.now();
+      return result;
+    };
     const audio = window.solitaireAudio;
     const play = audio.play.bind(audio);
-    audio.play = (cue) => { window.autoActionCues.push(cue); return play(cue); };
+    audio.play = (cue) => {
+      if (cue === 'autoCollect') window.autoCollectStartedAt = performance.now();
+      window.autoActionCues.push(cue);
+      return play(cue);
+    };
   });
-  const queen = page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]');
-  await queen.click();
-  await queen.click();
+  await page.locator('[data-action="stock"]').tap();
   await expect(page.locator('.win-streak-backdrop')).toBeVisible({ timeout: 4000 });
   await expect.poll(() => page.evaluate(() => window.solitaireGame.state.foundations.reduce((sum, pile) => sum + pile.length, 0))).toBe(52);
   await expect(page.locator('#tableau .playing-card')).toHaveCount(0);
   expect(await page.evaluate(() => window.autoActionCues.filter((cue) => cue === 'autoCollect'))).toHaveLength(1);
+  const autoTiming = await page.evaluate(() => ({
+    startedAt: window.autoCollectStartedAt,
+    scheduledAt: window.autoCollectScheduledAt,
+    stockEmptiedAt: window.stockEmptiedAt,
+    moves: window.autoFoundationMoves,
+  }));
+  const automaticFoundationMoves = autoTiming.moves.filter((move) => move.automatic);
+  expect(autoTiming.stockEmptiedAt).toBeTruthy();
+  expect(autoTiming.scheduledAt).toBeTruthy();
+  expect(automaticFoundationMoves).toHaveLength(12);
+  expect(autoTiming.startedAt - autoTiming.stockEmptiedAt).toBeGreaterThanOrEqual(120);
+  expect(autoTiming.startedAt - autoTiming.stockEmptiedAt).toBeLessThan(250);
+  expect(autoTiming.startedAt - autoTiming.scheduledAt).toBeGreaterThanOrEqual(120);
+  expect(autoTiming.startedAt - autoTiming.scheduledAt).toBeLessThan(250);
+  const stepIntervals = automaticFoundationMoves.slice(1).map((move, index) => move.at - automaticFoundationMoves[index].at);
+  expect(stepIntervals).toHaveLength(11);
+  expect(stepIntervals.every((interval) => interval >= 70 && interval <= 180)).toBe(true);
   await expect.poll(() => page.evaluate(() => window.solitaireAudio.referenceAutoCollectBuffer?.duration)).toBeGreaterThan(2.19);
   await page.getByRole('button', { name: 'Tap to Continue' }).click();
   expect(await page.evaluate(() => window.autoActionCues.at(-1))).toBe('win');
