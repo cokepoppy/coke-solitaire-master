@@ -1366,7 +1366,29 @@ test('tapping a face-up card moves its full valid tableau sequence', async ({ pa
   await page.reload();
 
   await page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]').click({ position: { x: 8, y: 8 } });
-  await expect(page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]')).toHaveClass(/is-selected/);
+  const selectedCard = page.locator('#tableau .pile-column[data-pile="0"] .playing-card[data-index="1"]');
+  await expect(selectedCard).toHaveClass(/is-selected/);
+  const selectedFrame = await selectedCard.evaluate((element) => {
+    const frame = getComputedStyle(element, '::after');
+    return {
+      backgroundImage: frame.backgroundImage,
+      pointerEvents: frame.pointerEvents,
+      asset: frame.backgroundImage.match(/url\(["']?(.*?)["']?\)/)?.[1],
+    };
+  });
+  expect(selectedFrame.backgroundImage).toContain('selected-card-frame-reference.png');
+  expect(selectedFrame.pointerEvents).toBe('none');
+  const selectedFrameSize = await page.evaluate(async (asset) => {
+    const image = await createImageBitmap(await (await fetch(asset)).blob());
+    return [image.width, image.height];
+  }, selectedFrame.asset);
+  expect(selectedFrameSize).toEqual([118, 177]);
+  const selectedFrameHash = await page.evaluate(async () => {
+    const bytes = await (await fetch('/assets/ui/selected-card-frame-reference.png')).arrayBuffer();
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+  });
+  expect(selectedFrameHash).toBe('affb90c4150ab44ca497b4b2ad6537bf1630ec975c0c58d8402bc996b09ef639');
   await page.locator('#tableau .pile-column[data-pile="1"] .playing-card[data-index="0"]').click();
   await expect(page.locator('#moves-value')).toHaveText('1');
   await expect(page.locator('#score-value')).toHaveText('10');
@@ -2229,7 +2251,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v91');
+  expect(cacheNames).toContain('solitaire-master-v92');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2267,6 +2289,12 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
   });
   expect(offlineTutorialTip).toEqual({ ok: true, type: 'image/png', width: 702, height: 223 });
+  const offlineSelectedCardFrame = await page.evaluate(async () => {
+    const response = await fetch('/assets/ui/selected-card-frame-reference.png');
+    const image = await createImageBitmap(await response.blob());
+    return { ok: response.ok, type: response.headers.get('content-type'), width: image.width, height: image.height };
+  });
+  expect(offlineSelectedCardFrame).toEqual({ ok: true, type: 'image/png', width: 118, height: 177 });
   const offlineLowerThemeImage = await page.evaluate(async () => {
     const response = await fetch('/assets/themes/theme-background-green-11-reference.png');
     const image = await createImageBitmap(await response.blob());

@@ -135,7 +135,7 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v100');
+    const shell = await caches.open('solitaire-master-solitaire-v101');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const recycleSample = await shell.match(`${location.origin}/solitaire/assets/audio/stock-recycle-reference.wav`);
     const recycledDrawSample = await shell.match(`${location.origin}/solitaire/assets/audio/draw-after-recycle-reference.wav`);
@@ -148,6 +148,7 @@ try {
     const winTimeReference = await shell.match(`${location.origin}/solitaire/assets/ui/win-result-time-02-13-reference.png`);
     const winMovesReference = await shell.match(`${location.origin}/solitaire/assets/ui/win-result-moves-121-reference.png`);
     const sourceStockBack = await shell.match(`${location.origin}/solitaire/assets/cards/back-solitaire-master-source-20s.png`);
+    const selectedCardFrame = await shell.match(`${location.origin}/solitaire/assets/ui/selected-card-frame-reference.png`);
     const styleFourFace = await shell.match(`${location.origin}/solitaire/assets/cards/face-style-4-6-of-clubs-reference.png`);
     const laterStyleFourFace = await shell.match(`${location.origin}/solitaire/assets/cards/face-style-4-queen-of-diamonds-reference.png`);
     const mountainBackground = await shell.match(`${location.origin}/solitaire/assets/themes/mountain-valley-reference-guided.jpg`);
@@ -169,6 +170,7 @@ try {
       winTimeReferenceCached: Boolean(winTimeReference),
       winMovesReferenceCached: Boolean(winMovesReference),
       sourceStockBackCached: Boolean(sourceStockBack),
+      selectedCardFrameCached: Boolean(selectedCardFrame),
       styleFourFaceCached: Boolean(styleFourFace),
       laterStyleFourFaceCached: Boolean(laterStyleFourFace),
       mountainBackgroundCached: Boolean(mountainBackground),
@@ -188,12 +190,13 @@ try {
   assert.equal(worker.winTimeReferenceCached, true);
   assert.equal(worker.winMovesReferenceCached, true);
   assert.equal(worker.sourceStockBackCached, true);
+  assert.equal(worker.selectedCardFrameCached, true);
   assert.equal(worker.styleFourFaceCached, true);
   assert.equal(worker.laterStyleFourFaceCached, true);
   assert.equal(worker.mountainBackgroundCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v100'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v101'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);
