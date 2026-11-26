@@ -543,6 +543,22 @@ async function runSourceOpeningReplay(page) {
 test.describe('source-sized visual comparison', () => {
   test.use({ deviceScaleFactor: 2 });
 
+  test('fresh-deal Queen of Spades keeps its measured source overlap', async ({ page }) => {
+    await page.setViewportSize({ width: 442, height: 960 });
+    await page.goto('/');
+    await page.waitForTimeout(1450);
+    const sourceBounds = await page.locator('.pile-column[data-pile="1"] .playing-card[data-card-id="♠-12"]').evaluate((card) => {
+      const rect = card.getBoundingClientRect();
+      return {
+        x: Math.round(rect.left * devicePixelRatio),
+        y: Math.round(rect.top * devicePixelRatio),
+        image: card.querySelector('.card-face-art').getAttribute('src'),
+      };
+    });
+    expect(sourceBounds).toEqual({ x: 133, y: 679, image: '/assets/cards/queen-of-spades-reference.png' });
+    await page.screenshot({ path: 'test-results/source-initial-deal.png', fullPage: true });
+  });
+
   test('source opening replay matches the 20-second score, move count, and exposed cards', async ({ page }) => {
     await runSourceOpeningReplay(page);
     const timerTextBox = await page.locator('#time-value').boundingBox();
