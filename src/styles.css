@@ -79,6 +79,10 @@ button:focus-visible { outline: 3px solid #f4d67a; outline-offset: 2px; }
   margin-left: 3px;
 }
 
+@media (max-width: 440px) {
+  .game-topbar { margin-top: 8px; }
+}
+
 .menu-button {
   display: grid;
   width: 36px;

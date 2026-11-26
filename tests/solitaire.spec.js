@@ -55,6 +55,12 @@ test('mobile deal, stock draw, undo, and a legal hinted move', async ({ page }) 
   expect(dealMotion.faceFlip).toBe('deal-face-reveal');
 
   await expect(page).toHaveTitle('Solitaire Master');
+  const topbarPosition = await page.locator('.game-topbar').evaluate((topbar) => ({
+    marginTop: Number.parseFloat(getComputedStyle(topbar).marginTop),
+    top: topbar.getBoundingClientRect().top,
+  }));
+  expect(topbarPosition.marginTop).toBe(8);
+  expect(topbarPosition.top).toBeLessThan(30);
   await expect(page.locator('#tableau .pile-column')).toHaveCount(7);
   await expect(page.locator('#tableau .card-face')).toHaveCount(7);
   await expect(page.locator('#tableau .card-back')).toHaveCount(21);
@@ -1929,7 +1935,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v71');
+  expect(cacheNames).toContain('solitaire-master-v72');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
