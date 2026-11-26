@@ -200,6 +200,8 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 
 .tableau { margin-top: clamp(14px, 4.3vw, 21px); align-items: start; min-height: calc(var(--card-height) + 184px); }
 .pile-column { position: relative; width: var(--card-width); min-height: calc(var(--card-height) + 168px); border-radius: 8px; }
+.pile-column:nth-child(4) > .card-face,
+.pile-column:nth-child(6) > .card-face { left: .25px; }
 .empty-tableau-mark { position: absolute; top: 0; left: 0; display: grid; width: var(--card-width); height: var(--card-height); place-items: center; border: 1px dashed rgba(237, 229, 195, .34); border-radius: 8px; color: rgba(243, 225, 173, .56); font-family: Georgia, serif; font-size: 21px; }
 
 .playing-card {

@@ -467,6 +467,8 @@ async function runSourceOpeningReplay(page) {
   expect(faceUpStackSpacing[1]).toBeCloseTo(37, 1);
   const sourceCardTops = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().top * devicePixelRatio)));
   expect(sourceCardTops).toEqual([719, 814, 888]);
+  const sourceCourtCardLefts = await page.locator('.pile-column:nth-child(4) > .card-face, .pile-column:nth-child(6) > .card-face').evaluateAll((cards) => cards.map((card) => Math.round(card.getBoundingClientRect().left * devicePixelRatio * 10) / 10));
+  expect(sourceCourtCardLefts).toEqual([383, 383, 383, 633]);
   const finalBoard = await page.evaluate(() => ({
     score: window.solitaireGame.state.score,
     moves: window.solitaireGame.state.moves,
