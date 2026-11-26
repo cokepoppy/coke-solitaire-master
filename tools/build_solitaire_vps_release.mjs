@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.resolve(process.argv[2] ?? 'dist/solitaire');
 const base = '/solitaire';
-const cacheName = 'solitaire-master-solitaire-v88';
+const cacheName = 'solitaire-master-solitaire-v89';
 const cachePrefix = 'solitaire-master-solitaire-v';
 
 if (output === root || output.startsWith(`${root}${path.sep}`)) {
