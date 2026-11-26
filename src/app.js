@@ -1674,8 +1674,9 @@ $('#stats-button')?.addEventListener('click', () => { audio.play('tap'); showSta
 
 setInterval(() => {
   if (document.hidden) return;
-  game.tick();
+  const scoreChanged = game.tick();
   renderTimeDisplay(game.state.seconds);
+  if (scoreChanged) renderStatNumber($('#score-value'), game.state.score);
   if (game.state.seconds % 10 === 0) game.save();
 }, 1000);
 

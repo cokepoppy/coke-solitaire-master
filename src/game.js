@@ -146,7 +146,12 @@ export class SolitaireGame {
   }
 
   tick() {
-    if (!this.state.won) this.state.seconds += 1;
+    if (this.state.won) return false;
+    this.state.seconds += 1;
+    if (this.state.scoringMode !== 'standard' || this.state.seconds % 10 !== 0) return false;
+    const score = this.state.score;
+    this.state.score = Math.max(0, score - 2);
+    return this.state.score !== score;
   }
 
   snapshot() {

@@ -2251,7 +2251,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v92');
+  expect(cacheNames).toContain('solitaire-master-v93');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2619,6 +2619,41 @@ test('source settings switch between Standard and Vegas scoring', async ({ page 
   await expect(page.getByRole('button', { name: /Scoring Mode Standard/ })).toBeVisible();
   await page.getByRole('button', { name: 'Close dialog' }).click();
   expect(await recycle(200)).toBe(200);
+});
+
+test('standard scoring deducts two points every ten seconds and updates the live score', async ({ page }) => {
+  await page.clock.install({ time: new Date('2026-11-27T12:00:00Z') });
+  await page.goto('/');
+  await page.clock.runFor(1400);
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    game.state.scoringMode = 'standard';
+    game.state.score = 30;
+    game.state.seconds = 9;
+    game.save();
+  });
+
+  await page.clock.runFor(600);
+  await expect(page.locator('#time-value')).toHaveText('00:10');
+  await expect(page.locator('#score-value')).toHaveText('28');
+
+  await page.getByRole('button', { name: 'Game menu' }).click();
+  await page.getByRole('button', { name: 'Settings and themes' }).click();
+  await page.getByRole('button', { name: /Scoring Mode Standard/ }).click();
+  await page.getByRole('button', { name: 'Vegas' }).click();
+  await page.getByRole('button', { name: 'Close dialog' }).click();
+  await page.evaluate(() => {
+    const game = window.solitaireGame;
+    game.state.score = 200;
+    game.state.seconds = 19;
+    game.save();
+  });
+  await page.locator('[data-action="stock"]').click();
+  await expect(page.locator('#score-value')).toHaveText('200');
+
+  await page.clock.runFor(1000);
+  await expect(page.locator('#time-value')).toHaveText('00:20');
+  await expect(page.locator('#score-value')).toHaveText('200');
 });
 
 test('mobile stock recycle restores draw order and undo', async ({ page }) => {
