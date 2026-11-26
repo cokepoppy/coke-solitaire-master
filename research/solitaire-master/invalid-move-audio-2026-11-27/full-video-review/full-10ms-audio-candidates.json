@@ -1,0 +1,4092 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_wav_name": "solitaire-gameplay-full.wav",
+  "source_wav_sha256": "035f2b43e6e467a511feb1ce36dc9ea9cbdf87a6f8e3e3a7af15f7a2d4602b7c",
+  "audit_timestamp_utc": "2026-11-26T19:16:37.438579+00:00",
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "source_duration_seconds": 1044.0,
+  "source_offset_seconds": 0.0,
+  "analysis_hop_ms": 10,
+  "analysis_window_count": 104400,
+  "global_rms_median": 1.126e-05,
+  "global_rms_p95": 0.09543271,
+  "global_rms_max": 0.51603657,
+  "windows_above_rms_0_01": 23631,
+  "fraction_windows_above_rms_0_01": 0.226351,
+  "windows_above_rms_0_05": 9847,
+  "fraction_windows_above_rms_0_05": 0.09432,
+  "candidate_events": [
+    {
+      "source_time_seconds": 2.57,
+      "rms": 0.03750172,
+      "peak": 0.21099854,
+      "high_band_fraction": 0.977109,
+      "spectral_centroid_hz": 4049.31
+    },
+    {
+      "source_time_seconds": 2.83,
+      "rms": 0.04292804,
+      "peak": 0.22668457,
+      "high_band_fraction": 0.856706,
+      "spectral_centroid_hz": 4442.55
+    },
+    {
+      "source_time_seconds": 3.31,
+      "rms": 0.04135101,
+      "peak": 0.1578064,
+      "high_band_fraction": 0.930969,
+      "spectral_centroid_hz": 4941.96
+    },
+    {
+      "source_time_seconds": 13.36,
+      "rms": 0.11635178,
+      "peak": 0.46633911,
+      "high_band_fraction": 0.686346,
+      "spectral_centroid_hz": 4051.42
+    },
+    {
+      "source_time_seconds": 18.23,
+      "rms": 0.10619888,
+      "peak": 0.47180176,
+      "high_band_fraction": 0.492746,
+      "spectral_centroid_hz": 3221.28
+    },
+    {
+      "source_time_seconds": 19.38,
+      "rms": 0.12381152,
+      "peak": 0.47564697,
+      "high_band_fraction": 0.623508,
+      "spectral_centroid_hz": 3466.86
+    },
+    {
+      "source_time_seconds": 23.6,
+      "rms": 0.11639017,
+      "peak": 0.46630859,
+      "high_band_fraction": 0.686777,
+      "spectral_centroid_hz": 4058.09
+    },
+    {
+      "source_time_seconds": 26.12,
+      "rms": 0.12872447,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.647283,
+      "spectral_centroid_hz": 3527.95
+    },
+    {
+      "source_time_seconds": 26.76,
+      "rms": 0.12519817,
+      "peak": 0.50012207,
+      "high_band_fraction": 0.659632,
+      "spectral_centroid_hz": 3575.6
+    },
+    {
+      "source_time_seconds": 31.79,
+      "rms": 0.09923381,
+      "peak": 0.49716187,
+      "high_band_fraction": 0.683816,
+      "spectral_centroid_hz": 4447.93
+    },
+    {
+      "source_time_seconds": 35.76,
+      "rms": 0.11677761,
+      "peak": 0.46826172,
+      "high_band_fraction": 0.67971,
+      "spectral_centroid_hz": 4006.25
+    },
+    {
+      "source_time_seconds": 36.53,
+      "rms": 0.12543949,
+      "peak": 0.47433472,
+      "high_band_fraction": 0.665005,
+      "spectral_centroid_hz": 3646.26
+    },
+    {
+      "source_time_seconds": 38.32,
+      "rms": 0.11689217,
+      "peak": 0.47531128,
+      "high_band_fraction": 0.682412,
+      "spectral_centroid_hz": 4055.74
+    },
+    {
+      "source_time_seconds": 40.24,
+      "rms": 0.11759673,
+      "peak": 0.47314453,
+      "high_band_fraction": 0.688857,
+      "spectral_centroid_hz": 4094.71
+    },
+    {
+      "source_time_seconds": 41.57,
+      "rms": 0.10168069,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.399117,
+      "spectral_centroid_hz": 2797.39
+    },
+    {
+      "source_time_seconds": 42.8,
+      "rms": 0.11557738,
+      "peak": 0.43493652,
+      "high_band_fraction": 0.677778,
+      "spectral_centroid_hz": 4070.07
+    },
+    {
+      "source_time_seconds": 43.27,
+      "rms": 0.11992139,
+      "peak": 0.47714233,
+      "high_band_fraction": 0.668082,
+      "spectral_centroid_hz": 3888.12
+    },
+    {
+      "source_time_seconds": 46.65,
+      "rms": 0.04082844,
+      "peak": 0.11294556,
+      "high_band_fraction": 0.167206,
+      "spectral_centroid_hz": 1616.12
+    },
+    {
+      "source_time_seconds": 48.05,
+      "rms": 0.12437775,
+      "peak": 0.46139526,
+      "high_band_fraction": 0.662906,
+      "spectral_centroid_hz": 3685.12
+    },
+    {
+      "source_time_seconds": 50.61,
+      "rms": 0.12592392,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.670956,
+      "spectral_centroid_hz": 3672.86
+    },
+    {
+      "source_time_seconds": 53.47,
+      "rms": 0.1272848,
+      "peak": 0.46948242,
+      "high_band_fraction": 0.6163,
+      "spectral_centroid_hz": 3512.92
+    },
+    {
+      "source_time_seconds": 55.35,
+      "rms": 0.10785134,
+      "peak": 0.47009277,
+      "high_band_fraction": 0.497448,
+      "spectral_centroid_hz": 3166.78
+    },
+    {
+      "source_time_seconds": 57.22,
+      "rms": 0.10676208,
+      "peak": 0.46716309,
+      "high_band_fraction": 0.681212,
+      "spectral_centroid_hz": 4308.55
+    },
+    {
+      "source_time_seconds": 58.38,
+      "rms": 0.10346909,
+      "peak": 0.4725647,
+      "high_band_fraction": 0.457668,
+      "spectral_centroid_hz": 3015.91
+    },
+    {
+      "source_time_seconds": 59.02,
+      "rms": 0.10197454,
+      "peak": 0.45483398,
+      "high_band_fraction": 0.464931,
+      "spectral_centroid_hz": 2968.61
+    },
+    {
+      "source_time_seconds": 60.17,
+      "rms": 0.12527572,
+      "peak": 0.49642944,
+      "high_band_fraction": 0.59696,
+      "spectral_centroid_hz": 3403.26
+    },
+    {
+      "source_time_seconds": 61.96,
+      "rms": 0.12761211,
+      "peak": 0.49899292,
+      "high_band_fraction": 0.657349,
+      "spectral_centroid_hz": 3600.29
+    },
+    {
+      "source_time_seconds": 63.54,
+      "rms": 0.12302288,
+      "peak": 0.47207642,
+      "high_band_fraction": 0.61632,
+      "spectral_centroid_hz": 3419.79
+    },
+    {
+      "source_time_seconds": 64.73,
+      "rms": 0.11310402,
+      "peak": 0.47521973,
+      "high_band_fraction": 0.699242,
+      "spectral_centroid_hz": 4225.28
+    },
+    {
+      "source_time_seconds": 67.42,
+      "rms": 0.12728946,
+      "peak": 0.52099609,
+      "high_band_fraction": 0.700029,
+      "spectral_centroid_hz": 3794.49
+    },
+    {
+      "source_time_seconds": 68.79,
+      "rms": 0.10882921,
+      "peak": 0.51364136,
+      "high_band_fraction": 0.487944,
+      "spectral_centroid_hz": 3187.06
+    },
+    {
+      "source_time_seconds": 69.43,
+      "rms": 0.10588454,
+      "peak": 0.46878052,
+      "high_band_fraction": 0.494515,
+      "spectral_centroid_hz": 3224.78
+    },
+    {
+      "source_time_seconds": 70.02,
+      "rms": 0.1058952,
+      "peak": 0.48269653,
+      "high_band_fraction": 0.68491,
+      "spectral_centroid_hz": 4381.5
+    },
+    {
+      "source_time_seconds": 70.58,
+      "rms": 0.12323945,
+      "peak": 0.4727478,
+      "high_band_fraction": 0.626697,
+      "spectral_centroid_hz": 3477.36
+    },
+    {
+      "source_time_seconds": 72.88,
+      "rms": 0.34270144,
+      "peak": 0.76681519,
+      "high_band_fraction": 0.237505,
+      "spectral_centroid_hz": 1699.33
+    },
+    {
+      "source_time_seconds": 73.53,
+      "rms": 0.2549867,
+      "peak": 0.65536499,
+      "high_band_fraction": 0.781461,
+      "spectral_centroid_hz": 1792.75
+    },
+    {
+      "source_time_seconds": 74.55,
+      "rms": 0.10594852,
+      "peak": 0.49871826,
+      "high_band_fraction": 0.537911,
+      "spectral_centroid_hz": 3186.94
+    },
+    {
+      "source_time_seconds": 79.07,
+      "rms": 0.12767959,
+      "peak": 0.48294067,
+      "high_band_fraction": 0.632369,
+      "spectral_centroid_hz": 3580.94
+    },
+    {
+      "source_time_seconds": 81.16,
+      "rms": 0.12701537,
+      "peak": 0.49978638,
+      "high_band_fraction": 0.655697,
+      "spectral_centroid_hz": 3616.26
+    },
+    {
+      "source_time_seconds": 83.17,
+      "rms": 0.10276099,
+      "peak": 0.48278809,
+      "high_band_fraction": 0.409209,
+      "spectral_centroid_hz": 2776.11
+    },
+    {
+      "source_time_seconds": 84.62,
+      "rms": 0.10392781,
+      "peak": 0.47314453,
+      "high_band_fraction": 0.438788,
+      "spectral_centroid_hz": 2955.08
+    },
+    {
+      "source_time_seconds": 86.32,
+      "rms": 0.11403304,
+      "peak": 0.45898438,
+      "high_band_fraction": 0.709841,
+      "spectral_centroid_hz": 4109.74
+    },
+    {
+      "source_time_seconds": 87.86,
+      "rms": 0.12469478,
+      "peak": 0.48373413,
+      "high_band_fraction": 0.633956,
+      "spectral_centroid_hz": 3439.85
+    },
+    {
+      "source_time_seconds": 88.8,
+      "rms": 0.11470655,
+      "peak": 0.46420288,
+      "high_band_fraction": 0.552226,
+      "spectral_centroid_hz": 3392.9
+    },
+    {
+      "source_time_seconds": 89.27,
+      "rms": 0.10830499,
+      "peak": 0.50695801,
+      "high_band_fraction": 0.478083,
+      "spectral_centroid_hz": 3188.77
+    },
+    {
+      "source_time_seconds": 90.93,
+      "rms": 0.12451468,
+      "peak": 0.46157837,
+      "high_band_fraction": 0.677125,
+      "spectral_centroid_hz": 3635.53
+    },
+    {
+      "source_time_seconds": 91.95,
+      "rms": 0.09910098,
+      "peak": 0.49771118,
+      "high_band_fraction": 0.684782,
+      "spectral_centroid_hz": 4436.18
+    },
+    {
+      "source_time_seconds": 92.72,
+      "rms": 0.11701989,
+      "peak": 0.47961426,
+      "high_band_fraction": 0.705545,
+      "spectral_centroid_hz": 4033.62
+    },
+    {
+      "source_time_seconds": 93.79,
+      "rms": 0.12796535,
+      "peak": 0.46777344,
+      "high_band_fraction": 0.648933,
+      "spectral_centroid_hz": 3481.6
+    },
+    {
+      "source_time_seconds": 95.28,
+      "rms": 0.11635178,
+      "peak": 0.46633911,
+      "high_band_fraction": 0.686346,
+      "spectral_centroid_hz": 4051.42
+    },
+    {
+      "source_time_seconds": 98.61,
+      "rms": 0.08100895,
+      "peak": 0.47180176,
+      "high_band_fraction": 0.552796,
+      "spectral_centroid_hz": 5453.16
+    },
+    {
+      "source_time_seconds": 99.17,
+      "rms": 0.10009615,
+      "peak": 0.48980713,
+      "high_band_fraction": 0.384696,
+      "spectral_centroid_hz": 2794.28
+    },
+    {
+      "source_time_seconds": 100.4,
+      "rms": 0.1175423,
+      "peak": 0.46401978,
+      "high_band_fraction": 0.690271,
+      "spectral_centroid_hz": 4070.75
+    },
+    {
+      "source_time_seconds": 102.82,
+      "rms": 0.1969173,
+      "peak": 0.48364258,
+      "high_band_fraction": 0.15818,
+      "spectral_centroid_hz": 1537.9
+    },
+    {
+      "source_time_seconds": 103.21,
+      "rms": 0.02927627,
+      "peak": 0.08236694,
+      "high_band_fraction": 0.889059,
+      "spectral_centroid_hz": 5883.0
+    },
+    {
+      "source_time_seconds": 104.5,
+      "rms": 0.12302288,
+      "peak": 0.47207642,
+      "high_band_fraction": 0.61632,
+      "spectral_centroid_hz": 3419.79
+    },
+    {
+      "source_time_seconds": 105.61,
+      "rms": 0.12604134,
+      "peak": 0.49819946,
+      "high_band_fraction": 0.595307,
+      "spectral_centroid_hz": 3317.47
+    },
+    {
+      "source_time_seconds": 106.55,
+      "rms": 0.10767063,
+      "peak": 0.46920776,
+      "high_band_fraction": 0.498984,
+      "spectral_centroid_hz": 3182.42
+    },
+    {
+      "source_time_seconds": 107.83,
+      "rms": 0.10769312,
+      "peak": 0.47311401,
+      "high_band_fraction": 0.515886,
+      "spectral_centroid_hz": 3231.04
+    },
+    {
+      "source_time_seconds": 108.98,
+      "rms": 0.12406793,
+      "peak": 0.48617554,
+      "high_band_fraction": 0.627699,
+      "spectral_centroid_hz": 3478.08
+    },
+    {
+      "source_time_seconds": 113.12,
+      "rms": 0.113629,
+      "peak": 0.46780396,
+      "high_band_fraction": 0.544464,
+      "spectral_centroid_hz": 3365.55
+    },
+    {
+      "source_time_seconds": 114.91,
+      "rms": 0.1272848,
+      "peak": 0.46948242,
+      "high_band_fraction": 0.6163,
+      "spectral_centroid_hz": 3512.92
+    },
+    {
+      "source_time_seconds": 116.19,
+      "rms": 0.12602402,
+      "peak": 0.47271729,
+      "high_band_fraction": 0.64406,
+      "spectral_centroid_hz": 3559.49
+    },
+    {
+      "source_time_seconds": 117.51,
+      "rms": 0.12030686,
+      "peak": 0.47723389,
+      "high_band_fraction": 0.678166,
+      "spectral_centroid_hz": 3872.96
+    },
+    {
+      "source_time_seconds": 119.09,
+      "rms": 0.1227017,
+      "peak": 0.45343018,
+      "high_band_fraction": 0.651146,
+      "spectral_centroid_hz": 3657.73
+    },
+    {
+      "source_time_seconds": 123.73,
+      "rms": 0.35712972,
+      "peak": 0.67514038,
+      "high_band_fraction": 0.185865,
+      "spectral_centroid_hz": 1911.06
+    },
+    {
+      "source_time_seconds": 124.85,
+      "rms": 0.12727726,
+      "peak": 0.49362183,
+      "high_band_fraction": 0.668228,
+      "spectral_centroid_hz": 3587.49
+    },
+    {
+      "source_time_seconds": 128.26,
+      "rms": 0.10843977,
+      "peak": 0.49349976,
+      "high_band_fraction": 0.684249,
+      "spectral_centroid_hz": 4368.36
+    },
+    {
+      "source_time_seconds": 130.14,
+      "rms": 0.12531824,
+      "peak": 0.51202393,
+      "high_band_fraction": 0.681366,
+      "spectral_centroid_hz": 3749.13
+    },
+    {
+      "source_time_seconds": 131.38,
+      "rms": 0.12597674,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.640653,
+      "spectral_centroid_hz": 3439.62
+    },
+    {
+      "source_time_seconds": 136.41,
+      "rms": 0.1130343,
+      "peak": 0.47497559,
+      "high_band_fraction": 0.699015,
+      "spectral_centroid_hz": 4226.53
+    },
+    {
+      "source_time_seconds": 138.59,
+      "rms": 0.12674215,
+      "peak": 0.46768188,
+      "high_band_fraction": 0.642224,
+      "spectral_centroid_hz": 3539.94
+    },
+    {
+      "source_time_seconds": 141.75,
+      "rms": 0.10896137,
+      "peak": 0.51159668,
+      "high_band_fraction": 0.50268,
+      "spectral_centroid_hz": 3229.44
+    },
+    {
+      "source_time_seconds": 142.17,
+      "rms": 0.11414338,
+      "peak": 0.47952271,
+      "high_band_fraction": 0.689881,
+      "spectral_centroid_hz": 4223.87
+    },
+    {
+      "source_time_seconds": 143.28,
+      "rms": 0.11691216,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.672121,
+      "spectral_centroid_hz": 4025.27
+    },
+    {
+      "source_time_seconds": 147.53,
+      "rms": 0.17620686,
+      "peak": 0.8291626,
+      "high_band_fraction": 0.131351,
+      "spectral_centroid_hz": 2152.61
+    },
+    {
+      "source_time_seconds": 147.91,
+      "rms": 0.2290094,
+      "peak": 0.88049316,
+      "high_band_fraction": 0.204132,
+      "spectral_centroid_hz": 1965.81
+    },
+    {
+      "source_time_seconds": 148.26,
+      "rms": 0.14567998,
+      "peak": 0.68301392,
+      "high_band_fraction": 0.146856,
+      "spectral_centroid_hz": 2480.3
+    },
+    {
+      "source_time_seconds": 148.95,
+      "rms": 0.19275871,
+      "peak": 0.77493286,
+      "high_band_fraction": 0.249238,
+      "spectral_centroid_hz": 2583.6
+    },
+    {
+      "source_time_seconds": 149.23,
+      "rms": 0.11389383,
+      "peak": 0.74719238,
+      "high_band_fraction": 0.474316,
+      "spectral_centroid_hz": 2290.7
+    },
+    {
+      "source_time_seconds": 149.6,
+      "rms": 0.09407683,
+      "peak": 0.47583008,
+      "high_band_fraction": 0.275002,
+      "spectral_centroid_hz": 2072.68
+    },
+    {
+      "source_time_seconds": 149.91,
+      "rms": 0.06330478,
+      "peak": 0.31265259,
+      "high_band_fraction": 0.232525,
+      "spectral_centroid_hz": 1950.47
+    },
+    {
+      "source_time_seconds": 150.22,
+      "rms": 0.02413657,
+      "peak": 0.109375,
+      "high_band_fraction": 0.410864,
+      "spectral_centroid_hz": 1981.27
+    },
+    {
+      "source_time_seconds": 151.94,
+      "rms": 0.09467945,
+      "peak": 0.2119751,
+      "high_band_fraction": 0.133413,
+      "spectral_centroid_hz": 1675.6
+    },
+    {
+      "source_time_seconds": 154.59,
+      "rms": 0.03776323,
+      "peak": 0.21575928,
+      "high_band_fraction": 0.992035,
+      "spectral_centroid_hz": 3918.46
+    },
+    {
+      "source_time_seconds": 154.85,
+      "rms": 0.04420754,
+      "peak": 0.21551514,
+      "high_band_fraction": 0.941374,
+      "spectral_centroid_hz": 4847.42
+    },
+    {
+      "source_time_seconds": 155.33,
+      "rms": 0.04158732,
+      "peak": 0.18099976,
+      "high_band_fraction": 0.974141,
+      "spectral_centroid_hz": 4644.44
+    },
+    {
+      "source_time_seconds": 157.15,
+      "rms": 0.16782996,
+      "peak": 0.68310547,
+      "high_band_fraction": 0.754561,
+      "spectral_centroid_hz": 3719.44
+    },
+    {
+      "source_time_seconds": 158.35,
+      "rms": 0.17128529,
+      "peak": 0.56915283,
+      "high_band_fraction": 0.881722,
+      "spectral_centroid_hz": 3476.69
+    },
+    {
+      "source_time_seconds": 159.44,
+      "rms": 0.20866673,
+      "peak": 0.99942017,
+      "high_band_fraction": 0.890311,
+      "spectral_centroid_hz": 3326.77
+    },
+    {
+      "source_time_seconds": 160.34,
+      "rms": 0.21705145,
+      "peak": 0.99673462,
+      "high_band_fraction": 0.840372,
+      "spectral_centroid_hz": 3408.91
+    },
+    {
+      "source_time_seconds": 161.66,
+      "rms": 0.1159132,
+      "peak": 0.7019043,
+      "high_band_fraction": 0.841705,
+      "spectral_centroid_hz": 2923.55
+    },
+    {
+      "source_time_seconds": 165.08,
+      "rms": 0.2172603,
+      "peak": 1.0,
+      "high_band_fraction": 0.91635,
+      "spectral_centroid_hz": 2976.28
+    },
+    {
+      "source_time_seconds": 168.29,
+      "rms": 0.19298147,
+      "peak": 0.69024658,
+      "high_band_fraction": 0.917674,
+      "spectral_centroid_hz": 3713.5
+    },
+    {
+      "source_time_seconds": 171.18,
+      "rms": 0.07329945,
+      "peak": 0.22424316,
+      "high_band_fraction": 0.161259,
+      "spectral_centroid_hz": 2178.7
+    },
+    {
+      "source_time_seconds": 171.74,
+      "rms": 0.02240331,
+      "peak": 0.05767822,
+      "high_band_fraction": 0.246714,
+      "spectral_centroid_hz": 2030.56
+    },
+    {
+      "source_time_seconds": 173.75,
+      "rms": 0.10873862,
+      "peak": 0.49075317,
+      "high_band_fraction": 0.51001,
+      "spectral_centroid_hz": 3224.7
+    },
+    {
+      "source_time_seconds": 176.05,
+      "rms": 0.12725362,
+      "peak": 0.49349976,
+      "high_band_fraction": 0.668422,
+      "spectral_centroid_hz": 3588.19
+    },
+    {
+      "source_time_seconds": 178.35,
+      "rms": 0.09660453,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.684152,
+      "spectral_centroid_hz": 4526.43
+    },
+    {
+      "source_time_seconds": 179.72,
+      "rms": 0.12872592,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.647277,
+      "spectral_centroid_hz": 3527.94
+    },
+    {
+      "source_time_seconds": 180.7,
+      "rms": 0.1272556,
+      "peak": 0.49758911,
+      "high_band_fraction": 0.694383,
+      "spectral_centroid_hz": 3747.4
+    },
+    {
+      "source_time_seconds": 181.09,
+      "rms": 0.10048578,
+      "peak": 0.47854614,
+      "high_band_fraction": 0.397414,
+      "spectral_centroid_hz": 2788.98
+    },
+    {
+      "source_time_seconds": 182.03,
+      "rms": 0.03917042,
+      "peak": 0.1116333,
+      "high_band_fraction": 0.238298,
+      "spectral_centroid_hz": 1823.14
+    },
+    {
+      "source_time_seconds": 183.52,
+      "rms": 0.11589465,
+      "peak": 0.46850586,
+      "high_band_fraction": 0.552258,
+      "spectral_centroid_hz": 3297.66
+    },
+    {
+      "source_time_seconds": 183.94,
+      "rms": 0.10532647,
+      "peak": 0.45904541,
+      "high_band_fraction": 0.668028,
+      "spectral_centroid_hz": 4335.33
+    },
+    {
+      "source_time_seconds": 188.34,
+      "rms": 0.1238441,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.623781,
+      "spectral_centroid_hz": 3479.07
+    },
+    {
+      "source_time_seconds": 190.69,
+      "rms": 0.10295894,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.4272,
+      "spectral_centroid_hz": 2805.07
+    },
+    {
+      "source_time_seconds": 191.2,
+      "rms": 0.11552571,
+      "peak": 0.46640015,
+      "high_band_fraction": 0.551019,
+      "spectral_centroid_hz": 3359.97
+    },
+    {
+      "source_time_seconds": 192.78,
+      "rms": 0.10432804,
+      "peak": 0.46777344,
+      "high_band_fraction": 0.457058,
+      "spectral_centroid_hz": 2988.16
+    },
+    {
+      "source_time_seconds": 194.95,
+      "rms": 0.11973719,
+      "peak": 0.45547485,
+      "high_band_fraction": 0.689199,
+      "spectral_centroid_hz": 3914.15
+    },
+    {
+      "source_time_seconds": 196.27,
+      "rms": 0.09730867,
+      "peak": 0.49914551,
+      "high_band_fraction": 0.679095,
+      "spectral_centroid_hz": 4509.56
+    },
+    {
+      "source_time_seconds": 197.64,
+      "rms": 0.12916701,
+      "peak": 0.49075317,
+      "high_band_fraction": 0.642124,
+      "spectral_centroid_hz": 3543.46
+    },
+    {
+      "source_time_seconds": 198.41,
+      "rms": 0.12330621,
+      "peak": 0.50656128,
+      "high_band_fraction": 0.591835,
+      "spectral_centroid_hz": 3375.77
+    },
+    {
+      "source_time_seconds": 199.3,
+      "rms": 0.10535279,
+      "peak": 0.47427368,
+      "high_band_fraction": 0.660952,
+      "spectral_centroid_hz": 4302.39
+    },
+    {
+      "source_time_seconds": 205.06,
+      "rms": 0.10544547,
+      "peak": 0.46011353,
+      "high_band_fraction": 0.677774,
+      "spectral_centroid_hz": 4385.78
+    },
+    {
+      "source_time_seconds": 206.56,
+      "rms": 0.11332838,
+      "peak": 0.47283936,
+      "high_band_fraction": 0.542094,
+      "spectral_centroid_hz": 3377.16
+    },
+    {
+      "source_time_seconds": 207.88,
+      "rms": 0.12916701,
+      "peak": 0.49075317,
+      "high_band_fraction": 0.642124,
+      "spectral_centroid_hz": 3543.46
+    },
+    {
+      "source_time_seconds": 209.97,
+      "rms": 0.12366496,
+      "peak": 0.47238159,
+      "high_band_fraction": 0.654322,
+      "spectral_centroid_hz": 3638.16
+    },
+    {
+      "source_time_seconds": 213.55,
+      "rms": 0.09916833,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.688464,
+      "spectral_centroid_hz": 4443.2
+    },
+    {
+      "source_time_seconds": 215.22,
+      "rms": 0.12210745,
+      "peak": 0.48968506,
+      "high_band_fraction": 0.62172,
+      "spectral_centroid_hz": 3439.39
+    },
+    {
+      "source_time_seconds": 215.65,
+      "rms": 0.10193025,
+      "peak": 0.4777832,
+      "high_band_fraction": 0.396767,
+      "spectral_centroid_hz": 2804.92
+    },
+    {
+      "source_time_seconds": 216.93,
+      "rms": 0.10212622,
+      "peak": 0.47576904,
+      "high_band_fraction": 0.38728,
+      "spectral_centroid_hz": 2754.77
+    },
+    {
+      "source_time_seconds": 219.61,
+      "rms": 0.11298324,
+      "peak": 0.47180176,
+      "high_band_fraction": 0.698933,
+      "spectral_centroid_hz": 4214.88
+    },
+    {
+      "source_time_seconds": 222.73,
+      "rms": 0.122946,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.591616,
+      "spectral_centroid_hz": 3416.2
+    },
+    {
+      "source_time_seconds": 223.41,
+      "rms": 0.12413798,
+      "peak": 0.47381592,
+      "high_band_fraction": 0.660298,
+      "spectral_centroid_hz": 3695.48
+    },
+    {
+      "source_time_seconds": 224.43,
+      "rms": 0.09850541,
+      "peak": 0.51858521,
+      "high_band_fraction": 0.687771,
+      "spectral_centroid_hz": 4493.15
+    },
+    {
+      "source_time_seconds": 225.07,
+      "rms": 0.09927934,
+      "peak": 0.49923706,
+      "high_band_fraction": 0.684847,
+      "spectral_centroid_hz": 4435.82
+    },
+    {
+      "source_time_seconds": 226.53,
+      "rms": 0.10244389,
+      "peak": 0.48464966,
+      "high_band_fraction": 0.416175,
+      "spectral_centroid_hz": 2775.98
+    },
+    {
+      "source_time_seconds": 232.03,
+      "rms": 0.12818329,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.642461,
+      "spectral_centroid_hz": 3552.68
+    },
+    {
+      "source_time_seconds": 233.22,
+      "rms": 0.10632046,
+      "peak": 0.46960449,
+      "high_band_fraction": 0.678474,
+      "spectral_centroid_hz": 4354.4
+    },
+    {
+      "source_time_seconds": 234.93,
+      "rms": 0.12592392,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.670956,
+      "spectral_centroid_hz": 3672.86
+    },
+    {
+      "source_time_seconds": 236.34,
+      "rms": 0.12609158,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.6454,
+      "spectral_centroid_hz": 3436.55
+    },
+    {
+      "source_time_seconds": 237.75,
+      "rms": 0.1092746,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.504416,
+      "spectral_centroid_hz": 3207.19
+    },
+    {
+      "source_time_seconds": 239.84,
+      "rms": 0.11755472,
+      "peak": 0.47015381,
+      "high_band_fraction": 0.565588,
+      "spectral_centroid_hz": 3325.18
+    },
+    {
+      "source_time_seconds": 243.12,
+      "rms": 0.11689217,
+      "peak": 0.47531128,
+      "high_band_fraction": 0.682412,
+      "spectral_centroid_hz": 4055.74
+    },
+    {
+      "source_time_seconds": 244.19,
+      "rms": 0.12652646,
+      "peak": 0.43457031,
+      "high_band_fraction": 0.645968,
+      "spectral_centroid_hz": 3517.94
+    },
+    {
+      "source_time_seconds": 245.0,
+      "rms": 0.12746719,
+      "peak": 0.50332642,
+      "high_band_fraction": 0.65769,
+      "spectral_centroid_hz": 3610.87
+    },
+    {
+      "source_time_seconds": 248.29,
+      "rms": 0.10239823,
+      "peak": 0.48373413,
+      "high_band_fraction": 0.400004,
+      "spectral_centroid_hz": 2783.08
+    },
+    {
+      "source_time_seconds": 250.08,
+      "rms": 0.11755472,
+      "peak": 0.47015381,
+      "high_band_fraction": 0.565588,
+      "spectral_centroid_hz": 3325.18
+    },
+    {
+      "source_time_seconds": 253.41,
+      "rms": 0.10343234,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.386719,
+      "spectral_centroid_hz": 2782.25
+    },
+    {
+      "source_time_seconds": 255.75,
+      "rms": 0.3330197,
+      "peak": 0.76327515,
+      "high_band_fraction": 0.143447,
+      "spectral_centroid_hz": 1613.86
+    },
+    {
+      "source_time_seconds": 256.4,
+      "rms": 0.25879735,
+      "peak": 0.63418579,
+      "high_band_fraction": 0.802503,
+      "spectral_centroid_hz": 1870.99
+    },
+    {
+      "source_time_seconds": 257.67,
+      "rms": 0.12246957,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.687019,
+      "spectral_centroid_hz": 3865.08
+    },
+    {
+      "source_time_seconds": 258.01,
+      "rms": 0.1127049,
+      "peak": 0.4888916,
+      "high_band_fraction": 0.68102,
+      "spectral_centroid_hz": 4222.98
+    },
+    {
+      "source_time_seconds": 263.39,
+      "rms": 0.08570414,
+      "peak": 0.49423218,
+      "high_band_fraction": 0.560837,
+      "spectral_centroid_hz": 5462.56
+    },
+    {
+      "source_time_seconds": 263.9,
+      "rms": 0.12690197,
+      "peak": 0.50286865,
+      "high_band_fraction": 0.686558,
+      "spectral_centroid_hz": 3722.07
+    },
+    {
+      "source_time_seconds": 265.27,
+      "rms": 0.10581762,
+      "peak": 0.46234131,
+      "high_band_fraction": 0.496528,
+      "spectral_centroid_hz": 3195.38
+    },
+    {
+      "source_time_seconds": 266.55,
+      "rms": 0.10633769,
+      "peak": 0.44979858,
+      "high_band_fraction": 0.483811,
+      "spectral_centroid_hz": 3171.61
+    },
+    {
+      "source_time_seconds": 266.93,
+      "rms": 0.12588666,
+      "peak": 0.47036743,
+      "high_band_fraction": 0.661848,
+      "spectral_centroid_hz": 3692.61
+    },
+    {
+      "source_time_seconds": 269.06,
+      "rms": 0.10645569,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.681908,
+      "spectral_centroid_hz": 4334.57
+    },
+    {
+      "source_time_seconds": 270.47,
+      "rms": 0.1225385,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.689513,
+      "spectral_centroid_hz": 3874.28
+    },
+    {
+      "source_time_seconds": 271.88,
+      "rms": 0.12872592,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.647277,
+      "spectral_centroid_hz": 3527.94
+    },
+    {
+      "source_time_seconds": 274.57,
+      "rms": 0.12620491,
+      "peak": 0.49954224,
+      "high_band_fraction": 0.591459,
+      "spectral_centroid_hz": 3334.58
+    },
+    {
+      "source_time_seconds": 275.63,
+      "rms": 0.09850564,
+      "peak": 0.51858521,
+      "high_band_fraction": 0.687767,
+      "spectral_centroid_hz": 4493.12
+    },
+    {
+      "source_time_seconds": 276.49,
+      "rms": 0.12509015,
+      "peak": 0.5045166,
+      "high_band_fraction": 0.596655,
+      "spectral_centroid_hz": 3402.12
+    },
+    {
+      "source_time_seconds": 280.5,
+      "rms": 0.12383508,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.623843,
+      "spectral_centroid_hz": 3479.06
+    },
+    {
+      "source_time_seconds": 282.12,
+      "rms": 0.12872447,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.647283,
+      "spectral_centroid_hz": 3527.95
+    },
+    {
+      "source_time_seconds": 283.06,
+      "rms": 0.12406793,
+      "peak": 0.48617554,
+      "high_band_fraction": 0.627699,
+      "spectral_centroid_hz": 3478.08
+    },
+    {
+      "source_time_seconds": 283.83,
+      "rms": 0.10873248,
+      "peak": 0.51794434,
+      "high_band_fraction": 0.481735,
+      "spectral_centroid_hz": 3183.85
+    },
+    {
+      "source_time_seconds": 284.98,
+      "rms": 0.12597674,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.640653,
+      "spectral_centroid_hz": 3439.62
+    },
+    {
+      "source_time_seconds": 286.3,
+      "rms": 0.1250343,
+      "peak": 0.49813843,
+      "high_band_fraction": 0.680676,
+      "spectral_centroid_hz": 3770.2
+    },
+    {
+      "source_time_seconds": 291.46,
+      "rms": 0.10535279,
+      "peak": 0.47427368,
+      "high_band_fraction": 0.660952,
+      "spectral_centroid_hz": 4302.39
+    },
+    {
+      "source_time_seconds": 293.99,
+      "rms": 0.26930895,
+      "peak": 0.66995239,
+      "high_band_fraction": 0.79836,
+      "spectral_centroid_hz": 1846.49
+    },
+    {
+      "source_time_seconds": 295.22,
+      "rms": 0.12597674,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.640653,
+      "spectral_centroid_hz": 3439.62
+    },
+    {
+      "source_time_seconds": 300.37,
+      "rms": 0.35700753,
+      "peak": 0.74957275,
+      "high_band_fraction": 0.186717,
+      "spectral_centroid_hz": 1943.06
+    },
+    {
+      "source_time_seconds": 304.13,
+      "rms": 0.19380477,
+      "peak": 0.95733643,
+      "high_band_fraction": 0.145858,
+      "spectral_centroid_hz": 2174.69
+    },
+    {
+      "source_time_seconds": 304.47,
+      "rms": 0.21197286,
+      "peak": 0.99697876,
+      "high_band_fraction": 0.354544,
+      "spectral_centroid_hz": 2245.85
+    },
+    {
+      "source_time_seconds": 305.02,
+      "rms": 0.19967905,
+      "peak": 0.84564209,
+      "high_band_fraction": 0.317551,
+      "spectral_centroid_hz": 2213.58
+    },
+    {
+      "source_time_seconds": 305.36,
+      "rms": 0.16769087,
+      "peak": 0.76861572,
+      "high_band_fraction": 0.136153,
+      "spectral_centroid_hz": 2187.33
+    },
+    {
+      "source_time_seconds": 305.64,
+      "rms": 0.11506329,
+      "peak": 0.68823242,
+      "high_band_fraction": 0.232396,
+      "spectral_centroid_hz": 2658.83
+    },
+    {
+      "source_time_seconds": 306.02,
+      "rms": 0.09791064,
+      "peak": 0.47958374,
+      "high_band_fraction": 0.414009,
+      "spectral_centroid_hz": 2292.52
+    },
+    {
+      "source_time_seconds": 306.63,
+      "rms": 0.02326612,
+      "peak": 0.1131897,
+      "high_band_fraction": 0.219093,
+      "spectral_centroid_hz": 2191.86
+    },
+    {
+      "source_time_seconds": 311.0,
+      "rms": 0.03615418,
+      "peak": 0.20993042,
+      "high_band_fraction": 0.942875,
+      "spectral_centroid_hz": 3684.59
+    },
+    {
+      "source_time_seconds": 311.26,
+      "rms": 0.03950205,
+      "peak": 0.20550537,
+      "high_band_fraction": 0.948968,
+      "spectral_centroid_hz": 4946.49
+    },
+    {
+      "source_time_seconds": 311.74,
+      "rms": 0.04380122,
+      "peak": 0.15869141,
+      "high_band_fraction": 0.954898,
+      "spectral_centroid_hz": 4639.19
+    },
+    {
+      "source_time_seconds": 313.27,
+      "rms": 0.17186578,
+      "peak": 0.68832397,
+      "high_band_fraction": 0.871286,
+      "spectral_centroid_hz": 3736.48
+    },
+    {
+      "source_time_seconds": 314.51,
+      "rms": 0.17016846,
+      "peak": 0.59658813,
+      "high_band_fraction": 0.880485,
+      "spectral_centroid_hz": 3474.45
+    },
+    {
+      "source_time_seconds": 315.19,
+      "rms": 0.17483969,
+      "peak": 0.68746948,
+      "high_band_fraction": 0.870011,
+      "spectral_centroid_hz": 3794.27
+    },
+    {
+      "source_time_seconds": 322.66,
+      "rms": 0.15642425,
+      "peak": 0.5645752,
+      "high_band_fraction": 0.780705,
+      "spectral_centroid_hz": 3347.79
+    },
+    {
+      "source_time_seconds": 323.62,
+      "rms": 0.1876775,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.966191,
+      "spectral_centroid_hz": 3184.98
+    },
+    {
+      "source_time_seconds": 324.14,
+      "rms": 0.22108325,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.864865,
+      "spectral_centroid_hz": 3274.16
+    },
+    {
+      "source_time_seconds": 325.46,
+      "rms": 0.11893382,
+      "peak": 0.70559692,
+      "high_band_fraction": 0.826602,
+      "spectral_centroid_hz": 2925.24
+    },
+    {
+      "source_time_seconds": 326.06,
+      "rms": 0.21642761,
+      "peak": 0.9894104,
+      "high_band_fraction": 0.863968,
+      "spectral_centroid_hz": 3239.32
+    },
+    {
+      "source_time_seconds": 327.76,
+      "rms": 0.21273506,
+      "peak": 1.0,
+      "high_band_fraction": 0.891455,
+      "spectral_centroid_hz": 3385.7
+    },
+    {
+      "source_time_seconds": 330.15,
+      "rms": 0.20409985,
+      "peak": 1.0,
+      "high_band_fraction": 0.869198,
+      "spectral_centroid_hz": 3373.44
+    },
+    {
+      "source_time_seconds": 332.67,
+      "rms": 0.12112597,
+      "peak": 0.70581055,
+      "high_band_fraction": 0.827951,
+      "spectral_centroid_hz": 2935.5
+    },
+    {
+      "source_time_seconds": 333.54,
+      "rms": 0.15527306,
+      "peak": 0.59228516,
+      "high_band_fraction": 0.783026,
+      "spectral_centroid_hz": 3383.19
+    },
+    {
+      "source_time_seconds": 335.83,
+      "rms": 0.07988889,
+      "peak": 0.19625854,
+      "high_band_fraction": 0.130578,
+      "spectral_centroid_hz": 2068.55
+    },
+    {
+      "source_time_seconds": 337.46,
+      "rms": 0.1252556,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.624952,
+      "spectral_centroid_hz": 3456.89
+    },
+    {
+      "source_time_seconds": 339.63,
+      "rms": 0.09730867,
+      "peak": 0.49914551,
+      "high_band_fraction": 0.679095,
+      "spectral_centroid_hz": 4509.56
+    },
+    {
+      "source_time_seconds": 340.57,
+      "rms": 0.11233138,
+      "peak": 0.49978638,
+      "high_band_fraction": 0.679759,
+      "spectral_centroid_hz": 4281.37
+    },
+    {
+      "source_time_seconds": 341.34,
+      "rms": 0.12673661,
+      "peak": 0.50390625,
+      "high_band_fraction": 0.692392,
+      "spectral_centroid_hz": 3733.48
+    },
+    {
+      "source_time_seconds": 342.79,
+      "rms": 0.12030686,
+      "peak": 0.47723389,
+      "high_band_fraction": 0.678166,
+      "spectral_centroid_hz": 3872.96
+    },
+    {
+      "source_time_seconds": 343.22,
+      "rms": 0.124484,
+      "peak": 0.47824097,
+      "high_band_fraction": 0.607582,
+      "spectral_centroid_hz": 3468.07
+    },
+    {
+      "source_time_seconds": 343.94,
+      "rms": 0.10684332,
+      "peak": 0.46685791,
+      "high_band_fraction": 0.681067,
+      "spectral_centroid_hz": 4310.19
+    },
+    {
+      "source_time_seconds": 345.78,
+      "rms": 0.12292029,
+      "peak": 0.49475098,
+      "high_band_fraction": 0.63155,
+      "spectral_centroid_hz": 3458.12
+    },
+    {
+      "source_time_seconds": 349.49,
+      "rms": 0.12341559,
+      "peak": 0.47427368,
+      "high_band_fraction": 0.641278,
+      "spectral_centroid_hz": 3612.88
+    },
+    {
+      "source_time_seconds": 351.24,
+      "rms": 0.12919588,
+      "peak": 0.49069214,
+      "high_band_fraction": 0.64219,
+      "spectral_centroid_hz": 3546.11
+    },
+    {
+      "source_time_seconds": 351.71,
+      "rms": 0.12721214,
+      "peak": 0.46875,
+      "high_band_fraction": 0.640688,
+      "spectral_centroid_hz": 3511.97
+    },
+    {
+      "source_time_seconds": 355.21,
+      "rms": 0.12203053,
+      "peak": 0.47958374,
+      "high_band_fraction": 0.578916,
+      "spectral_centroid_hz": 3397.65
+    },
+    {
+      "source_time_seconds": 356.91,
+      "rms": 0.09930892,
+      "peak": 0.50170898,
+      "high_band_fraction": 0.695425,
+      "spectral_centroid_hz": 4490.23
+    },
+    {
+      "source_time_seconds": 358.24,
+      "rms": 0.11458275,
+      "peak": 0.46188354,
+      "high_band_fraction": 0.563982,
+      "spectral_centroid_hz": 3388.88
+    },
+    {
+      "source_time_seconds": 359.65,
+      "rms": 0.10244389,
+      "peak": 0.48464966,
+      "high_band_fraction": 0.416175,
+      "spectral_centroid_hz": 2775.98
+    },
+    {
+      "source_time_seconds": 361.44,
+      "rms": 0.11213452,
+      "peak": 0.45343018,
+      "high_band_fraction": 0.543636,
+      "spectral_centroid_hz": 3413.74
+    },
+    {
+      "source_time_seconds": 362.38,
+      "rms": 0.10204785,
+      "peak": 0.48254395,
+      "high_band_fraction": 0.431456,
+      "spectral_centroid_hz": 2996.38
+    },
+    {
+      "source_time_seconds": 365.49,
+      "rms": 0.12481347,
+      "peak": 0.46026611,
+      "high_band_fraction": 0.663129,
+      "spectral_centroid_hz": 3689.81
+    },
+    {
+      "source_time_seconds": 366.26,
+      "rms": 0.12339575,
+      "peak": 0.49938965,
+      "high_band_fraction": 0.632294,
+      "spectral_centroid_hz": 3485.72
+    },
+    {
+      "source_time_seconds": 367.28,
+      "rms": 0.11588198,
+      "peak": 0.46640015,
+      "high_band_fraction": 0.702709,
+      "spectral_centroid_hz": 4046.21
+    },
+    {
+      "source_time_seconds": 368.18,
+      "rms": 0.1252556,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.624952,
+      "spectral_centroid_hz": 3456.89
+    },
+    {
+      "source_time_seconds": 369.16,
+      "rms": 0.12823485,
+      "peak": 0.51193237,
+      "high_band_fraction": 0.653104,
+      "spectral_centroid_hz": 3529.49
+    },
+    {
+      "source_time_seconds": 369.63,
+      "rms": 0.12622023,
+      "peak": 0.44882202,
+      "high_band_fraction": 0.643475,
+      "spectral_centroid_hz": 3492.05
+    },
+    {
+      "source_time_seconds": 371.51,
+      "rms": 0.10594843,
+      "peak": 0.49871826,
+      "high_band_fraction": 0.537911,
+      "spectral_centroid_hz": 3186.94
+    },
+    {
+      "source_time_seconds": 372.49,
+      "rms": 0.123328,
+      "peak": 0.51226807,
+      "high_band_fraction": 0.589799,
+      "spectral_centroid_hz": 3374.37
+    },
+    {
+      "source_time_seconds": 373.81,
+      "rms": 0.12366416,
+      "peak": 0.47238159,
+      "high_band_fraction": 0.654321,
+      "spectral_centroid_hz": 3638.14
+    },
+    {
+      "source_time_seconds": 375.52,
+      "rms": 0.11514833,
+      "peak": 0.46279907,
+      "high_band_fraction": 0.538397,
+      "spectral_centroid_hz": 3340.48
+    },
+    {
+      "source_time_seconds": 377.17,
+      "rms": 0.23326777,
+      "peak": 0.70578003,
+      "high_band_fraction": 0.216368,
+      "spectral_centroid_hz": 1621.78
+    },
+    {
+      "source_time_seconds": 378.21,
+      "rms": 0.10159066,
+      "peak": 0.48156738,
+      "high_band_fraction": 0.403442,
+      "spectral_centroid_hz": 2820.39
+    },
+    {
+      "source_time_seconds": 379.36,
+      "rms": 0.113629,
+      "peak": 0.46780396,
+      "high_band_fraction": 0.544464,
+      "spectral_centroid_hz": 3365.55
+    },
+    {
+      "source_time_seconds": 381.32,
+      "rms": 0.12632348,
+      "peak": 0.46234131,
+      "high_band_fraction": 0.650982,
+      "spectral_centroid_hz": 3616.62
+    },
+    {
+      "source_time_seconds": 382.47,
+      "rms": 0.11840497,
+      "peak": 0.48959351,
+      "high_band_fraction": 0.671148,
+      "spectral_centroid_hz": 3873.14
+    },
+    {
+      "source_time_seconds": 383.54,
+      "rms": 0.12441609,
+      "peak": 0.4831543,
+      "high_band_fraction": 0.642868,
+      "spectral_centroid_hz": 3451.09
+    },
+    {
+      "source_time_seconds": 385.63,
+      "rms": 0.12818329,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.642461,
+      "spectral_centroid_hz": 3552.68
+    },
+    {
+      "source_time_seconds": 389.34,
+      "rms": 0.12381541,
+      "peak": 0.47909546,
+      "high_band_fraction": 0.662223,
+      "spectral_centroid_hz": 3783.06
+    },
+    {
+      "source_time_seconds": 393.18,
+      "rms": 0.12610811,
+      "peak": 0.4871521,
+      "high_band_fraction": 0.673602,
+      "spectral_centroid_hz": 3735.79
+    },
+    {
+      "source_time_seconds": 394.72,
+      "rms": 0.11421262,
+      "peak": 0.46157837,
+      "high_band_fraction": 0.547749,
+      "spectral_centroid_hz": 3364.9
+    },
+    {
+      "source_time_seconds": 396.08,
+      "rms": 0.11524621,
+      "peak": 0.47271729,
+      "high_band_fraction": 0.690268,
+      "spectral_centroid_hz": 4047.88
+    },
+    {
+      "source_time_seconds": 397.96,
+      "rms": 0.12736617,
+      "peak": 0.47290039,
+      "high_band_fraction": 0.661533,
+      "spectral_centroid_hz": 3611.01
+    },
+    {
+      "source_time_seconds": 399.11,
+      "rms": 0.12081785,
+      "peak": 0.48638916,
+      "high_band_fraction": 0.667353,
+      "spectral_centroid_hz": 3849.94
+    },
+    {
+      "source_time_seconds": 400.18,
+      "rms": 0.12609158,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.6454,
+      "spectral_centroid_hz": 3436.55
+    },
+    {
+      "source_time_seconds": 402.57,
+      "rms": 0.12641351,
+      "peak": 0.4805603,
+      "high_band_fraction": 0.591105,
+      "spectral_centroid_hz": 3323.28
+    },
+    {
+      "source_time_seconds": 403.46,
+      "rms": 0.10700279,
+      "peak": 0.47174072,
+      "high_band_fraction": 0.681097,
+      "spectral_centroid_hz": 4385.94
+    },
+    {
+      "source_time_seconds": 405.09,
+      "rms": 0.10185815,
+      "peak": 0.47747803,
+      "high_band_fraction": 0.400107,
+      "spectral_centroid_hz": 2775.46
+    },
+    {
+      "source_time_seconds": 406.11,
+      "rms": 0.12818828,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.642443,
+      "spectral_centroid_hz": 3552.67
+    },
+    {
+      "source_time_seconds": 406.71,
+      "rms": 0.09940732,
+      "peak": 0.41400146,
+      "high_band_fraction": 0.48398,
+      "spectral_centroid_hz": 4923.45
+    },
+    {
+      "source_time_seconds": 407.13,
+      "rms": 0.11325099,
+      "peak": 0.48242188,
+      "high_band_fraction": 0.674836,
+      "spectral_centroid_hz": 4201.95
+    },
+    {
+      "source_time_seconds": 408.24,
+      "rms": 0.11588189,
+      "peak": 0.46640015,
+      "high_band_fraction": 0.702706,
+      "spectral_centroid_hz": 4046.84
+    },
+    {
+      "source_time_seconds": 409.82,
+      "rms": 0.12381541,
+      "peak": 0.47909546,
+      "high_band_fraction": 0.662223,
+      "spectral_centroid_hz": 3783.06
+    },
+    {
+      "source_time_seconds": 411.91,
+      "rms": 0.11996237,
+      "peak": 0.47747803,
+      "high_band_fraction": 0.669939,
+      "spectral_centroid_hz": 3896.27
+    },
+    {
+      "source_time_seconds": 414.0,
+      "rms": 0.11500055,
+      "peak": 0.4519043,
+      "high_band_fraction": 0.69828,
+      "spectral_centroid_hz": 4067.44
+    },
+    {
+      "source_time_seconds": 416.35,
+      "rms": 0.12818329,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.642461,
+      "spectral_centroid_hz": 3552.68
+    },
+    {
+      "source_time_seconds": 418.01,
+      "rms": 0.11294962,
+      "peak": 0.45709229,
+      "high_band_fraction": 0.712521,
+      "spectral_centroid_hz": 4183.0
+    },
+    {
+      "source_time_seconds": 420.02,
+      "rms": 0.12210745,
+      "peak": 0.48968506,
+      "high_band_fraction": 0.62172,
+      "spectral_centroid_hz": 3439.39
+    },
+    {
+      "source_time_seconds": 420.79,
+      "rms": 0.10695158,
+      "peak": 0.47970581,
+      "high_band_fraction": 0.497916,
+      "spectral_centroid_hz": 3195.8
+    },
+    {
+      "source_time_seconds": 422.75,
+      "rms": 0.12792379,
+      "peak": 0.4631958,
+      "high_band_fraction": 0.650305,
+      "spectral_centroid_hz": 3485.11
+    },
+    {
+      "source_time_seconds": 424.5,
+      "rms": 0.12440823,
+      "peak": 0.48464966,
+      "high_band_fraction": 0.643232,
+      "spectral_centroid_hz": 3453.09
+    },
+    {
+      "source_time_seconds": 427.1,
+      "rms": 0.12531824,
+      "peak": 0.51202393,
+      "high_band_fraction": 0.681366,
+      "spectral_centroid_hz": 3749.13
+    },
+    {
+      "source_time_seconds": 433.59,
+      "rms": 0.10846623,
+      "peak": 0.49749756,
+      "high_band_fraction": 0.529582,
+      "spectral_centroid_hz": 3252.79
+    },
+    {
+      "source_time_seconds": 435.21,
+      "rms": 0.09552741,
+      "peak": 0.42218018,
+      "high_band_fraction": 0.516721,
+      "spectral_centroid_hz": 5108.37
+    },
+    {
+      "source_time_seconds": 435.59,
+      "rms": 0.11939894,
+      "peak": 0.4697876,
+      "high_band_fraction": 0.670966,
+      "spectral_centroid_hz": 3872.09
+    },
+    {
+      "source_time_seconds": 437.51,
+      "rms": 0.11986815,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.669797,
+      "spectral_centroid_hz": 3838.04
+    },
+    {
+      "source_time_seconds": 440.46,
+      "rms": 0.1007408,
+      "peak": 0.47271729,
+      "high_band_fraction": 0.44537,
+      "spectral_centroid_hz": 3038.59
+    },
+    {
+      "source_time_seconds": 452.49,
+      "rms": 0.1263639,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.60563,
+      "spectral_centroid_hz": 3309.78
+    },
+    {
+      "source_time_seconds": 455.09,
+      "rms": 0.12466142,
+      "peak": 0.46960449,
+      "high_band_fraction": 0.669755,
+      "spectral_centroid_hz": 3662.45
+    },
+    {
+      "source_time_seconds": 458.93,
+      "rms": 0.12399015,
+      "peak": 0.47711182,
+      "high_band_fraction": 0.664918,
+      "spectral_centroid_hz": 3701.81
+    },
+    {
+      "source_time_seconds": 461.45,
+      "rms": 0.12445467,
+      "peak": 0.4871521,
+      "high_band_fraction": 0.602539,
+      "spectral_centroid_hz": 3325.21
+    },
+    {
+      "source_time_seconds": 462.73,
+      "rms": 0.12636514,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.60562,
+      "spectral_centroid_hz": 3309.81
+    },
+    {
+      "source_time_seconds": 467.46,
+      "rms": 0.10576621,
+      "peak": 0.46188354,
+      "high_band_fraction": 0.681993,
+      "spectral_centroid_hz": 4346.87
+    },
+    {
+      "source_time_seconds": 468.96,
+      "rms": 0.09864377,
+      "peak": 0.46173096,
+      "high_band_fraction": 0.506722,
+      "spectral_centroid_hz": 5084.76
+    },
+    {
+      "source_time_seconds": 469.3,
+      "rms": 0.12597771,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.64066,
+      "spectral_centroid_hz": 3439.66
+    },
+    {
+      "source_time_seconds": 470.32,
+      "rms": 0.11759673,
+      "peak": 0.47314453,
+      "high_band_fraction": 0.688857,
+      "spectral_centroid_hz": 4094.71
+    },
+    {
+      "source_time_seconds": 471.22,
+      "rms": 0.12195835,
+      "peak": 0.487854,
+      "high_band_fraction": 0.624431,
+      "spectral_centroid_hz": 3437.19
+    },
+    {
+      "source_time_seconds": 471.94,
+      "rms": 0.10850219,
+      "peak": 0.46591187,
+      "high_band_fraction": 0.670519,
+      "spectral_centroid_hz": 4270.42
+    },
+    {
+      "source_time_seconds": 472.46,
+      "rms": 0.10309095,
+      "peak": 0.46588135,
+      "high_band_fraction": 0.441106,
+      "spectral_centroid_hz": 2963.92
+    },
+    {
+      "source_time_seconds": 477.41,
+      "rms": 0.10295894,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.4272,
+      "spectral_centroid_hz": 2805.07
+    },
+    {
+      "source_time_seconds": 487.73,
+      "rms": 0.1227017,
+      "peak": 0.45343018,
+      "high_band_fraction": 0.651146,
+      "spectral_centroid_hz": 3657.73
+    },
+    {
+      "source_time_seconds": 488.84,
+      "rms": 0.12753943,
+      "peak": 0.46951294,
+      "high_band_fraction": 0.650873,
+      "spectral_centroid_hz": 3568.06
+    },
+    {
+      "source_time_seconds": 492.98,
+      "rms": 0.09059229,
+      "peak": 0.43545532,
+      "high_band_fraction": 0.524464,
+      "spectral_centroid_hz": 5315.63
+    },
+    {
+      "source_time_seconds": 494.73,
+      "rms": 0.13077088,
+      "peak": 0.54495239,
+      "high_band_fraction": 0.522287,
+      "spectral_centroid_hz": 3173.77
+    },
+    {
+      "source_time_seconds": 496.99,
+      "rms": 0.185628,
+      "peak": 0.5355835,
+      "high_band_fraction": 0.28929,
+      "spectral_centroid_hz": 2945.17
+    },
+    {
+      "source_time_seconds": 500.02,
+      "rms": 0.13045198,
+      "peak": 0.47607422,
+      "high_band_fraction": 0.606967,
+      "spectral_centroid_hz": 3312.98
+    },
+    {
+      "source_time_seconds": 502.02,
+      "rms": 0.13408379,
+      "peak": 0.49087524,
+      "high_band_fraction": 0.497985,
+      "spectral_centroid_hz": 4102.12
+    },
+    {
+      "source_time_seconds": 504.54,
+      "rms": 0.1376957,
+      "peak": 0.51541138,
+      "high_band_fraction": 0.591725,
+      "spectral_centroid_hz": 3577.87
+    },
+    {
+      "source_time_seconds": 507.31,
+      "rms": 0.11128145,
+      "peak": 0.53363037,
+      "high_band_fraction": 0.386868,
+      "spectral_centroid_hz": 3931.18
+    },
+    {
+      "source_time_seconds": 509.79,
+      "rms": 0.12438954,
+      "peak": 0.45016479,
+      "high_band_fraction": 0.654865,
+      "spectral_centroid_hz": 3556.73
+    },
+    {
+      "source_time_seconds": 512.18,
+      "rms": 0.13208887,
+      "peak": 0.51046753,
+      "high_band_fraction": 0.527832,
+      "spectral_centroid_hz": 3251.59
+    },
+    {
+      "source_time_seconds": 512.82,
+      "rms": 0.16930772,
+      "peak": 0.67816162,
+      "high_band_fraction": 0.77182,
+      "spectral_centroid_hz": 3688.78
+    },
+    {
+      "source_time_seconds": 515.08,
+      "rms": 0.03709662,
+      "peak": 0.2076416,
+      "high_band_fraction": 0.993125,
+      "spectral_centroid_hz": 3880.78
+    },
+    {
+      "source_time_seconds": 515.34,
+      "rms": 0.04382831,
+      "peak": 0.20501709,
+      "high_band_fraction": 0.961288,
+      "spectral_centroid_hz": 4833.61
+    },
+    {
+      "source_time_seconds": 515.82,
+      "rms": 0.0426075,
+      "peak": 0.16967773,
+      "high_band_fraction": 0.981914,
+      "spectral_centroid_hz": 4667.2
+    },
+    {
+      "source_time_seconds": 517.34,
+      "rms": 0.12815359,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.695265,
+      "spectral_centroid_hz": 3740.69
+    },
+    {
+      "source_time_seconds": 517.77,
+      "rms": 0.12715134,
+      "peak": 0.52270508,
+      "high_band_fraction": 0.610857,
+      "spectral_centroid_hz": 3432.34
+    },
+    {
+      "source_time_seconds": 519.73,
+      "rms": 0.12756787,
+      "peak": 0.47015381,
+      "high_band_fraction": 0.675326,
+      "spectral_centroid_hz": 3620.76
+    },
+    {
+      "source_time_seconds": 520.97,
+      "rms": 0.12527572,
+      "peak": 0.49642944,
+      "high_band_fraction": 0.59696,
+      "spectral_centroid_hz": 3403.26
+    },
+    {
+      "source_time_seconds": 524.77,
+      "rms": 0.10239823,
+      "peak": 0.48373413,
+      "high_band_fraction": 0.400004,
+      "spectral_centroid_hz": 2783.08
+    },
+    {
+      "source_time_seconds": 529.12,
+      "rms": 0.11470655,
+      "peak": 0.46420288,
+      "high_band_fraction": 0.552226,
+      "spectral_centroid_hz": 3392.9
+    },
+    {
+      "source_time_seconds": 530.06,
+      "rms": 0.10220426,
+      "peak": 0.45275879,
+      "high_band_fraction": 0.463777,
+      "spectral_centroid_hz": 2966.45
+    },
+    {
+      "source_time_seconds": 533.34,
+      "rms": 0.12494706,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.688393,
+      "spectral_centroid_hz": 3768.15
+    },
+    {
+      "source_time_seconds": 534.79,
+      "rms": 0.11996237,
+      "peak": 0.47747803,
+      "high_band_fraction": 0.669939,
+      "spectral_centroid_hz": 3896.27
+    },
+    {
+      "source_time_seconds": 535.22,
+      "rms": 0.12440501,
+      "peak": 0.49169922,
+      "high_band_fraction": 0.621453,
+      "spectral_centroid_hz": 3485.02
+    },
+    {
+      "source_time_seconds": 536.58,
+      "rms": 0.10710856,
+      "peak": 0.47396851,
+      "high_band_fraction": 0.68093,
+      "spectral_centroid_hz": 4385.13
+    },
+    {
+      "source_time_seconds": 539.49,
+      "rms": 0.09980511,
+      "peak": 0.48959351,
+      "high_band_fraction": 0.383945,
+      "spectral_centroid_hz": 2801.28
+    },
+    {
+      "source_time_seconds": 542.56,
+      "rms": 0.11458275,
+      "peak": 0.46188354,
+      "high_band_fraction": 0.563982,
+      "spectral_centroid_hz": 3388.88
+    },
+    {
+      "source_time_seconds": 543.45,
+      "rms": 0.11329019,
+      "peak": 0.47058105,
+      "high_band_fraction": 0.70518,
+      "spectral_centroid_hz": 4248.89
+    },
+    {
+      "source_time_seconds": 543.92,
+      "rms": 0.1158957,
+      "peak": 0.46572876,
+      "high_band_fraction": 0.667393,
+      "spectral_centroid_hz": 3992.56
+    },
+    {
+      "source_time_seconds": 545.71,
+      "rms": 0.09600528,
+      "peak": 0.49813843,
+      "high_band_fraction": 0.685667,
+      "spectral_centroid_hz": 4540.75
+    },
+    {
+      "source_time_seconds": 546.61,
+      "rms": 0.12401965,
+      "peak": 0.47000122,
+      "high_band_fraction": 0.643806,
+      "spectral_centroid_hz": 3622.26
+    },
+    {
+      "source_time_seconds": 548.49,
+      "rms": 0.12627301,
+      "peak": 0.51779175,
+      "high_band_fraction": 0.604216,
+      "spectral_centroid_hz": 3347.08
+    },
+    {
+      "source_time_seconds": 549.81,
+      "rms": 0.12477372,
+      "peak": 0.46066284,
+      "high_band_fraction": 0.663008,
+      "spectral_centroid_hz": 3695.1
+    },
+    {
+      "source_time_seconds": 550.66,
+      "rms": 0.10631744,
+      "peak": 0.46960449,
+      "high_band_fraction": 0.678653,
+      "spectral_centroid_hz": 4354.83
+    },
+    {
+      "source_time_seconds": 551.39,
+      "rms": 0.12655371,
+      "peak": 0.4362793,
+      "high_band_fraction": 0.646214,
+      "spectral_centroid_hz": 3523.22
+    },
+    {
+      "source_time_seconds": 555.66,
+      "rms": 0.10392781,
+      "peak": 0.47314453,
+      "high_band_fraction": 0.438788,
+      "spectral_centroid_hz": 2955.08
+    },
+    {
+      "source_time_seconds": 556.68,
+      "rms": 0.1273589,
+      "peak": 0.4548645,
+      "high_band_fraction": 0.651588,
+      "spectral_centroid_hz": 3584.79
+    },
+    {
+      "source_time_seconds": 557.41,
+      "rms": 0.10126208,
+      "peak": 0.49938965,
+      "high_band_fraction": 0.388055,
+      "spectral_centroid_hz": 2855.35
+    },
+    {
+      "source_time_seconds": 558.59,
+      "rms": 0.06742459,
+      "peak": 0.19613647,
+      "high_band_fraction": 0.154136,
+      "spectral_centroid_hz": 2353.01
+    },
+    {
+      "source_time_seconds": 560.52,
+      "rms": 0.12786038,
+      "peak": 0.47009277,
+      "high_band_fraction": 0.65314,
+      "spectral_centroid_hz": 3569.72
+    },
+    {
+      "source_time_seconds": 563.76,
+      "rms": 0.11660493,
+      "peak": 0.48275757,
+      "high_band_fraction": 0.7038,
+      "spectral_centroid_hz": 4042.91
+    },
+    {
+      "source_time_seconds": 565.98,
+      "rms": 0.12525894,
+      "peak": 0.47976685,
+      "high_band_fraction": 0.679469,
+      "spectral_centroid_hz": 3710.24
+    },
+    {
+      "source_time_seconds": 566.66,
+      "rms": 0.10687536,
+      "peak": 0.4614563,
+      "high_band_fraction": 0.664496,
+      "spectral_centroid_hz": 4240.61
+    },
+    {
+      "source_time_seconds": 569.48,
+      "rms": 0.12453581,
+      "peak": 0.49676514,
+      "high_band_fraction": 0.653669,
+      "spectral_centroid_hz": 3586.95
+    },
+    {
+      "source_time_seconds": 571.44,
+      "rms": 0.1175423,
+      "peak": 0.46401978,
+      "high_band_fraction": 0.690271,
+      "spectral_centroid_hz": 4070.75
+    },
+    {
+      "source_time_seconds": 572.64,
+      "rms": 0.11590882,
+      "peak": 0.46716309,
+      "high_band_fraction": 0.551443,
+      "spectral_centroid_hz": 3296.13
+    },
+    {
+      "source_time_seconds": 575.33,
+      "rms": 0.10212622,
+      "peak": 0.47576904,
+      "high_band_fraction": 0.38728,
+      "spectral_centroid_hz": 2754.77
+    },
+    {
+      "source_time_seconds": 576.61,
+      "rms": 0.10202637,
+      "peak": 0.49267578,
+      "high_band_fraction": 0.399455,
+      "spectral_centroid_hz": 2792.45
+    },
+    {
+      "source_time_seconds": 577.71,
+      "rms": 0.09660453,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.684152,
+      "spectral_centroid_hz": 4526.43
+    },
+    {
+      "source_time_seconds": 578.44,
+      "rms": 0.1270639,
+      "peak": 0.46261597,
+      "high_band_fraction": 0.649811,
+      "spectral_centroid_hz": 3585.18
+    },
+    {
+      "source_time_seconds": 579.08,
+      "rms": 0.12852252,
+      "peak": 0.48464966,
+      "high_band_fraction": 0.647001,
+      "spectral_centroid_hz": 3525.16
+    },
+    {
+      "source_time_seconds": 580.96,
+      "rms": 0.11563741,
+      "peak": 0.47439575,
+      "high_band_fraction": 0.555183,
+      "spectral_centroid_hz": 3359.6
+    },
+    {
+      "source_time_seconds": 582.24,
+      "rms": 0.11762176,
+      "peak": 0.49353027,
+      "high_band_fraction": 0.558317,
+      "spectral_centroid_hz": 3277.64
+    },
+    {
+      "source_time_seconds": 583.26,
+      "rms": 0.12503552,
+      "peak": 0.49813843,
+      "high_band_fraction": 0.680675,
+      "spectral_centroid_hz": 3770.19
+    },
+    {
+      "source_time_seconds": 583.77,
+      "rms": 0.11354378,
+      "peak": 0.49899292,
+      "high_band_fraction": 0.67457,
+      "spectral_centroid_hz": 4268.04
+    },
+    {
+      "source_time_seconds": 584.71,
+      "rms": 0.11957774,
+      "peak": 0.49749756,
+      "high_band_fraction": 0.66811,
+      "spectral_centroid_hz": 3849.64
+    },
+    {
+      "source_time_seconds": 585.57,
+      "rms": 0.10202552,
+      "peak": 0.47399902,
+      "high_band_fraction": 0.39025,
+      "spectral_centroid_hz": 2768.5
+    },
+    {
+      "source_time_seconds": 586.63,
+      "rms": 0.1207858,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.688968,
+      "spectral_centroid_hz": 3873.49
+    },
+    {
+      "source_time_seconds": 588.21,
+      "rms": 0.12466142,
+      "peak": 0.46960449,
+      "high_band_fraction": 0.669755,
+      "spectral_centroid_hz": 3662.45
+    },
+    {
+      "source_time_seconds": 589.61,
+      "rms": 0.08947755,
+      "peak": 0.21517944,
+      "high_band_fraction": 0.194835,
+      "spectral_centroid_hz": 2270.34
+    },
+    {
+      "source_time_seconds": 590.13,
+      "rms": 0.12883064,
+      "peak": 0.42840576,
+      "high_band_fraction": 0.633676,
+      "spectral_centroid_hz": 3502.02
+    },
+    {
+      "source_time_seconds": 593.71,
+      "rms": 0.33088991,
+      "peak": 0.74295044,
+      "high_band_fraction": 0.480869,
+      "spectral_centroid_hz": 1840.64
+    },
+    {
+      "source_time_seconds": 594.34,
+      "rms": 0.25313985,
+      "peak": 0.64337158,
+      "high_band_fraction": 0.547282,
+      "spectral_centroid_hz": 1816.88
+    },
+    {
+      "source_time_seconds": 595.12,
+      "rms": 0.11576187,
+      "peak": 0.47671509,
+      "high_band_fraction": 0.666658,
+      "spectral_centroid_hz": 3981.16
+    },
+    {
+      "source_time_seconds": 596.45,
+      "rms": 0.10239821,
+      "peak": 0.48373413,
+      "high_band_fraction": 0.400004,
+      "spectral_centroid_hz": 2783.08
+    },
+    {
+      "source_time_seconds": 597.68,
+      "rms": 0.11645506,
+      "peak": 0.4725647,
+      "high_band_fraction": 0.660662,
+      "spectral_centroid_hz": 3965.82
+    },
+    {
+      "source_time_seconds": 599.22,
+      "rms": 0.12436895,
+      "peak": 0.47576904,
+      "high_band_fraction": 0.612655,
+      "spectral_centroid_hz": 3447.08
+    },
+    {
+      "source_time_seconds": 599.69,
+      "rms": 0.12536241,
+      "peak": 0.50750732,
+      "high_band_fraction": 0.609949,
+      "spectral_centroid_hz": 3379.26
+    },
+    {
+      "source_time_seconds": 600.89,
+      "rms": 0.09244733,
+      "peak": 0.37615967,
+      "high_band_fraction": 0.613211,
+      "spectral_centroid_hz": 5049.23
+    },
+    {
+      "source_time_seconds": 601.22,
+      "rms": 0.10561069,
+      "peak": 0.46871948,
+      "high_band_fraction": 0.678663,
+      "spectral_centroid_hz": 4356.6
+    },
+    {
+      "source_time_seconds": 602.59,
+      "rms": 0.12655269,
+      "peak": 0.4362793,
+      "high_band_fraction": 0.646214,
+      "spectral_centroid_hz": 3523.19
+    },
+    {
+      "source_time_seconds": 603.57,
+      "rms": 0.12569934,
+      "peak": 0.47286987,
+      "high_band_fraction": 0.669687,
+      "spectral_centroid_hz": 3667.16
+    },
+    {
+      "source_time_seconds": 604.38,
+      "rms": 0.1238367,
+      "peak": 0.47799683,
+      "high_band_fraction": 0.662709,
+      "spectral_centroid_hz": 3777.99
+    },
+    {
+      "source_time_seconds": 606.93,
+      "rms": 0.20884679,
+      "peak": 0.55419922,
+      "high_band_fraction": 0.266621,
+      "spectral_centroid_hz": 1644.66
+    },
+    {
+      "source_time_seconds": 612.32,
+      "rms": 0.11337461,
+      "peak": 0.4753418,
+      "high_band_fraction": 0.545025,
+      "spectral_centroid_hz": 3351.99
+    },
+    {
+      "source_time_seconds": 613.38,
+      "rms": 0.1072046,
+      "peak": 0.47357178,
+      "high_band_fraction": 0.679393,
+      "spectral_centroid_hz": 4360.81
+    },
+    {
+      "source_time_seconds": 613.73,
+      "rms": 0.10207304,
+      "peak": 0.47384644,
+      "high_band_fraction": 0.391552,
+      "spectral_centroid_hz": 2787.87
+    },
+    {
+      "source_time_seconds": 614.83,
+      "rms": 0.09718389,
+      "peak": 0.51272583,
+      "high_band_fraction": 0.671494,
+      "spectral_centroid_hz": 4436.96
+    },
+    {
+      "source_time_seconds": 619.49,
+      "rms": 0.10294826,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.391411,
+      "spectral_centroid_hz": 2828.96
+    },
+    {
+      "source_time_seconds": 622.39,
+      "rms": 0.10619912,
+      "peak": 0.47180176,
+      "high_band_fraction": 0.492742,
+      "spectral_centroid_hz": 3221.25
+    },
+    {
+      "source_time_seconds": 623.84,
+      "rms": 0.11590132,
+      "peak": 0.46716309,
+      "high_band_fraction": 0.551442,
+      "spectral_centroid_hz": 3296.13
+    },
+    {
+      "source_time_seconds": 626.14,
+      "rms": 0.12769713,
+      "peak": 0.49954224,
+      "high_band_fraction": 0.679114,
+      "spectral_centroid_hz": 3702.63
+    },
+    {
+      "source_time_seconds": 628.53,
+      "rms": 0.12392446,
+      "peak": 0.46780396,
+      "high_band_fraction": 0.641857,
+      "spectral_centroid_hz": 3622.37
+    },
+    {
+      "source_time_seconds": 629.34,
+      "rms": 0.12445062,
+      "peak": 0.48944092,
+      "high_band_fraction": 0.681541,
+      "spectral_centroid_hz": 3720.29
+    },
+    {
+      "source_time_seconds": 631.26,
+      "rms": 0.1272556,
+      "peak": 0.49758911,
+      "high_band_fraction": 0.694383,
+      "spectral_centroid_hz": 3747.4
+    },
+    {
+      "source_time_seconds": 632.33,
+      "rms": 0.12265593,
+      "peak": 0.48718262,
+      "high_band_fraction": 0.595503,
+      "spectral_centroid_hz": 3392.69
+    },
+    {
+      "source_time_seconds": 632.93,
+      "rms": 0.10186701,
+      "peak": 0.46957397,
+      "high_band_fraction": 0.388725,
+      "spectral_centroid_hz": 2818.01
+    },
+    {
+      "source_time_seconds": 633.97,
+      "rms": 0.09021232,
+      "peak": 0.2230835,
+      "high_band_fraction": 0.142977,
+      "spectral_centroid_hz": 2186.46
+    },
+    {
+      "source_time_seconds": 635.66,
+      "rms": 0.10348161,
+      "peak": 0.47531128,
+      "high_band_fraction": 0.466138,
+      "spectral_centroid_hz": 3040.85
+    },
+    {
+      "source_time_seconds": 649.18,
+      "rms": 0.12635256,
+      "peak": 0.49215698,
+      "high_band_fraction": 0.674461,
+      "spectral_centroid_hz": 3733.95
+    },
+    {
+      "source_time_seconds": 649.74,
+      "rms": 0.10265591,
+      "peak": 0.4720459,
+      "high_band_fraction": 0.458828,
+      "spectral_centroid_hz": 3052.83
+    },
+    {
+      "source_time_seconds": 650.55,
+      "rms": 0.1076309,
+      "peak": 0.47344971,
+      "high_band_fraction": 0.515919,
+      "spectral_centroid_hz": 3236.97
+    },
+    {
+      "source_time_seconds": 651.44,
+      "rms": 0.11666346,
+      "peak": 0.4631958,
+      "high_band_fraction": 0.675167,
+      "spectral_centroid_hz": 3984.83
+    },
+    {
+      "source_time_seconds": 652.3,
+      "rms": 0.10346381,
+      "peak": 0.4725647,
+      "high_band_fraction": 0.457398,
+      "spectral_centroid_hz": 3014.97
+    },
+    {
+      "source_time_seconds": 653.02,
+      "rms": 0.08201896,
+      "peak": 0.46939087,
+      "high_band_fraction": 0.574329,
+      "spectral_centroid_hz": 5491.36
+    },
+    {
+      "source_time_seconds": 655.79,
+      "rms": 0.10002598,
+      "peak": 0.52444458,
+      "high_band_fraction": 0.60878,
+      "spectral_centroid_hz": 4339.81
+    },
+    {
+      "source_time_seconds": 658.1,
+      "rms": 0.12392969,
+      "peak": 0.46447754,
+      "high_band_fraction": 0.627416,
+      "spectral_centroid_hz": 3492.31
+    },
+    {
+      "source_time_seconds": 660.27,
+      "rms": 0.09814996,
+      "peak": 0.50036621,
+      "high_band_fraction": 0.664443,
+      "spectral_centroid_hz": 4385.96
+    },
+    {
+      "source_time_seconds": 662.32,
+      "rms": 0.11573781,
+      "peak": 0.46798706,
+      "high_band_fraction": 0.689181,
+      "spectral_centroid_hz": 4054.0
+    },
+    {
+      "source_time_seconds": 667.26,
+      "rms": 0.3593342,
+      "peak": 0.70077515,
+      "high_band_fraction": 0.185099,
+      "spectral_centroid_hz": 1901.52
+    },
+    {
+      "source_time_seconds": 669.32,
+      "rms": 0.23955616,
+      "peak": 0.63818359,
+      "high_band_fraction": 0.34403,
+      "spectral_centroid_hz": 3034.93
+    },
+    {
+      "source_time_seconds": 670.51,
+      "rms": 0.20336345,
+      "peak": 0.9135437,
+      "high_band_fraction": 0.171176,
+      "spectral_centroid_hz": 2300.31
+    },
+    {
+      "source_time_seconds": 670.85,
+      "rms": 0.21512748,
+      "peak": 0.99841309,
+      "high_band_fraction": 0.405569,
+      "spectral_centroid_hz": 2413.99
+    },
+    {
+      "source_time_seconds": 671.4,
+      "rms": 0.2017739,
+      "peak": 0.84503174,
+      "high_band_fraction": 0.401669,
+      "spectral_centroid_hz": 2150.73
+    },
+    {
+      "source_time_seconds": 671.72,
+      "rms": 0.15204661,
+      "peak": 0.48684692,
+      "high_band_fraction": 0.219711,
+      "spectral_centroid_hz": 2411.87
+    },
+    {
+      "source_time_seconds": 672.26,
+      "rms": 0.13645504,
+      "peak": 0.68322754,
+      "high_band_fraction": 0.186589,
+      "spectral_centroid_hz": 1905.52
+    },
+    {
+      "source_time_seconds": 672.53,
+      "rms": 0.03858793,
+      "peak": 0.21524048,
+      "high_band_fraction": 0.136164,
+      "spectral_centroid_hz": 2104.4
+    },
+    {
+      "source_time_seconds": 673.01,
+      "rms": 0.02374569,
+      "peak": 0.10913086,
+      "high_band_fraction": 0.309111,
+      "spectral_centroid_hz": 1959.77
+    },
+    {
+      "source_time_seconds": 677.04,
+      "rms": 0.0345512,
+      "peak": 0.20373535,
+      "high_band_fraction": 0.859615,
+      "spectral_centroid_hz": 5107.91
+    },
+    {
+      "source_time_seconds": 677.52,
+      "rms": 0.03898523,
+      "peak": 0.16693115,
+      "high_band_fraction": 0.942299,
+      "spectral_centroid_hz": 4836.4
+    },
+    {
+      "source_time_seconds": 679.31,
+      "rms": 0.17164329,
+      "peak": 0.58282471,
+      "high_band_fraction": 0.880946,
+      "spectral_centroid_hz": 3442.36
+    },
+    {
+      "source_time_seconds": 680.2,
+      "rms": 0.1645831,
+      "peak": 0.68051147,
+      "high_band_fraction": 0.753604,
+      "spectral_centroid_hz": 3768.42
+    },
+    {
+      "source_time_seconds": 681.34,
+      "rms": 0.20580314,
+      "peak": 1.0,
+      "high_band_fraction": 0.867822,
+      "spectral_centroid_hz": 3350.6
+    },
+    {
+      "source_time_seconds": 683.69,
+      "rms": 0.12445612,
+      "peak": 0.71908569,
+      "high_band_fraction": 0.829178,
+      "spectral_centroid_hz": 2943.15
+    },
+    {
+      "source_time_seconds": 684.16,
+      "rms": 0.21788511,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.82795,
+      "spectral_centroid_hz": 3370.05
+    },
+    {
+      "source_time_seconds": 684.93,
+      "rms": 0.1227021,
+      "peak": 0.70483398,
+      "high_band_fraction": 0.887874,
+      "spectral_centroid_hz": 2975.77
+    },
+    {
+      "source_time_seconds": 685.71,
+      "rms": 0.17191596,
+      "peak": 0.5776062,
+      "high_band_fraction": 0.885385,
+      "spectral_centroid_hz": 3549.28
+    },
+    {
+      "source_time_seconds": 687.15,
+      "rms": 0.08954624,
+      "peak": 0.28231812,
+      "high_band_fraction": 0.139785,
+      "spectral_centroid_hz": 2247.96
+    },
+    {
+      "source_time_seconds": 688.39,
+      "rms": 0.12109442,
+      "peak": 0.48916626,
+      "high_band_fraction": 0.666244,
+      "spectral_centroid_hz": 3832.4
+    },
+    {
+      "source_time_seconds": 690.35,
+      "rms": 0.09660453,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.684152,
+      "spectral_centroid_hz": 4526.43
+    },
+    {
+      "source_time_seconds": 692.32,
+      "rms": 0.11582859,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.5486,
+      "spectral_centroid_hz": 3367.46
+    },
+    {
+      "source_time_seconds": 693.17,
+      "rms": 0.12465168,
+      "peak": 0.46029663,
+      "high_band_fraction": 0.662915,
+      "spectral_centroid_hz": 3690.18
+    },
+    {
+      "source_time_seconds": 694.66,
+      "rms": 0.10587096,
+      "peak": 0.47283936,
+      "high_band_fraction": 0.681875,
+      "spectral_centroid_hz": 4362.45
+    },
+    {
+      "source_time_seconds": 697.65,
+      "rms": 0.12341559,
+      "peak": 0.47427368,
+      "high_band_fraction": 0.641278,
+      "spectral_centroid_hz": 3612.88
+    },
+    {
+      "source_time_seconds": 700.34,
+      "rms": 0.1238441,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.623781,
+      "spectral_centroid_hz": 3479.07
+    },
+    {
+      "source_time_seconds": 702.56,
+      "rms": 0.11582891,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.548602,
+      "spectral_centroid_hz": 3367.44
+    },
+    {
+      "source_time_seconds": 704.14,
+      "rms": 0.10217172,
+      "peak": 0.45455933,
+      "high_band_fraction": 0.470345,
+      "spectral_centroid_hz": 2976.68
+    },
+    {
+      "source_time_seconds": 705.37,
+      "rms": 0.11417253,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.69139,
+      "spectral_centroid_hz": 4220.81
+    },
+    {
+      "source_time_seconds": 705.93,
+      "rms": 0.12400913,
+      "peak": 0.48730469,
+      "high_band_fraction": 0.586461,
+      "spectral_centroid_hz": 3354.24
+    },
+    {
+      "source_time_seconds": 708.49,
+      "rms": 0.1263639,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.60563,
+      "spectral_centroid_hz": 3309.78
+    },
+    {
+      "source_time_seconds": 711.86,
+      "rms": 0.12436895,
+      "peak": 0.47576904,
+      "high_band_fraction": 0.612655,
+      "spectral_centroid_hz": 3447.08
+    },
+    {
+      "source_time_seconds": 713.05,
+      "rms": 0.11463285,
+      "peak": 0.49075317,
+      "high_band_fraction": 0.671721,
+      "spectral_centroid_hz": 4173.01
+    },
+    {
+      "source_time_seconds": 713.69,
+      "rms": 0.11327516,
+      "peak": 0.46807861,
+      "high_band_fraction": 0.708221,
+      "spectral_centroid_hz": 4207.71
+    },
+    {
+      "source_time_seconds": 714.42,
+      "rms": 0.12339575,
+      "peak": 0.49938965,
+      "high_band_fraction": 0.632294,
+      "spectral_centroid_hz": 3485.72
+    },
+    {
+      "source_time_seconds": 716.59,
+      "rms": 0.09910098,
+      "peak": 0.49771118,
+      "high_band_fraction": 0.684782,
+      "spectral_centroid_hz": 4436.18
+    },
+    {
+      "source_time_seconds": 717.94,
+      "rms": 0.07635858,
+      "peak": 0.20605469,
+      "high_band_fraction": 0.159413,
+      "spectral_centroid_hz": 2347.27
+    },
+    {
+      "source_time_seconds": 721.97,
+      "rms": 0.12366496,
+      "peak": 0.47238159,
+      "high_band_fraction": 0.654322,
+      "spectral_centroid_hz": 3638.16
+    },
+    {
+      "source_time_seconds": 722.87,
+      "rms": 0.1082833,
+      "peak": 0.50057983,
+      "high_band_fraction": 0.520453,
+      "spectral_centroid_hz": 3211.81
+    },
+    {
+      "source_time_seconds": 723.72,
+      "rms": 0.12769175,
+      "peak": 0.49749756,
+      "high_band_fraction": 0.654422,
+      "spectral_centroid_hz": 3585.5
+    },
+    {
+      "source_time_seconds": 724.36,
+      "rms": 0.12759738,
+      "peak": 0.46792603,
+      "high_band_fraction": 0.650747,
+      "spectral_centroid_hz": 3561.54
+    },
+    {
+      "source_time_seconds": 725.43,
+      "rms": 0.10896137,
+      "peak": 0.51159668,
+      "high_band_fraction": 0.50268,
+      "spectral_centroid_hz": 3229.44
+    },
+    {
+      "source_time_seconds": 727.3,
+      "rms": 0.10544547,
+      "peak": 0.46011353,
+      "high_band_fraction": 0.677774,
+      "spectral_centroid_hz": 4385.78
+    },
+    {
+      "source_time_seconds": 729.86,
+      "rms": 0.10645569,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.681908,
+      "spectral_centroid_hz": 4334.57
+    },
+    {
+      "source_time_seconds": 732.15,
+      "rms": 0.24392207,
+      "peak": 0.62411499,
+      "high_band_fraction": 0.12245,
+      "spectral_centroid_hz": 1580.42
+    },
+    {
+      "source_time_seconds": 733.28,
+      "rms": 0.1147296,
+      "peak": 0.46862793,
+      "high_band_fraction": 0.550154,
+      "spectral_centroid_hz": 3343.03
+    },
+    {
+      "source_time_seconds": 742.66,
+      "rms": 0.10843977,
+      "peak": 0.49349976,
+      "high_band_fraction": 0.684249,
+      "spectral_centroid_hz": 4368.36
+    },
+    {
+      "source_time_seconds": 743.94,
+      "rms": 0.10636459,
+      "peak": 0.46810913,
+      "high_band_fraction": 0.678501,
+      "spectral_centroid_hz": 4356.79
+    },
+    {
+      "source_time_seconds": 745.81,
+      "rms": 0.19589728,
+      "peak": 0.59988403,
+      "high_band_fraction": 0.327904,
+      "spectral_centroid_hz": 1755.83
+    },
+    {
+      "source_time_seconds": 746.17,
+      "rms": 0.03415158,
+      "peak": 0.11251831,
+      "high_band_fraction": 0.729622,
+      "spectral_centroid_hz": 6746.43
+    },
+    {
+      "source_time_seconds": 747.4,
+      "rms": 0.12694938,
+      "peak": 0.47521973,
+      "high_band_fraction": 0.650295,
+      "spectral_centroid_hz": 3624.28
+    },
+    {
+      "source_time_seconds": 748.47,
+      "rms": 0.10690331,
+      "peak": 0.48242188,
+      "high_band_fraction": 0.497889,
+      "spectral_centroid_hz": 3196.53
+    },
+    {
+      "source_time_seconds": 749.45,
+      "rms": 0.12636051,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.605596,
+      "spectral_centroid_hz": 3309.9
+    },
+    {
+      "source_time_seconds": 751.54,
+      "rms": 0.1238441,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.623781,
+      "spectral_centroid_hz": 3479.07
+    },
+    {
+      "source_time_seconds": 753.67,
+      "rms": 0.12060373,
+      "peak": 0.47857666,
+      "high_band_fraction": 0.684234,
+      "spectral_centroid_hz": 3847.54
+    },
+    {
+      "source_time_seconds": 755.85,
+      "rms": 0.12627518,
+      "peak": 0.49957275,
+      "high_band_fraction": 0.592617,
+      "spectral_centroid_hz": 3335.21
+    },
+    {
+      "source_time_seconds": 756.87,
+      "rms": 0.12071311,
+      "peak": 0.48373413,
+      "high_band_fraction": 0.693476,
+      "spectral_centroid_hz": 3902.87
+    },
+    {
+      "source_time_seconds": 758.19,
+      "rms": 0.09713267,
+      "peak": 0.51202393,
+      "high_band_fraction": 0.671753,
+      "spectral_centroid_hz": 4437.9
+    },
+    {
+      "source_time_seconds": 758.79,
+      "rms": 0.12001045,
+      "peak": 0.49459839,
+      "high_band_fraction": 0.673094,
+      "spectral_centroid_hz": 3867.96
+    },
+    {
+      "source_time_seconds": 759.73,
+      "rms": 0.12732956,
+      "peak": 0.49362183,
+      "high_band_fraction": 0.668798,
+      "spectral_centroid_hz": 3587.14
+    },
+    {
+      "source_time_seconds": 761.35,
+      "rms": 0.1184955,
+      "peak": 0.48968506,
+      "high_band_fraction": 0.67186,
+      "spectral_centroid_hz": 3884.61
+    },
+    {
+      "source_time_seconds": 764.17,
+      "rms": 0.12326802,
+      "peak": 0.49813843,
+      "high_band_fraction": 0.601131,
+      "spectral_centroid_hz": 3425.77
+    },
+    {
+      "source_time_seconds": 765.23,
+      "rms": 0.09681459,
+      "peak": 0.48712158,
+      "high_band_fraction": 0.665928,
+      "spectral_centroid_hz": 4392.92
+    },
+    {
+      "source_time_seconds": 765.92,
+      "rms": 0.11298373,
+      "peak": 0.46817017,
+      "high_band_fraction": 0.545641,
+      "spectral_centroid_hz": 3356.88
+    },
+    {
+      "source_time_seconds": 767.07,
+      "rms": 0.12821518,
+      "peak": 0.47705078,
+      "high_band_fraction": 0.652629,
+      "spectral_centroid_hz": 3478.85
+    },
+    {
+      "source_time_seconds": 768.05,
+      "rms": 0.1251584,
+      "peak": 0.46313477,
+      "high_band_fraction": 0.670929,
+      "spectral_centroid_hz": 3617.75
+    },
+    {
+      "source_time_seconds": 768.82,
+      "rms": 0.12617733,
+      "peak": 0.47619629,
+      "high_band_fraction": 0.640063,
+      "spectral_centroid_hz": 3440.48
+    },
+    {
+      "source_time_seconds": 770.65,
+      "rms": 0.11321255,
+      "peak": 0.5015564,
+      "high_band_fraction": 0.679081,
+      "spectral_centroid_hz": 4277.94
+    },
+    {
+      "source_time_seconds": 770.99,
+      "rms": 0.09551216,
+      "peak": 0.49804688,
+      "high_band_fraction": 0.682725,
+      "spectral_centroid_hz": 4526.39
+    },
+    {
+      "source_time_seconds": 771.68,
+      "rms": 0.04901452,
+      "peak": 0.17089844,
+      "high_band_fraction": 0.121546,
+      "spectral_centroid_hz": 1636.77
+    },
+    {
+      "source_time_seconds": 774.75,
+      "rms": 0.08242976,
+      "peak": 0.48403931,
+      "high_band_fraction": 0.536593,
+      "spectral_centroid_hz": 5421.21
+    },
+    {
+      "source_time_seconds": 775.13,
+      "rms": 0.11206312,
+      "peak": 0.45681763,
+      "high_band_fraction": 0.707437,
+      "spectral_centroid_hz": 4211.63
+    },
+    {
+      "source_time_seconds": 775.99,
+      "rms": 0.10620705,
+      "peak": 0.47238159,
+      "high_band_fraction": 0.492851,
+      "spectral_centroid_hz": 3227.95
+    },
+    {
+      "source_time_seconds": 776.58,
+      "rms": 0.1058952,
+      "peak": 0.48269653,
+      "high_band_fraction": 0.68491,
+      "spectral_centroid_hz": 4381.5
+    },
+    {
+      "source_time_seconds": 778.33,
+      "rms": 0.11353531,
+      "peak": 0.49749756,
+      "high_band_fraction": 0.674705,
+      "spectral_centroid_hz": 4265.68
+    },
+    {
+      "source_time_seconds": 785.07,
+      "rms": 0.0980436,
+      "peak": 0.50671387,
+      "high_band_fraction": 0.684096,
+      "spectral_centroid_hz": 4513.09
+    },
+    {
+      "source_time_seconds": 786.35,
+      "rms": 0.09658683,
+      "peak": 0.49316406,
+      "high_band_fraction": 0.673663,
+      "spectral_centroid_hz": 4471.08
+    },
+    {
+      "source_time_seconds": 787.21,
+      "rms": 0.12508276,
+      "peak": 0.49554443,
+      "high_band_fraction": 0.603577,
+      "spectral_centroid_hz": 3406.96
+    },
+    {
+      "source_time_seconds": 787.89,
+      "rms": 0.12549514,
+      "peak": 0.47183228,
+      "high_band_fraction": 0.66785,
+      "spectral_centroid_hz": 3655.66
+    },
+    {
+      "source_time_seconds": 789.17,
+      "rms": 0.12616214,
+      "peak": 0.47396851,
+      "high_band_fraction": 0.665358,
+      "spectral_centroid_hz": 3694.26
+    },
+    {
+      "source_time_seconds": 791.05,
+      "rms": 0.12541732,
+      "peak": 0.51776123,
+      "high_band_fraction": 0.60852,
+      "spectral_centroid_hz": 3433.81
+    },
+    {
+      "source_time_seconds": 793.65,
+      "rms": 0.12366496,
+      "peak": 0.47238159,
+      "high_band_fraction": 0.654322,
+      "spectral_centroid_hz": 3638.16
+    },
+    {
+      "source_time_seconds": 797.96,
+      "rms": 0.12701537,
+      "peak": 0.49978638,
+      "high_band_fraction": 0.655697,
+      "spectral_centroid_hz": 3616.26
+    },
+    {
+      "source_time_seconds": 803.25,
+      "rms": 0.12466142,
+      "peak": 0.46960449,
+      "high_band_fraction": 0.669755,
+      "spectral_centroid_hz": 3662.45
+    },
+    {
+      "source_time_seconds": 805.41,
+      "rms": 0.33227342,
+      "peak": 0.72750854,
+      "high_band_fraction": 0.187118,
+      "spectral_centroid_hz": 1600.41
+    },
+    {
+      "source_time_seconds": 806.07,
+      "rms": 0.27386561,
+      "peak": 0.64923096,
+      "high_band_fraction": 0.739532,
+      "spectral_centroid_hz": 1822.06
+    },
+    {
+      "source_time_seconds": 807.77,
+      "rms": 0.11417016,
+      "peak": 0.48687744,
+      "high_band_fraction": 0.691294,
+      "spectral_centroid_hz": 4222.05
+    },
+    {
+      "source_time_seconds": 814.81,
+      "rms": 0.11211514,
+      "peak": 0.46234131,
+      "high_band_fraction": 0.713791,
+      "spectral_centroid_hz": 4221.27
+    },
+    {
+      "source_time_seconds": 815.92,
+      "rms": 0.11524621,
+      "peak": 0.47271729,
+      "high_band_fraction": 0.690268,
+      "spectral_centroid_hz": 4047.88
+    },
+    {
+      "source_time_seconds": 816.69,
+      "rms": 0.12729022,
+      "peak": 0.46731567,
+      "high_band_fraction": 0.677534,
+      "spectral_centroid_hz": 3613.09
+    },
+    {
+      "source_time_seconds": 817.59,
+      "rms": 0.10009395,
+      "peak": 0.44268799,
+      "high_band_fraction": 0.505176,
+      "spectral_centroid_hz": 4948.39
+    },
+    {
+      "source_time_seconds": 818.14,
+      "rms": 0.12769794,
+      "peak": 0.51779175,
+      "high_band_fraction": 0.682955,
+      "spectral_centroid_hz": 3749.36
+    },
+    {
+      "source_time_seconds": 818.78,
+      "rms": 0.12509908,
+      "peak": 0.49523926,
+      "high_band_fraction": 0.681077,
+      "spectral_centroid_hz": 3764.16
+    },
+    {
+      "source_time_seconds": 819.12,
+      "rms": 0.1168673,
+      "peak": 0.46395874,
+      "high_band_fraction": 0.674597,
+      "spectral_centroid_hz": 4031.35
+    },
+    {
+      "source_time_seconds": 819.98,
+      "rms": 0.10333925,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.469598,
+      "spectral_centroid_hz": 3043.49
+    },
+    {
+      "source_time_seconds": 820.49,
+      "rms": 0.12232748,
+      "peak": 0.49713135,
+      "high_band_fraction": 0.577935,
+      "spectral_centroid_hz": 3424.55
+    },
+    {
+      "source_time_seconds": 820.83,
+      "rms": 0.12815844,
+      "peak": 0.46444702,
+      "high_band_fraction": 0.645705,
+      "spectral_centroid_hz": 3468.44
+    },
+    {
+      "source_time_seconds": 821.17,
+      "rms": 0.1256317,
+      "peak": 0.47869873,
+      "high_band_fraction": 0.677846,
+      "spectral_centroid_hz": 3587.24
+    },
+    {
+      "source_time_seconds": 822.11,
+      "rms": 0.12792379,
+      "peak": 0.4631958,
+      "high_band_fraction": 0.650305,
+      "spectral_centroid_hz": 3485.11
+    },
+    {
+      "source_time_seconds": 822.41,
+      "rms": 0.1258726,
+      "peak": 0.49832153,
+      "high_band_fraction": 0.598271,
+      "spectral_centroid_hz": 3325.3
+    },
+    {
+      "source_time_seconds": 826.97,
+      "rms": 0.21427083,
+      "peak": 0.93157959,
+      "high_band_fraction": 0.259276,
+      "spectral_centroid_hz": 2628.76
+    },
+    {
+      "source_time_seconds": 827.29,
+      "rms": 0.22026956,
+      "peak": 1.0,
+      "high_band_fraction": 0.191064,
+      "spectral_centroid_hz": 2770.71
+    },
+    {
+      "source_time_seconds": 827.86,
+      "rms": 0.19982345,
+      "peak": 0.82284546,
+      "high_band_fraction": 0.401847,
+      "spectral_centroid_hz": 2093.31
+    },
+    {
+      "source_time_seconds": 828.21,
+      "rms": 0.12890229,
+      "peak": 0.50524902,
+      "high_band_fraction": 0.311211,
+      "spectral_centroid_hz": 2299.88
+    },
+    {
+      "source_time_seconds": 828.72,
+      "rms": 0.13500609,
+      "peak": 0.65866089,
+      "high_band_fraction": 0.369544,
+      "spectral_centroid_hz": 2075.11
+    },
+    {
+      "source_time_seconds": 829.16,
+      "rms": 0.06179665,
+      "peak": 0.31265259,
+      "high_band_fraction": 0.144196,
+      "spectral_centroid_hz": 1980.8
+    },
+    {
+      "source_time_seconds": 829.47,
+      "rms": 0.02372077,
+      "peak": 0.1098938,
+      "high_band_fraction": 0.361515,
+      "spectral_centroid_hz": 1910.04
+    },
+    {
+      "source_time_seconds": 831.02,
+      "rms": 0.09739514,
+      "peak": 0.21630859,
+      "high_band_fraction": 0.158197,
+      "spectral_centroid_hz": 1772.01
+    },
+    {
+      "source_time_seconds": 833.84,
+      "rms": 0.03451084,
+      "peak": 0.20556641,
+      "high_band_fraction": 0.854288,
+      "spectral_centroid_hz": 4992.0
+    },
+    {
+      "source_time_seconds": 834.32,
+      "rms": 0.03857127,
+      "peak": 0.16543579,
+      "high_band_fraction": 0.946243,
+      "spectral_centroid_hz": 4784.24
+    },
+    {
+      "source_time_seconds": 835.25,
+      "rms": 0.16108398,
+      "peak": 0.71273804,
+      "high_band_fraction": 0.753887,
+      "spectral_centroid_hz": 3817.96
+    },
+    {
+      "source_time_seconds": 836.53,
+      "rms": 0.16088778,
+      "peak": 0.66897583,
+      "high_band_fraction": 0.743198,
+      "spectral_centroid_hz": 3853.88
+    },
+    {
+      "source_time_seconds": 837.22,
+      "rms": 0.1562598,
+      "peak": 0.57843018,
+      "high_band_fraction": 0.785687,
+      "spectral_centroid_hz": 3394.49
+    },
+    {
+      "source_time_seconds": 838.28,
+      "rms": 0.16733359,
+      "peak": 0.70834351,
+      "high_band_fraction": 0.747631,
+      "spectral_centroid_hz": 3767.32
+    },
+    {
+      "source_time_seconds": 839.21,
+      "rms": 0.21804111,
+      "peak": 0.98266602,
+      "high_band_fraction": 0.838582,
+      "spectral_centroid_hz": 3400.37
+    },
+    {
+      "source_time_seconds": 840.15,
+      "rms": 0.1238282,
+      "peak": 0.71124268,
+      "high_band_fraction": 0.832986,
+      "spectral_centroid_hz": 2966.91
+    },
+    {
+      "source_time_seconds": 840.66,
+      "rms": 0.21848483,
+      "peak": 1.0,
+      "high_band_fraction": 0.842617,
+      "spectral_centroid_hz": 3475.78
+    },
+    {
+      "source_time_seconds": 841.34,
+      "rms": 0.11461053,
+      "peak": 0.6887207,
+      "high_band_fraction": 0.838507,
+      "spectral_centroid_hz": 2895.74
+    },
+    {
+      "source_time_seconds": 842.42,
+      "rms": 0.16787295,
+      "peak": 0.6973877,
+      "high_band_fraction": 0.789788,
+      "spectral_centroid_hz": 3799.71
+    },
+    {
+      "source_time_seconds": 844.77,
+      "rms": 0.10294826,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.391411,
+      "spectral_centroid_hz": 2828.96
+    },
+    {
+      "source_time_seconds": 846.86,
+      "rms": 0.10346909,
+      "peak": 0.4725647,
+      "high_band_fraction": 0.457668,
+      "spectral_centroid_hz": 3015.91
+    },
+    {
+      "source_time_seconds": 849.29,
+      "rms": 0.12378921,
+      "peak": 0.47976685,
+      "high_band_fraction": 0.588769,
+      "spectral_centroid_hz": 3349.8
+    },
+    {
+      "source_time_seconds": 850.74,
+      "rms": 0.12609158,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.6454,
+      "spectral_centroid_hz": 3436.55
+    },
+    {
+      "source_time_seconds": 851.68,
+      "rms": 0.1131137,
+      "peak": 0.4697876,
+      "high_band_fraction": 0.544096,
+      "spectral_centroid_hz": 3385.37
+    },
+    {
+      "source_time_seconds": 853.09,
+      "rms": 0.10175221,
+      "peak": 0.48617554,
+      "high_band_fraction": 0.404945,
+      "spectral_centroid_hz": 2800.11
+    },
+    {
+      "source_time_seconds": 854.41,
+      "rms": 0.12499689,
+      "peak": 0.49615479,
+      "high_band_fraction": 0.590882,
+      "spectral_centroid_hz": 3334.17
+    },
+    {
+      "source_time_seconds": 855.35,
+      "rms": 0.10798974,
+      "peak": 0.47402954,
+      "high_band_fraction": 0.52088,
+      "spectral_centroid_hz": 3232.51
+    },
+    {
+      "source_time_seconds": 858.29,
+      "rms": 0.12399015,
+      "peak": 0.47711182,
+      "high_band_fraction": 0.664918,
+      "spectral_centroid_hz": 3701.81
+    },
+    {
+      "source_time_seconds": 865.37,
+      "rms": 0.11414117,
+      "peak": 0.51159668,
+      "high_band_fraction": 0.683138,
+      "spectral_centroid_hz": 4258.4
+    },
+    {
+      "source_time_seconds": 867.34,
+      "rms": 0.10346909,
+      "peak": 0.4725647,
+      "high_band_fraction": 0.457668,
+      "spectral_centroid_hz": 3015.91
+    },
+    {
+      "source_time_seconds": 873.74,
+      "rms": 0.1027891,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.470974,
+      "spectral_centroid_hz": 3036.8
+    },
+    {
+      "source_time_seconds": 874.67,
+      "rms": 0.09660453,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.684152,
+      "spectral_centroid_hz": 4526.43
+    },
+    {
+      "source_time_seconds": 875.31,
+      "rms": 0.0981521,
+      "peak": 0.49884033,
+      "high_band_fraction": 0.668462,
+      "spectral_centroid_hz": 4392.43
+    },
+    {
+      "source_time_seconds": 876.42,
+      "rms": 0.10673147,
+      "peak": 0.46704102,
+      "high_band_fraction": 0.681214,
+      "spectral_centroid_hz": 4307.47
+    },
+    {
+      "source_time_seconds": 877.87,
+      "rms": 0.09682356,
+      "peak": 0.4864502,
+      "high_band_fraction": 0.666385,
+      "spectral_centroid_hz": 4393.87
+    },
+    {
+      "source_time_seconds": 879.28,
+      "rms": 0.11585265,
+      "peak": 0.46768188,
+      "high_band_fraction": 0.703372,
+      "spectral_centroid_hz": 4048.74
+    },
+    {
+      "source_time_seconds": 881.71,
+      "rms": 0.09908385,
+      "peak": 0.50579834,
+      "high_band_fraction": 0.66551,
+      "spectral_centroid_hz": 4391.32
+    },
+    {
+      "source_time_seconds": 882.7,
+      "rms": 0.10165174,
+      "peak": 0.47216797,
+      "high_band_fraction": 0.442574,
+      "spectral_centroid_hz": 3035.94
+    },
+    {
+      "source_time_seconds": 884.06,
+      "rms": 0.1267347,
+      "peak": 0.50671387,
+      "high_band_fraction": 0.691741,
+      "spectral_centroid_hz": 3745.01
+    },
+    {
+      "source_time_seconds": 886.37,
+      "rms": 0.10185815,
+      "peak": 0.47747803,
+      "high_band_fraction": 0.400107,
+      "spectral_centroid_hz": 2775.46
+    },
+    {
+      "source_time_seconds": 888.5,
+      "rms": 0.12292029,
+      "peak": 0.49475098,
+      "high_band_fraction": 0.63155,
+      "spectral_centroid_hz": 3458.12
+    },
+    {
+      "source_time_seconds": 890.5,
+      "rms": 0.10510641,
+      "peak": 0.45343018,
+      "high_band_fraction": 0.679424,
+      "spectral_centroid_hz": 4352.35
+    },
+    {
+      "source_time_seconds": 891.87,
+      "rms": 0.12726641,
+      "peak": 0.45455933,
+      "high_band_fraction": 0.644226,
+      "spectral_centroid_hz": 3513.79
+    },
+    {
+      "source_time_seconds": 893.19,
+      "rms": 0.1199728,
+      "peak": 0.4760437,
+      "high_band_fraction": 0.669962,
+      "spectral_centroid_hz": 3897.99
+    },
+    {
+      "source_time_seconds": 893.75,
+      "rms": 0.10448289,
+      "peak": 0.45587158,
+      "high_band_fraction": 0.520914,
+      "spectral_centroid_hz": 3197.08
+    },
+    {
+      "source_time_seconds": 894.81,
+      "rms": 0.11496249,
+      "peak": 0.51269531,
+      "high_band_fraction": 0.675755,
+      "spectral_centroid_hz": 4183.05
+    },
+    {
+      "source_time_seconds": 897.46,
+      "rms": 0.12406793,
+      "peak": 0.48617554,
+      "high_band_fraction": 0.627699,
+      "spectral_centroid_hz": 3478.08
+    },
+    {
+      "source_time_seconds": 899.26,
+      "rms": 0.01247919,
+      "peak": 0.04196167,
+      "high_band_fraction": 0.140471,
+      "spectral_centroid_hz": 3638.85
+    },
+    {
+      "source_time_seconds": 900.06,
+      "rms": 0.12712139,
+      "peak": 0.51730347,
+      "high_band_fraction": 0.679613,
+      "spectral_centroid_hz": 3717.11
+    },
+    {
+      "source_time_seconds": 901.32,
+      "rms": 0.07378463,
+      "peak": 0.22399902,
+      "high_band_fraction": 0.124873,
+      "spectral_centroid_hz": 2180.35
+    },
+    {
+      "source_time_seconds": 903.99,
+      "rms": 0.10594849,
+      "peak": 0.49871826,
+      "high_band_fraction": 0.537911,
+      "spectral_centroid_hz": 3186.94
+    },
+    {
+      "source_time_seconds": 905.1,
+      "rms": 0.10204785,
+      "peak": 0.48254395,
+      "high_band_fraction": 0.431456,
+      "spectral_centroid_hz": 2996.38
+    },
+    {
+      "source_time_seconds": 905.69,
+      "rms": 0.1125565,
+      "peak": 0.47094727,
+      "high_band_fraction": 0.697895,
+      "spectral_centroid_hz": 4198.4
+    },
+    {
+      "source_time_seconds": 910.0,
+      "rms": 0.11585265,
+      "peak": 0.46768188,
+      "high_band_fraction": 0.703372,
+      "spectral_centroid_hz": 4048.74
+    },
+    {
+      "source_time_seconds": 911.62,
+      "rms": 0.10807236,
+      "peak": 0.48117065,
+      "high_band_fraction": 0.649643,
+      "spectral_centroid_hz": 4255.44
+    },
+    {
+      "source_time_seconds": 913.18,
+      "rms": 0.2135026,
+      "peak": 0.56552124,
+      "high_band_fraction": 0.129181,
+      "spectral_centroid_hz": 1588.95
+    },
+    {
+      "source_time_seconds": 919.22,
+      "rms": 0.12289962,
+      "peak": 0.49557495,
+      "high_band_fraction": 0.631537,
+      "spectral_centroid_hz": 3460.93
+    },
+    {
+      "source_time_seconds": 919.65,
+      "rms": 0.10142853,
+      "peak": 0.47857666,
+      "high_band_fraction": 0.388055,
+      "spectral_centroid_hz": 2827.1
+    },
+    {
+      "source_time_seconds": 927.07,
+      "rms": 0.12674215,
+      "peak": 0.46768188,
+      "high_band_fraction": 0.642224,
+      "spectral_centroid_hz": 3539.94
+    },
+    {
+      "source_time_seconds": 928.43,
+      "rms": 0.07974425,
+      "peak": 0.26113892,
+      "high_band_fraction": 0.126141,
+      "spectral_centroid_hz": 2241.03
+    },
+    {
+      "source_time_seconds": 930.31,
+      "rms": 0.12015343,
+      "peak": 0.4765625,
+      "high_band_fraction": 0.66348,
+      "spectral_centroid_hz": 3821.93
+    },
+    {
+      "source_time_seconds": 932.7,
+      "rms": 0.12494706,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.688393,
+      "spectral_centroid_hz": 3768.15
+    },
+    {
+      "source_time_seconds": 935.43,
+      "rms": 0.11840433,
+      "peak": 0.48959351,
+      "high_band_fraction": 0.671148,
+      "spectral_centroid_hz": 3873.1
+    },
+    {
+      "source_time_seconds": 937.18,
+      "rms": 0.1281523,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.695265,
+      "spectral_centroid_hz": 3740.69
+    },
+    {
+      "source_time_seconds": 938.08,
+      "rms": 0.11560769,
+      "peak": 0.47219849,
+      "high_band_fraction": 0.550857,
+      "spectral_centroid_hz": 3350.76
+    },
+    {
+      "source_time_seconds": 939.19,
+      "rms": 0.10878991,
+      "peak": 0.51193237,
+      "high_band_fraction": 0.487814,
+      "spectral_centroid_hz": 3179.97
+    },
+    {
+      "source_time_seconds": 941.45,
+      "rms": 0.12381791,
+      "peak": 0.47866821,
+      "high_band_fraction": 0.588074,
+      "spectral_centroid_hz": 3349.5
+    },
+    {
+      "source_time_seconds": 943.18,
+      "rms": 0.23577328,
+      "peak": 0.6307373,
+      "high_band_fraction": 0.149494,
+      "spectral_centroid_hz": 1605.63
+    },
+    {
+      "source_time_seconds": 944.22,
+      "rms": 0.12698179,
+      "peak": 0.50665283,
+      "high_band_fraction": 0.695668,
+      "spectral_centroid_hz": 3750.99
+    },
+    {
+      "source_time_seconds": 945.29,
+      "rms": 0.12604134,
+      "peak": 0.49819946,
+      "high_band_fraction": 0.595307,
+      "spectral_centroid_hz": 3317.47
+    },
+    {
+      "source_time_seconds": 947.17,
+      "rms": 0.10294826,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.391411,
+      "spectral_centroid_hz": 2828.96
+    },
+    {
+      "source_time_seconds": 948.79,
+      "rms": 0.10642038,
+      "peak": 0.47558594,
+      "high_band_fraction": 0.481706,
+      "spectral_centroid_hz": 3197.58
+    },
+    {
+      "source_time_seconds": 949.73,
+      "rms": 0.10343598,
+      "peak": 0.47589111,
+      "high_band_fraction": 0.386583,
+      "spectral_centroid_hz": 2779.93
+    },
+    {
+      "source_time_seconds": 951.39,
+      "rms": 0.12821639,
+      "peak": 0.47705078,
+      "high_band_fraction": 0.652629,
+      "spectral_centroid_hz": 3478.85
+    },
+    {
+      "source_time_seconds": 953.74,
+      "rms": 0.10220885,
+      "peak": 0.49847412,
+      "high_band_fraction": 0.534082,
+      "spectral_centroid_hz": 4975.72
+    },
+    {
+      "source_time_seconds": 954.12,
+      "rms": 0.12811841,
+      "peak": 0.51159668,
+      "high_band_fraction": 0.643858,
+      "spectral_centroid_hz": 3586.94
+    },
+    {
+      "source_time_seconds": 956.94,
+      "rms": 0.10106351,
+      "peak": 0.47543335,
+      "high_band_fraction": 0.447392,
+      "spectral_centroid_hz": 3027.29
+    },
+    {
+      "source_time_seconds": 957.41,
+      "rms": 0.10198041,
+      "peak": 0.48291016,
+      "high_band_fraction": 0.428333,
+      "spectral_centroid_hz": 2771.95
+    },
+    {
+      "source_time_seconds": 960.22,
+      "rms": 0.12672889,
+      "peak": 0.49716187,
+      "high_band_fraction": 0.686313,
+      "spectral_centroid_hz": 3718.75
+    },
+    {
+      "source_time_seconds": 961.67,
+      "rms": 0.12071311,
+      "peak": 0.48373413,
+      "high_band_fraction": 0.693476,
+      "spectral_centroid_hz": 3902.87
+    },
+    {
+      "source_time_seconds": 963.68,
+      "rms": 0.11432593,
+      "peak": 0.46960449,
+      "high_band_fraction": 0.571634,
+      "spectral_centroid_hz": 3388.27
+    },
+    {
+      "source_time_seconds": 965.51,
+      "rms": 0.1207858,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.688968,
+      "spectral_centroid_hz": 3873.49
+    },
+    {
+      "source_time_seconds": 965.85,
+      "rms": 0.11305691,
+      "peak": 0.47061157,
+      "high_band_fraction": 0.698082,
+      "spectral_centroid_hz": 4218.32
+    },
+    {
+      "source_time_seconds": 967.26,
+      "rms": 0.12443401,
+      "peak": 0.48880005,
+      "high_band_fraction": 0.682217,
+      "spectral_centroid_hz": 3721.9
+    },
+    {
+      "source_time_seconds": 968.58,
+      "rms": 0.10676208,
+      "peak": 0.46716309,
+      "high_band_fraction": 0.681212,
+      "spectral_centroid_hz": 4308.55
+    },
+    {
+      "source_time_seconds": 968.97,
+      "rms": 0.12253842,
+      "peak": 0.49465942,
+      "high_band_fraction": 0.600654,
+      "spectral_centroid_hz": 3406.81
+    },
+    {
+      "source_time_seconds": 970.29,
+      "rms": 0.12756787,
+      "peak": 0.47015381,
+      "high_band_fraction": 0.675326,
+      "spectral_centroid_hz": 3620.76
+    },
+    {
+      "source_time_seconds": 972.21,
+      "rms": 0.12592392,
+      "peak": 0.47317505,
+      "high_band_fraction": 0.670956,
+      "spectral_centroid_hz": 3672.86
+    },
+    {
+      "source_time_seconds": 972.81,
+      "rms": 0.12475328,
+      "peak": 0.51202393,
+      "high_band_fraction": 0.596195,
+      "spectral_centroid_hz": 3404.51
+    },
+    {
+      "source_time_seconds": 975.28,
+      "rms": 0.34319952,
+      "peak": 0.71789551,
+      "high_band_fraction": 0.224496,
+      "spectral_centroid_hz": 1708.92
+    },
+    {
+      "source_time_seconds": 975.93,
+      "rms": 0.25132322,
+      "peak": 0.63687134,
+      "high_band_fraction": 0.793761,
+      "spectral_centroid_hz": 1817.31
+    },
+    {
+      "source_time_seconds": 986.12,
+      "rms": 0.12916701,
+      "peak": 0.49075317,
+      "high_band_fraction": 0.642124,
+      "spectral_centroid_hz": 3543.46
+    },
+    {
+      "source_time_seconds": 986.98,
+      "rms": 0.0413212,
+      "peak": 0.11306763,
+      "high_band_fraction": 0.200904,
+      "spectral_centroid_hz": 1738.73
+    },
+    {
+      "source_time_seconds": 989.36,
+      "rms": 0.11667043,
+      "peak": 0.46405029,
+      "high_band_fraction": 0.675141,
+      "spectral_centroid_hz": 3985.27
+    },
+    {
+      "source_time_seconds": 1001.57,
+      "rms": 0.10200255,
+      "peak": 0.47723389,
+      "high_band_fraction": 0.384191,
+      "spectral_centroid_hz": 2817.38
+    },
+    {
+      "source_time_seconds": 1002.71,
+      "rms": 0.10963987,
+      "peak": 0.27267456,
+      "high_band_fraction": 0.147534,
+      "spectral_centroid_hz": 2058.29
+    },
+    {
+      "source_time_seconds": 1007.88,
+      "rms": 0.12783299,
+      "peak": 0.48242188,
+      "high_band_fraction": 0.635683,
+      "spectral_centroid_hz": 3560.15
+    },
+    {
+      "source_time_seconds": 1010.95,
+      "rms": 0.11986815,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.669797,
+      "spectral_centroid_hz": 3838.04
+    },
+    {
+      "source_time_seconds": 1013.68,
+      "rms": 0.11691153,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.672118,
+      "spectral_centroid_hz": 4025.27
+    },
+    {
+      "source_time_seconds": 1014.58,
+      "rms": 0.12632486,
+      "peak": 0.47738647,
+      "high_band_fraction": 0.647627,
+      "spectral_centroid_hz": 3438.75
+    },
+    {
+      "source_time_seconds": 1015.26,
+      "rms": 0.12714165,
+      "peak": 0.49884033,
+      "high_band_fraction": 0.680447,
+      "spectral_centroid_hz": 3706.6
+    },
+    {
+      "source_time_seconds": 1016.07,
+      "rms": 0.11999477,
+      "peak": 0.47698975,
+      "high_band_fraction": 0.664818,
+      "spectral_centroid_hz": 3896.14
+    },
+    {
+      "source_time_seconds": 1016.58,
+      "rms": 0.10463168,
+      "peak": 0.44888306,
+      "high_band_fraction": 0.68147,
+      "spectral_centroid_hz": 4362.24
+    },
+    {
+      "source_time_seconds": 1020.0,
+      "rms": 0.11989436,
+      "peak": 0.45568848,
+      "high_band_fraction": 0.508133,
+      "spectral_centroid_hz": 3230.79
+    },
+    {
+      "source_time_seconds": 1020.88,
+      "rms": 0.07969868,
+      "peak": 0.18005371,
+      "high_band_fraction": 0.128512,
+      "spectral_centroid_hz": 2442.84
+    },
+    {
+      "source_time_seconds": 1029.38,
+      "rms": 0.10843977,
+      "peak": 0.49349976,
+      "high_band_fraction": 0.684249,
+      "spectral_centroid_hz": 4368.36
+    },
+    {
+      "source_time_seconds": 1034.35,
+      "rms": 0.23902738,
+      "peak": 0.85705566,
+      "high_band_fraction": 0.133279,
+      "spectral_centroid_hz": 1813.77
+    },
+    {
+      "source_time_seconds": 1035.05,
+      "rms": 0.19724695,
+      "peak": 0.80526733,
+      "high_band_fraction": 0.394856,
+      "spectral_centroid_hz": 2064.31
+    },
+    {
+      "source_time_seconds": 1035.39,
+      "rms": 0.18347888,
+      "peak": 0.79702759,
+      "high_band_fraction": 0.133209,
+      "spectral_centroid_hz": 1904.3
+    },
+    {
+      "source_time_seconds": 1035.91,
+      "rms": 0.12493352,
+      "peak": 0.67431641,
+      "high_band_fraction": 0.396795,
+      "spectral_centroid_hz": 2138.86
+    },
+    {
+      "source_time_seconds": 1036.35,
+      "rms": 0.061876,
+      "peak": 0.31411743,
+      "high_band_fraction": 0.164293,
+      "spectral_centroid_hz": 1961.19
+    },
+    {
+      "source_time_seconds": 1036.66,
+      "rms": 0.0237074,
+      "peak": 0.10931396,
+      "high_band_fraction": 0.395011,
+      "spectral_centroid_hz": 1963.56
+    },
+    {
+      "source_time_seconds": 1037.91,
+      "rms": 0.1051629,
+      "peak": 0.25875854,
+      "high_band_fraction": 0.157452,
+      "spectral_centroid_hz": 1782.54
+    },
+    {
+      "source_time_seconds": 1040.13,
+      "rms": 0.03410612,
+      "peak": 0.21286011,
+      "high_band_fraction": 0.764799,
+      "spectral_centroid_hz": 3499.81
+    },
+    {
+      "source_time_seconds": 1040.39,
+      "rms": 0.03770842,
+      "peak": 0.20751953,
+      "high_band_fraction": 0.911074,
+      "spectral_centroid_hz": 5147.78
+    },
+    {
+      "source_time_seconds": 1040.87,
+      "rms": 0.04310551,
+      "peak": 0.1696167,
+      "high_band_fraction": 0.941376,
+      "spectral_centroid_hz": 4779.41
+    },
+    {
+      "source_time_seconds": 1042.49,
+      "rms": 0.30115983,
+      "peak": 0.98361206,
+      "high_band_fraction": 0.656503,
+      "spectral_centroid_hz": 3260.78
+    }
+  ],
+  "features_csv": "audio-windows.csv",
+  "note": "Thresholded peaks are event candidates in a mixed track, not verified action-to-effect labels."
+}

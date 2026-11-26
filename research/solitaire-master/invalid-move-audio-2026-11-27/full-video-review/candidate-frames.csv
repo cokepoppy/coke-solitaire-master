@@ -1,0 +1,8 @@
+source_seconds,source_pts,source_timescale,visual_state,frame_file,png_sha256
+149.500,2296320,15360,winning-streak-overlay-1,frames/frame-149p500-winning-streak-overlay-1.png,bf80d72b2cd4cd0e0dee0bb44535d8e0d3318ae6e9eb6963f83610651782b45c
+305.350,4690176,15360,winning-streak-overlay-2,frames/frame-305p350-winning-streak-overlay-2.png,2140d16ff58e9bbafbe35f34b73ae45281c34d8f0ed49cc12b1c6a0f31fc7261
+672.250,10325760,15360,winning-streak-overlay-3,frames/frame-672p250-winning-streak-overlay-3.png,0a32f04f1ac51d0c74f7715267c323a8d0272da4fa48cfd116995f648c6d0586
+697.600,10715136,15360,legal-move-combo-2,frames/frame-697p600-legal-move-combo-2.png,c18005d5bc3bd041892a02f3ea51c727a5bd422300d0a080e4ce560a9e42fbd0
+828.150,12720384,15360,winning-streak-overlay-4,frames/frame-828p150-winning-streak-overlay-4.png,22e58fa7a270bc1d389a8ad7837e6e5d3bd8e67df72ead661e0f5469b9373479
+855.300,13137408,15360,legal-move-combo-7,frames/frame-855p300-legal-move-combo-7.png,e61944fecf4b610500c46e73b5351a70da6fe84acdf121e10b15be5604e888b2
+1035.900,15911424,15360,winning-streak-overlay-5,frames/frame-1035p900-winning-streak-overlay-5.png,6ef9c749e91c567bcf6e1bd7da30d6ad5c2f6fd6475e711521e624eb9fd18a9b
