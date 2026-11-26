@@ -617,7 +617,8 @@ function animateStockRecycle(origin) {
   const layer = document.createElement('div');
   layer.className = 'stock-recycle-flight';
   layer.setAttribute('aria-hidden', 'true');
-  const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 167;
+  const sourceRecycleProgress = [0.2, 0.464, 0.576, 0.676, 0.76, 0.836, 0.836, 0.896, 0.94, 0.972, 1];
+  const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : (1000 / 60) * (sourceRecycleProgress.length - 1);
 
   for (const [index, position] of origin.cards.entries()) {
     const card = document.createElement('span');
@@ -654,13 +655,11 @@ function animateStockRecycle(origin) {
   const deltaX = origin.stock.left - origin.wasteSlot.left;
   const deltaY = origin.stock.top - origin.wasteSlot.top;
   for (const card of layer.querySelectorAll('.stock-recycle-flight-card')) {
-    card.animate(
-      [
-        { transform: 'translate3d(0, 0, 0)' },
-        { transform: `translate3d(${deltaX}px, ${deltaY}px, 0)` },
-      ],
-      { duration, easing: 'ease-out', fill: 'forwards' },
-    );
+    const keyframes = sourceRecycleProgress.map((progress, index) => ({
+      offset: index / (sourceRecycleProgress.length - 1),
+      transform: `translate3d(${deltaX * progress}px, ${deltaY * progress}px, 0)`,
+    }));
+    card.animate(keyframes, { duration, easing: 'linear', fill: 'forwards' });
   }
   stockRecycleFlight.timer = setTimeout(() => clearStockRecycleFlight({ restoreStockArt: true }), duration + 16);
 }

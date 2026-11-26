@@ -1963,7 +1963,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v75');
+  expect(cacheNames).toContain('solitaire-master-v76');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2363,6 +2363,8 @@ test('mobile stock recycle restores draw order and undo', async ({ page }) => {
       height: Number.parseFloat(card.style.height),
       duration: animation.effect.getTiming().duration,
       easing: animation.effect.getTiming().easing,
+      firstOffset: animation.effect.getKeyframes()[0].offset,
+      firstProgress: new DOMMatrix(animation.effect.getKeyframes()[0].transform).m41,
       deltaX: target.m41,
       deltaY: target.m42,
       faceDown: Boolean(card.querySelector('.card-back-art')),
@@ -2375,11 +2377,29 @@ test('mobile stock recycle restores draw order and undo', async ({ page }) => {
     expect(card.top).toBeCloseTo(origin.top, 2);
     expect(card.width).toBeCloseTo(origin.width, 2);
     expect(card.height).toBeCloseTo(origin.height, 2);
-    expect(card.duration).toBe(167);
-    expect(card.easing).toBe('ease-out');
+    expect(card.duration).toBeCloseTo((1000 / 60) * 10, 5);
+    expect(card.easing).toBe('linear');
+    expect(card.firstOffset).toBe(0);
+    expect(card.firstProgress).toBeCloseTo((recycleFlightOrigin.stock - recycleFlightOrigin.waste) * 0.2, 2);
     expect(card.deltaX).toBeCloseTo(recycleFlightOrigin.stock - recycleFlightOrigin.waste, 2);
     expect(card.deltaY).toBeCloseTo(0, 2);
     expect(card.faceDown).toBe(true);
+  }
+  const sourceFlightProgress = await page.locator('.stock-recycle-flight-card').first().evaluate((card) => {
+    const animation = card.getAnimations()[0];
+    const duration = animation.effect.getTiming().duration;
+    const deltaX = new DOMMatrix(animation.effect.getKeyframes().at(-1).transform).m41;
+    animation.pause();
+    const progress = Array.from({ length: 11 }, (_, index) => {
+      animation.currentTime = duration * index / 10;
+      return new DOMMatrix(getComputedStyle(card).transform).m41 / deltaX;
+    });
+    animation.finish();
+    return progress;
+  });
+  expect(sourceFlightProgress).toHaveLength(11);
+  for (const [index, expected] of [0.2, 0.464, 0.576, 0.676, 0.76, 0.836, 0.836, 0.896, 0.94, 0.972, 1].entries()) {
+    expect(sourceFlightProgress[index]).toBeCloseTo(expected, 2);
   }
   await expect(page.locator('.stock-recycle-flight')).toHaveCount(0, { timeout: 1000 });
   await expect(page.locator('.stock-slot .stock-button .playing-card')).toBeVisible();

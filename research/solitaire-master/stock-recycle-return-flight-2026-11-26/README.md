@@ -11,7 +11,7 @@ This audit resolves the recycle transition that the 100 ms pass in [`stock-recyc
 | 98.333344 s / 1,510,400 | The returned cards have settled into a single back at approximately `(758,429)`. |
 | 98.800017 s / 1,517,568 | The next draw reveals 9♠ and the stock count drops from 11 to 10. |
 
-The visible return lasts about 167 ms from the first sampled in-flight frame through the settled frame. This bounds the observed animation but does not reveal the exact touch-release instant. The replica therefore uses a 167 ms ease-out flight for the three visible waste cards, flips them to backs, keeps the recycle arrow and updated count at the stock destination, then restores the normal stock artwork. The precise easing curve and initial unsampled motion remain implementation approximations.
+The visible return spans ten 60 fps intervals (166.667 ms) from the first sampled in-flight frame through the settled frame. Using the recorded waste-slot origin x=508 and stock destination x=758, the leading back's normalized travel at each sampled frame is approximately `0.200, 0.464, 0.576, 0.676, 0.760, 0.836, 0.836, 0.896, 0.940, 0.972, 1.000`. The source frame PTS and extracted image hashes are in `frames.csv` and `manifest.json`; the positions are measured from the retained `(480,400,404,230)` crops and are approximate to a few source pixels. The replica now uses those eleven positions as evenly spaced animation keyframes, so the first visible back begins one-fifth of the way to the stock and the remaining path follows the source samples. The exact release instant and any motion before the first sampled back remain unobserved.
 
 To regenerate the 60 fps review crops and ledger:
 
