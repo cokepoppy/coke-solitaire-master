@@ -107,6 +107,7 @@ const WIN_RESULT_PRELOAD_ASSETS = [
   'win-banner-reference.png', 'win-result-background-reference.png',
   'win-result-score-digit-5-reference.png', 'win-result-score-digit-2-a-reference.png',
   'win-result-score-digit-2-b-reference.png', 'win-result-score-digit-3-reference.png',
+  'win-result-score-digit-0-reference.png',
   'win-best-reference.png', 'win-trophy-reference.png', 'win-streak-trophy-reference.png',
   'win-streak-title-reference.png', 'win-streak-thumb-reference.png', 'win-new-deal-reference.png',
   'win-result-score-label-reference.png', 'win-result-percent-reference.png',
@@ -236,7 +237,7 @@ function scheduleWinResultStage(result, delay, stage, callback) {
 }
 
 function sourceWinScoreMarkup(scoreText) {
-  if (!/^[235]+$/.test(scoreText)) return `<strong class="win-result-score-value">${scoreText}</strong>`;
+  if (!/^[0235]+$/.test(scoreText)) return `<strong class="win-result-score-value">${scoreText}</strong>`;
   let scoreTwos = 0;
   const digits = [...scoreText].map((digit) => {
     let glyph = digit;

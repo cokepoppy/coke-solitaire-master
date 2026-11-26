@@ -1493,6 +1493,7 @@ test.describe('source-sized win result', () => {
       'win-banner-reference.png', 'win-result-background-reference.png',
       'win-result-score-digit-5-reference.png', 'win-result-score-digit-2-a-reference.png',
       'win-result-score-digit-2-b-reference.png', 'win-result-score-digit-3-reference.png',
+      'win-result-score-digit-0-reference.png',
       'win-best-reference.png', 'win-trophy-reference.png', 'win-streak-trophy-reference.png',
       'win-streak-title-reference.png', 'win-streak-thumb-reference.png', 'win-new-deal-reference.png',
       'win-result-score-label-reference.png', 'win-result-percent-reference.png',
@@ -1590,6 +1591,54 @@ test.describe('source-sized win result', () => {
       { file: 'win-result-score-digit-3-reference.png', size: [52, 94], rect: [584, 862, 52, 94] },
     ]);
     await page.screenshot({ path: 'test-results/source-win-result-884x1920.png', fullPage: true, animations: 'disabled' });
+
+    await page.evaluate(() => {
+      const game = window.solitaireGame;
+      const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
+      const suits = ['♠', '♥', '♦', '♣'];
+      game.state.stock = [];
+      game.state.waste = [];
+      game.state.autoCollect = false;
+      game.state.foundations = suits.map((suit) => cards.filter((card) => card.suit === suit && card.rank < 13).sort((first, last) => first.rank - last.rank));
+      game.state.tableau = [...suits.map((suit) => [cards.find((card) => card.suit === suit && card.rank === 13)]), [], [], []];
+      game.state.moves = 117;
+      game.state.score = 3460;
+      game.state.seconds = 132;
+      game.state.challenge = null;
+      game.state.won = false;
+      game.state.history = [];
+      game.state.selected = null;
+      localStorage.setItem('solitaire-master-profile-v1', JSON.stringify({ games: 1, wins: 1, bestScore: 0, dailyCompleted: [] }));
+      game.save();
+    });
+    await page.reload();
+    for (let pile = 0; pile < 3; pile += 1) {
+      await page.locator(`#tableau .pile-column[data-pile="${pile}"] .playing-card`).click();
+      await page.locator(`.foundation-slot[data-pile="${pile}"]`).click();
+    }
+    await page.locator('#tableau .pile-column[data-pile="3"] .playing-card').click();
+    await page.locator('.foundation-slot[data-pile="3"]').click();
+    await expect(page.locator('.win-streak-backdrop')).toBeVisible();
+    await page.getByRole('button', { name: 'Tap to Continue' }).click();
+    await expect(page.locator('.win-result-backdrop')).toBeVisible();
+    await expect(page.locator('.win-result')).toHaveAttribute('data-result-stage', 'settled', { timeout: 3000 });
+    await expect(page.locator('.win-result-score')).toContainText('3500');
+    const zeroScoreGlyphs = await page.locator('.win-result-score-sprites img').evaluateAll((images) => images.map((image) => {
+      const rect = image.getBoundingClientRect();
+      return {
+        digit: image.dataset.sourceDigit,
+        file: image.getAttribute('src').split('/').at(-1),
+        size: [image.naturalWidth, image.naturalHeight],
+        rect: [rect.x, rect.y, rect.width, rect.height].map((value) => Math.round(value * devicePixelRatio)),
+      };
+    }));
+    expect(zeroScoreGlyphs).toEqual([
+      { digit: '3', file: 'win-result-score-digit-3-reference.png', size: [52, 94], rect: [428, 862, 52, 94] },
+      { digit: '5', file: 'win-result-score-digit-5-reference.png', size: [51, 94], rect: [480, 862, 51, 94] },
+      { digit: '0', file: 'win-result-score-digit-0-reference.png', size: [53, 94], rect: [531, 862, 53, 94] },
+      { digit: '0', file: 'win-result-score-digit-0-reference.png', size: [53, 94], rect: [584, 862, 53, 94] },
+    ]);
+    await page.screenshot({ path: 'test-results/source-win-result-3500-zero.png', fullPage: true, animations: 'disabled' });
   });
 });
 
@@ -2167,7 +2216,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v88');
+  expect(cacheNames).toContain('solitaire-master-v89');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2223,7 +2272,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   });
   expect(offlineWinBackground).toEqual({ ok: true, type: 'image/png', width: 884, height: 153 });
   const offlineWinScoreGlyphs = await page.evaluate(async () => Promise.all([
-    '5', '2-a', '2-b', '3',
+    '5', '2-a', '2-b', '3', '0',
   ].map(async (glyph) => {
     const response = await fetch(`/assets/ui/win-result-score-digit-${glyph}-reference.png`);
     const image = await createImageBitmap(await response.blob());
@@ -2234,6 +2283,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     { ok: true, type: 'image/png', width: 52, height: 94 },
     { ok: true, type: 'image/png', width: 53, height: 94 },
     { ok: true, type: 'image/png', width: 52, height: 94 },
+    { ok: true, type: 'image/png', width: 53, height: 94 },
   ]);
   const offlineWinSound = await page.evaluate(async () => {
     const response = await fetch('/assets/audio/win-reference.wav');

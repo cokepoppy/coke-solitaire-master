@@ -595,6 +595,7 @@ body.source-settings-draw-mode .source-draw-mode-reference { position: absolute;
 .win-result-score-sprites img[data-source-glyph="2-a"] { width: 5.882353cqw; }
 .win-result-score-sprites img[data-source-glyph="2-b"] { width: 5.995475cqw; }
 .win-result-score-sprites img[data-source-glyph="3"] { width: 5.882353cqw; }
+.win-result-score-sprites img[data-source-glyph="0"] { width: 5.995475cqw; }
 .win-result-best { position: absolute; z-index: 4; top: 43.6458%; left: 76.6968%; display: block; width: 13.2353%; height: auto; opacity: 0; transition: opacity .16s ease; }
 .win-result.is-summary-visible .win-result-best { opacity: 1; }
 .win-result-percent { position: absolute; inset: 0; margin: 0; }
