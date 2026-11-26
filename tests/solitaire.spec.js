@@ -709,7 +709,10 @@ test.describe('source-sized face gallery', () => {
         ['king-of-spades', 13, '♠'], ['ace-of-diamonds', 1, '♦'], ['2-of-clubs', 2, '♣'],
         ['ace-of-hearts', 1, '♥'], ['10-of-clubs', 10, '♣'], ['king-of-clubs', 13, '♣'],
         ['3-of-hearts', 3, '♥'], ['king-of-hearts', 13, '♥'], ['jack-of-hearts', 11, '♥'],
-        ['6-of-clubs', 6, '♣'], ['6-of-diamonds', 6, '♦'], ['8-of-clubs', 8, '♣'],
+        ['6-of-clubs', 6, '♣'], ['6-of-diamonds', 6, '♦'], ['4-of-spades', 4, '♠'],
+        ['8-of-spades', 8, '♠'], ['8-of-hearts', 8, '♥'], ['ace-of-spades', 1, '♠'],
+        ['2-of-diamonds', 2, '♦'], ['6-of-hearts', 6, '♥'], ['7-of-clubs', 7, '♣'],
+        ['jack-of-diamonds', 11, '♦'], ['queen-of-diamonds', 12, '♦'], ['8-of-clubs', 8, '♣'],
       ];
       const cards = faces.map(([name, rank, suit], index) => ({ id: `sample-${name}-${index}`, rank, suit, faceUp: true }));
       window.solitaireGame.state.tableau = [cards, [], [], [], [], [], []];
@@ -724,14 +727,16 @@ test.describe('source-sized face gallery', () => {
       const faces = [
         '10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds',
         '2-of-clubs', 'ace-of-hearts', '10-of-clubs', 'king-of-clubs', '3-of-hearts',
-        'king-of-hearts', 'jack-of-hearts', '6-of-clubs', '6-of-diamonds', '8-of-clubs',
+        'king-of-hearts', 'jack-of-hearts', '6-of-clubs', '6-of-diamonds', '4-of-spades',
+        '8-of-spades', '8-of-hearts', 'ace-of-spades', '2-of-diamonds', '6-of-hearts',
+        '7-of-clubs', 'jack-of-diamonds', 'queen-of-diamonds', '8-of-clubs',
       ];
       for (const [index, name] of faces.entries()) {
-        const usesStyleCrop = index < 5 || (style === 4 && index < 14);
+        const usesStyleCrop = index < 5 || (style === 4 && index < 23);
         const filename = usesStyleCrop ? `face-style-${style}-${name}-reference.png` : `${name}-reference.png`;
         await expect(page.locator('.card-face-art').nth(index)).toHaveAttribute('src', `/assets/cards/${filename}`);
       }
-      await expect.poll(() => page.locator('.card-face-art').evaluateAll((images) => images.length === 15 && images.every((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177))).toBe(true);
+      await expect.poll(() => page.locator('.card-face-art').evaluateAll((images) => images.length === 24 && images.every((image) => image.complete && image.naturalWidth === 118 && image.naturalHeight === 177))).toBe(true);
     }
   });
 
@@ -2162,7 +2167,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v87');
+  expect(cacheNames).toContain('solitaire-master-v88');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
@@ -2380,6 +2385,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     const names = [
       ...[3, 4, 5].flatMap((style) => ['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts', 'king-of-spades', 'ace-of-diamonds'].map((card) => `face-style-${style}-${card}-reference.png`)),
       ...['2-of-clubs', 'ace-of-hearts', '10-of-clubs', 'king-of-clubs', '3-of-hearts', 'king-of-hearts', 'jack-of-hearts', '6-of-clubs', '6-of-diamonds'].map((card) => `face-style-4-${card}-reference.png`),
+      ...['4-of-spades', '8-of-spades', '8-of-hearts', 'ace-of-spades', '2-of-diamonds', '6-of-hearts', '7-of-clubs', 'jack-of-diamonds', 'queen-of-diamonds'].map((card) => `face-style-4-${card}-reference.png`),
     ];
     return Promise.all(names.map(async (name) => {
       const response = await fetch(`/assets/cards/${name}`);
@@ -2387,7 +2393,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
       return { ok: response.ok, width: image.width, height: image.height };
     }));
   });
-  expect(offlineAlternateFaceSamples).toEqual(Array(24).fill({ ok: true, width: 118, height: 177 }));
+  expect(offlineAlternateFaceSamples).toEqual(Array(33).fill({ ok: true, width: 118, height: 177 }));
   const offlineFoundationSlots = await page.evaluate(async () => Promise.all([1, 2, 3, 4].map(async (index) => {
     const response = await fetch(`/assets/ui/foundation-empty-${index}.png`);
     return response.ok && response.headers.get('content-type') === 'image/png';

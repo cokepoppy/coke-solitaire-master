@@ -1,4 +1,4 @@
-const CACHE = 'solitaire-master-v87';
+const CACHE = 'solitaire-master-v88';
 const CACHE_PREFIX = 'solitaire-master-v';
 const PRECACHE_BATCH_SIZE = 8;
 const cardRanks = ['ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king'];
@@ -64,6 +64,7 @@ const galleryFaceSamples = ['10-of-diamonds', 'jack-of-clubs', 'queen-of-hearts'
 const alternateFaceSamples = [
   ...[3, 4, 5].flatMap((style) => galleryFaceSamples.map((card) => `/assets/cards/face-style-${style}-${card}-reference.png`)),
   ...['2-of-clubs', 'ace-of-hearts', '10-of-clubs', 'king-of-clubs', '3-of-hearts', 'king-of-hearts', 'jack-of-hearts', '6-of-clubs', '6-of-diamonds'].map((card) => `/assets/cards/face-style-4-${card}-reference.png`),
+  ...['4-of-spades', '8-of-spades', '8-of-hearts', 'ace-of-spades', '2-of-diamonds', '6-of-hearts', '7-of-clubs', 'jack-of-diamonds', 'queen-of-diamonds'].map((card) => `/assets/cards/face-style-4-${card}-reference.png`),
 ];
 const referenceCardBacks = ['/assets/cards/back-blue-reference.png', '/assets/cards/back-teal-reference.png', '/assets/cards/back-lattice-reference.png', '/assets/cards/back-spade-reference.png', '/assets/cards/back-coral-reference.png', '/assets/cards/back-floral-reference.png', '/assets/cards/back-amber-reference.png'];
 const actionIcons = ['/assets/ui/action-play-plus.png', '/assets/ui/action-magic.png', '/assets/ui/action-hint.png', '/assets/ui/action-undo.png'];

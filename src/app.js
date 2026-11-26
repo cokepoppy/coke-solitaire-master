@@ -160,6 +160,8 @@ const FACE_STYLE_SAMPLES = {
     ...GALLERY_FACE_SAMPLES,
     '2-of-clubs', 'ace-of-hearts', '10-of-clubs', 'king-of-clubs',
     '3-of-hearts', 'king-of-hearts', 'jack-of-hearts', '6-of-clubs', '6-of-diamonds',
+    '4-of-spades', '8-of-spades', '8-of-hearts', 'ace-of-spades', '2-of-diamonds',
+    '6-of-hearts', '7-of-clubs', 'jack-of-diamonds', 'queen-of-diamonds',
   ]),
   'style-5': new Set(GALLERY_FACE_SAMPLES),
 };
