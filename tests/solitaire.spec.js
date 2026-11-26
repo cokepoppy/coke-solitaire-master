@@ -1412,6 +1412,18 @@ test.describe('source-sized win result', () => {
 
   test('result artwork aligns with the 310-second source frame', async ({ page }) => {
     await page.goto('/');
+    const winResultAssets = [
+      'win-result-crown-intro-reference.png', 'win-result-title-intro-reference.png',
+      'win-banner-reference.png', 'win-result-background-reference.png',
+      'win-result-score-digit-5-reference.png', 'win-result-score-digit-2-a-reference.png',
+      'win-result-score-digit-2-b-reference.png', 'win-result-score-digit-3-reference.png',
+      'win-best-reference.png', 'win-trophy-reference.png', 'win-streak-trophy-reference.png',
+      'win-streak-title-reference.png', 'win-streak-thumb-reference.png', 'win-new-deal-reference.png',
+      'win-result-score-label-reference.png', 'win-result-percent-reference.png',
+      'win-result-time-label-reference.png', 'win-result-moves-label-reference.png',
+    ];
+    await expect.poll(() => page.evaluate((files) => files.every((file) => performance.getEntriesByType('resource')
+      .some((entry) => new URL(entry.name).pathname.endsWith(`/assets/ui/${file}`))), winResultAssets)).toBe(true);
     await page.evaluate(() => {
       const game = window.solitaireGame;
       const cards = game.state.seedDeck.map((card) => ({ ...card, faceUp: true }));
@@ -2079,7 +2091,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
     await complete;
   });
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v84');
+  expect(cacheNames).toContain('solitaire-master-v85');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

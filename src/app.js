@@ -86,6 +86,7 @@ let winNewBest = false;
 let winResultSoundPlayed = false;
 let winResultTimers = [];
 let winResultScoreFrame = 0;
+let winResultPreloadedImages = [];
 let autoHintTimer = null;
 let autoCollectTimer = null;
 let autoCollectRunning = false;
@@ -101,6 +102,16 @@ const WIN_RESULT_TROPHY_DELAY_MS = 1200;
 const WIN_RESULT_ACTION_DELAY_MS = 1400;
 const WIN_RESULT_SCORE_DURATION_MS = 1300;
 const WIN_RESULT_SOUND_DELAY_SECONDS = 0.38;
+const WIN_RESULT_PRELOAD_ASSETS = [
+  'win-result-crown-intro-reference.png', 'win-result-title-intro-reference.png',
+  'win-banner-reference.png', 'win-result-background-reference.png',
+  'win-result-score-digit-5-reference.png', 'win-result-score-digit-2-a-reference.png',
+  'win-result-score-digit-2-b-reference.png', 'win-result-score-digit-3-reference.png',
+  'win-best-reference.png', 'win-trophy-reference.png', 'win-streak-trophy-reference.png',
+  'win-streak-title-reference.png', 'win-streak-thumb-reference.png', 'win-new-deal-reference.png',
+  'win-result-score-label-reference.png', 'win-result-percent-reference.png',
+  'win-result-time-label-reference.png', 'win-result-moves-label-reference.png',
+];
 const WIN_RESULT_SCORE_TICKS = [
   3614, 3785, 3996, 4092, 4229, 4391, 4466, 4568, 4691, 4746, 4822, 4908, 4947, 4998,
   5056, 5081, 5114, 5149, 5163, 5181, 5199, 5205, 5213, 5219, 5221, 5222, 5223,
@@ -186,6 +197,17 @@ function clearTableauTutorial() {
     tip.classList.remove('visible');
     tip.hidden = true;
   }
+}
+
+function preloadWinResultAssets() {
+  if (winResultPreloadedImages.length) return;
+  winResultPreloadedImages = WIN_RESULT_PRELOAD_ASSETS.map((asset) => {
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = `/assets/ui/${asset}`;
+    image.decode().catch(() => {});
+    return image;
+  });
 }
 
 function clearWinResultTransition() {
@@ -1638,6 +1660,7 @@ setInterval(() => {
 }, 1000);
 
 render();
+preloadWinResultAssets();
   let hasProfile = false;
   try { hasProfile = Boolean(localStorage.getItem(STORAGE_PROFILE)); } catch { /* storage is optional */ }
 if (!hasProfile) writeProfile({ games: 1, wins: 0, bestScore: 0, dailyCompleted: [] });
