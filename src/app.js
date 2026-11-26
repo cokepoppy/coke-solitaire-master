@@ -1035,10 +1035,10 @@ function completeWin() {
     // in the 390 px comparison viewport; use that point as the shared cascade origin.
     const fromX = 55;
     const fromY = 36.3;
-    const toX = -15 + suitIndex * 25 + rankProgress * 40;
-    const lowRankYStack = suitIndex === 0 ? 0 : (1 - rankProgress) * 4;
-    const lowerLeftFanCurve = suitIndex === 0 ? Math.sin(rankProgress * Math.PI) * 6 : 0;
-    const toY = 72.5 - suitIndex * 9 - rankProgress * 24 + lowRankYStack + lowerLeftFanCurve;
+    const toX = -17 + suitIndex * 25 + rankProgress * 35;
+    const lowRankYStack = suitIndex === 0 ? 0 : (1 - rankProgress) * 7;
+    const lowerLeftFanCurve = suitIndex === 0 ? Math.sin(rankProgress * Math.PI) * 4 : 0;
+    const toY = 72.5 - suitIndex * 9 - rankProgress * 21 + lowRankYStack + lowerLeftFanCurve;
     const rotation = ((rankIndex % 5) - 2) * 2.2 + (suitIndex - 1.5) * 2;
     const delay = rankIndex * 100 + suitIndex * 250;
     const order = suitIndex * 13 + rankIndex;

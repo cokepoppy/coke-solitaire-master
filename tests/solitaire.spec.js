@@ -1529,6 +1529,11 @@ test('winning shows a result card and records a completed daily challenge', asyn
     firstCard: cards[0].getBoundingClientRect().toJSON(),
     lastCard: cards.at(-1).getBoundingClientRect().toJSON(),
   }));
+  const sourceFanEndpoints = await page.locator('.win-cascade-card').evaluateAll((cards) => [0, 12, 51].map((index) => [
+    cards[index].style.getPropertyValue('--cascade-to-x'),
+    cards[index].style.getPropertyValue('--cascade-to-y'),
+  ]));
+  expect(sourceFanEndpoints).toEqual([['-17%', '72.5%'], ['18%', '51.5%'], ['93%', '24.5%']]);
   expect(fan.unfinishedAnimations).toBe(0);
   expect(fan.firstCard.left).toBeLessThan(fan.lastCard.left);
   expect(fan.firstCard.top).toBeGreaterThan(fan.lastCard.top);
@@ -1922,7 +1927,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v69');
+  expect(cacheNames).toContain('solitaire-master-v70');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';
