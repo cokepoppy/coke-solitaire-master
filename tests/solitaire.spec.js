@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 
 const sourceArtSrgbHashes = JSON.parse(readFileSync(new URL('./fixtures/source-art-srgb-hashes.json', import.meta.url), 'utf8'));
 
@@ -1355,6 +1355,10 @@ test('winning shows a result card and records a completed daily challenge', asyn
   await page.reload();
   await page.evaluate(() => {
     window.gameAudioCues = [];
+    window.winCascadeStart = null;
+    document.addEventListener('animationstart', (event) => {
+      if (event.animationName === 'win-cascade-card' && window.winCascadeStart === null) window.winCascadeStart = performance.now();
+    }, true);
     const audio = window.solitaireAudio;
     const play = audio.play.bind(audio);
     audio.play = (cue) => { window.gameAudioCues.push(cue); return play(cue); };
@@ -1366,6 +1370,26 @@ test('winning shows a result card and records a completed daily challenge', asyn
   }
 
   await expect(page.locator('.win-streak-backdrop')).toBeVisible();
+  await page.waitForFunction(() => window.winCascadeStart !== null);
+  const timelineDirectory = 'test-results/win-streak-timeline';
+  mkdirSync(timelineDirectory, { recursive: true });
+  const timelineStart = await page.evaluate(() => window.winCascadeStart);
+  const timelineSamples = [];
+  for (let index = 0; index <= 35; index += 1) {
+    const targetMs = index * 100;
+    const elapsedMs = await page.evaluate((start) => performance.now() - start, timelineStart);
+    if (elapsedMs < targetMs) await page.waitForTimeout(targetMs - elapsedMs);
+    const actualMs = await page.evaluate((start) => performance.now() - start, timelineStart);
+    const filename = `frame-${String(index).padStart(3, '0')}.png`;
+    await page.screenshot({ path: `${timelineDirectory}/${filename}` });
+    timelineSamples.push({ targetMs, actualMs, filename });
+    if (index === 30) {
+      const stillRunning = await page.locator('.win-cascade-card').evaluateAll((cards) => cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length);
+      expect(stillRunning).toBeGreaterThan(0);
+    }
+  }
+  writeFileSync(`${timelineDirectory}/manifest.json`, JSON.stringify({ viewport: [390, 844], sourceStartSeconds: 303.5, samples: timelineSamples }, null, 2));
+
   await expect(page.locator('.win-streak-title')).toHaveAttribute('alt', 'winning streak');
   await expect.poll(() => page.locator('.win-streak-title').evaluate((image) => image.complete && image.naturalWidth === 680 && image.naturalHeight === 126)).toBe(true);
   await expect(page.locator('.win-streak-reward img')).toHaveAttribute('src', '/assets/ui/win-streak-trophy-reference.png');
@@ -1376,9 +1400,6 @@ test('winning shows a result card and records a completed daily challenge', asyn
   expect(await page.evaluate(() => window.solitaireGame.state.foundations.every((pile) => pile.length === 13))).toBe(true);
   const suitOrder = await page.locator('.win-cascade-card').evaluateAll((cards) => [0, 13, 26, 39].map((index) => new URL(cards[index].src).pathname));
   expect(suitOrder.map((source) => source.match(/of-(hearts|diamonds|spades|clubs)/)?.[1])).toEqual(['hearts', 'diamonds', 'spades', 'clubs']);
-  await page.waitForTimeout(3000);
-  const sourceDurationStillRunning = await page.locator('.win-cascade-card').evaluateAll((cards) => cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length);
-  expect(sourceDurationStillRunning).toBeGreaterThan(0);
   await expect.poll(() => page.locator('.win-cascade-card').evaluateAll((cards) => cards.filter((card) => card.getAnimations().some((animation) => animation.playState !== 'finished')).length)).toBe(0);
   const sourceOverlayBounds = await page.evaluate(() => {
     const elementBounds = (element) => {
@@ -1754,7 +1775,7 @@ test('the board fits a 320px phone and the installed shell loads offline', async
   await page.goto('/');
   await page.evaluate(() => navigator.serviceWorker.ready);
   const cacheNames = await page.evaluate(() => caches.keys());
-  expect(cacheNames).toContain('solitaire-master-v67');
+  expect(cacheNames).toContain('solitaire-master-v68');
   await expect.poll(() => page.evaluate(async () => {
     const response = await fetch('/assets/audio/auto-collect-reference.wav');
     return response.ok && response.headers.get('content-type') === 'audio/x-wav';

@@ -1,6 +1,6 @@
 # Winning streak source-frame comparison
 
-This review compares the completed win-streak fan at 307.000 seconds in the gameplay recording with the mobile-web animation. The source's first visible fan pixels appear at 303.500 s, the streak title is visible by 304.000 s, and the cards are settled at 307.000 s. The web fan now stays in motion after three seconds and settles at about 3.5 seconds. It uses one source win, so the observed scatter is a visual sample rather than a rule for every deal.
+This review compares the win-streak transition from 303.500–307.000 seconds in the gameplay recording with the mobile-web animation. The source's first fan pixels appear at 303.500 s, the title and reward arrive during the next half-second, and the cards settle by 307.000 s. The web transition now starts the fan at the measured source point, stages cards by suit and rank, and finishes at 3.5 seconds; the result transition begins 4.5 seconds after the fan starts. It uses one source win, so the observed scatter is a visual sample rather than a rule for every deal.
 
 ## Reproduce
 
@@ -14,12 +14,15 @@ swift tools/extract_video_window.swift \
   research/solitaire-master/source-videos/gLd0HXtDt5I.mp4 \
   307 307 1 /tmp/solitaire-win-clear-01s
 npx playwright test -g 'winning shows a result card'
+python3 tools/compare_win_streak_timeline.py \
+  /tmp/solitaire-win-streak-transition \
+  test-results/win-streak-timeline
 python3 tools/compare_win_streak_fan.py \
   /tmp/solitaire-win-clear-01s/frame-00000-req-307.000000-pts-4715520.png \
   test-results/mobile-win-streak.png
 ```
 
-The source is 884×1920. For a visual comparison at the test's 390×844 CSS viewport, resize it to 390×847 and crop the last three rows. The web screenshot is written to the ignored `test-results/mobile-win-streak.png`; neither image derivative is committed.
+The source is 884×1920. For a visual comparison at the test's 390×844 CSS viewport, resize it to 390×847 and crop the last three rows. The win-flow E2E captures 36 browser screenshots at 100 ms intervals under the ignored `test-results/win-streak-timeline/` directory, and saves the settled web frame as `test-results/mobile-win-streak.png`; neither image derivative is committed.
 
 ## Measurements
 
@@ -30,10 +33,12 @@ The source is 884×1920. For a visual comparison at the test's 390×844 CSS view
 | Neutral card-pixel count | 37,322 | 38,124 |
 | Source/web card-mask intersection over union | — | `0.3942` (`0.3235` before this pass) |
 | RGB MAE on source card-mask pixels | — | `0.0720` (`0.0854` before this pass) |
+| Mean mask IoU across 36 transition frames | — | `0.2592` (`0.2361` before motion matching) |
+| Neutral-pixel count MAE across 36 frames | — | `3,668` (`5,172` before motion matching) |
 
-The title now uses a transparent 680×126 source crop from PTS 4,715,520 instead of browser-rendered text. At the 390×844 viewport it displays at 300×55.6 CSS pixels from `(45, 270)`, matching the source crop's scaled coordinates; the win-flow E2E checks its loaded dimensions and measured bounds. Card endpoint coordinates remain unchanged. The neutral-card mask spans rows 320–679 and includes the title's small overlap at its top edge.
+The title now uses a transparent 680×126 source crop from PTS 4,715,520 instead of browser-rendered text. At the 390×844 viewport it displays at 300×55.6 CSS pixels from `(45, 270)`, matching the source crop's scaled coordinates; the win-flow E2E checks its loaded dimensions and measured bounds. The first sampled fan pixels at 303.500 s are centered at `(241, 320)` in the 390 px viewport. Cards now begin from that shared origin (`left: 55%`, `top: 36.3%`) and use `rankIndex × 100 ms + suitIndex × 250 ms` delays with a 1.55 s flight, preserving the existing 3.5 s settle time. The title starts at 120 ms, the reward at 200 ms, and the board dim reaches its source level over 200 ms. The result transition is set to 4.5 s, matching the 303.5–308.0 s source interval. Card endpoint coordinates remain unchanged. The neutral-card mask spans rows 320–679 and includes the title's small overlap at its top edge.
 
-The mask uses pixels in rows 320–679 with mean RGB intensity above 0.18 and channel spread below 0.20. The web uses the source-visible Hearts, Diamonds, Spades, Clubs fan order. A parameter sweep of the card endpoints reduced the masked source-pixel MAE by 14.6% and improved mask IoU by 21.7% over the prior `main` rendering. The normalized endpoint map is `x = -15% + 25% × suitIndex + 40% × rankProgress` and `y = 72.5% - 9% × suitIndex - 24% × rankProgress`, with the existing low-rank stack and small lower-left curve. The 41-frame mask counts, source PTS values, and PNG hashes are in [`frames-100ms.csv`](frames-100ms.csv). The individual card scatter remains an approximation; the recording captures only one completed deal.
+The mask uses pixels in rows 320–679 with mean RGB intensity above 0.18 and channel spread below 0.20. The web uses the source-visible Hearts, Diamonds, Spades, Clubs fan order. Across the 36 samples, the timed change raised mean mask IoU from 0.2361 to 0.2592 and lowered neutral-pixel count MAE from 5,172 to 3,668. The settled-frame endpoint sweep reduced masked source-pixel MAE by 14.6% and improved mask IoU by 21.7% over the earlier rendering. The normalized endpoint map is `x = -15% + 25% × suitIndex + 40% × rankProgress` and `y = 72.5% - 9% × suitIndex - 24% × rankProgress`, with the existing low-rank stack and small lower-left curve. The 41-frame mask counts, source PTS values, and PNG hashes are in [`frames-100ms.csv`](frames-100ms.csv), and the current source-to-web metrics are in [`timeline-comparison-2026-11-26.json`](timeline-comparison-2026-11-26.json). The timeline metric is directional: the automated web win fixture has four Kings on an otherwise empty tableau, while the recorded source still shows its completed tableau, so underlying board pixels also affect the comparison. Individual card scatter remains an approximation; the recording captures only one completed deal.
 
 The settled 307-second source frame also shows all four foundation slots empty behind the fan. The replica now hides those four displayed top cards for the win sequence while retaining the complete 13-card piles in game state; the win-flow browser test checks both the empty display and preserved piles, then checks that a new deal restores normal empty-slot art.
 

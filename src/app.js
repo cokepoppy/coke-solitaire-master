@@ -904,15 +904,18 @@ function completeWin() {
   const cascade = fanSuitOrder.flatMap((foundationIndex, suitIndex) => game.state.foundations[foundationIndex].map((card, rankIndex) => {
     const asset = cardFaceAssetName(card);
     const rankProgress = rankIndex / 12;
-    const fromX = 8 + suitIndex * 20;
+    // The first measured neutral pixels in the 303.5 s source frame are centered at (241, 320)
+    // in the 390 px comparison viewport; use that point as the shared cascade origin.
+    const fromX = 55;
+    const fromY = 36.3;
     const toX = -15 + suitIndex * 25 + rankProgress * 40;
     const lowRankYStack = suitIndex === 0 ? 0 : (1 - rankProgress) * 4;
     const lowerLeftFanCurve = suitIndex === 0 ? Math.sin(rankProgress * Math.PI) * 6 : 0;
     const toY = 72.5 - suitIndex * 9 - rankProgress * 24 + lowRankYStack + lowerLeftFanCurve;
     const rotation = ((rankIndex % 5) - 2) * 2.2 + (suitIndex - 1.5) * 2;
-    const delay = rankIndex * 33 + suitIndex * 70;
+    const delay = rankIndex * 100 + suitIndex * 250;
     const order = suitIndex * 13 + rankIndex;
-    return `<img class="win-cascade-card" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${fromX}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
+    return `<img class="win-cascade-card" src="/assets/cards/${asset}" alt="" style="--cascade-from-x:${fromX}%;--cascade-from-y:${fromY}%;--cascade-to-x:${toX}%;--cascade-to-y:${toY}%;--cascade-rotation:${rotation}deg;--cascade-delay:${delay}ms;z-index:${order}">`;
   })).join('');
   setModal('Winning streak', '', `
     <div class="win-streak-screen" aria-label="Winning streak">
@@ -926,7 +929,7 @@ function completeWin() {
   `, 'win-streak');
   $('.game-shell').classList.add('won');
   clearTimeout(winStreakTimer);
-  winStreakTimer = setTimeout(() => showWinResult(winNewBest), 4700);
+  winStreakTimer = setTimeout(() => showWinResult(winNewBest), 4500);
 }
 
 function showWinResult(newBest) {

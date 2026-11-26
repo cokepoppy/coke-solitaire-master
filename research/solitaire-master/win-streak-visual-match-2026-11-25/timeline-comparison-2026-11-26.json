@@ -1,0 +1,75 @@
+{
+  "viewport": [
+    390,
+    844
+  ],
+  "roiY": [
+    320,
+    680
+  ],
+  "sourceIntervalSeconds": [
+    303.5,
+    307.0
+  ],
+  "sampleCount": 36,
+  "meanMaskIoU": 0.25948509060408786,
+  "neutralPixelCountMAE": 3700.472222222222,
+  "checkpoints": [
+    {
+      "sourceSeconds": 303.5,
+      "webCaptureMs": 5.6,
+      "sourceNeutralPixels": 38,
+      "webNeutralPixels": 2349,
+      "maskIoU": 0.007172995780590718
+    },
+    {
+      "sourceSeconds": 304.0,
+      "webCaptureMs": 503.2,
+      "sourceNeutralPixels": 11833,
+      "webNeutralPixels": 12087,
+      "maskIoU": 0.1414936769267478
+    },
+    {
+      "sourceSeconds": 304.5,
+      "webCaptureMs": 1003.5,
+      "sourceNeutralPixels": 21282,
+      "webNeutralPixels": 21714,
+      "maskIoU": 0.2502835208933089
+    },
+    {
+      "sourceSeconds": 305.0,
+      "webCaptureMs": 1503.6,
+      "sourceNeutralPixels": 25662,
+      "webNeutralPixels": 32569,
+      "maskIoU": 0.24975318710563593
+    },
+    {
+      "sourceSeconds": 305.5,
+      "webCaptureMs": 2004.6,
+      "sourceNeutralPixels": 29585,
+      "webNeutralPixels": 36410,
+      "maskIoU": 0.27659780253791394
+    },
+    {
+      "sourceSeconds": 306.0,
+      "webCaptureMs": 2500.9,
+      "sourceNeutralPixels": 34147,
+      "webNeutralPixels": 38013,
+      "maskIoU": 0.3041042415918168
+    },
+    {
+      "sourceSeconds": 306.5,
+      "webCaptureMs": 3005.5,
+      "sourceNeutralPixels": 35506,
+      "webNeutralPixels": 38124,
+      "maskIoU": 0.3666060358587921
+    },
+    {
+      "sourceSeconds": 307.0,
+      "webCaptureMs": 3503.2,
+      "sourceNeutralPixels": 37322,
+      "webNeutralPixels": 38119,
+      "maskIoU": 0.3940609062014931
+    }
+  ]
+}
