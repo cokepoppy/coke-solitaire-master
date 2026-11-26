@@ -75,6 +75,7 @@ let animatedCardIds = new Set();
 let revealedCardIds = new Set();
 let cardMoveIds = new Set();
 let cardFlight = null;
+let stockRecycleFlight = null;
 let winShown = false;
 let winCascadeClearsFoundations = Boolean(game.state.won);
 let comboFeedbackTimer = null;
@@ -308,10 +309,11 @@ function renderTopRow() {
   const wasteCol = leftHand ? 2 : 5;
   const foundationStart = leftHand ? 4 : 1;
   const stock = game.state.stock;
+  const recyclingStock = Boolean(stockRecycleFlight);
   const stockHint = game.state.hint?.source?.zone === 'stock';
-  const stockButton = `<div class="slot stock-slot drop-target${stockHint ? ' is-hint' : ''}" style="grid-column:${stockCol};grid-row:1" data-drop-zone="stock" data-pile="0">
-      <button class="stock-button${stockHint ? ' is-hint' : ''}" type="button" data-action="stock" aria-label="${stock.length ? `Draw a card, ${stock.length} cards remaining` : game.state.waste.length ? 'Turn the waste pile over' : 'Stock pile is empty'}">
-        ${stock.length ? `<span class="playing-card card-back${game.state.cardBack === 'ruby' ? ' source-card-back' : ''}">${stockCardBackMarkup()}</span>` : '<span class="empty-stock">↻</span>'}
+  const stockButton = `<div class="slot stock-slot drop-target${stockHint ? ' is-hint' : ''}${recyclingStock ? ' is-recycling' : ''}" style="grid-column:${stockCol};grid-row:1" data-drop-zone="stock" data-pile="0">
+      <button class="stock-button${stockHint ? ' is-hint' : ''}" type="button" data-action="stock" aria-label="${recyclingStock ? 'Returning waste cards to stock' : stock.length ? `Draw a card, ${stock.length} cards remaining` : game.state.waste.length ? 'Turn the waste pile over' : 'Stock pile is empty'}"${recyclingStock ? ' disabled' : ''}>
+        ${stock.length && !recyclingStock ? `<span class="playing-card card-back${game.state.cardBack === 'ruby' ? ' source-card-back' : ''}">${stockCardBackMarkup()}</span>` : '<span class="empty-stock">↻</span>'}
       </button>
       ${stock.length ? `<span class="stock-count${game.state.cardBack === 'ruby' ? ` source-stock-count${stock.length === 24 ? ' source-stock-count-baked' : ''}` : ''}">${stock.length}</span>` : ''}
     </div>`;
@@ -425,6 +427,7 @@ function updateChrome() {
 }
 
 function render() {
+  clearStockRecycleFlight();
   const settlingDeal = firstDeal;
   if (settlingDeal) clearTimeout(dealSettlementTimer);
   renderTopRow();
@@ -583,6 +586,81 @@ function captureStockFlight() {
   const waste = document.querySelector('.waste-slot')?.getBoundingClientRect();
   if (!stock || !waste) return null;
   return { originX: stock.left, originY: stock.top, targetX: waste.left, targetY: waste.top };
+}
+
+function captureStockRecycleFlight() {
+  const stock = document.querySelector('.stock-slot')?.getBoundingClientRect();
+  const wasteSlot = document.querySelector('.waste-slot')?.getBoundingClientRect();
+  const cards = [...document.querySelectorAll('.waste-slot > .playing-card')].map((card) => {
+    const rect = card.getBoundingClientRect();
+    return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+  });
+  if (!stock || !wasteSlot || !cards.length) return null;
+  return { stock, wasteSlot, cards };
+}
+
+function clearStockRecycleFlight({ restoreStockArt = false } = {}) {
+  if (!stockRecycleFlight) return;
+  clearTimeout(stockRecycleFlight.timer);
+  stockRecycleFlight.layer.remove();
+  stockRecycleFlight = null;
+  if (restoreStockArt) {
+    renderTopRow();
+    updateChrome();
+  }
+}
+
+function animateStockRecycle(origin) {
+  if (!origin?.cards.length) return;
+  const layer = document.createElement('div');
+  layer.className = 'stock-recycle-flight';
+  layer.setAttribute('aria-hidden', 'true');
+  const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 167;
+
+  for (const [index, position] of origin.cards.entries()) {
+    const card = document.createElement('span');
+    card.className = `playing-card card-back${game.state.cardBack === 'ruby' ? ' source-card-back' : ''} stock-recycle-flight-card`;
+    card.style.left = `${position.left}px`;
+    card.style.top = `${position.top}px`;
+    card.style.width = `${position.width}px`;
+    card.style.height = `${position.height}px`;
+    card.style.zIndex = String(index + 1);
+    card.innerHTML = cardBackImageMarkup();
+    layer.append(card);
+  }
+
+  document.body.append(layer);
+  stockRecycleFlight = { layer, timer: null };
+  renderTopRow();
+  updateChrome();
+
+  const stockCount = document.querySelector('.stock-slot .stock-count');
+  if (stockCount) {
+    const rect = stockCount.getBoundingClientRect();
+    const count = document.createElement('span');
+    count.className = `stock-count stock-recycle-flight-count${game.state.cardBack === 'ruby' ? ' source-stock-count' : ''}`;
+    count.textContent = String(game.state.stock.length);
+    count.style.position = 'fixed';
+    count.style.left = `${rect.left}px`;
+    count.style.top = `${rect.top}px`;
+    count.style.bottom = 'auto';
+    count.style.width = `${rect.width}px`;
+    count.style.height = `${rect.height}px`;
+    layer.append(count);
+  }
+
+  const deltaX = origin.stock.left - origin.wasteSlot.left;
+  const deltaY = origin.stock.top - origin.wasteSlot.top;
+  for (const card of layer.querySelectorAll('.stock-recycle-flight-card')) {
+    card.animate(
+      [
+        { transform: 'translate3d(0, 0, 0)' },
+        { transform: `translate3d(${deltaX}px, ${deltaY}px, 0)` },
+      ],
+      { duration, easing: 'ease-out', fill: 'forwards' },
+    );
+  }
+  stockRecycleFlight.timer = setTimeout(() => clearStockRecycleFlight({ restoreStockArt: true }), duration + 16);
 }
 
 function animateStockCards(origin, cards) {
@@ -1021,6 +1099,8 @@ function showWinResult(newBest) {
 }
 
 function handleStock() {
+  if (stockRecycleFlight) return;
+  const recycleOrigin = game.state.stock.length ? null : captureStockRecycleFlight();
   const origin = captureStockFlight();
   const drawAfterRecycle = game.state.recycledStockPendingDraw;
   const action = game.drawFromStock();
@@ -1029,6 +1109,7 @@ function handleStock() {
   scheduleAutoCollect();
   audio.play(action === 'recycle' ? 'recycle' : drawAfterRecycle ? 'drawAfterRecycle' : 'draw');
   renderStockAction();
+  if (action === 'recycle') animateStockRecycle(recycleOrigin);
   showComboFeedback();
 }
 
@@ -1084,6 +1165,7 @@ function handleHint() {
 }
 
 function handleMagic() {
+  if (stockRecycleFlight) return;
   if (game.state.magicCharges < 1) {
     announce('No magic moves remain in this deal');
     return;
@@ -1095,6 +1177,7 @@ function handleMagic() {
     return;
   }
   if (hint.source.zone === 'stock') {
+    const recycleOrigin = game.state.stock.length ? null : captureStockRecycleFlight();
     const origin = captureStockFlight();
     const action = game.drawFromStock();
     if (action === 'empty') {
@@ -1108,6 +1191,7 @@ function handleMagic() {
     game.save();
     audio.play(action === 'recycle' ? 'recycle' : 'draw');
     render();
+    if (action === 'recycle') animateStockRecycle(recycleOrigin);
     announce('Magic revealed a new card');
     scheduleAutoCollect();
     return;
