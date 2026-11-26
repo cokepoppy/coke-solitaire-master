@@ -1,0 +1,865 @@
+{
+  "source_url": "https://www.youtube.com/watch?v=gLd0HXtDt5I",
+  "source_video_sha256": "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_wav_name": "solitaire-gameplay-full.wav",
+  "source_wav_sha256": "035f2b43e6e467a511feb1ce36dc9ea9cbdf87a6f8e3e3a7af15f7a2d4602b7c",
+  "audit_timestamp_utc": "2026-11-26T14:32:51.830938+00:00",
+  "sample_rate_hz": 44100,
+  "channels": 2,
+  "sample_width_bits": 16,
+  "source_duration_seconds": 1044.0,
+  "source_offset_seconds": 0.0,
+  "analysis_hop_ms": 50,
+  "analysis_window_count": 20880,
+  "global_rms_median": 2.547e-05,
+  "global_rms_p95": 0.09262063,
+  "global_rms_max": 0.49544153,
+  "windows_above_rms_0_01": 4751,
+  "fraction_windows_above_rms_0_01": 0.227538,
+  "windows_above_rms_0_05": 2319,
+  "fraction_windows_above_rms_0_05": 0.111063,
+  "candidate_events": [
+    {
+      "source_time_seconds": 68.75,
+      "rms": 0.06425007,
+      "peak": 0.51364136,
+      "high_band_fraction": 0.525942,
+      "spectral_centroid_hz": 3712.97
+    },
+    {
+      "source_time_seconds": 72.85,
+      "rms": 0.33240995,
+      "peak": 0.76681519,
+      "high_band_fraction": 0.167177,
+      "spectral_centroid_hz": 1602.42
+    },
+    {
+      "source_time_seconds": 73.5,
+      "rms": 0.23511416,
+      "peak": 0.68426514,
+      "high_band_fraction": 0.430118,
+      "spectral_centroid_hz": 1739.56
+    },
+    {
+      "source_time_seconds": 93.75,
+      "rms": 0.06468919,
+      "peak": 0.46777344,
+      "high_band_fraction": 0.479895,
+      "spectral_centroid_hz": 3582.34
+    },
+    {
+      "source_time_seconds": 102.8,
+      "rms": 0.19297901,
+      "peak": 0.55947876,
+      "high_band_fraction": 0.223782,
+      "spectral_centroid_hz": 1814.27
+    },
+    {
+      "source_time_seconds": 130.1,
+      "rms": 0.06443153,
+      "peak": 0.51202393,
+      "high_band_fraction": 0.461641,
+      "spectral_centroid_hz": 3514.17
+    },
+    {
+      "source_time_seconds": 138.55,
+      "rms": 0.06430776,
+      "peak": 0.46768188,
+      "high_band_fraction": 0.473272,
+      "spectral_centroid_hz": 3588.38
+    },
+    {
+      "source_time_seconds": 148.05,
+      "rms": 0.15998039,
+      "peak": 0.99008179,
+      "high_band_fraction": 0.152985,
+      "spectral_centroid_hz": 2463.01
+    },
+    {
+      "source_time_seconds": 148.9,
+      "rms": 0.11775363,
+      "peak": 0.49139404,
+      "high_band_fraction": 0.130781,
+      "spectral_centroid_hz": 2189.83
+    },
+    {
+      "source_time_seconds": 149.45,
+      "rms": 0.07078744,
+      "peak": 0.65866089,
+      "high_band_fraction": 0.125222,
+      "spectral_centroid_hz": 2028.51
+    },
+    {
+      "source_time_seconds": 157.15,
+      "rms": 0.09772211,
+      "peak": 0.68310547,
+      "high_band_fraction": 0.657521,
+      "spectral_centroid_hz": 5115.6
+    },
+    {
+      "source_time_seconds": 158.35,
+      "rms": 0.0864666,
+      "peak": 0.56915283,
+      "high_band_fraction": 0.706076,
+      "spectral_centroid_hz": 5385.9
+    },
+    {
+      "source_time_seconds": 159.4,
+      "rms": 0.09344374,
+      "peak": 0.99942017,
+      "high_band_fraction": 0.889264,
+      "spectral_centroid_hz": 2809.39
+    },
+    {
+      "source_time_seconds": 160.3,
+      "rms": 0.10030121,
+      "peak": 0.99673462,
+      "high_band_fraction": 0.883664,
+      "spectral_centroid_hz": 3160.36
+    },
+    {
+      "source_time_seconds": 165.05,
+      "rms": 0.10606828,
+      "peak": 1.0,
+      "high_band_fraction": 0.854539,
+      "spectral_centroid_hz": 3369.64
+    },
+    {
+      "source_time_seconds": 168.25,
+      "rms": 0.09277432,
+      "peak": 0.69024658,
+      "high_band_fraction": 0.801663,
+      "spectral_centroid_hz": 4651.33
+    },
+    {
+      "source_time_seconds": 171.15,
+      "rms": 0.07630898,
+      "peak": 0.23483276,
+      "high_band_fraction": 0.144752,
+      "spectral_centroid_hz": 2565.8
+    },
+    {
+      "source_time_seconds": 188.3,
+      "rms": 0.06401893,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.477169,
+      "spectral_centroid_hz": 3610.05
+    },
+    {
+      "source_time_seconds": 190.65,
+      "rms": 0.06394232,
+      "peak": 0.47744751,
+      "high_band_fraction": 0.562765,
+      "spectral_centroid_hz": 3829.94
+    },
+    {
+      "source_time_seconds": 197.6,
+      "rms": 0.06499515,
+      "peak": 0.49075317,
+      "high_band_fraction": 0.459605,
+      "spectral_centroid_hz": 3518.89
+    },
+    {
+      "source_time_seconds": 224.4,
+      "rms": 0.06450305,
+      "peak": 0.51858521,
+      "high_band_fraction": 0.582692,
+      "spectral_centroid_hz": 3873.14
+    },
+    {
+      "source_time_seconds": 236.3,
+      "rms": 0.06495984,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.49211,
+      "spectral_centroid_hz": 3633.51
+    },
+    {
+      "source_time_seconds": 239.8,
+      "rms": 0.06495556,
+      "peak": 0.47015381,
+      "high_band_fraction": 0.519133,
+      "spectral_centroid_hz": 3674.51
+    },
+    {
+      "source_time_seconds": 244.15,
+      "rms": 0.06410003,
+      "peak": 0.43457031,
+      "high_band_fraction": 0.471946,
+      "spectral_centroid_hz": 3565.3
+    },
+    {
+      "source_time_seconds": 256.35,
+      "rms": 0.24595997,
+      "peak": 0.69735718,
+      "high_band_fraction": 0.193903,
+      "spectral_centroid_hz": 1804.13
+    },
+    {
+      "source_time_seconds": 275.6,
+      "rms": 0.06450312,
+      "peak": 0.51858521,
+      "high_band_fraction": 0.582688,
+      "spectral_centroid_hz": 3873.18
+    },
+    {
+      "source_time_seconds": 276.45,
+      "rms": 0.0653194,
+      "peak": 0.5045166,
+      "high_band_fraction": 0.502526,
+      "spectral_centroid_hz": 3679.29
+    },
+    {
+      "source_time_seconds": 293.95,
+      "rms": 0.24344736,
+      "peak": 0.66995239,
+      "high_band_fraction": 0.304597,
+      "spectral_centroid_hz": 1835.13
+    },
+    {
+      "source_time_seconds": 300.35,
+      "rms": 0.34732419,
+      "peak": 0.74957275,
+      "high_band_fraction": 0.144569,
+      "spectral_centroid_hz": 2251.58
+    },
+    {
+      "source_time_seconds": 304.45,
+      "rms": 0.17832659,
+      "peak": 1.0,
+      "high_band_fraction": 0.236897,
+      "spectral_centroid_hz": 2350.1
+    },
+    {
+      "source_time_seconds": 305.35,
+      "rms": 0.12743491,
+      "peak": 0.76861572,
+      "high_band_fraction": 0.147307,
+      "spectral_centroid_hz": 2569.0
+    },
+    {
+      "source_time_seconds": 313.25,
+      "rms": 0.0987546,
+      "peak": 0.68832397,
+      "high_band_fraction": 0.729008,
+      "spectral_centroid_hz": 4229.02
+    },
+    {
+      "source_time_seconds": 314.5,
+      "rms": 0.0979559,
+      "peak": 0.69903564,
+      "high_band_fraction": 0.684525,
+      "spectral_centroid_hz": 4871.33
+    },
+    {
+      "source_time_seconds": 315.15,
+      "rms": 0.08510753,
+      "peak": 0.68746948,
+      "high_band_fraction": 0.811808,
+      "spectral_centroid_hz": 4802.82
+    },
+    {
+      "source_time_seconds": 322.65,
+      "rms": 0.09759026,
+      "peak": 0.68438721,
+      "high_band_fraction": 0.681016,
+      "spectral_centroid_hz": 4917.41
+    },
+    {
+      "source_time_seconds": 323.6,
+      "rms": 0.10460241,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.832527,
+      "spectral_centroid_hz": 3357.22
+    },
+    {
+      "source_time_seconds": 324.1,
+      "rms": 0.10199304,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.866355,
+      "spectral_centroid_hz": 3279.82
+    },
+    {
+      "source_time_seconds": 326.05,
+      "rms": 0.10355045,
+      "peak": 0.9894104,
+      "high_band_fraction": 0.856549,
+      "spectral_centroid_hz": 3362.12
+    },
+    {
+      "source_time_seconds": 327.75,
+      "rms": 0.10708138,
+      "peak": 1.0,
+      "high_band_fraction": 0.857173,
+      "spectral_centroid_hz": 3450.9
+    },
+    {
+      "source_time_seconds": 330.15,
+      "rms": 0.10362097,
+      "peak": 1.0,
+      "high_band_fraction": 0.869439,
+      "spectral_centroid_hz": 3383.27
+    },
+    {
+      "source_time_seconds": 333.5,
+      "rms": 0.09385976,
+      "peak": 0.68557739,
+      "high_band_fraction": 0.777846,
+      "spectral_centroid_hz": 4467.43
+    },
+    {
+      "source_time_seconds": 339.6,
+      "rms": 0.06403001,
+      "peak": 0.49914551,
+      "high_band_fraction": 0.569949,
+      "spectral_centroid_hz": 3860.65
+    },
+    {
+      "source_time_seconds": 341.3,
+      "rms": 0.06501854,
+      "peak": 0.50390625,
+      "high_band_fraction": 0.45803,
+      "spectral_centroid_hz": 3510.6
+    },
+    {
+      "source_time_seconds": 351.2,
+      "rms": 0.06500659,
+      "peak": 0.49069214,
+      "high_band_fraction": 0.459674,
+      "spectral_centroid_hz": 3520.3
+    },
+    {
+      "source_time_seconds": 372.45,
+      "rms": 0.06464283,
+      "peak": 0.51226807,
+      "high_band_fraction": 0.504935,
+      "spectral_centroid_hz": 3655.56
+    },
+    {
+      "source_time_seconds": 377.15,
+      "rms": 0.22653285,
+      "peak": 0.70578003,
+      "high_band_fraction": 0.187554,
+      "spectral_centroid_hz": 1732.55
+    },
+    {
+      "source_time_seconds": 383.5,
+      "rms": 0.06455485,
+      "peak": 0.4831543,
+      "high_band_fraction": 0.494632,
+      "spectral_centroid_hz": 3594.78
+    },
+    {
+      "source_time_seconds": 433.55,
+      "rms": 0.06397179,
+      "peak": 0.49749756,
+      "high_band_fraction": 0.525435,
+      "spectral_centroid_hz": 3786.71
+    },
+    {
+      "source_time_seconds": 452.45,
+      "rms": 0.06581204,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.506237,
+      "spectral_centroid_hz": 3653.74
+    },
+    {
+      "source_time_seconds": 488.8,
+      "rms": 0.06440698,
+      "peak": 0.46951294,
+      "high_band_fraction": 0.463825,
+      "spectral_centroid_hz": 3515.45
+    },
+    {
+      "source_time_seconds": 492.95,
+      "rms": 0.06479257,
+      "peak": 0.54144287,
+      "high_band_fraction": 0.46655,
+      "spectral_centroid_hz": 4728.09
+    },
+    {
+      "source_time_seconds": 494.7,
+      "rms": 0.0775009,
+      "peak": 0.54495239,
+      "high_band_fraction": 0.453911,
+      "spectral_centroid_hz": 3656.81
+    },
+    {
+      "source_time_seconds": 500.0,
+      "rms": 0.08178172,
+      "peak": 0.47607422,
+      "high_band_fraction": 0.486958,
+      "spectral_centroid_hz": 3574.55
+    },
+    {
+      "source_time_seconds": 502.0,
+      "rms": 0.11284569,
+      "peak": 0.49087524,
+      "high_band_fraction": 0.275605,
+      "spectral_centroid_hz": 3437.34
+    },
+    {
+      "source_time_seconds": 504.5,
+      "rms": 0.07860639,
+      "peak": 0.51541138,
+      "high_band_fraction": 0.178469,
+      "spectral_centroid_hz": 3022.89
+    },
+    {
+      "source_time_seconds": 507.3,
+      "rms": 0.07472646,
+      "peak": 0.53363037,
+      "high_band_fraction": 0.470811,
+      "spectral_centroid_hz": 3485.09
+    },
+    {
+      "source_time_seconds": 509.75,
+      "rms": 0.06519603,
+      "peak": 0.45016479,
+      "high_band_fraction": 0.402347,
+      "spectral_centroid_hz": 3377.49
+    },
+    {
+      "source_time_seconds": 512.15,
+      "rms": 0.07800443,
+      "peak": 0.51046753,
+      "high_band_fraction": 0.419515,
+      "spectral_centroid_hz": 3640.85
+    },
+    {
+      "source_time_seconds": 512.8,
+      "rms": 0.10041264,
+      "peak": 0.67816162,
+      "high_band_fraction": 0.718555,
+      "spectral_centroid_hz": 4079.9
+    },
+    {
+      "source_time_seconds": 517.3,
+      "rms": 0.06551691,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.45891,
+      "spectral_centroid_hz": 3500.71
+    },
+    {
+      "source_time_seconds": 533.3,
+      "rms": 0.06431755,
+      "peak": 0.49371338,
+      "high_band_fraction": 0.45281,
+      "spectral_centroid_hz": 3515.7
+    },
+    {
+      "source_time_seconds": 548.45,
+      "rms": 0.06560456,
+      "peak": 0.51779175,
+      "high_band_fraction": 0.500863,
+      "spectral_centroid_hz": 3656.47
+    },
+    {
+      "source_time_seconds": 551.35,
+      "rms": 0.06411719,
+      "peak": 0.4362793,
+      "high_band_fraction": 0.477363,
+      "spectral_centroid_hz": 3569.77
+    },
+    {
+      "source_time_seconds": 572.6,
+      "rms": 0.06404026,
+      "peak": 0.46716309,
+      "high_band_fraction": 0.518508,
+      "spectral_centroid_hz": 3656.34
+    },
+    {
+      "source_time_seconds": 578.4,
+      "rms": 0.06428394,
+      "peak": 0.46261597,
+      "high_band_fraction": 0.469078,
+      "spectral_centroid_hz": 3532.23
+    },
+    {
+      "source_time_seconds": 582.2,
+      "rms": 0.06453709,
+      "peak": 0.49353027,
+      "high_band_fraction": 0.508697,
+      "spectral_centroid_hz": 3674.5
+    },
+    {
+      "source_time_seconds": 590.1,
+      "rms": 0.06755193,
+      "peak": 0.42840576,
+      "high_band_fraction": 0.534045,
+      "spectral_centroid_hz": 3745.97
+    },
+    {
+      "source_time_seconds": 594.35,
+      "rms": 0.21814218,
+      "peak": 0.69659424,
+      "high_band_fraction": 0.705269,
+      "spectral_centroid_hz": 1789.27
+    },
+    {
+      "source_time_seconds": 599.65,
+      "rms": 0.06527545,
+      "peak": 0.50750732,
+      "high_band_fraction": 0.508424,
+      "spectral_centroid_hz": 3636.13
+    },
+    {
+      "source_time_seconds": 602.55,
+      "rms": 0.06409972,
+      "peak": 0.4362793,
+      "high_band_fraction": 0.471198,
+      "spectral_centroid_hz": 3570.68
+    },
+    {
+      "source_time_seconds": 606.9,
+      "rms": 0.20168076,
+      "peak": 0.55419922,
+      "high_band_fraction": 0.149584,
+      "spectral_centroid_hz": 1742.7
+    },
+    {
+      "source_time_seconds": 619.45,
+      "rms": 0.06399892,
+      "peak": 0.4859314,
+      "high_band_fraction": 0.560559,
+      "spectral_centroid_hz": 3799.8
+    },
+    {
+      "source_time_seconds": 623.8,
+      "rms": 0.0640362,
+      "peak": 0.46716309,
+      "high_band_fraction": 0.518641,
+      "spectral_centroid_hz": 3656.36
+    },
+    {
+      "source_time_seconds": 626.1,
+      "rms": 0.06536844,
+      "peak": 0.49954224,
+      "high_band_fraction": 0.455416,
+      "spectral_centroid_hz": 3486.79
+    },
+    {
+      "source_time_seconds": 629.3,
+      "rms": 0.06399461,
+      "peak": 0.48944092,
+      "high_band_fraction": 0.455761,
+      "spectral_centroid_hz": 3518.29
+    },
+    {
+      "source_time_seconds": 653.0,
+      "rms": 0.06439754,
+      "peak": 0.50079346,
+      "high_band_fraction": 0.524811,
+      "spectral_centroid_hz": 5113.94
+    },
+    {
+      "source_time_seconds": 667.25,
+      "rms": 0.3668614,
+      "peak": 0.70077515,
+      "high_band_fraction": 0.121424,
+      "spectral_centroid_hz": 2194.95
+    },
+    {
+      "source_time_seconds": 670.85,
+      "rms": 0.16446601,
+      "peak": 0.99841309,
+      "high_band_fraction": 0.130813,
+      "spectral_centroid_hz": 2663.76
+    },
+    {
+      "source_time_seconds": 672.25,
+      "rms": 0.06854006,
+      "peak": 0.68322754,
+      "high_band_fraction": 0.175635,
+      "spectral_centroid_hz": 2022.12
+    },
+    {
+      "source_time_seconds": 679.3,
+      "rms": 0.09884677,
+      "peak": 0.69586182,
+      "high_band_fraction": 0.684182,
+      "spectral_centroid_hz": 4870.28
+    },
+    {
+      "source_time_seconds": 680.2,
+      "rms": 0.09762926,
+      "peak": 0.68051147,
+      "high_band_fraction": 0.671724,
+      "spectral_centroid_hz": 5135.34
+    },
+    {
+      "source_time_seconds": 681.3,
+      "rms": 0.09519748,
+      "peak": 1.0,
+      "high_band_fraction": 0.883817,
+      "spectral_centroid_hz": 2912.69
+    },
+    {
+      "source_time_seconds": 684.15,
+      "rms": 0.10519294,
+      "peak": 0.99996948,
+      "high_band_fraction": 0.852702,
+      "spectral_centroid_hz": 3383.91
+    },
+    {
+      "source_time_seconds": 685.7,
+      "rms": 0.0988113,
+      "peak": 0.69992065,
+      "high_band_fraction": 0.687732,
+      "spectral_centroid_hz": 4957.3
+    },
+    {
+      "source_time_seconds": 700.3,
+      "rms": 0.06401893,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.477169,
+      "spectral_centroid_hz": 3610.05
+    },
+    {
+      "source_time_seconds": 708.45,
+      "rms": 0.06580909,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.506813,
+      "spectral_centroid_hz": 3655.95
+    },
+    {
+      "source_time_seconds": 732.15,
+      "rms": 0.1949655,
+      "peak": 0.70568848,
+      "high_band_fraction": 0.192688,
+      "spectral_centroid_hz": 1710.91
+    },
+    {
+      "source_time_seconds": 745.8,
+      "rms": 0.17018704,
+      "peak": 0.59988403,
+      "high_band_fraction": 0.268511,
+      "spectral_centroid_hz": 1832.87
+    },
+    {
+      "source_time_seconds": 751.5,
+      "rms": 0.06401893,
+      "peak": 0.47302246,
+      "high_band_fraction": 0.477169,
+      "spectral_centroid_hz": 3610.05
+    },
+    {
+      "source_time_seconds": 765.2,
+      "rms": 0.06396201,
+      "peak": 0.48712158,
+      "high_band_fraction": 0.570096,
+      "spectral_centroid_hz": 3822.59
+    },
+    {
+      "source_time_seconds": 787.85,
+      "rms": 0.0640215,
+      "peak": 0.47183228,
+      "high_band_fraction": 0.460584,
+      "spectral_centroid_hz": 3529.34
+    },
+    {
+      "source_time_seconds": 805.4,
+      "rms": 0.33991998,
+      "peak": 0.7828064,
+      "high_band_fraction": 0.154804,
+      "spectral_centroid_hz": 1605.64
+    },
+    {
+      "source_time_seconds": 806.05,
+      "rms": 0.23744167,
+      "peak": 0.69378662,
+      "high_band_fraction": 0.565432,
+      "spectral_centroid_hz": 1711.39
+    },
+    {
+      "source_time_seconds": 816.65,
+      "rms": 0.06486098,
+      "peak": 0.46731567,
+      "high_band_fraction": 0.47275,
+      "spectral_centroid_hz": 3518.44
+    },
+    {
+      "source_time_seconds": 818.1,
+      "rms": 0.06533031,
+      "peak": 0.51779175,
+      "high_band_fraction": 0.45722,
+      "spectral_centroid_hz": 3507.87
+    },
+    {
+      "source_time_seconds": 820.45,
+      "rms": 0.0640518,
+      "peak": 0.49713135,
+      "high_band_fraction": 0.503044,
+      "spectral_centroid_hz": 3675.2
+    },
+    {
+      "source_time_seconds": 827.3,
+      "rms": 0.16296439,
+      "peak": 0.98641968,
+      "high_band_fraction": 0.193544,
+      "spectral_centroid_hz": 2424.85
+    },
+    {
+      "source_time_seconds": 828.15,
+      "rms": 0.1163903,
+      "peak": 0.49047852,
+      "high_band_fraction": 0.177936,
+      "spectral_centroid_hz": 2278.4
+    },
+    {
+      "source_time_seconds": 835.25,
+      "rms": 0.09690394,
+      "peak": 0.71273804,
+      "high_band_fraction": 0.665736,
+      "spectral_centroid_hz": 5076.04
+    },
+    {
+      "source_time_seconds": 836.5,
+      "rms": 0.09855317,
+      "peak": 0.66897583,
+      "high_band_fraction": 0.758841,
+      "spectral_centroid_hz": 4252.75
+    },
+    {
+      "source_time_seconds": 837.2,
+      "rms": 0.09864286,
+      "peak": 0.67984009,
+      "high_band_fraction": 0.722572,
+      "spectral_centroid_hz": 4401.96
+    },
+    {
+      "source_time_seconds": 838.25,
+      "rms": 0.09937343,
+      "peak": 0.70834351,
+      "high_band_fraction": 0.753,
+      "spectral_centroid_hz": 4189.77
+    },
+    {
+      "source_time_seconds": 839.2,
+      "rms": 0.10522461,
+      "peak": 0.98266602,
+      "high_band_fraction": 0.855835,
+      "spectral_centroid_hz": 3357.79
+    },
+    {
+      "source_time_seconds": 840.65,
+      "rms": 0.1059285,
+      "peak": 1.0,
+      "high_band_fraction": 0.853362,
+      "spectral_centroid_hz": 3450.81
+    },
+    {
+      "source_time_seconds": 842.4,
+      "rms": 0.09851044,
+      "peak": 0.6973877,
+      "high_band_fraction": 0.735228,
+      "spectral_centroid_hz": 4140.86
+    },
+    {
+      "source_time_seconds": 849.25,
+      "rms": 0.06466321,
+      "peak": 0.47976685,
+      "high_band_fraction": 0.48943,
+      "spectral_centroid_hz": 3631.62
+    },
+    {
+      "source_time_seconds": 850.7,
+      "rms": 0.06495984,
+      "peak": 0.47601318,
+      "high_band_fraction": 0.49211,
+      "spectral_centroid_hz": 3633.51
+    },
+    {
+      "source_time_seconds": 873.7,
+      "rms": 0.06397822,
+      "peak": 0.46542358,
+      "high_band_fraction": 0.539385,
+      "spectral_centroid_hz": 3800.69
+    },
+    {
+      "source_time_seconds": 913.2,
+      "rms": 0.14575043,
+      "peak": 0.58425903,
+      "high_band_fraction": 0.139757,
+      "spectral_centroid_hz": 1498.28
+    },
+    {
+      "source_time_seconds": 928.4,
+      "rms": 0.08062744,
+      "peak": 0.26113892,
+      "high_band_fraction": 0.138621,
+      "spectral_centroid_hz": 2544.51
+    },
+    {
+      "source_time_seconds": 937.15,
+      "rms": 0.06424058,
+      "peak": 0.49578857,
+      "high_band_fraction": 0.632108,
+      "spectral_centroid_hz": 3899.49
+    },
+    {
+      "source_time_seconds": 939.15,
+      "rms": 0.06425035,
+      "peak": 0.51193237,
+      "high_band_fraction": 0.525521,
+      "spectral_centroid_hz": 3714.84
+    },
+    {
+      "source_time_seconds": 945.25,
+      "rms": 0.06565361,
+      "peak": 0.49819946,
+      "high_band_fraction": 0.502952,
+      "spectral_centroid_hz": 3649.16
+    },
+    {
+      "source_time_seconds": 951.35,
+      "rms": 0.06471962,
+      "peak": 0.47705078,
+      "high_band_fraction": 0.477163,
+      "spectral_centroid_hz": 3553.17
+    },
+    {
+      "source_time_seconds": 970.25,
+      "rms": 0.06496409,
+      "peak": 0.47015381,
+      "high_band_fraction": 0.473124,
+      "spectral_centroid_hz": 3515.86
+    },
+    {
+      "source_time_seconds": 975.25,
+      "rms": 0.34660104,
+      "peak": 0.74728394,
+      "high_band_fraction": 0.140147,
+      "spectral_centroid_hz": 1603.85
+    },
+    {
+      "source_time_seconds": 975.9,
+      "rms": 0.23363821,
+      "peak": 0.68252563,
+      "high_band_fraction": 0.422803,
+      "spectral_centroid_hz": 1745.34
+    },
+    {
+      "source_time_seconds": 1034.5,
+      "rms": 0.16073826,
+      "peak": 0.9887085,
+      "high_band_fraction": 0.138984,
+      "spectral_centroid_hz": 2691.47
+    },
+    {
+      "source_time_seconds": 1035.9,
+      "rms": 0.06763631,
+      "peak": 0.67431641,
+      "high_band_fraction": 0.208385,
+      "spectral_centroid_hz": 2060.08
+    },
+    {
+      "source_time_seconds": 1042.45,
+      "rms": 0.18542157,
+      "peak": 1.0,
+      "high_band_fraction": 0.776854,
+      "spectral_centroid_hz": 4418.52
+    }
+  ],
+  "features_csv": "audio-windows.csv",
+  "note": "Thresholded peaks are event candidates in a mixed track, not verified action-to-effect labels."
+}

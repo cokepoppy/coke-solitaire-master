@@ -1,0 +1,38 @@
+{
+  "window_count": 20880,
+  "window_hop_seconds": 0.05,
+  "thresholds": [
+    {
+      "rms_lte": 0.0,
+      "window_count": 10012,
+      "fraction": 0.4795019157088123,
+      "longest_run_seconds": 11.350000000000001,
+      "longest_run_start_seconds": 636.3,
+      "longest_run_end_exclusive_seconds": 647.65
+    },
+    {
+      "rms_lte": 0.0001,
+      "window_count": 11704,
+      "fraction": 0.560536398467433,
+      "longest_run_seconds": 11.450000000000001,
+      "longest_run_start_seconds": 636.2,
+      "longest_run_end_exclusive_seconds": 647.6500000000001
+    },
+    {
+      "rms_lte": 0.001,
+      "window_count": 13653,
+      "fraction": 0.6538793103448276,
+      "longest_run_seconds": 11.8,
+      "longest_run_start_seconds": 635.85,
+      "longest_run_end_exclusive_seconds": 647.65
+    },
+    {
+      "rms_lte": 0.01,
+      "window_count": 16129,
+      "fraction": 0.7724616858237547,
+      "longest_run_seconds": 12.0,
+      "longest_run_start_seconds": 635.7,
+      "longest_run_end_exclusive_seconds": 647.7
+    }
+  ]
+}
