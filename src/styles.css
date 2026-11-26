@@ -238,6 +238,11 @@ body:not([data-theme='felt']) .foundation-theme-mark { position: absolute; inset
 .card-back { position: absolute; left: 0; top: var(--card-offset, 0); border: 1px solid rgba(255,255,255,.86); background: #f5eee0; }
 .card-back.source-card-back { border: 0; background: transparent; box-shadow: none; }
 .source-card-back .card-back-underlay, .source-card-back .card-back-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; }
+.stock-slot.is-recycling .stock-button { cursor: default; }
+.stock-slot.is-recycling .stock-count { visibility: hidden; }
+.stock-recycle-flight { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+.stock-recycle-flight-card { position: fixed; left: 0; top: 0; transition: none; pointer-events: none; }
+.stock-recycle-flight-count { z-index: 10; pointer-events: none; }
 .stock-count.source-stock-count { bottom: calc(var(--card-height) * .045); left: calc(var(--card-width) * .04); width: calc(var(--card-width) * .3); height: calc(var(--card-height) * .135); min-width: 0; padding: 0; border-radius: 0; background: #21171a; font-size: clamp(8px, 2.4vw, 11px); }
 .stock-count.source-stock-count-baked { color: transparent; text-shadow: none; background: transparent; }
 .drag-ghost { position: fixed; z-index: 1000; width: var(--card-width); height: var(--card-height); pointer-events: none; filter: drop-shadow(0 13px 18px rgba(0,0,0,.42)); }

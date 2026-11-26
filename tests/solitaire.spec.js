@@ -439,7 +439,7 @@ async function runSourceOpeningReplay(page) {
   await dragMove(4, 4, 3, 4, 37);
   await expect(page.locator('#score-value')).toHaveText('30');
   await expect(page.locator('#moves-value')).toHaveText('3');
-  await page.waitForTimeout(200);
+  await expect.poll(() => page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.map((card) => card.getAnimations().length))).toEqual([0, 0, 0]);
   const faceUpStackSpacing = await page.locator('.pile-column[data-pile="3"] .card-face').evaluateAll((cards) => cards.slice(1).map((card, index) => card.getBoundingClientRect().top - cards[index].getBoundingClientRect().top));
   expect(faceUpStackSpacing).toHaveLength(2);
   expect(faceUpStackSpacing[0]).toBeCloseTo(47.5, 1);
@@ -2264,12 +2264,58 @@ test('mobile stock recycle restores draw order and undo', async ({ page }) => {
   }
   await expect(page.getByRole('button', { name: 'Turn the waste pile over' })).toBeVisible();
   await expect(page.locator('.waste-slot .card-face')).toHaveCount(3);
+  await page.waitForFunction(() => !document.querySelector('.waste-slot .card-arrive'));
   expect(await page.evaluate(() => window.solitaireGame.state.waste.length)).toBe(24);
 
+  const recycleFlightOrigin = await page.evaluate(() => ({
+    stock: document.querySelector('.stock-slot').getBoundingClientRect().left,
+    waste: document.querySelector('.waste-slot').getBoundingClientRect().left,
+    cards: [...document.querySelectorAll('.waste-slot > .playing-card')].map((card) => {
+      const rect = card.getBoundingClientRect();
+      return { left: rect.left, top: rect.top, width: rect.width, height: rect.height };
+    }),
+  }));
   const stockBox = await page.locator('[data-action="stock"]').boundingBox();
   await page.touchscreen.tap(stockBox.x + stockBox.width / 2, stockBox.y + stockBox.height / 2);
   expect(await page.evaluate(() => window.stockAudioCues.at(-1))).toBe('recycle');
-  await expect(page.locator('.stock-count')).toHaveText('24');
+  await expect(page.locator('.stock-recycle-flight-count')).toHaveText('24');
+  await expect(page.locator('.stock-slot')).toHaveClass(/is-recycling/);
+  await expect(page.locator('[data-action="stock"]')).toBeDisabled();
+  await expect(page.locator('.stock-slot .empty-stock')).toBeVisible();
+  await expect(page.locator('.stock-slot .stock-count')).toHaveCSS('visibility', 'hidden');
+  await page.screenshot({ path: 'test-results/stock-recycle-flight.png' });
+  const recycleFlight = await page.locator('.stock-recycle-flight-card').evaluateAll((cards) => cards.map((card) => {
+    const animation = card.getAnimations()[0];
+    const frames = animation.effect.getKeyframes();
+    const target = new DOMMatrix(frames.at(-1).transform);
+    return {
+      left: Number.parseFloat(card.style.left),
+      top: Number.parseFloat(card.style.top),
+      width: Number.parseFloat(card.style.width),
+      height: Number.parseFloat(card.style.height),
+      duration: animation.effect.getTiming().duration,
+      easing: animation.effect.getTiming().easing,
+      deltaX: target.m41,
+      deltaY: target.m42,
+      faceDown: Boolean(card.querySelector('.card-back-art')),
+    };
+  }));
+  expect(recycleFlight).toHaveLength(3);
+  for (const [index, card] of recycleFlight.entries()) {
+    const origin = recycleFlightOrigin.cards[index];
+    expect(card.left).toBeCloseTo(origin.left, 2);
+    expect(card.top).toBeCloseTo(origin.top, 2);
+    expect(card.width).toBeCloseTo(origin.width, 2);
+    expect(card.height).toBeCloseTo(origin.height, 2);
+    expect(card.duration).toBe(167);
+    expect(card.easing).toBe('ease-out');
+    expect(card.deltaX).toBeCloseTo(recycleFlightOrigin.stock - recycleFlightOrigin.waste, 2);
+    expect(card.deltaY).toBeCloseTo(0, 2);
+    expect(card.faceDown).toBe(true);
+  }
+  await expect(page.locator('.stock-recycle-flight')).toHaveCount(0, { timeout: 1000 });
+  await expect(page.locator('.stock-slot .stock-button .playing-card')).toBeVisible();
+  await expect(page.locator('.stock-slot .empty-stock')).toHaveCount(0);
   const recycled = await page.evaluate(() => ({
     stock: window.solitaireGame.state.stock.length,
     waste: window.solitaireGame.state.waste.length,
