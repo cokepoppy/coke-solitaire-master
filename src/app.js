@@ -11,11 +11,13 @@ function createFirstDealDeck() {
     faceUp: false,
   })));
   const remaining = new Map(deck.map((card) => [card.id, card]));
-  const take = (suit, rank, faceUp) => {
+  const take = (suit, rank, faceUp, tableauOffsetRatio) => {
     const card = remaining.get(`${suit}-${rank}`);
     if (!card) throw new Error(`Missing card ${rank}${suit} in the first deal.`);
     remaining.delete(card.id);
-    return { ...card, faceUp };
+    const dealtCard = { ...card, faceUp };
+    if (Number.isFinite(tableauOffsetRatio)) dealtCard.tableauOffsetRatio = tableauOffsetRatio;
+    return dealtCard;
   };
   const hidden = () => {
     const card = [...remaining.values()].find((candidate) => candidate.id !== '♥-6');
@@ -25,7 +27,7 @@ function createFirstDealDeck() {
   };
   const tableau = [
     [take('♦', 5, true)],
-    [take('♣', 6, false), take('♠', 12, true)],
+    [take('♣', 6, false), take('♠', 12, true, 0.19)],
     [hidden(), hidden(), take('♣', 2, true)],
     [hidden(), hidden(), hidden(), take('♦', 13, true)],
     [hidden(), hidden(), hidden(), take('♣', 3, false), take('♦', 11, true)],
