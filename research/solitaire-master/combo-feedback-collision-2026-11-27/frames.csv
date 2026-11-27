@@ -1,0 +1,5 @@
+requested_seconds,actual_seconds,source_pts,source_timescale,observation,filename,png_sha256
+65.500000,65.500000,1006080,15360,COMBO 2 over the moving 2 of hearts,frames/good-combo2-card-2h-65.50s-pts-1006080.png,09ed90de3641c22e75be8aa500e2c0b6d605e71738e9dc75c104a0e83cb404cc
+65.850000,65.833333,1011200,15360,Good reward visible while the COMBO 2 feedback remains,frames/good-combo2-banner-65.85s-pts-1011200.png,4cb0d6e8dce0b74cafcfb3ef1d5afbd43a4415664e7901b292a384c9945146e3
+102.300000,102.300000,1571328,15360,COMBO 2 over the moving 4 of clubs,frames/great-combo2-card-4c-102.30s-pts-1571328.png,f507758f91bb031accaf05a14c383289c19f02e087c644a40322173d739ab22d
+102.500000,102.500000,1574400,15360,Great reward visible while the COMBO 2 feedback remains,frames/great-combo2-banner-102.50s-pts-1574400.png,e52459412dd44a7165e9bdb07dc8018abee8245be22d5dfaf546c9a2f0951329
