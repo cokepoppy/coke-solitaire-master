@@ -76,10 +76,13 @@ try {
     await otherGame.put(new Request(`${location.origin}/another-game-shell`), new Response('keep'));
     const existingRootApp = await caches.open('solitaire-master-v50');
     await existingRootApp.put(new Request(`${location.origin}/existing-root-game-shell`), new Response('keep'));
+    const oldSolitaireSubpath = await caches.open('solitaire-master-solitaire-v102');
+    await oldSolitaireSubpath.put(new Request(`${location.origin}/solitaire/old-shell`), new Response('stale'));
   });
 
   await page.goto(`http://127.0.0.1:${port}/solitaire/`, { waitUntil: 'domcontentloaded' });
   assert.equal(await page.title(), 'Solitaire Master');
+  assert.ok(await page.locator('.game-topbar').evaluate((topbar) => topbar.getBoundingClientRect().top < 30));
   await page.waitForFunction(() => document.querySelectorAll('#tableau .card-face').length === 7);
   assert.match(await page.locator('.stock-slot .card-back-art').getAttribute('src'), /^\/solitaire\/assets\//);
   await page.locator('[data-action="stock"]').click();
@@ -135,7 +138,7 @@ try {
   const worker = await page.evaluate(async () => {
     const registration = await navigator.serviceWorker.ready;
     const cachesAfterInstall = await caches.keys();
-    const shell = await caches.open('solitaire-master-solitaire-v102');
+    const shell = await caches.open('solitaire-master-solitaire-v103');
     const shellPage = await shell.match(`${location.origin}/solitaire/index.html`);
     const recycleSample = await shell.match(`${location.origin}/solitaire/assets/audio/stock-recycle-reference.wav`);
     const recycledDrawSample = await shell.match(`${location.origin}/solitaire/assets/audio/draw-after-recycle-reference.wav`);
@@ -160,6 +163,7 @@ try {
       scope: registration.scope,
       script: registration.active?.scriptURL,
       cachesAfterInstall,
+      oldSubpathCacheRemoved: !cachesAfterInstall.includes('solitaire-master-solitaire-v102'),
       shellPageCached: Boolean(shellPage),
       recycleSamplesCached: Boolean(recycleSample) && Boolean(recycledDrawSample),
       themeGallerySamplesCached: Boolean(uiTapSample) && Boolean(themeGallerySelectSample),
@@ -180,6 +184,7 @@ try {
   });
   assert.equal(worker.scope, `http://127.0.0.1:${port}/solitaire/`);
   assert.equal(worker.script, `http://127.0.0.1:${port}/solitaire/sw.js`);
+  assert.equal(worker.oldSubpathCacheRemoved, true);
   assert.equal(worker.shellPageCached, true);
   assert.equal(worker.recycleSamplesCached, true);
   assert.equal(worker.themeGallerySamplesCached, true);
@@ -196,7 +201,7 @@ try {
   assert.equal(worker.mountainBackgroundCached, true);
   assert.equal(worker.otherGameCachePreserved, true);
   assert.equal(worker.existingRootGameCachePreserved, true);
-  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v102'));
+  assert.ok(worker.cachesAfterInstall.includes('solitaire-master-solitaire-v103'));
   assert.deepEqual(unscopedRequests, []);
   assert.deepEqual(badResponses, []);
   assert.deepEqual(pageErrors, []);
