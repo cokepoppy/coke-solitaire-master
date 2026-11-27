@@ -17,3 +17,17 @@ The opening reference replay reaches score 30 at timer `00:07`, with 3 moves (so
 `SolitaireGame.tick()` now applies that Standard-mode deduction and keeps the visible score sprites in sync. A mobile Chrome test advances the timer through `00:10`, checks the score changes from 30 to 28, then switches to Vegas and confirms that the score does not incur a timed deduction at `00:20`.
 
 The recording does not expose a low-score timer tick, so it cannot establish whether the source clamps the time deduction at zero. The replica retains its existing minimum-zero score behavior. The recording also does not show a Vegas deal; Vegas timer behavior follows the usual no-time-penalty convention rather than direct target-app evidence.
+
+## Foundation combo score samples
+
+I re-scanned four short windows at 50 ms in [`score-moves-50ms-60_5-61_5s.csv`](score-moves-50ms-60_5-61_5s.csv), [`score-moves-50ms-64_5-66_5s.csv`](score-moves-50ms-64_5-66_5s.csv), [`score-moves-50ms-71_8-73_0s.csv`](score-moves-50ms-71_8-73_0s.csv), and [`score-moves-50ms-101_5-103_0s.csv`](score-moves-50ms-101_5-103_0s.csv). Selected transition/reward frames with the scoreboard and tableau are retained in `frames/foundation-good`, `frames/combo-amazing`, and `frames/combo-great`; each manifest preserves exact PTS, source hash, and PNG hashes. These samples show that the score and move counter can advance together by more than the usual +10 foundation points:
+
+| Source time | Score and moves | Feedback visible afterward |
+| --- | --- | --- |
+| 60.60 → 60.65 s | 142 → 172; 23 → 24 (+30) | A foundation action is in flight; no tier label is unobstructed in the sampled event frame. |
+| 65.05 → 65.10 s | 170 → 200; 27 → 28 (+30) | A foundation card is moving. |
+| 65.35 → 65.40 s | 200 → 220; 28 → 29 (+20) | `Good` is visible at 65.90 s ([PTS 1,012,224](frames/foundation-good/frame-00001-req-065.900000-pts-1012224.png)); the moving 2♥ covers the combo numeral in the intermediate frames. |
+| 72.30 → 72.35 s | 350 → 380; 38 → 39 (+30) | `COMBO 4` and `Amazing` are both visible at 72.70 s ([PTS 1,116,672](frames/combo-amazing/frame-00001-req-072.700000-pts-1116672.png)); the timer deduction then changes 380 to 378. |
+| 101.90 → 101.95 s | 484 → 504; 59 → 60 (+20) | `COMBO 2` and `Great` are both visible at 102.50 s ([PTS 1,574,400](frames/combo-great/frame-00001-req-102.500000-pts-1574400.png)); the timer deduction then changes 504 to 502. |
+
+The first pair of rows do not have an unobstructed tier label at the exact score transition. The later rows tie +20 to `Great`/combo 2 and +30 to `Amazing`/combo 4, but the video does not isolate whether the transition also reveals a face-down card or includes another automatic foundation transfer. The +20 `Good` sample is likewise not enough to separate its reward from ordinary move points. Therefore the current evidence identifies a likely scoring mismatch in combo moves but does **not** yet isolate the combo bonus formula. Keep the existing scoring implementation unchanged until a source sequence with an unambiguous single action and exposed-card state resolves the extra points.

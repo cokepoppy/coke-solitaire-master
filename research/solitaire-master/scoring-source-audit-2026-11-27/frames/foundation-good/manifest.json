@@ -1,0 +1,40 @@
+{
+  "crop" : {
+    "height" : 900,
+    "width" : 884,
+    "x" : 0,
+    "y" : 280
+  },
+  "frame_count" : 2,
+  "frame_hash_type" : "SHA-256 of the saved PNG file bytes",
+  "frames" : [
+    {
+      "actual_seconds" : 65.400000000000006,
+      "filename" : "frame-00000-req-065.400000-pts-1004544.png",
+      "index" : 0,
+      "png_sha256" : "27a696df3b53bc72056dd2e509de0f164dfb83900513ee82a692b33afd5d22fd",
+      "requested_seconds" : 65.400000000000006,
+      "source_pts" : 1004544
+    },
+    {
+      "actual_seconds" : 65.900000000000006,
+      "filename" : "frame-00001-req-065.900000-pts-1012224.png",
+      "index" : 1,
+      "png_sha256" : "3ae55d3e9d758c74f63a19a033e001a876ba1fc0c1e8306bfdf4b38bdb4932c3",
+      "requested_seconds" : 65.900000000000006,
+      "source_pts" : 1012224
+    }
+  ],
+  "requested_window_seconds" : {
+    "end" : 65.900000000000006,
+    "start" : 65.400000000000006,
+    "step" : 0.5
+  },
+  "source_file_name" : "gLd0HXtDt5I.mp4",
+  "source_natural_size" : {
+    "height" : 1920,
+    "width" : 884
+  },
+  "source_sha256" : "56489d4aac9256d15de461d236a990df361621363fdc2904341a0e8e9cb64928",
+  "source_time_scale" : 15360
+}
