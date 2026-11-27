@@ -1,0 +1,9 @@
+requested_seconds,actual_seconds,source_pts,source_timescale,observation,filename,png_sha256
+65.500000,65.500000,1006080,15360,COMBO is visible but its numeral is occluded by the moving 2 of hearts,frames/good-combo-number-occluded-65.50s-pts-1006080.png,09ed90de3641c22e75be8aa500e2c0b6d605e71738e9dc75c104a0e83cb404cc
+65.850000,65.833333,1011200,15360,Good reward visible; the combo numeral remains occluded by the 2 of hearts,frames/good-combo-number-occluded-65.85s-pts-1011200.png,4cb0d6e8dce0b74cafcfb3ef1d5afbd43a4415664e7901b292a384c9945146e3
+102.300000,102.300000,1571328,15360,COMBO 2 over the moving 4 of clubs,frames/great-combo2-card-4c-102.30s-pts-1571328.png,f507758f91bb031accaf05a14c383289c19f02e087c644a40322173d739ab22d
+102.500000,102.500000,1574400,15360,Great reward visible while the COMBO 2 feedback remains,frames/great-combo2-banner-102.50s-pts-1574400.png,e52459412dd44a7165e9bdb07dc8018abee8245be22d5dfaf546c9a2f0951329
+255.750000,255.750000,3928320,15360,COMBO 5 and Amazing visible together,frames/amazing-combo5-255.75s-pts-3928320.png,ea816a1c475fc906f82c4ab8efdbecc92be0097957798485c76bffeea86ba7f5
+259.250000,259.250000,3982080,15360,COMBO 9 and Good visible together,frames/good-combo9-259.25s-pts-3982080.png,806dbe2edd59f646bbd093cdf24d6df9b8273b39183d82ca6138e4f8e229bb78
+293.250000,293.250000,4504320,15360,COMBO 3 and Amazing visible together,frames/amazing-combo3-293.25s-pts-4504320.png,edeb883c16068dfcea1f6dd0679174c4d3ab95c77ecdd638a990d816996837b3
+718.000000,718.000000,11028480,15360,COMBO 3 and Good visible together,frames/good-combo3-718.00s-pts-11028480.png,2314119561a6f544fcf9a9bdb4b6499bcb96286eac829d1f33768df33cf1b04d
